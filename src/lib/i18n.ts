@@ -88,6 +88,13 @@ const th = {
   filterSearch: "ค้นหา",
   filterReset: "รีเซ็ต",
   any: "ทั้งหมด",
+  adminOverview: "ภาพรวม",
+  adminProperties: "ประกาศ",
+  adminUsers: "ผู้ใช้",
+  adminLeads: "ลีด",
+  adminPayments: "การชำระเงิน",
+  adminAnalytics: "วิเคราะห์ข้อมูล",
+  backToWebsite: "กลับเว็บไซต์",
 } as const;
 
 const en: Record<keyof typeof th, string> = {
@@ -170,6 +177,13 @@ const en: Record<keyof typeof th, string> = {
   filterSearch: "Search",
   filterReset: "Reset",
   any: "Any",
+  adminOverview: "Overview",
+  adminProperties: "Properties",
+  adminUsers: "Users",
+  adminLeads: "Leads",
+  adminPayments: "Payments",
+  adminAnalytics: "Analytics",
+  backToWebsite: "Back to Site",
 };
 
 const translations: Record<Locale, Record<keyof typeof th, string>> = { th, en };
