@@ -14,9 +14,16 @@ export async function getListingBySlug(
   slug: string,
   currentUser?: { id: string; role: string } | null
 ): Promise<Property | undefined> {
-  const userListing = await getUserPropertyBySlug(slug, currentUser);
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    // fallback to original slug
+  }
+
+  const userListing = await getUserPropertyBySlug(decodedSlug, currentUser);
   if (userListing) return userListing;
-  return staticProperties.find((p) => p.slug === slug);
+  return staticProperties.find((p) => p.slug === decodedSlug || p.slug === slug);
 }
 
 function applyFilters(list: Property[], filters: SearchFilters): Property[] {
