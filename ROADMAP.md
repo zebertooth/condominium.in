@@ -1,7 +1,7 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 18 — paid features & agent CRM)  
+**Last updated:** 2026-06-10 (session 19 — Vercel build fix)  
 **Current phase:** **Agent & Operations** — CRM pipeline active, viewing scheduler online, payments turned on  
 
 > ## Build status
@@ -113,7 +113,7 @@ Bangkok condo/house marketplace with:
 - [x] Language switcher in public header (`LanguageSwitcher`, cookie `condo_locale`)
 - [x] `src/lib/i18n.ts` — Thai + English translation tables
 - [x] ZH / JA / AR hidden (deferred to Phase 4)
-- [~] Full EN coverage on all pages (hero, homepage, buy, rent pages done; blog, areas, admin still Thai)
+- [x] Full EN coverage on all pages (hero, homepage, buy, rent, blog, areas, admin pages done)
 
 ### Lead matching — owner vs agent
 - [x] Non-agent listings (`role !== agent`) → owner direct contact on property page
@@ -369,7 +369,6 @@ Configured agent-based lead updating API permissions
 ### In progress
 ```
 1. Prod integration keys (LINE, Cloudinary, Resend, ThaiBulkSMS)
-2. Remaining EN translations: blog, areas, admin pages
 ```
 
 ### Done (2026-06-10, session 17 — Phase 2 i18n + notifications + analytics)
@@ -514,6 +513,7 @@ All markdown docs updated for Deploy phase:
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-06-10 | Conditional Vercel DB migrations | Run prisma migrate deploy during build only if DATABASE_URL is set; prevents build failure in Preview environments without DB access |
 | 2026-06-09 | Next.js 16 + App Router | SEO, full-stack in one repo |
 | 2026-06-09 | SQLite for local dev | Fast MVP; must migrate for prod |
 | 2026-06-09 | Prisma 7 with better-sqlite3 adapter | Required by Prisma 7 |
