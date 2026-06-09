@@ -20,21 +20,19 @@ Instructions for AI coding agents (Cursor, Claude, Copilot, etc.) working in thi
 4. **Check** ROADMAP "In progress" — don't duplicate work already started
 5. **Update** `ROADMAP.md` when you finish a feature (checkbox + date)
 
-> ## 🤝 HANDOFF (session 17 — **Phase 2 in progress**)
+> ## 🤝 HANDOFF (session 18 — **Phase 3 in progress**)
 >
-> **Deployed:** Vercel production live (`condominium.in.th` DNS done). Neon Postgres migrated through `20260609180000_analytics_matching`.
+> **Deployed:** Vercel production live (`condominium.in.th` DNS done). Neon Postgres migrated through `20260609185416_add_viewing_fields`.
 >
 > **Done this session:**
-> - **i18n expansion:** 35+ new translation keys added; hero, homepage, `/buy`, `/rent` pages fully bilingual (TH+EN). Areas name shows EN when locale=en.
-> - **Owner inquiry notification:** When an owner-direct inquiry is submitted, the owner gets an email (via Resend when configured, console fallback in dev).
-> - **Browse filter analytics:** `/api/analytics/search-filter` endpoint + `PropertySearch` logs filter events to `SearchEvent` table. Admin analytics now includes browse searches.
+> - **Paid features active:** `PAID_FEATURES_ENABLED` turned on, PromptPay ID set to `0863048177`.
+> - **Viewing Scheduler:** Property page leads support physical viewing scheduling (Date + Time input).
+> - **Agent CRM Dashboard:** Created `/dashboard/agent` with stats cards, AgentLeadTable, and viewing agenda list. Enforced agent-level pipeline editing constraints.
 >
 > **NOT done (next priorities):**
-> 1. Set Production keys on Vercel: `LINE_LOGIN_*`, `CLOUDINARY_*`, `RESEND_*`, `THAIBULKSMS_*`
-> 2. Flip `PAID_FEATURES_ENABLED` to true when `PROMPTPAY_ID` is set
-> 3. EN translations for: blog pages, areas pages, admin UI
-> 4. Agent CRM: viewing scheduler, agent dashboard
-> 5. **Sponsored posts layout** — planned, do NOT implement until user asks
+> 1. EN translations for: blog pages, areas pages, admin UI
+> 2. Set remaining Production keys on Vercel: `LINE_LOGIN_*`, `CLOUDINARY_*`, `RESEND_*`, `THAIBULKSMS_*`
+> 3. **Sponsored posts layout** — planned, do NOT implement until user asks
 
 ---
 

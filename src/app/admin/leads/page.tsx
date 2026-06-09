@@ -13,7 +13,7 @@ export default async function AdminLeadsPage() {
       include: { assignedTo: { select: { id: true, fullName: true } } },
     }),
     prisma.user.findMany({
-      where: { role: "admin" },
+      where: { role: { in: ["admin", "agent"] } },
       select: { id: true, fullName: true },
       orderBy: { fullName: "asc" },
     }),

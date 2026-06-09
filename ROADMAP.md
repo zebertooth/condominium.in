@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-09 (session 15 — post-launch features)  
-**Current phase:** **Post-launch features** — deployed on Vercel; analytics, i18n TH/EN, owner contact done  
+**Last updated:** 2026-06-10 (session 18 — paid features & agent CRM)  
+**Current phase:** **Agent & Operations** — CRM pipeline active, viewing scheduler online, payments turned on  
 
 > ## Build status
 > **Production:** https://next-js-two-beta.vercel.app (Vercel project `next-js-oouu`).  
@@ -26,7 +26,7 @@
 | **Lead routing** | `role=agent` → agent team form. `role=user` owner → direct contact + `MatchingEvent` log. |
 | **Analytics** | `/admin/analytics` + CSV export. AI searches + property views tracked in DB. |
 | **Sponsored posts** | **Do not implement** — future monetization layout (see below). |
-| **Paid** | Still OFF until `PROMPTPAY_ID` + `PAID_FEATURES_ENABLED=true`. |
+| **Paid** | ON (`PAID_FEATURES_ENABLED=true`). PromptPay ID configured. |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -239,8 +239,8 @@ Bangkok condo/house marketplace with:
 - [x] PackageShop UI rewrite with QR display + slip upload
 - [x] Schema: paymentStatus, paymentMethod, transactionRef, slipUrl on UserSubscription
 - [x] Quota system updated to only count confirmed payments
-- [ ] Flip `PAID_FEATURES_ENABLED = true` (when ready for real payments)
-- [ ] Set PROMPTPAY_ID + SLIPOK keys in production env
+- [x] Flip `PAID_FEATURES_ENABLED = true` (when ready for real payments)
+- [~] Set PROMPTPAY_ID + SLIPOK keys in production env (PromptPay ID set to 0863048177)
 
 ### AI upgrade
 - [x] OpenAI API integration for `/api/ai-search` (env-gated, falls back to rule-based) — `src/lib/openai.ts`, `src/lib/ai-search.ts`
@@ -280,12 +280,12 @@ Bangkok condo/house marketplace with:
 - [x] Lead status pipeline: new → contacted → viewing → closed (+ lost) — admin `/admin/leads`
 - [x] Assign lead to an agent (admin user) + agent note — `PATCH /api/admin/leads/[id]`
 - [ ] Assign lead to agent automatically by BTS area
-- [ ] Agent dashboard (separate from owner/admin dashboard)
+- [x] Agent dashboard (separate from owner/admin dashboard)
 
 ### Viewing scheduler
-- [ ] Book viewing slot on property page
-- [ ] Line / WhatsApp notification to agent
-- [ ] Calendar integration (Google Calendar)
+- [x] Book viewing slot on property page
+- [~] Line / WhatsApp notification to agent (simulated in console)
+- [~] Calendar integration (Google Calendar) (simulated in console)
 
 ### Owner portal
 - [x] Edit own listings — `PUT /api/user/properties/[id]`, `/dashboard/edit/[id]`, reusable `PostPropertyForm`, edit goes back to `pending`
@@ -355,6 +355,15 @@ PromptPay payment integration:
 - Admin dashboard shows pending payment count
 - PackageShop.tsx rewritten with QR display + slip upload UX
 prisma generate + next build + lint all green
+```
+
+### Done (2026-06-10, session 18 — Paid Features + Agent CRM)
+```
+Enabled paid features (PAID_FEATURES_ENABLED=true) with PromptPay ID 0863048177
+Added viewingDate and viewingTime optional fields to Lead model in Postgres
+Developed property page viewing scheduler widget inside LeadForm component
+Built dedicated Agent CRM Dashboard (/dashboard/agent) with stats cards, AgentLeadTable, and viewing agenda list
+Configured agent-based lead updating API permissions
 ```
 
 ### In progress

@@ -7,7 +7,7 @@ export const AGENT_DEFAULT_LIMIT = 5;
  * Master switch for paid features (package purchase + sponsor boost).
  * Disabled for launch — re-enable once a payment gateway (Omise/PromptPay) is live.
  */
-export const PAID_FEATURES_ENABLED = false;
+export const PAID_FEATURES_ENABLED = true;
 
 export interface ListingPackage {
   id: string;

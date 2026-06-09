@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/admin";
+import { requireAgentOrAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { LEAD_STATUSES } from "@/lib/lead-constants";
 
@@ -11,8 +11,23 @@ const VALID_STATUSES: string[] = LEAD_STATUSES.map((s) => s.value);
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
-    await requireAdmin();
+    const user = await requireAgentOrAdmin();
     const { id } = await context.params;
+    
+    // Find existing lead
+    const existingLead = await prisma.lead.findUnique({
+      where: { id },
+    });
+
+    if (!existingLead) {
+      return NextResponse.json({ error: "ไม่พบลีด" }, { status: 404 });
+    }
+
+    // Agent access control: agent can only edit leads assigned to themselves
+    if (user.role === "agent" && existingLead.assignedToId !== user.id) {
+      return NextResponse.json({ error: "ไม่มีสิทธิ์จัดการลีดนี้" }, { status: 403 });
+    }
+
     const body = (await request.json()) as {
       status?: string;
       assignedToId?: string | null;
@@ -33,6 +48,10 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     if (body.assignedToId !== undefined) {
+      // Agents cannot reassign leads
+      if (user.role === "agent") {
+        return NextResponse.json({ error: "เอเจนต์ไม่มีสิทธิ์มอบหมายลีด" }, { status: 403 });
+      }
       data.assignedToId = body.assignedToId || null;
     }
 
