@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  phone         String?   @unique
+  phoneVerified Boolean   @default(false)
+  email         String?   @unique
+  emailVerified Boolean   @default(false)
+  fullName      String
+  passwordHash  String
+  role          String    @default("user")
+  listingLimitOverride Int?
+  isThai        Boolean   @default(true)
+  lineVerified  Boolean   @default(false)
+  lineUserId    String?   @unique
+  idCardHash    String?   @unique
+  idVerified    Boolean   @default(false)
+  idSubmittedAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  properties    UserProperty[]
+  subscriptions UserSubscription[]
+  assignedLeads Lead[]             @relation("AgentLeads")
+}
+
+model PhoneOtp {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+}
+
+model EmailOtp {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model UserProperty {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug           String    @unique
+  title          String
+  description    String
+  listingType    String
+  propertyType   String    @default("condo")
+  price          Int
+  priceUnit      String
+  bedrooms       Int
+  bathrooms      Int
+  areaSqm        Float
+  floor          Int?
+  district       String
+  btsStation     String?
+  address        String
+  latitude       Float?
+  longitude      Float?
+  features       String    @default("[]")
+  images         String    @default("[]")
+  status         String    @default("pending")
+  isSponsored    Boolean   @default(false)
+  sponsoredUntil DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Lead {
+  id            String   @id @default(cuid())
+  name          String
+  phone         String?
+  email         String?
+  message       String
+  source        String   @default("contact")
+  propertySlug  String?
+  propertyTitle String?
+  btsStation    String?
+  status        String   @default("new")
+  assignedToId  String?
+  assignedTo    User?    @relation("AgentLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
+  agentNote     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([assignedToId])
+}
+
+model UserSubscription {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId       String
+  extraSlots      Int
+  pricePaid       Int
+  startsAt        DateTime @default(now())
+  expiresAt       DateTime
+  status          String   @default("active")
+  paymentStatus   String   @default("pending")
+  paymentMethod   String?
+  transactionRef  String?  @unique
+  slipUrl         String?
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentStatus])
+}

@@ -1,0 +1,98 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBlogPost } from "@/lib/blog";
+import { createMetadata, siteConfig } from "@/lib/seo";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
+  if (!post) return {};
+
+  return createMetadata({
+    title: post.seoTitle,
+    description: post.seoDescription,
+    path: `/blog/${slug}`,
+    keywords: [post.category],
+  });
+}
+
+function renderContent(content: string) {
+  return content.split("\n\n").map((block, i) => {
+    if (block.startsWith("**") && block.includes("**")) {
+      const title = block.replace(/\*\*/g, "").trim();
+      return (
+        <h2 key={i} className="mt-6 text-xl font-bold text-slate-900">
+          {title}
+        </h2>
+      );
+    }
+    const html = block
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n/g, "<br />");
+    return (
+      <p
+        key={i}
+        className="mt-3 leading-relaxed text-slate-700"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  });
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
+  if (!post) notFound();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.publishedAt,
+    author: { "@type": "Organization", name: siteConfig.name },
+    publisher: { "@type": "Organization", name: siteConfig.name },
+  };
+
+  return (
+    <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      <JsonLd data={jsonLd} />
+
+      <nav className="mb-6 text-sm text-slate-500">
+        <Link href="/blog" className="hover:text-teal-700">บทความ</Link>
+        {" / "}
+        <span className="text-slate-900">{post.title}</span>
+      </nav>
+
+      <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
+        {post.category}
+      </span>
+      <h1 className="mt-4 text-3xl font-bold text-slate-900">{post.title}</h1>
+      <p className="mt-2 text-slate-500">
+        {new Date(post.publishedAt).toLocaleDateString("th-TH")} · {post.readTime} นาทีอ่าน
+      </p>
+
+      <div className="prose mt-8 max-w-none">{renderContent(post.content)}</div>
+
+      <div className="mt-12 rounded-2xl bg-teal-50 p-6">
+        <h2 className="font-bold text-teal-900">พร้อมหาคอนโดแล้ว?</h2>
+        <p className="mt-2 text-teal-800">
+          ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง
+        </p>
+        <div className="mt-4 flex gap-3">
+          <Link href="/ai-search" className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white">
+            ค้นหาด้วย AI
+          </Link>
+          <Link href="/contact" className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800">
+            ติดต่อเรา
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
+}
