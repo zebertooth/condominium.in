@@ -124,11 +124,22 @@ const userSelect = {
   role: true,
 } as const;
 
-export async function getUserPropertyBySlug(slug: string): Promise<Property | null> {
+export async function getUserPropertyBySlug(
+  slug: string,
+  currentUser?: { id: string; role: string } | null
+): Promise<Property | null> {
   const p = await prisma.userProperty.findFirst({
-    where: { slug, status: "published" },
+    where: { slug },
     include: { user: { select: userSelect } },
   });
   if (!p) return null;
+
+  // If the property is not published, only the owner and admins can view it
+  if (p.status !== "published") {
+    if (!currentUser || (currentUser.role !== "admin" && p.userId !== currentUser.id)) {
+      return null;
+    }
+  }
+
   return dbPropertyToListing(p);
 }

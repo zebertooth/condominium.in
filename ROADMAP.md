@@ -227,7 +227,7 @@ Bangkok condo/house marketplace with:
 ### Real verification
 - [x] SMS OTP — ThaiBulkSMS (preferred) + Twilio fallback (`src/lib/notifications.ts`)
 - [x] Email OTP — Resend (console fallback in dev)
-- [ ] Remove `devCode` from API responses in production
+- [x] Remove `devCode` from API responses in production (gated by NODE_ENV !== "development")
 - [ ] Optional: ID card photo upload + admin manual review
 
 ### Real payments
