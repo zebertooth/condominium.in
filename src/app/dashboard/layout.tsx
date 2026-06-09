@@ -30,6 +30,14 @@ export default async function DashboardLayout({
           <Link href="/dashboard/verify" className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200">
             ยืนยันตัวตน
           </Link>
+          {(user.role === "agent" || user.role === "admin") && (
+            <Link
+              href="/dashboard/agent"
+              className="rounded-lg bg-teal-50 px-3 py-1.5 text-teal-700 hover:bg-teal-100 font-medium"
+            >
+              งานของฉัน (CRM)
+            </Link>
+          )}
           <LogoutButton />
         </nav>
       </div>

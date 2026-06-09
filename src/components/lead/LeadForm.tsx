@@ -31,6 +31,9 @@ export function LeadForm({
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState(defaultMessage);
+  const [isViewing, setIsViewing] = useState(false);
+  const [viewingDate, setViewingDate] = useState("");
+  const [viewingTime, setViewingTime] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
   const [error, setError] = useState("");
 
@@ -55,6 +58,8 @@ export function LeadForm({
           propertySlug,
           propertyTitle,
           btsStation,
+          viewingDate: isViewing ? viewingDate : undefined,
+          viewingTime: isViewing ? viewingTime : undefined,
         }),
       });
       const data = await res.json();
@@ -129,6 +134,57 @@ export function LeadForm({
           />
         </div>
       </div>
+
+      {source === "property" && (
+        <div className="rounded-xl border border-teal-100 bg-teal-50/50 p-4">
+          <label className="flex items-center gap-2 font-medium text-teal-800 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isViewing}
+              onChange={(e) => setIsViewing(e.target.checked)}
+              className="h-4 w-4 rounded border-teal-300 text-teal-600 focus:ring-teal-500"
+            />
+            <span>📅 ต้องการนัดเข้าชมทรัพย์จริง (Schedule Viewing)</span>
+          </label>
+
+          {isViewing && (
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-teal-700">วันที่สะดวกเข้าชม</label>
+                <input
+                  type="date"
+                  required
+                  min={new Date().toISOString().split("T")[0]}
+                  value={viewingDate}
+                  onChange={(e) => setViewingDate(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none ring-teal-500 focus:ring-2 text-sm text-slate-700"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-teal-700">เวลาที่สะดวก</label>
+                <select
+                  required
+                  value={viewingTime}
+                  onChange={(e) => setViewingTime(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none ring-teal-500 focus:ring-2 text-sm text-slate-700"
+                >
+                  <option value="">— เลือกเวลา —</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div>
         <label htmlFor="lead-message" className="block text-sm font-medium text-slate-700">

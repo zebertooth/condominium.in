@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { formatPrice, t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { getListingBySlug } from "@/lib/listings";
+import { getCurrentUser } from "@/lib/auth";
 import { createMetadata, siteConfig } from "@/lib/seo";
 
 interface PageProps {
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function PropertyPage({ params }: PageProps) {
   const { slug } = await params;
-  const [property, locale] = await Promise.all([getListingBySlug(slug), getLocale()]);
+  const currentUser = await getCurrentUser();
+  const [property, locale] = await Promise.all([getListingBySlug(slug, currentUser), getLocale()]);
   if (!property) notFound();
 
   const jsonLd = {
@@ -56,6 +58,16 @@ export default async function PropertyPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      {property.status && property.status !== "published" && (
+        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 flex items-center gap-2 shadow-sm font-medium">
+          <span>⚠️</span>
+          <span>
+            {locale === "en"
+              ? "This listing is currently pending approval (or rejected) and is only visible to you and the administrator."
+              : "ประกาศนี้อยู่ระหว่างรอการอนุมัติ (หรือถูกปฏิเสธ) จะมองเห็นได้เฉพาะคุณและแอดมินเท่านั้น"}
+          </span>
+        </div>
+      )}
       <PropertyViewTracker
         propertySlug={property.slug}
         propertyType={property.propertyType}

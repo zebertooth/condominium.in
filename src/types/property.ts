@@ -52,9 +52,13 @@ export interface AreaGuide {
   btsLine: string;
   btsStation: string;
   description: string;
+  descriptionEn?: string;
   seoTitle: string;
+  seoTitleEn?: string;
   seoDescription: string;
+  seoDescriptionEn?: string;
   highlights: string[];
+  highlightsEn?: string[];
   avgRentPrice: number;
   avgSalePrice: number;
 }
@@ -62,13 +66,19 @@ export interface AreaGuide {
 export interface BlogPost {
   slug: string;
   title: string;
+  titleEn?: string;
   excerpt: string;
+  excerptEn?: string;
   content: string;
+  contentEn?: string;
   category: string;
+  categoryEn?: string;
   publishedAt: string;
   readTime: number;
   seoTitle: string;
+  seoTitleEn?: string;
   seoDescription: string;
+  seoDescriptionEn?: string;
 }
 
 export interface SearchFilters {

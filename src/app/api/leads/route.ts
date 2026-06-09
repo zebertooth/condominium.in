@@ -52,6 +52,10 @@ export async function POST(request: Request) {
           const propertyTitle = parsed.data.propertyTitle ?? "ประกาศของคุณ";
           const visitorName = parsed.data.name;
           const visitorContact = [parsed.data.phone, parsed.data.email].filter(Boolean).join(" / ");
+          const viewingText = parsed.data.viewingDate
+            ? `\nต้องการนัดชมทรัพย์ในวันที่: ${parsed.data.viewingDate} เวลา: ${parsed.data.viewingTime ?? "ไม่ระบุ"}`
+            : "";
+
           void sendEmail(
             owner.email,
             `มีคนสนใจ: ${propertyTitle}`,
@@ -60,7 +64,7 @@ export async function POST(request: Request) {
               "",
               `${visitorName} สนใจประกาศ "${propertyTitle}" ของคุณและฝากข้อความไว้:`,
               "",
-              `"${parsed.data.message}"`,
+              `"${parsed.data.message}"${viewingText}`,
               "",
               `ช่องทางติดต่อ: ${visitorContact || "ไม่ระบุ"}`,
               "",
@@ -70,6 +74,14 @@ export async function POST(request: Request) {
             ].join("\n"),
           );
         }
+      }
+    } else {
+      // agent_team contact mode: simulate Line / WhatsApp notification to agent & Google Calendar integration
+      if (parsed.data.viewingDate) {
+        console.log(`[viewing-scheduler] SIMULATION:
+- LINE / WhatsApp Alert sent to Agent Team about viewing request for property "${parsed.data.propertyTitle}"
+- Details: Date ${parsed.data.viewingDate}, Time ${parsed.data.viewingTime ?? "not specified"}
+- Google Calendar API: Inserted viewing slot calendar event.`);
       }
     }
 

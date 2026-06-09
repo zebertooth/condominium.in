@@ -1211,6 +1211,8 @@ export const LeadScalarFieldEnum = {
   status: 'status',
   assignedToId: 'assignedToId',
   agentNote: 'agentNote',
+  viewingDate: 'viewingDate',
+  viewingTime: 'viewingTime',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

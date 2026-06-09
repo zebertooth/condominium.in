@@ -10,8 +10,11 @@ export async function getAllListings(): Promise<Property[]> {
   return [...userListings, ...staticProperties];
 }
 
-export async function getListingBySlug(slug: string): Promise<Property | undefined> {
-  const userListing = await getUserPropertyBySlug(slug);
+export async function getListingBySlug(
+  slug: string,
+  currentUser?: { id: string; role: string } | null
+): Promise<Property | undefined> {
+  const userListing = await getUserPropertyBySlug(slug, currentUser);
   if (userListing) return userListing;
   return staticProperties.find((p) => p.slug === slug);
 }
