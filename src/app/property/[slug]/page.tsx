@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LeadForm } from "@/components/lead/LeadForm";
+import { PropertyContactSection } from "@/components/property/PropertyContactSection";
 import { PropertyImageGallery } from "@/components/property/PropertyImageGallery";
 import { PropertyMap } from "@/components/property/PropertyMap";
+import { PropertyViewTracker } from "@/components/property/PropertyViewTracker";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { formatPrice, t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { getListingBySlug } from "@/lib/listings";
 import { createMetadata, siteConfig } from "@/lib/seo";
 
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function PropertyPage({ params }: PageProps) {
   const { slug } = await params;
-  const property = await getListingBySlug(slug);
+  const [property, locale] = await Promise.all([getListingBySlug(slug), getLocale()]);
   if (!property) notFound();
 
   const jsonLd = {
@@ -50,15 +52,24 @@ export default async function PropertyPage({ params }: PageProps) {
       : {}),
   };
 
+  const listingLabel = property.listingType === "rent" ? t("rent", locale) : t("sale", locale);
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <PropertyViewTracker
+        propertySlug={property.slug}
+        propertyType={property.propertyType}
+        listingType={property.listingType}
+        district={property.district}
+        btsStation={property.btsStation}
+      />
       <JsonLd data={jsonLd} />
 
       <nav className="mb-6 text-sm text-slate-500">
-        <Link href="/" className="hover:text-teal-700">หน้าแรก</Link>
+        <Link href="/" className="hover:text-teal-700">{t("home", locale)}</Link>
         {" / "}
         <Link href={property.listingType === "rent" ? "/rent" : "/buy"} className="hover:text-teal-700">
-          {property.listingType === "rent" ? "เช่า" : "ขาย"}
+          {listingLabel}
         </Link>
         {" / "}
         <span className="text-slate-900">{property.title}</span>
@@ -70,7 +81,7 @@ export default async function PropertyPage({ params }: PageProps) {
         <div>
           <div className="flex flex-wrap gap-2">
             <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
-              {property.listingType === "rent" ? "เช่า" : "ขาย"}
+              {listingLabel}
             </span>
             {property.btsStation && (
               <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800">
@@ -78,25 +89,30 @@ export default async function PropertyPage({ params }: PageProps) {
                 {property.distanceToBtsMeters ? ` (${property.distanceToBtsMeters}m)` : ""}
               </span>
             )}
+            {property.contactMode === "owner_direct" && (
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800">
+                {t("contactOwner", locale)}
+              </span>
+            )}
           </div>
 
           <h1 className="mt-4 text-3xl font-bold text-slate-900">{property.title}</h1>
           <p className="mt-2 text-3xl font-bold text-teal-700">
-            {formatPrice(property.price, property.priceUnit)}
+            {formatPrice(property.price, property.priceUnit, locale)}
           </p>
           <p className="mt-2 text-sm text-slate-600">{property.address}</p>
 
           <div className="mt-6 grid grid-cols-3 gap-4 rounded-xl bg-slate-50 p-4">
             <div>
-              <p className="text-sm text-slate-500">{t("bedrooms")}</p>
+              <p className="text-sm text-slate-500">{t("bedrooms", locale)}</p>
               <p className="text-lg font-semibold">{property.bedrooms}</p>
             </div>
             <div>
-              <p className="text-sm text-slate-500">{t("bathrooms")}</p>
+              <p className="text-sm text-slate-500">{t("bathrooms", locale)}</p>
               <p className="text-lg font-semibold">{property.bathrooms}</p>
             </div>
             <div>
-              <p className="text-sm text-slate-500">{t("sqm")}</p>
+              <p className="text-sm text-slate-500">{t("sqm", locale)}</p>
               <p className="text-lg font-semibold">{property.areaSqm}</p>
             </div>
           </div>
@@ -104,7 +120,7 @@ export default async function PropertyPage({ params }: PageProps) {
           <p className="mt-6 leading-relaxed text-slate-700">{property.description}</p>
 
           <div className="mt-6">
-            <h2 className="font-semibold text-slate-900">สิ่งอำนวยความสะดวก</h2>
+            <h2 className="font-semibold text-slate-900">{t("amenities", locale)}</h2>
             <ul className="mt-2 flex flex-wrap gap-2">
               {property.features.map((f) => (
                 <li key={f} className="rounded-lg bg-slate-100 px-3 py-1 text-sm text-slate-700">{f}</li>
@@ -112,14 +128,16 @@ export default async function PropertyPage({ params }: PageProps) {
             </ul>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/contact" className="rounded-xl bg-teal-600 px-6 py-3 font-medium text-white hover:bg-teal-700">
-              {t("scheduleViewing")}
-            </Link>
-            <Link href="/agents" className="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-800 hover:bg-slate-50">
-              {t("contactAgent")}
-            </Link>
-          </div>
+          {property.contactMode !== "owner_direct" && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/contact" className="rounded-xl bg-teal-600 px-6 py-3 font-medium text-white hover:bg-teal-700">
+                {t("scheduleViewing", locale)}
+              </Link>
+              <Link href="/agents" className="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-800 hover:bg-slate-50">
+                {t("contactAgent", locale)}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -127,22 +145,7 @@ export default async function PropertyPage({ params }: PageProps) {
         <PropertyMap latitude={property.latitude} longitude={property.longitude} address={property.address} />
       )}
 
-      <div className="mt-12 max-w-2xl">
-        <h2 className="text-2xl font-bold text-slate-900">สนใจทรัพย์นี้? นัดชมกับทีมเอเจนต์</h2>
-        <p className="mt-2 text-slate-600">
-          กรอกข้อมูลเพื่อให้ทีมงานติดต่อกลับ พาชมทรัพย์จริง และช่วยดูแลขั้นตอนเช่า-ซื้อ
-        </p>
-        <div className="mt-6">
-          <LeadForm
-            source="property"
-            propertySlug={property.slug}
-            propertyTitle={property.title}
-            btsStation={property.btsStation}
-            defaultMessage={`สนใจ "${property.title}" ต้องการสอบถามข้อมูลเพิ่มเติม / นัดชมทรัพย์`}
-            submitLabel="ส่งคำขอนัดชม"
-          />
-        </div>
-      </div>
+      <PropertyContactSection property={property} locale={locale} />
     </div>
   );
 }

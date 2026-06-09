@@ -13,7 +13,9 @@ export default async function AdminPropertiesPage({ searchParams }: PageProps) {
   const rows = await prisma.userProperty.findMany({
     where: filterStatus ? { status: filterStatus } : { status: { not: "deleted" } },
     orderBy: { createdAt: "desc" },
-    include: { user: { select: { fullName: true, phone: true, email: true } } },
+    include: {
+      user: { select: { id: true, fullName: true, phone: true, email: true, role: true } },
+    },
   });
 
   const properties = rows.map((p) => ({

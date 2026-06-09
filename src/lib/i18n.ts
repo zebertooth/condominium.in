@@ -1,15 +1,14 @@
-export type Locale = "th" | "zh" | "ja" | "ar";
+export type Locale = "th" | "en";
 
 export const defaultLocale: Locale = "th";
 
-export const locales: { code: Locale; label: string; dir: "ltr" | "rtl" }[] = [
-  { code: "th", label: "ไทย", dir: "ltr" },
-  { code: "zh", label: "中文", dir: "ltr" },
-  { code: "ja", label: "日本語", dir: "ltr" },
-  { code: "ar", label: "العربية", dir: "rtl" },
+/** Active UI locales — zh/ja/ar deferred to Phase 4 */
+export const activeLocales: { code: Locale; label: string }[] = [
+  { code: "th", label: "ไทย" },
+  { code: "en", label: "EN" },
 ];
 
-const translations = {
+const th = {
   siteName: "Condominium.in.th",
   tagline: "ตลาดคอนโดและบ้าน ซื้อ-เช่า ใกล้ BTS กรุงเทพฯ",
   buy: "ซื้อ",
@@ -31,6 +30,7 @@ const translations = {
   million: "ล้าน",
   scheduleViewing: "นัดชมทรัพย์",
   contactAgent: "ติดต่อเอเจนต์",
+  contactOwner: "ติดต่อเจ้าของโดยตรง",
   ownerTitle: "เจ้าของทรัพย์? ลงประกาศกับเรา",
   ownerDesc: "ทีมงานของเราจะช่วยถ่ายรูป จัดทำรายละเอียด และหาผู้เช่า/ผู้ซื้อให้คุณ",
   agentTitle: "ทีมเอเจนต์มืออาชีพ",
@@ -39,20 +39,154 @@ const translations = {
   aiDesc: "บอกความต้องการเป็นภาษาพูด AI จะวิเคราะห์ข้อมูลทุกประกาศและแนะนำทรัพย์ที่ตรงใจ",
   footerAbout:
     "Condominium.in.th คือแพลตฟอร์มซื้อ-เช่าคอนโดและบ้านในกรุงเทพฯ เน้นย่านใกล้ BTS พร้อมทีมเอเจนต์และ AI ค้นหาอัจฉริยะ",
+  propertyAgentHeading: "สนใจทรัพย์นี้? นัดชมกับทีมเอเจนต์",
+  propertyAgentDesc: "กรอกข้อมูลเพื่อให้ทีมงานติดต่อกลับ พาชมทรัพย์จริง และช่วยดูแลขั้นตอนเช่า-ซื้อ",
+  propertyOwnerHeading: "สนใจทรัพย์นี้? ติดต่อเจ้าของโดยตรง",
+  propertyOwnerDesc: "ประกาศนี้ลงโดยเจ้าของทรัพย์ คุณสามารถติดต่อได้โดยตรงผ่านช่องทางด้านล่าง",
+  ownerContactInfo: "ข้อมูลติดต่อเจ้าของ",
+  ownerInquiry: "ส่งข้อความถึงเจ้าของ",
+  logout: "ออกจากระบบ",
+  language: "ภาษา",
+  amenities: "สิ่งอำนวยความสะดวก",
+  home: "หน้าแรก",
+  sale: "ขาย",
+  dashboard: "แดชบอร์ด",
+  login: "เข้าสู่ระบบ",
+  noPropertiesFound: "ไม่พบประกาศที่ตรงเงื่อนไข ลองใช้ ค้นหาด้วย AI หรือติดต่อทีมเอเจนต์",
+  buyPageTitle: "ซื้อคอนโดและบ้าน",
+  buyPageDesc: "ประกาศขายคอนโดในกรุงเทพฯ เน้นย่านใกล้ BTS ใช้ AI ช่วยวิเคราะห์และแนะนำทรัพย์ที่ตรงงบและทำเล",
+  rentPageTitle: "เช่าคอนโดและบ้าน",
+  rentPageDesc: "ประกาศเช่าคอนโดใกล้ BTS ในกรุงเทพฯ AI ช่วยจับคู่ทรัพย์ตามงบ จำนวนห้องนอน และสถานีรถไฟฟ้า",
+  allSaleListings: "ประกาศขายทั้งหมด",
+  allRentListings: "ประกาศเช่าทั้งหมด",
+  heroSubtitle: "ตลาดคอนโดและบ้าน กรุงเทพฯ",
+  heroCta: "ซื้อ-เช่าคอนโดใกล้ BTS ค้นหาด้วย AI นัดชมจริงกับทีมเอเจนต์",
+  heroBadge1: "ใกล้ BTS อโศก เอกมัย สาทร",
+  heroBadge2: "ลงประกาศฟรีสำหรับเจ้าของ",
+  heroBadge3: "ทีมเอเจนต์พาไปชมทรัพย์จริง",
+  heroAiCta: "ลองค้นหาด้วย AI →",
+  heroListCta: "ลงประกาศฟรี →",
+  featuredDesc: "ประกาศคอนโดและบ้านยอดนิยม อัปเดตล่าสุด",
+  nearBtsDesc: "คู่มือย่านใกล้รถไฟฟ้า BTS สำหรับ SEO และช่วยเลือกทำเล",
+  rentAvgPrefix: "เช่าเฉลี่ย",
+  rentAvgSuffix: "/เดือน",
+  blogSection: "บทความแนะนำ",
+  blogSectionDesc: "เนื้อหา SEO ช่วยดึงทราฟฟิกจาก Google",
+  areasPageTitle: "ย่านใกล้รถไฟฟ้า BTS กรุงเทพฯ",
+  areasPageDesc: "คู่มือเลือกทำเลคอนโดและบ้านตามสถานี BTS ครอบคลุมทุกสาย",
+  avgRentPrice: "เช่าเฉลี่ย",
+  avgSalePrice: "ขายเฉลี่ย",
+  blogPageTitle: "บทความอสังหาริมทรัพย์",
+  blogPageDesc: "ความรู้ ข้อมูล และคำแนะนำด้านการซื้อ-เช่าคอนโดในกรุงเทพฯ",
+  readTime: "นาทีอ่าน",
+  filterType: "ประเภทการค้นหา",
+  filterDistrict: "เขต / ย่าน",
+  filterBts: "สถานี BTS",
+  filterMinPrice: "ราคาต่ำสุด",
+  filterMaxPrice: "ราคาสูงสุด",
+  filterBedrooms: "จำนวนห้องนอน",
+  filterSearch: "ค้นหา",
+  filterReset: "รีเซ็ต",
+  any: "ทั้งหมด",
 } as const;
 
-export type TranslationKey = keyof typeof translations;
+const en: Record<keyof typeof th, string> = {
+  siteName: "Condominium.in.th",
+  tagline: "Bangkok condos & homes — buy & rent near BTS",
+  buy: "Buy",
+  rent: "Rent",
+  aiSearch: "AI Search",
+  listProperty: "List for free",
+  agents: "Agents",
+  areas: "BTS Areas",
+  blog: "Blog",
+  contact: "Contact",
+  searchPlaceholder: "e.g. 2BR condo near BTS Asoke, budget 25,000",
+  featuredListings: "Featured listings",
+  nearBts: "Near BTS",
+  viewAll: "View all",
+  bedrooms: "Bedrooms",
+  bathrooms: "Bathrooms",
+  sqm: "sqm",
+  perMonth: "/mo",
+  million: "M",
+  scheduleViewing: "Schedule viewing",
+  contactAgent: "Contact agent",
+  contactOwner: "Contact owner directly",
+  ownerTitle: "Property owner? List with us",
+  ownerDesc: "Our team helps with photos, details, and finding tenants or buyers",
+  agentTitle: "Professional agents",
+  agentDesc: "Real viewings, expert advice, and support through closing",
+  aiTitle: "AI finds the right condo",
+  aiDesc: "Describe what you need in plain language — AI matches listings for you",
+  footerAbout:
+    "Condominium.in.th is a Bangkok buy & rent marketplace focused on BTS areas, with agent support and smart AI search.",
+  propertyAgentHeading: "Interested? Schedule with our agent team",
+  propertyAgentDesc: "Submit your details and our team will arrange a viewing and guide you through rent or purchase.",
+  propertyOwnerHeading: "Interested? Contact the owner directly",
+  propertyOwnerDesc: "This listing was posted by the property owner. Reach them directly using the details below.",
+  ownerContactInfo: "Owner contact",
+  ownerInquiry: "Message the owner",
+  logout: "Log out",
+  language: "Language",
+  amenities: "Amenities",
+  home: "Home",
+  sale: "Sale",
+  dashboard: "Dashboard",
+  login: "Log in",
+  noPropertiesFound: "No properties found. Try our AI Search or contact an agent.",
+  buyPageTitle: "Buy condos & homes",
+  buyPageDesc: "Bangkok properties for sale near BTS — use AI to find the right match for your budget and location.",
+  rentPageTitle: "Rent condos & homes",
+  rentPageDesc: "Bangkok condos for rent near BTS — AI matches listings by budget, bedrooms and BTS station.",
+  allSaleListings: "All properties for sale",
+  allRentListings: "All properties for rent",
+  heroSubtitle: "Bangkok condo & home marketplace",
+  heroCta: "Buy or rent condos near BTS — AI search, real viewings with our agent team",
+  heroBadge1: "Near BTS Asoke, Ekkamai, Sathorn",
+  heroBadge2: "Free listing for owners",
+  heroBadge3: "Agent team for real viewings",
+  heroAiCta: "Try AI Search →",
+  heroListCta: "List for free →",
+  featuredDesc: "Popular condos and homes — updated listings",
+  nearBtsDesc: "BTS area guides to help you choose the right location",
+  rentAvgPrefix: "Avg. rent",
+  rentAvgSuffix: "/mo",
+  blogSection: "Featured articles",
+  blogSectionDesc: "SEO content to help you make the right property decision",
+  areasPageTitle: "Bangkok BTS Area Guides",
+  areasPageDesc: "Find condos and homes by BTS station across all lines in Bangkok.",
+  avgRentPrice: "Avg. rent",
+  avgSalePrice: "Avg. sale",
+  blogPageTitle: "Real Estate Articles",
+  blogPageDesc: "Tips, guides and insights for buying and renting condos in Bangkok.",
+  readTime: "min read",
+  filterType: "Listing type",
+  filterDistrict: "District / Area",
+  filterBts: "BTS Station",
+  filterMinPrice: "Min price",
+  filterMaxPrice: "Max price",
+  filterBedrooms: "Bedrooms",
+  filterSearch: "Search",
+  filterReset: "Reset",
+  any: "Any",
+};
 
-export function t(key: TranslationKey): string {
-  return translations[key];
+const translations: Record<Locale, Record<keyof typeof th, string>> = { th, en };
+
+export type TranslationKey = keyof typeof th;
+
+export function t(key: TranslationKey, locale: Locale = defaultLocale): string {
+  return translations[locale][key] ?? translations.th[key];
 }
 
-export function formatPrice(price: number, unit: string): string {
+export function formatPrice(price: number, unit: string, locale: Locale = defaultLocale): string {
+  const loc = locale === "en" ? "en-US" : "th-TH";
   if (unit === "THB/month") {
-    return `฿${price.toLocaleString("th-TH")}${translations.perMonth}`;
+    return `฿${price.toLocaleString(loc)}${t("perMonth", locale)}`;
   }
   if (price >= 1_000_000) {
-    return `฿${(price / 1_000_000).toFixed(2)} ${translations.million}`;
+    return `฿${(price / 1_000_000).toFixed(2)} ${t("million", locale)}`;
   }
-  return `฿${price.toLocaleString("th-TH")}`;
+  return `฿${price.toLocaleString(loc)}`;
 }

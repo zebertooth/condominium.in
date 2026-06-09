@@ -389,6 +389,9 @@ export const ModelName = {
   EmailOtp: 'EmailOtp',
   UserProperty: 'UserProperty',
   Lead: 'Lead',
+  SearchEvent: 'SearchEvent',
+  PropertyViewEvent: 'PropertyViewEvent',
+  MatchingEvent: 'MatchingEvent',
   UserSubscription: 'UserSubscription'
 } as const
 
@@ -405,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "userSubscription"
+    modelProps: "user" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +782,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SearchEvent: {
+      payload: Prisma.$SearchEventPayload<ExtArgs>
+      fields: Prisma.SearchEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SearchEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SearchEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>
+        }
+        findFirst: {
+          args: Prisma.SearchEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SearchEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>
+        }
+        findMany: {
+          args: Prisma.SearchEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>[]
+        }
+        create: {
+          args: Prisma.SearchEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>
+        }
+        createMany: {
+          args: Prisma.SearchEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SearchEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>[]
+        }
+        delete: {
+          args: Prisma.SearchEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>
+        }
+        update: {
+          args: Prisma.SearchEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.SearchEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SearchEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SearchEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.SearchEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchEventPayload>
+        }
+        aggregate: {
+          args: Prisma.SearchEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSearchEvent>
+        }
+        groupBy: {
+          args: Prisma.SearchEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SearchEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SearchEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SearchEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    PropertyViewEvent: {
+      payload: Prisma.$PropertyViewEventPayload<ExtArgs>
+      fields: Prisma.PropertyViewEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PropertyViewEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PropertyViewEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>
+        }
+        findFirst: {
+          args: Prisma.PropertyViewEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PropertyViewEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>
+        }
+        findMany: {
+          args: Prisma.PropertyViewEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>[]
+        }
+        create: {
+          args: Prisma.PropertyViewEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>
+        }
+        createMany: {
+          args: Prisma.PropertyViewEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PropertyViewEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>[]
+        }
+        delete: {
+          args: Prisma.PropertyViewEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>
+        }
+        update: {
+          args: Prisma.PropertyViewEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.PropertyViewEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PropertyViewEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PropertyViewEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.PropertyViewEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PropertyViewEventPayload>
+        }
+        aggregate: {
+          args: Prisma.PropertyViewEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePropertyViewEvent>
+        }
+        groupBy: {
+          args: Prisma.PropertyViewEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PropertyViewEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PropertyViewEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PropertyViewEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    MatchingEvent: {
+      payload: Prisma.$MatchingEventPayload<ExtArgs>
+      fields: Prisma.MatchingEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MatchingEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MatchingEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>
+        }
+        findFirst: {
+          args: Prisma.MatchingEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MatchingEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>
+        }
+        findMany: {
+          args: Prisma.MatchingEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>[]
+        }
+        create: {
+          args: Prisma.MatchingEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>
+        }
+        createMany: {
+          args: Prisma.MatchingEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MatchingEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>[]
+        }
+        delete: {
+          args: Prisma.MatchingEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>
+        }
+        update: {
+          args: Prisma.MatchingEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.MatchingEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MatchingEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MatchingEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.MatchingEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchingEventPayload>
+        }
+        aggregate: {
+          args: Prisma.MatchingEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMatchingEvent>
+        }
+        groupBy: {
+          args: Prisma.MatchingEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MatchingEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MatchingEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MatchingEventCountAggregateOutputType> | number
+        }
+      }
+    }
     UserSubscription: {
       payload: Prisma.$UserSubscriptionPayload<ExtArgs>
       fields: Prisma.UserSubscriptionFieldRefs
@@ -977,9 +1202,12 @@ export const LeadScalarFieldEnum = {
   email: 'email',
   message: 'message',
   source: 'source',
+  contactMode: 'contactMode',
   propertySlug: 'propertySlug',
   propertyTitle: 'propertyTitle',
   btsStation: 'btsStation',
+  ownerUserId: 'ownerUserId',
+  posterRole: 'posterRole',
   status: 'status',
   assignedToId: 'assignedToId',
   agentNote: 'agentNote',
@@ -988,6 +1216,54 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const SearchEventScalarFieldEnum = {
+  id: 'id',
+  query: 'query',
+  listingType: 'listingType',
+  btsStation: 'btsStation',
+  district: 'district',
+  propertyType: 'propertyType',
+  filters: 'filters',
+  resultCount: 'resultCount',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type SearchEventScalarFieldEnum = (typeof SearchEventScalarFieldEnum)[keyof typeof SearchEventScalarFieldEnum]
+
+
+export const PropertyViewEventScalarFieldEnum = {
+  id: 'id',
+  propertySlug: 'propertySlug',
+  propertyType: 'propertyType',
+  listingType: 'listingType',
+  district: 'district',
+  btsStation: 'btsStation',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type PropertyViewEventScalarFieldEnum = (typeof PropertyViewEventScalarFieldEnum)[keyof typeof PropertyViewEventScalarFieldEnum]
+
+
+export const MatchingEventScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  propertySlug: 'propertySlug',
+  propertyTitle: 'propertyTitle',
+  ownerUserId: 'ownerUserId',
+  posterRole: 'posterRole',
+  leadId: 'leadId',
+  visitorName: 'visitorName',
+  visitorPhone: 'visitorPhone',
+  visitorEmail: 'visitorEmail',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type MatchingEventScalarFieldEnum = (typeof MatchingEventScalarFieldEnum)[keyof typeof MatchingEventScalarFieldEnum]
 
 
 export const UserSubscriptionScalarFieldEnum = {
@@ -1216,6 +1492,9 @@ export type GlobalOmitConfig = {
   emailOtp?: Prisma.EmailOtpOmit
   userProperty?: Prisma.UserPropertyOmit
   lead?: Prisma.LeadOmit
+  searchEvent?: Prisma.SearchEventOmit
+  propertyViewEvent?: Prisma.PropertyViewEventOmit
+  matchingEvent?: Prisma.MatchingEventOmit
   userSubscription?: Prisma.UserSubscriptionOmit
 }
 

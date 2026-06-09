@@ -37,7 +37,13 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const { url, provider } = await uploadImage(buffer, file.type);
     return NextResponse.json({ url, provider });
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === "CLOUDINARY_REQUIRED") {
+      return NextResponse.json(
+        { error: "ระบบอัปโหลดรูปยังไม่พร้อม กรุณาติดต่อผู้ดูแลระบบ" },
+        { status: 503 },
+      );
+    }
     return NextResponse.json({ error: "อัปโหลดรูปไม่สำเร็จ" }, { status: 500 });
   }
 }

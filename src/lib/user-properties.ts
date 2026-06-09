@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { isOwnerDirectListing } from "@/lib/matching";
 import type { Property } from "@/types/property";
 
 function slugify(text: string): string {
@@ -46,9 +47,29 @@ type DbProperty = {
   isSponsored: boolean;
   sponsoredUntil: Date | null;
   createdAt: Date;
+  user?: {
+    id?: string;
+    fullName: string;
+    phone: string | null;
+    email: string | null;
+    role?: string;
+  };
 };
 
 export function dbPropertyToListing(p: DbProperty): Property {
+  const poster =
+    p.user && p.user.id && p.user.role
+      ? {
+          userId: p.user.id,
+          fullName: p.user.fullName,
+          phone: p.user.phone ?? undefined,
+          email: p.user.email ?? undefined,
+          role: p.user.role,
+        }
+      : undefined;
+
+  const ownerDirect = poster ? isOwnerDirectListing(poster.role) : false;
+
   return {
     id: p.id,
     slug: p.slug,
@@ -74,6 +95,9 @@ export function dbPropertyToListing(p: DbProperty): Property {
     featured: p.isSponsored,
     publishedAt: p.createdAt.toISOString().slice(0, 10),
     status: p.status as Property["status"],
+    poster,
+    contactMode: ownerDirect ? "owner_direct" : "agent_team",
+    isUserListing: true,
   };
 }
 
@@ -92,9 +116,18 @@ export async function getAllPublishedUserProperties(): Promise<Property[]> {
   );
 }
 
+const userSelect = {
+  id: true,
+  fullName: true,
+  phone: true,
+  email: true,
+  role: true,
+} as const;
+
 export async function getUserPropertyBySlug(slug: string): Promise<Property | null> {
   const p = await prisma.userProperty.findFirst({
     where: { slug, status: "published" },
+    include: { user: { select: userSelect } },
   });
   if (!p) return null;
   return dbPropertyToListing(p);

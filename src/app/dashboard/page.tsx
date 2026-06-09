@@ -16,7 +16,34 @@ export default async function DashboardPage() {
     where: { userId: user.id, status: { not: "deleted" } },
     orderBy: { createdAt: "desc" },
   });
-  const properties = rows.map(dbPropertyToListing);
+  
+  // Fetch stats for all properties
+  const propertySlugs = rows.map((r) => r.slug);
+  const [views, inquiries] = await Promise.all([
+    prisma.propertyViewEvent.groupBy({
+      by: ["propertySlug"],
+      where: { propertySlug: { in: propertySlugs } },
+      _count: true,
+    }),
+    prisma.matchingEvent.groupBy({
+      by: ["propertySlug"],
+      where: {
+        propertySlug: { in: propertySlugs },
+        eventType: "owner_inquiry",
+      },
+      _count: true,
+    }),
+  ]);
+
+  const viewCountMap = Object.fromEntries(views.map((v) => [v.propertySlug, v._count]));
+  const inquiryCountMap = Object.fromEntries(inquiries.map((i) => [i.propertySlug, i._count]));
+
+  const properties = rows.map((row) => {
+    const p = dbPropertyToListing(row);
+    p.viewsCount = viewCountMap[p.slug] || 0;
+    p.inquiriesCount = inquiryCountMap[p.slug] || 0;
+    return p;
+  });
 
   return (
     <div className="space-y-8">

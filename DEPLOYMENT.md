@@ -1,122 +1,161 @@
 # DEPLOYMENT.md — Launching Condominium.in.th
 
-Step-by-step runbook to take the app from local SQLite to a live production deploy.
+Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
+**Current status (session 15):** Live on Vercel (`next-js-two-beta.vercel.app`). Neon migrated through `analytics_matching`. Custom domain pending.
+
 ---
 
-## 0. Pre-flight (local)
+## 0. Pre-flight (local against Neon)
 
-```bash
-npm run build     # must pass
-npm run lint      # must be clean
+```powershell
+cd C:\Users\NATTASIT\Projects\condominium
+
+# One-shot: clean empty migration dirs, generate, migrate deploy, seed
+powershell -ExecutionPolicy Bypass -File scripts\setup-neon.ps1
+
+# Or manually:
+npx prisma generate
+npm run db:deploy
+npm run db:seed
+
+npm run build
+npm run lint
+npm run dev
 ```
 
-Confirm these still work locally before touching production.
+Open http://localhost:3000 — homepage must load without `table User does not exist`.
+
+### Troubleshooting
+
+| Error | Fix |
+|-------|-----|
+| `table public.User does not exist` | Run `scripts/setup-neon.ps1` or `npm run db:deploy` + `db:seed` |
+| `P3015` missing migration.sql | Delete empty folders under `prisma/migrations/` (no `migration.sql` inside), then `db:deploy` |
+| `P1013` invalid database string | `DATABASE_URL` must start with `postgresql://` — check `.env` |
+| Provider mismatch sqlite/postgres | Run `npx prisma generate` after any schema provider change |
+| Module not found `@/generated/prisma/client` | Run `npx prisma generate` |
+
+**Fallback:** `npx prisma db push` then `npm run db:seed` (skips migration history).
 
 ---
 
-## 1. ~~Choose a production database~~ ✅ Neon (chosen)
+## 1. Database — Neon ✅ (provisioned)
 
-SQLite (`file:./prisma/dev.db`) does not work on Vercel/serverless — the filesystem is ephemeral.
-
-**Decision: Neon** — Serverless Postgres, generous free tier, scales to zero. Best fit for Vercel.
-
-1. Sign up at https://neon.tech
-2. Create a project + database
-3. Copy the connection string (looks like `postgresql://user:pass@host/db?sslmode=require`)
+- **Provider:** [Neon](https://neon.tech) — serverless Postgres, Singapore region
+- **Connection string:** in `.env` as `DATABASE_URL`
+- **Schema:** `prisma/schema.prisma` → `provider = "postgresql"` (no `url` line — Prisma 7 uses `prisma.config.ts`)
+- **Runtime:** `src/lib/db.ts` → `@prisma/adapter-pg` + `pg.Pool`
+- **Migration:** `prisma/migrations/20260609150000_init_postgres/migration.sql`
 
 ---
 
-## 2. ~~Switch Prisma to PostgreSQL~~ ✅ Done (session 9)
+## 2. GitHub (if not done)
 
-All code changes have been completed:
-- `prisma/schema.prisma` → provider = `"postgresql"`
-- `src/lib/db.ts` → `@prisma/adapter-pg` + `pg.Pool`
-- `prisma/seed.ts` → `PrismaPg` adapter
-- Dependencies: `@prisma/adapter-pg`, `pg` installed
-
-### Remaining: run migrations against Neon
-```bash
-# Set DATABASE_URL in .env to your Neon connection string first
-npx prisma migrate deploy        # applies existing migrations
-# or, if migration history needs a reset for the new provider:
-# npx prisma migrate dev --name init_postgres
-npm run db:seed                  # create the admin user
+```powershell
+git init
+git branch -M main
+git add .
+git commit -m "Initial commit — Condominium.in.th launch prep"
+git remote add origin https://github.com/YOUR_USER/condominium.git
+git push -u origin main
 ```
 
+> `.env` is gitignored — never commit secrets.
+
 ---
 
-## 3. Production environment variables
+## 3. Vercel deploy
 
-Set these in Vercel (Project → Settings → Environment Variables). Minimum to boot:
+**Option A — GitHub (recommended):** Connect `https://github.com/zebertooth/condominium.in` in Vercel dashboard → Import → set env vars → Deploy.
+
+**Option B — CLI:**
+```bash
+npx vercel login
+npx vercel link
+npx vercel --prod
+```
+
+**Build:** Vercel runs `vercel-build` automatically:
+```json
+"vercel-build": "prisma generate && prisma migrate deploy && next build"
+```
+
+**Health check after deploy:** `GET /api/health` → `{ "status": "ok", "database": "connected" }`
+
+Copy env template from `.env.example` when setting Vercel variables.
+
+---
+
+## 4. Production environment variables (Vercel)
+
+**Required:**
 
 ```env
-DATABASE_URL=postgresql://...        # from step 1
-AUTH_SECRET=<long random string>     # NOT the dev default
+DATABASE_URL=postgresql://...          # same Neon string (or separate prod branch)
+AUTH_SECRET=<long-random-string>     # NOT the dev default
 NODE_ENV=production
 ADMIN_EMAIL=admin@condominium.in.th
-ADMIN_PASSWORD=<strong password>
+ADMIN_PASSWORD=<strong-password>
 ```
 
-Enable features as keys become available (all optional — app degrades gracefully):
+**Enable when ready (all optional — app degrades gracefully):**
+
 ```env
-OPENAI_API_KEY=                      # LLM AI search (else rule-based)
-NEXT_PUBLIC_GA_ID=                   # GA4
-RESEND_API_KEY= / EMAIL_FROM=        # real email OTP
-THAIBULKSMS_API_KEY= / _API_SECRET= / _SENDER=   # real SMS (TH)
-CLOUDINARY_CLOUD_NAME= / _API_KEY= / _API_SECRET=  # cloud image upload
-LINE_LOGIN_CHANNEL_ID= / _CHANNEL_SECRET= / _CALLBACK_URL=  # LINE verify
-PROMPTPAY_ID=                        # PromptPay phone/citizen ID for QR (enables paid features)
-SLIPOK_API_KEY= / SLIPOK_BRANCH_ID=  # automated slip verification (else admin manual)
+OPENAI_API_KEY=
+NEXT_PUBLIC_GA_ID=
+RESEND_API_KEY=
+EMAIL_FROM=
+THAIBULKSMS_API_KEY=
+THAIBULKSMS_API_SECRET=
+THAIBULKSMS_SENDER=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+LINE_LOGIN_CHANNEL_ID=
+LINE_LOGIN_CHANNEL_SECRET=
+LINE_LOGIN_CALLBACK_URL=https://condominium.in.th/api/auth/line/callback
+PROMPTPAY_ID=
+SLIPOK_API_KEY=
+SLIPOK_BRANCH_ID=
 ```
 
-> `LINE_LOGIN_CALLBACK_URL` must be the **production** URL, e.g. `https://condominium.in.th/api/auth/line/callback`, and must be whitelisted in the LINE Developers console.
-
----
-
-## 4. Deploy to Vercel
-
-```bash
-# from the repo root
-vercel            # first run links/creates the project
-vercel --prod     # production deploy
-```
-Or connect the GitHub repo in the Vercel dashboard for auto-deploys on push.
-
-Build command is `npm run build` (already runs `prisma generate`). No special output config needed for Next.js.
+After `PROMPTPAY_ID` is set, flip `PAID_FEATURES_ENABLED = true` in `src/lib/packages.ts`.
 
 ---
 
 ## 5. DNS — point condominium.in.th
 
-1. In Vercel → Project → Domains, add `condominium.in.th` (and `www`).
-2. At your domain registrar, add the records Vercel shows (usually an `A` record to Vercel's IP or a `CNAME` to `cname.vercel-dns.com`).
-3. Wait for SSL to provision (automatic).
+1. Vercel → Project → Domains → add `condominium.in.th` and `www`
+2. At domain registrar, add DNS records Vercel shows (A or CNAME)
+3. Wait for SSL (automatic)
 
 ---
 
 ## 6. Post-deploy smoke test
 
 - [ ] Home, /buy, /rent, /property/[slug], /ai-search load
-- [ ] Register (Thai) → verify LINE + Email → post listing → admin approves → appears public
-- [ ] Register (non-Thai) → email verify → posting blocked notice
-- [ ] Admin login (`ADMIN_EMAIL`) → approve/reject + bulk + edit listing
-- [ ] `/sitemap.xml` and `/robots.txt` resolve
-- [ ] Rate limiting: hammering /api/ai-search returns 429 after the limit
-- [ ] Submit a lead from /contact → shows in /admin/leads
+- [ ] Register (Thai) → verify LINE + Email → post → admin approves → public
+- [ ] Register (non-Thai) → email verify → posting blocked
+- [ ] Admin login → approve/reject, bulk, edit listing
+- [ ] /admin/leads — lead from /contact appears
+- [ ] /sitemap.xml, /robots.txt
+- [ ] Image upload works (needs Cloudinary on Vercel)
+- [ ] Rate limit: /api/ai-search returns 429 when hammered
 
 ---
 
 ## 7. Known caveats
 
-- **Rate limiter is in-memory** (`src/lib/rate-limit.ts`) → per-instance on serverless. For strict global limits, move to Upstash Redis.
-- **Local image uploads** (`public/uploads`) don't persist on Vercel — configure Cloudinary before relying on uploads in prod.
-- **Paid features are OFF** (`PAID_FEATURES_ENABLED=false`); wire a payment gateway before flipping.
+- **Rate limiter** is in-memory (`src/lib/rate-limit.ts`) — per-instance on serverless. Use Upstash Redis for strict global limits.
+- **Local uploads** (`public/uploads`) don't persist on Vercel — configure Cloudinary.
+- **Paid features OFF** until `PAID_FEATURES_ENABLED=true` and `PROMPTPAY_ID` set.
+- **Rotate Neon password** if connection string was shared in chat.
 
 ---
 
 ## 8. Rollback
 
-- Vercel keeps previous deployments — promote an earlier one from the dashboard to roll back instantly.
-- DB migrations are forward-only; keep a backup/snapshot before `migrate deploy` on production data.
+- Vercel: promote previous deployment from dashboard.
+- DB: Neon supports point-in-time restore on paid plans; take snapshot before major migrations.

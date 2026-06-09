@@ -1,6 +1,14 @@
 export type ListingType = "sale" | "rent";
 export type PropertyType = "condo" | "house" | "townhouse" | "apartment";
 
+export interface ListingPoster {
+  userId: string;
+  fullName: string;
+  phone?: string;
+  email?: string;
+  role: string;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -28,6 +36,13 @@ export interface Property {
   status?: "pending" | "published" | "rejected" | "deleted";
   featured: boolean;
   publishedAt: string;
+  /** Set for user-submitted listings */
+  poster?: ListingPoster;
+  /** owner_direct when posted by non-agent; agent_team for agent/static listings */
+  contactMode?: "owner_direct" | "agent_team";
+  isUserListing?: boolean;
+  viewsCount?: number;
+  inquiriesCount?: number;
 }
 
 export interface AreaGuide {

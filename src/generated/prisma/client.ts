@@ -67,6 +67,21 @@ export type UserProperty = Prisma.UserPropertyModel
  */
 export type Lead = Prisma.LeadModel
 /**
+ * Model SearchEvent
+ * 
+ */
+export type SearchEvent = Prisma.SearchEventModel
+/**
+ * Model PropertyViewEvent
+ * 
+ */
+export type PropertyViewEvent = Prisma.PropertyViewEventModel
+/**
+ * Model MatchingEvent
+ * 
+ */
+export type MatchingEvent = Prisma.MatchingEventModel
+/**
  * Model UserSubscription
  * 
  */

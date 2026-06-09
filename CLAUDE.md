@@ -19,22 +19,19 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 9)
+## Model transfer snapshot (session 15)
 
-Quick state for the next AI model:
+| Item | Detail |
+|------|--------|
+| **Production** | Vercel: `https://next-js-two-beta.vercel.app` |
+| **DB** | Neon PostgreSQL. Migrations: `init_postgres`, `analytics_matching`. |
+| **i18n** | Cookie `condo_locale` (`th`/`en`). `LanguageSwitcher` in header. |
+| **Contact routing** | Agent listing → `LeadForm` (agent_team). Owner listing → `OwnerContactCard` + owner_direct lead. |
+| **Analytics** | `SearchEvent`, `PropertyViewEvent`, `MatchingEvent`. Admin: `/admin/analytics`. |
+| **Sponsored posts** | Planned only — do not implement until requested. |
+| **Next** | DNS, full EN copy, owner stats, flip paid when ready. |
 
-- Verified by user: migrate/build/lint passed after the latest schema changes.
-- Runtime DB stack now targets PostgreSQL (`schema.prisma` + `src/lib/db.ts` with `PrismaPg`).
-- Provider decision: Neon selected for production.
-- PromptPay flow implemented (purchase/sponsor create pending payment + QR; confirm via slip; admin payment review).
-- `PAID_FEATURES_ENABLED` still controls whether package/sponsor UI and APIs are active.
-- Launch policy remains: Thai = LINE+Email gate, non-Thai cannot post yet, phone OTP additive.
-
-Read order for the next model:
-1. `AGENTS.md` (handoff + priorities)
-2. `ROADMAP.md` (current phase + up next)
-3. This file (`CLAUDE.md`) for API/env/details
-4. `DEPLOYMENT.md` before production launch actions
+Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
 ---
 
@@ -45,8 +42,8 @@ Read order for the next model:
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript |
 | Styling | Tailwind CSS 4 |
-| Database | PostgreSQL via Prisma 7 (Neon for prod; SQLite migration complete) |
-| DB adapter | `@prisma/adapter-pg` (pg Pool) |
+| Database | PostgreSQL via Prisma 7 (Neon — ap-southeast-1) |
+| DB adapter | `@prisma/adapter-pg` (pg Pool) — URL in `prisma.config.ts` + `.env` |
 | Auth | JWT session cookie (`jose`) + `bcryptjs` |
 | Validation | Zod |
 | Fonts | Noto Sans Thai (Google Fonts) |
@@ -61,21 +58,31 @@ Read order for the next model:
 
 ```bash
 npm install
-npm run db:migrate    # apply Prisma migrations
-npm run db:seed       # create default admin user
+npx prisma generate   # regenerate client after schema changes
+npm run db:deploy     # apply migrations to Neon (production-safe)
+npm run db:seed       # create/update admin user
 npm run dev           # http://localhost:3000
 npm run build         # prisma generate + next build
 npm run lint
 ```
+
+**First-time Neon setup (Windows):**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup-neon.ps1
+```
+
+**If `P3015` (missing migration.sql):** delete empty folders under `prisma/migrations/` that lack `migration.sql`, then re-run `db:deploy`.
+
+**Fallback if migrate deploy fails:** `npx prisma db push` then `npm run db:seed`.
 
 ---
 
 ## Environment variables (`.env`)
 
 ```env
-DATABASE_URL="postgresql://user:pass@host/db?sslmode=require"
-# For local dev with SQLite, the project previously used: file:./prisma/dev.db
-# The schema now targets PostgreSQL — point this at a Neon instance
+DATABASE_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require"
+# Neon connection string — required for both local dev and production
+# URL is read by prisma.config.ts (migrate) and src/lib/db.ts (runtime)
 AUTH_SECRET="condominium-dev-secret-change-in-production"
 NODE_ENV="development"
 ADMIN_EMAIL="admin@condominium.in.th"
@@ -147,7 +154,7 @@ src/
 │   ├── analytics/          # GA4 Analytics
 │   ├── home/, layout/, seo/, ai/
 ├── lib/                    # Business logic (prefer adding here)
-│   ├── db.ts               # Prisma singleton (better-sqlite3 adapter)
+│   ├── db.ts               # Prisma singleton (@prisma/adapter-pg)
 │   ├── auth.ts             # Session, getCurrentUser, hashPassword/IdCard
 │   ├── admin.ts            # requireAdmin, getAdminUser, getAdminStats
 │   ├── validation.ts       # Zod schemas (register, property, lead, ...)
@@ -181,10 +188,10 @@ prisma/
 ## Data model (Prisma)
 
 ### User
-- `email?` (required at register for launch) + `phone?` (optional, SMS verify is next phase)
+- `email?` (required at register) + `phone?` (optional; SMS verify is additive, not a posting gate)
 - `isThai` (default true) — nationality, set at registration
 - `lineVerified`, `emailVerified` — Thai users need **both** to post (launch policy)
-- `phoneVerified` — reserved for next-phase SMS verification
+- `phoneVerified` — optional SMS step in verify flow (ThaiBulkSMS/Twilio)
 - `idVerified` + `idCardHash` — **no longer required** for posting (kept for future/admin use)
 - `role`: `"user"` | `"agent"` | `"admin"`
 - `listingLimitOverride?` — admin-set per-account listing cap (main control for agents)
@@ -192,19 +199,24 @@ prisma/
 
 ### Lead (Agent CRM)
 - Captured from contact form & property inquiry (`source`: contact/property/ai-search)
+- `contactMode`: `agent_team` (default) or `owner_direct` (owner-posted listings)
+- `ownerUserId`, `posterRole` — set for owner-direct inquiries
 - `status`: `new → contacted → viewing → closed | lost`
-- `assignedToId` → an admin/agent user; `agentNote` free text
 - Managed at `/admin/leads`
 
 ### UserProperty
 - Owner-submitted listings
 - `status`: `pending` → admin approves → `published` | `rejected` | `deleted`
-- `images`: JSON string array (URLs only, no file upload yet)
-- `latitude`, `longitude`: optional map coords
-- Default status on create: **`pending`**
+- `images`: JSON string array (Cloudinary URLs or `/uploads/*` local paths)
+- `isSponsored`, `sponsoredUntil`: for future sponsored placement (UI not built)
+- Poster `User.role` drives contact: `agent` → platform CRM; `user` → owner direct
+
+### SearchEvent / PropertyViewEvent / MatchingEvent
+- Analytics tables for admin dashboard + CSV export
+- Matching: `owner_contact_view`, `owner_phone_click`, `owner_email_click`, `owner_inquiry`
 
 ### UserSubscription
-- Paid packages for extra listing slots (payment is **mocked**)
+- Paid packages for extra listing slots (PromptPay QR + slip upload; gated by `PAID_FEATURES_ENABLED`)
 
 ### Static listings
 - `src/lib/properties.ts` — 6 demo listings, always merged in `src/lib/listings.ts`
@@ -216,7 +228,7 @@ prisma/
 ### Launch policy (current)
 - **Paid features OFF** — `PAID_FEATURES_ENABLED = false` in `src/lib/packages.ts` disables package purchase + sponsor (API returns 403, UI hidden). Flip to `true` once a payment gateway is live.
 - **ID verification removed** from the posting gate.
-- **SMS/phone verification deferred** to next phase (ThaiBulkSMS).
+- **SMS/phone verification is additive** — ThaiBulkSMS/Twilio wired; does not gate posting.
 
 ### Verification by role/nationality
 - **admin** — unlimited listings; no verification needed; can edit/check any user.
@@ -270,7 +282,11 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 | GET | `/api/auth/line/callback` | user | LINE OAuth callback → mark verified |
 | POST | `/api/auth/line/dev-verify` | user | Dev-only manual LINE verify |
 | POST | `/api/upload` | user | Image upload (Cloudinary or local) |
-| POST | `/api/leads` | — | Capture lead (contact/property) |
+| POST | `/api/leads` | — | Capture lead (contact/property; contactMode owner_direct/agent_team) |
+| POST | `/api/locale` | — | Set language cookie (th/en) |
+| POST | `/api/analytics/property-view` | — | Log property page view |
+| POST | `/api/analytics/matching` | — | Log owner contact interaction |
+| GET | `/api/admin/analytics/export` | admin | CSV export (searches/views/matching/leads) |
 | GET/POST | `/api/user/properties` | user | List / create property |
 | PUT | `/api/user/properties/[id]` | user | Edit own listing (resets to `pending`) |
 | DELETE | `/api/user/properties/[id]` | user | Soft-delete |
@@ -303,8 +319,8 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 - Metadata via `src/lib/seo.ts` → `createMetadata()`
 - JSON-LD in layout + property/blog pages
 - Dynamic sitemap: `src/app/sitemap.ts`
-- Area landing pages: `/areas/[slug]` (5 BTS stations)
-- Blog: 3 SEO articles in `src/lib/blog.ts`
+- Area landing pages: `/areas/[slug]` (9 BTS stations)
+- Blog: 5 SEO articles in `src/lib/blog.ts`
 
 ---
 
@@ -333,13 +349,18 @@ Done / env-gated (work in dev, need keys for prod):
 Partially done:
 - [~] SMS phone verification — ThaiBulkSMS + Twilio provider wired (`src/lib/notifications.ts`); phone OTP step is additive in verify flow (does not yet gate posting). Add `THAIBULKSMS_*` keys for prod.
 
-Not done yet (do not assume these exist):
-- [x] ~~Payment gateway (Omise / PromptPay)~~ **Done** — PromptPay QR + SlipOK; `PAID_FEATURES_ENABLED` still `false`
+**Deploy phase (current — see `DEPLOYMENT.md`):**
+- [ ] Neon tables applied (`db:deploy` + `db:seed` on user's machine)
+- [ ] GitHub repo + push to `main`
+- [ ] Vercel production deploy
+- [ ] DNS `condominium.in.th` → Vercel
+- [ ] Production env vars (`AUTH_SECRET`, `DATABASE_URL`, `ADMIN_*`, provider keys)
+
+**Post-deploy / Phase 3:**
+- [ ] Flip `PAID_FEATURES_ENABLED` when `PROMPTPAY_ID` set
 - [ ] Non-Thai user listing (blocked by policy for now)
-- [ ] ~~PostgreSQL production DB (SQLite only)~~ **Done** — schema + adapter swapped to PostgreSQL (Neon)
 - [ ] Viewing scheduler / agent dashboard
 - [ ] Multilingual pages (ZH, JA, AR)
-- [ ] Deployment to `condominium.in.th`
 - [ ] `middleware.ts` for auth
 
 ---
@@ -359,14 +380,13 @@ Edit `src/lib/packages.ts` — `FREE_PROPERTY_LIMIT`, `LISTING_PACKAGES`, `SPONS
 2. Replace or augment `src/lib/ai-search.ts`
 3. Keep `runAISearch()` async interface used by `/api/ai-search`
 
-### Migrate to PostgreSQL
-1. Change `datasource` in `schema.prisma`
-2. Swap SQLite adapter for `@prisma/adapter-pg` in `src/lib/db.ts`
-3. Run migrations on production DB
-
-### Deploy (Vercel)
-- SQLite file DB **does not work** on serverless — must migrate to PostgreSQL before production
-- Set `AUTH_SECRET`, `DATABASE_URL`, `ADMIN_EMAIL` in Vercel env
+### Deploy to production (current phase)
+See **`DEPLOYMENT.md`** for the full runbook. Summary:
+1. Confirm Neon tables: `scripts/setup-neon.ps1` or `npm run db:deploy` + `db:seed`
+2. `git init` + push to GitHub (if not done)
+3. `vercel --prod` with `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_*`
+4. Point `condominium.in.th` DNS to Vercel
+5. Add provider keys (LINE, Cloudinary, Resend, ThaiBulkSMS, PromptPay)
 
 ---
 

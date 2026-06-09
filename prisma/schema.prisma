@@ -92,9 +92,12 @@ model Lead {
   email         String?
   message       String
   source        String   @default("contact")
+  contactMode   String   @default("agent_team") // agent_team | owner_direct
   propertySlug  String?
   propertyTitle String?
   btsStation    String?
+  ownerUserId   String?
+  posterRole    String?
   status        String   @default("new")
   assignedToId  String?
   assignedTo    User?    @relation("AgentLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
@@ -104,6 +107,62 @@ model Lead {
 
   @@index([status])
   @@index([assignedToId])
+  @@index([contactMode])
+  @@index([ownerUserId])
+}
+
+model SearchEvent {
+  id           String   @id @default(cuid())
+  query        String
+  listingType  String?
+  btsStation   String?
+  district     String?
+  propertyType String?
+  filters      String   @default("{}")
+  resultCount  Int      @default(0)
+  source       String   @default("ai-search")
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([btsStation])
+  @@index([propertyType])
+  @@index([source])
+}
+
+model PropertyViewEvent {
+  id           String   @id @default(cuid())
+  propertySlug String
+  propertyType String?
+  listingType  String?
+  district     String?
+  btsStation   String?
+  source       String   @default("direct")
+  createdAt    DateTime @default(now())
+
+  @@index([propertySlug])
+  @@index([createdAt])
+  @@index([district])
+  @@index([propertyType])
+}
+
+model MatchingEvent {
+  id            String   @id @default(cuid())
+  eventType     String
+  propertySlug  String?
+  propertyTitle String?
+  ownerUserId   String?
+  posterRole    String?
+  leadId        String?
+  visitorName   String?
+  visitorPhone  String?
+  visitorEmail  String?
+  metadata      String   @default("{}")
+  createdAt     DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([propertySlug])
+  @@index([ownerUserId])
 }
 
 model UserSubscription {

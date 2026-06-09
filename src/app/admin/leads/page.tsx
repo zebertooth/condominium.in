@@ -26,6 +26,7 @@ export default async function AdminLeadsPage() {
     email: lead.email,
     message: lead.message,
     source: lead.source,
+    contactMode: lead.contactMode,
     propertySlug: lead.propertySlug,
     propertyTitle: lead.propertyTitle,
     btsStation: lead.btsStation,

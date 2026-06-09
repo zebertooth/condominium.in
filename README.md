@@ -2,75 +2,82 @@
 
 ตลาดคอนโดและบ้าน ซื้อ-เช่า ในกรุงเทพฯ เน้นย่านใกล้ BTS พร้อม AI ค้นหาอัจฉริยะและทีมเอเจนต์พาไปชมทรัพย์จริง
 
-## Features (Phase 1)
+**Production:** [next-js-two-beta.vercel.app](https://next-js-two-beta.vercel.app) · Domain `condominium.in.th` (DNS pending)
 
-- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า)
-- AI Search — บอกความต้องการเป็นภาษาพูด ระบบแนะนำทรัพย์
-- หน้าย่านใกล้ BTS (SEO landing pages)
-- บทความ SEO
-- **ลงประกาศด้วยตัวเอง** — ยืนยันเบอร์โทร + บัตรประชาชน, ลงฟรี 2 รายการ
-- **แพ็กเพิ่มประกาศ** — ฿100 = +4 ประกาศ / 30 วัน
-- **ประกาศเด่น (สปอนเซอร์)** — ฿50 / 7 วัน
-- หน้าทีมเอเจนต์
-- Sitemap, robots.txt, JSON-LD structured data
+## Features
+
+- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search
+- หน้าย่านใกล้ BTS (9 areas) + บทความ SEO (5 posts)
+- ลงประกาศด้วยตัวเอง — คนไทยยืนยัน LINE + อีเมล, ลงฟรี 2 รายการ
+- แอดมินอนุมัติประกาศ + bulk approve + แก้ไขประกาศ
+- Lead CRM — ฟอร์มติดต่อ + inquiry บนหน้าทรัพย์
+- Owner direct contact — ประกาศจากเจ้าของติดต่อได้โดยตรง (ไม่ใช่เอเจนต์)
+- Analytics admin — `/admin/analytics` + CSV export
+- ภาษา TH / EN — สลับได้ที่ header
+- PromptPay ชำระแพ็ก (ปิดอยู่จนกว่าจะตั้ง `PROMPTPAY_ID`)
+- Sitemap, robots.txt, JSON-LD, dynamic OG images
 
 ## Tech Stack
 
-- Next.js 16 (App Router)
-- TypeScript
-- Tailwind CSS 4
-- Thai-first (i18n structure ready for ZH, JA, AR)
+- Next.js 16 (App Router) + TypeScript + Tailwind CSS 4
+- PostgreSQL (Neon) + Prisma 7 + `@prisma/adapter-pg`
+- JWT auth, Zod validation, Thai-first UI
 
 ## Getting Started
 
-```bash
+### Prerequisites
+
+- Node.js 20+
+- Neon PostgreSQL database ([neon.tech](https://neon.tech) — free tier)
+- `DATABASE_URL` in `.env` (see `.env` example in `CLAUDE.md`)
+
+### Setup
+
+```powershell
 npm install
-npm run db:migrate   # สร้าง SQLite database
+
+# Create tables on Neon + seed admin user
+powershell -ExecutionPolicy Bypass -File scripts\setup-neon.ps1
+
 npm run dev
 ```
 
-### ทดสอบลงประกาศ
-
-1. ไปที่ `/register` สมัครด้วยเบอร์โทรหรืออีเมล
-2. ไปที่ `/dashboard/verify` — ยืนยัน OTP (โหมด dev แสดงรหัสบนหน้าจอ) + บัตรประชาชน
-3. ไปที่ `/dashboard/post` — เพิ่มรูปแกลเลอรี + ตำแหน่งแผนที่ แล้วส่งประกาศ
-4. แอดมินอนุมัติที่ `/admin/properties` ก่อนเผยแพร่บนเว็บ
-
-### Admin Panel
-
-```bash
-npm run db:seed   # สร้างแอดมินเริ่มต้น
-```
-
-- URL: `/admin`
-- Email: `admin@condominium.in.th`
-- Password: `admin123456` (เปลี่ยนใน `.env`)
-
-จัดการผู้ใช้ อนุมัติ/ปฏิเสธประกาศ และยืนยันบัตรประชาชน
-
 Open [http://localhost:3000](http://localhost:3000)
+
+### Admin login
+
+| Field | Value |
+|-------|-------|
+| URL | `/admin` |
+| Email | `admin@condominium.in.th` |
+| Password | `admin123456` (change in `.env`) |
+
+### Test flows
+
+**Thai user:** `/register` (คนไทย) → `/dashboard/verify` (LINE dev button + Email OTP) → `/dashboard/post` → `/admin/properties` (approve)
+
+**Non-Thai:** `/register` (Non-Thai) → verify email → posting blocked (by design)
+
+## Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint |
+| `npm run db:deploy` | Apply migrations to Neon |
+| `npm run db:seed` | Create/update admin user |
+| `scripts/setup-neon.ps1` | One-shot Neon setup (Windows) |
 
 ## Deploy
 
-Deploy to Vercel and point domain `condominium.in.th` to the deployment.
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for Vercel + DNS + production env vars.
 
-Set environment variables when adding real AI (Phase 2):
+## Documentation
 
-```
-OPENAI_API_KEY=your_key
-```
-
-## Roadmap
-
-| Doc | Audience |
-|-----|----------|
-| **[AGENTS.md](./AGENTS.md)** | AI agents — workflow & guardrails (read first) |
-| **[CLAUDE.md](./CLAUDE.md)** | Architecture & technical deep dive |
-| **[ROADMAP.md](./ROADMAP.md)** | Timeline, state tracker, priorities |
-
-| Phase | Status |
-|-------|--------|
-| 1 — Website, SEO, auth, admin, owner listings | Done |
-| 2 — Deploy, PostgreSQL, real AI, payments, OTP | Next |
-| 3 — Agent CRM, viewing scheduler | Planned |
-| 4 — Multilingual (ZH, JA, AR) | Planned |
+| File | Purpose |
+|------|---------|
+| [AGENTS.md](./AGENTS.md) | AI agent workflow + handoff |
+| [CLAUDE.md](./CLAUDE.md) | Architecture, API map, business rules |
+| [ROADMAP.md](./ROADMAP.md) | Phase status + what's next |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Production launch runbook |

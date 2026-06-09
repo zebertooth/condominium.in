@@ -4,32 +4,33 @@ import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { areaGuides } from "@/lib/areas";
 import { blogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { getFeaturedListings } from "@/lib/listings";
 
 export default async function HomePage() {
-  const featured = await getFeaturedListings();
+  const [featured, locale] = await Promise.all([getFeaturedListings(), getLocale()]);
 
   return (
     <>
-      <Hero />
+      <Hero locale={locale} />
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="mb-8 flex items-end justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">{t("featuredListings")}</h2>
-            <p className="mt-1 text-slate-600">ประกาศคอนโดและบ้านยอดนิยม อัปเดตล่าสุด</p>
+            <h2 className="text-2xl font-bold text-slate-900">{t("featuredListings", locale)}</h2>
+            <p className="mt-1 text-slate-600">{t("featuredDesc", locale)}</p>
           </div>
           <Link href="/rent" className="text-sm font-medium text-teal-700 hover:underline">
-            {t("viewAll")} →
+            {t("viewAll", locale)} →
           </Link>
         </div>
-        <PropertyGrid properties={featured} />
+        <PropertyGrid properties={featured} locale={locale} />
       </section>
 
       <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <h2 className="text-2xl font-bold text-slate-900">{t("nearBts")}</h2>
-          <p className="mt-1 text-slate-600">คู่มือย่านใกล้รถไฟฟ้า BTS สำหรับ SEO และช่วยเลือกทำเล</p>
+          <h2 className="text-2xl font-bold text-slate-900">{t("nearBts", locale)}</h2>
+          <p className="mt-1 text-slate-600">{t("nearBtsDesc", locale)}</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {areaGuides.map((area) => (
               <Link
@@ -38,10 +39,12 @@ export default async function HomePage() {
                 className="rounded-2xl border border-slate-200 p-5 transition hover:border-teal-300 hover:shadow-md"
               >
                 <p className="text-sm font-medium text-teal-700">BTS {area.btsStation}</p>
-                <h3 className="mt-1 text-lg font-bold text-slate-900">{area.name}</h3>
+                <h3 className="mt-1 text-lg font-bold text-slate-900">
+                  {locale === "en" ? area.nameEn : area.name}
+                </h3>
                 <p className="mt-2 line-clamp-2 text-sm text-slate-600">{area.description}</p>
                 <p className="mt-3 text-sm text-slate-500">
-                  เช่าเฉลี่ย ฿{area.avgRentPrice.toLocaleString("th-TH")}/เดือน
+                  {t("rentAvgPrefix", locale)} ฿{area.avgRentPrice.toLocaleString(locale === "en" ? "en-US" : "th-TH")}{t("rentAvgSuffix", locale)}
                 </p>
               </Link>
             ))}
@@ -52,24 +55,24 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-8 text-white">
-            <h2 className="text-2xl font-bold">{t("aiTitle")}</h2>
-            <p className="mt-3 text-violet-100">{t("aiDesc")}</p>
+            <h2 className="text-2xl font-bold">{t("aiTitle", locale)}</h2>
+            <p className="mt-3 text-violet-100">{t("aiDesc", locale)}</p>
             <Link
               href="/ai-search"
               className="mt-6 inline-block rounded-xl bg-white px-5 py-3 font-medium text-indigo-700 transition hover:bg-violet-50"
             >
-              ลองค้นหาด้วย AI →
+              {t("heroAiCta", locale)}
             </Link>
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-8">
-            <h2 className="text-2xl font-bold text-slate-900">{t("ownerTitle")}</h2>
-            <p className="mt-3 text-slate-600">{t("ownerDesc")}</p>
+            <h2 className="text-2xl font-bold text-slate-900">{t("ownerTitle", locale)}</h2>
+            <p className="mt-3 text-slate-600">{t("ownerDesc", locale)}</p>
             <Link
               href="/list-property"
               className="mt-6 inline-block rounded-xl bg-teal-600 px-5 py-3 font-medium text-white transition hover:bg-teal-700"
             >
-              ลงประกาศฟรี →
+              {t("heroListCta", locale)}
             </Link>
           </div>
         </div>
@@ -77,8 +80,8 @@ export default async function HomePage() {
 
       <section className="bg-slate-100 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <h2 className="text-2xl font-bold text-slate-900">บทความแนะนำ</h2>
-          <p className="mt-1 text-slate-600">เนื้อหา SEO ช่วยดึงทราฟฟิกจาก Google</p>
+          <h2 className="text-2xl font-bold text-slate-900">{t("blogSection", locale)}</h2>
+          <p className="mt-1 text-slate-600">{t("blogSectionDesc", locale)}</p>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {blogPosts.map((post) => (
               <Link

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logSearchEvent } from "@/lib/analytics";
 import { runAISearch } from "@/lib/ai-search";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import type { AISearchRequest } from "@/types/property";
@@ -27,6 +28,15 @@ export async function POST(request: Request) {
     }
 
     const result = await runAISearch(body);
+
+    void logSearchEvent({
+      query: body.query.trim(),
+      listingType: body.listingType,
+      resultCount: result.properties.length,
+      source: "ai-search",
+      filters: { engine: result.engine },
+    }).catch(() => {});
+
     return NextResponse.json(result);
   } catch {
     return NextResponse.json(

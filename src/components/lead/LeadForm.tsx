@@ -4,20 +4,28 @@ import { useState } from "react";
 
 interface LeadFormProps {
   source: "contact" | "property";
+  contactMode?: "agent_team" | "owner_direct";
+  ownerUserId?: string;
+  posterRole?: string;
   propertySlug?: string;
   propertyTitle?: string;
   btsStation?: string;
   defaultMessage?: string;
   submitLabel?: string;
+  successMessage?: string;
 }
 
 export function LeadForm({
   source,
+  contactMode = "agent_team",
+  ownerUserId,
+  posterRole,
   propertySlug,
   propertyTitle,
   btsStation,
   defaultMessage = "",
   submitLabel = "ส่งข้อความ",
+  successMessage = "ทีมงาน Condominium.in.th จะติดต่อกลับโดยเร็วที่สุด",
 }: LeadFormProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -41,6 +49,9 @@ export function LeadForm({
           email,
           message,
           source,
+          contactMode,
+          ownerUserId,
+          posterRole,
           propertySlug,
           propertyTitle,
           btsStation,
@@ -65,9 +76,7 @@ export function LeadForm({
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
         <p className="font-semibold text-green-800">ส่งข้อความเรียบร้อย</p>
-        <p className="mt-1 text-sm text-green-700">
-          ทีมงาน Condominium.in.th จะติดต่อกลับโดยเร็วที่สุด
-        </p>
+        <p className="mt-1 text-sm text-green-700">{successMessage}</p>
       </div>
     );
   }

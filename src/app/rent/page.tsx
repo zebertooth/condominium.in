@@ -1,5 +1,7 @@
 import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { PropertySearch } from "@/components/property/PropertySearch";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { createMetadata } from "@/lib/seo";
 import { filterListings } from "@/lib/listings";
 
@@ -12,14 +14,12 @@ export const metadata = createMetadata({
 });
 
 export default async function RentPage() {
-  const listings = await filterListings({ listingType: "rent" });
+  const [listings, locale] = await Promise.all([filterListings({ listingType: "rent" }), getLocale()]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">เช่าคอนโดและบ้าน</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">
-        ประกาศเช่าคอนโดใกล้ BTS ในกรุงเทพฯ AI ช่วยจับคู่ทรัพย์ตามงบ จำนวนห้องนอน และสถานีรถไฟฟ้า
-      </p>
+      <h1 className="text-3xl font-bold text-slate-900">{t("rentPageTitle", locale)}</h1>
+      <p className="mt-2 max-w-2xl text-slate-600">{t("rentPageDesc", locale)}</p>
 
       <div className="mt-8 max-w-3xl">
         <PropertySearch defaultType="rent" />
@@ -27,9 +27,9 @@ export default async function RentPage() {
 
       <div className="mt-12">
         <h2 className="mb-6 text-xl font-semibold text-slate-900">
-          ประกาศเช่าทั้งหมด ({listings.length})
+          {t("allRentListings", locale)} ({listings.length})
         </h2>
-        <PropertyGrid properties={listings} />
+        <PropertyGrid properties={listings} locale={locale} />
       </div>
     </div>
   );

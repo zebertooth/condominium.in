@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { getAdminUser } from "@/lib/admin";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -30,9 +31,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/payments" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
               การชำระเงิน
             </Link>
+            <Link href="/admin/analytics" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
+              วิเคราะห์ข้อมูล
+            </Link>
             <Link href="/" className="rounded-lg border border-slate-600 px-3 py-1.5 hover:bg-slate-800">
               กลับเว็บไซต์
             </Link>
+            <LogoutButton className="rounded-lg border border-red-400/60 px-3 py-1.5 text-red-200 hover:bg-red-950/50" />
           </nav>
         </div>
       </header>

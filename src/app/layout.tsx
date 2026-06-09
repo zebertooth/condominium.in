@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
 import { Analytics } from "@/components/analytics/Analytics";
+import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getLocale } from "@/lib/locale";
 import { createMetadata, siteConfig } from "@/lib/seo";
 import "./globals.css";
 
@@ -28,22 +30,26 @@ const organizationJsonLd = {
     "@type": "City",
     name: "Bangkok",
   },
-  availableLanguage: ["Thai", "Chinese", "Japanese", "Arabic"],
+  availableLanguage: ["Thai", "English"],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="th" className={`${notoSansThai.variable} h-full antialiased`}>
+    <html lang={locale} className={`${notoSansThai.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
-        <JsonLd data={organizationJsonLd} />
-        <Analytics />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <LocaleProvider locale={locale}>
+          <JsonLd data={organizationJsonLd} />
+          <Analytics />
+          <Header locale={locale} />
+          <main className="flex-1">{children}</main>
+          <Footer locale={locale} />
+        </LocaleProvider>
       </body>
     </html>
   );

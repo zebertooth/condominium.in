@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/i18n/LocaleProvider";
 
 interface PropertySearchProps {
   defaultType?: "sale" | "rent";
@@ -13,6 +13,7 @@ export function PropertySearch({
   defaultType = "rent",
   redirectTo = "/ai-search",
 }: PropertySearchProps) {
+  const t = useT();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [type, setType] = useState<"sale" | "rent">(defaultType);
@@ -22,6 +23,14 @@ export function PropertySearch({
     const params = new URLSearchParams();
     if (query) params.set("q", query);
     params.set("type", type);
+
+    // Log browse search event (fire-and-forget)
+    void fetch("/api/analytics/search-filter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ listingType: type, query: query || undefined }),
+    });
+
     router.push(`${redirectTo}?${params.toString()}`);
   }
 

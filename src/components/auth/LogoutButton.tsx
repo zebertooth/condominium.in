@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-export function LogoutButton() {
+export function LogoutButton({ className }: { className?: string }) {
   const router = useRouter();
 
   async function logout() {
@@ -15,7 +15,7 @@ export function LogoutButton() {
     <button
       type="button"
       onClick={logout}
-      className="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-50"
+      className={className ?? "rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-50"}
     >
       ออกจากระบบ
     </button>

@@ -16,13 +16,21 @@ export const LEAD_SOURCE_LABEL: Record<string, string> = {
   "ai-search": "AI ค้นหา",
 };
 
+export const LEAD_CONTACT_MODE_LABEL: Record<string, string> = {
+  agent_team: "ทีมเอเจนต์",
+  owner_direct: "เจ้าของโดยตรง",
+};
+
 export interface CreateLeadInput {
   name: string;
   phone?: string;
   email?: string;
   message: string;
   source: "contact" | "property" | "ai-search";
+  contactMode?: "agent_team" | "owner_direct";
   propertySlug?: string;
   propertyTitle?: string;
   btsStation?: string;
+  ownerUserId?: string;
+  posterRole?: string;
 }

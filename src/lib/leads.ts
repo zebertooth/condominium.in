@@ -16,9 +16,12 @@ export async function createLead(input: CreateLeadInput) {
       email: input.email?.toLowerCase().trim() || null,
       message: input.message.trim(),
       source: input.source,
+      contactMode: input.contactMode ?? "agent_team",
       propertySlug: input.propertySlug || null,
       propertyTitle: input.propertyTitle || null,
       btsStation: input.btsStation || null,
+      ownerUserId: input.ownerUserId || null,
+      posterRole: input.posterRole || null,
     },
   });
 }

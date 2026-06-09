@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LEAD_SOURCE_LABEL, LEAD_STATUSES, leadStatusLabel } from "@/lib/lead-constants";
+import {
+  LEAD_CONTACT_MODE_LABEL,
+  LEAD_SOURCE_LABEL,
+  LEAD_STATUSES,
+  leadStatusLabel,
+} from "@/lib/lead-constants";
 
 export interface LeadView {
   id: string;
@@ -12,6 +17,7 @@ export interface LeadView {
   email: string | null;
   message: string;
   source: string;
+  contactMode: string;
   propertySlug: string | null;
   propertyTitle: string | null;
   btsStation: string | null;
@@ -77,7 +83,11 @@ export function AdminLeadTable({
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-500">
-                {LEAD_SOURCE_LABEL[lead.source] ?? lead.source} · {lead.createdAt}
+                {LEAD_SOURCE_LABEL[lead.source] ?? lead.source}
+                {" · "}
+                {LEAD_CONTACT_MODE_LABEL[lead.contactMode] ?? lead.contactMode}
+                {" · "}
+                {lead.createdAt}
               </p>
             </div>
             <div className="text-right text-sm">

@@ -1,13 +1,13 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-09 (sessions 3–9)  
-**Current phase:** Launch prep (paid OFF, LINE+Email verify) + Phase 2/3 slices  
+**Last updated:** 2026-06-09 (session 15 — post-launch features)  
+**Current phase:** **Post-launch features** — deployed on Vercel; analytics, i18n TH/EN, owner contact done  
 
 > ## Build status
-> Migrate + build + lint were run successfully (User.isThai/lineVerified/lineUserId + Lead applied). ✅  
-> Sessions 6–9 are landed in codebase; session 9 includes Postgres + PromptPay integration.  
-> Agent shell instability may still appear in this environment, so the next model should ask the user to run build/lint if shell output is unavailable.
+> **Production:** https://next-js-two-beta.vercel.app (Vercel project `next-js-oouu`).  
+> **DB:** Neon PostgreSQL — migrations through `20260609180000_analytics_matching`.  
+> `npm run db:deploy` after pull if schema changed. `npm run build` must pass.
 
 > **LAUNCH POLICY (current):** Paid features OFF (`PAID_FEATURES_ENABLED=false`). ID verification removed. Thai users verify **LINE + Email** to post (2 free listings). Non-Thai users verify email only and **cannot post** yet. Phone/SMS verification is wired (ThaiBulkSMS) but **additive** (not a posting gate yet).
 
@@ -16,21 +16,25 @@
 
 ---
 
-## Model transfer snapshot (session 9)
+## Model transfer snapshot (session 15)
 
-Use this section when handing off to the next AI model.
+| Area | State |
+|------|--------|
+| **Production** | Vercel live. Custom domain `condominium.in.th` not pointed yet. |
+| **Database** | Neon + migrations: `init_postgres`, `analytics_matching`. |
+| **i18n** | TH + EN switcher (cookie). ZH/JA/AR disabled in UI. Many pages still Thai-only. |
+| **Lead routing** | `role=agent` → agent team form. `role=user` owner → direct contact + `MatchingEvent` log. |
+| **Analytics** | `/admin/analytics` + CSV export. AI searches + property views tracked in DB. |
+| **Sponsored posts** | **Do not implement** — future monetization layout (see below). |
+| **Paid** | Still OFF until `PROMPTPAY_ID` + `PAID_FEATURES_ENABLED=true`. |
 
-- Last verified by user: `npm run db:migrate`, `npm run build`, `npm run lint` all passed.
-- DB direction: PostgreSQL adapter (`@prisma/adapter-pg`) and Neon chosen.
-- Payments: PromptPay QR + slip verify flow implemented; still gated by `PAID_FEATURES_ENABLED` and `PROMPTPAY_ID`.
-- Launch policy unchanged: Thai requires LINE+Email to post, non-Thai blocked, SMS additive.
-- Immediate next operational step: production deploy (Neon connection string, Vercel env, DNS).
+**Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
-Next model startup order:
-1. Read `AGENTS.md` handoff block.
-2. Read `ROADMAP.md` "Up next" + "Blocked / needs decision".
-3. Read `CLAUDE.md` API map + env section.
-4. Ask user for any missing production credentials and proceed.
+**First commands (if app 500s on DB):**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup-neon.ps1
+npm run dev
+```
 
 ---
 
@@ -51,14 +55,16 @@ Bangkok condo/house marketplace with:
 | Phase | Focus | Status | Target |
 |-------|--------|--------|--------|
 | **1** | Website, SEO, MVP listings, auth, admin | **Done** | 2026 Q2 |
-| **Launch** | LINE+Email verify, paid OFF, deploy | **In progress** | 2026 Q2 |
-| **2** | Production infra, real AI, payments, SMS verify | Next | 2026 Q3 |
+| **Launch** | LINE+Email verify, paid OFF, Neon DB | **Done** | 2026 Q2 |
+| **Deploy** | Vercel + DNS + prod env vars | **Done** (live, DNS done) | 2026 Q2 |
+| **Post-launch** | Logout, i18n TH/EN, owner contact, analytics | **Done** | 2026 Q2 |
+| **2** | Real provider keys, flip paid, SEO scale, sponsored UI | **In Progress** | 2026 Q3 |
 | **3** | Agent CRM, owner portal, scheduling | Started | 2026 Q4 |
 | **4** | Multilingual (ZH, JA, AR) | Planned | 2027 Q1 |
 
 ---
 
-## Launch prep — Go-live without paid (CURRENT)
+## Launch prep — Go-live without paid (DONE)
 
 **Goal:** Ship the site to the public now; gather listings/leads without payments.
 
@@ -78,14 +84,67 @@ Bangkok condo/house marketplace with:
 - [x] PackageShop + sponsor button hidden in dashboard
 - [x] Quota ignores package slots while disabled
 
-### Next phase (in progress)
+### SMS (additive — done)
 - [x] ThaiBulkSMS provider in `src/lib/notifications.ts` (preferred for TH, Twilio fallback, console dev)
 - [x] Phone (SMS) OTP step re-added to verify flow for Thai users (additive)
 - [x] `THAIBULKSMS_*` env placeholders
-- [ ] Decide if phone verify should gate posting (currently optional/additive)
-- [ ] Add real ThaiBulkSMS keys + approved sender in prod
-- [ ] Enable listing for non-Thai users (policy decision)
-- [ ] Flip `PAID_FEATURES_ENABLED` once payment gateway is live
+- [x] Phone verify stays additive (not a posting gate) — policy decided
+- [ ] Add real ThaiBulkSMS keys + approved sender in prod (post-deploy)
+
+---
+
+## Deploy phase (ALMOST DONE)
+
+- [x] Vercel production deploy (`vercel --prod`, Node 24)
+- [x] `vercel-build` runs migrate deploy on build
+- [x] Health check `/api/health`
+- [~] Production env vars on Vercel (partial — verify `AUTH_SECRET`, `DATABASE_URL`)
+- [ ] Point DNS `condominium.in.th` to Vercel
+- [ ] LINE / Cloudinary / Resend / ThaiBulkSMS prod keys
+
+---
+
+## Post-launch features (DONE — session 15)
+
+### Admin UX
+- [x] Logout button in admin header (`LogoutButton` in `admin/layout.tsx`)
+
+### Localization (TH + EN only)
+- [x] Language switcher in public header (`LanguageSwitcher`, cookie `condo_locale`)
+- [x] `src/lib/i18n.ts` — Thai + English translation tables
+- [x] ZH / JA / AR hidden (deferred to Phase 4)
+- [~] Full EN coverage on all pages (hero, homepage, buy, rent pages done; blog, areas, admin still Thai)
+
+### Lead matching — owner vs agent
+- [x] Non-agent listings (`role !== agent`) → owner direct contact on property page
+- [x] `OwnerContactCard` — phone/email with click tracking
+- [x] `Lead.contactMode` — `owner_direct` | `agent_team`
+- [x] `MatchingEvent` model — logs views, clicks, inquiries
+- [x] Notify owner on inquiry via email (via `sendEmail` in `/api/leads`) — session 17
+- [x] Owner dashboard: inquiries + views per listing — session 16
+
+### Analytics & admin dashboard
+- [x] `SearchEvent` — AI search queries logged
+- [x] `PropertyViewEvent` — page views logged
+- [x] `/admin/analytics` — visual dashboard (bar charts)
+- [x] CSV export — searches, views, matching, leads (`/api/admin/analytics/export`)
+- [x] Browse/filter search logging — `/api/analytics/search-filter` + `PropertySearch` — session 17
+- [ ] Charts over custom date ranges
+
+---
+
+## Future: Sponsored posts & monetization (DO NOT IMPLEMENT YET)
+
+**User requirement:** When owners post, offer platform-managed premium packages and dedicated **Sponsored Posts** placement on homepage/search results.
+
+**Design notes for future agent:**
+- Reuse `UserProperty.isSponsored` + `sponsoredUntil` (already in schema)
+- Dedicated homepage carousel / sidebar slot above organic listings
+- Post-submit upsell flow in `/dashboard/post` after listing created
+- Flip `PAID_FEATURES_ENABLED` + `PROMPTPAY_ID` before enabling purchase UI
+- Analytics: track sponsored impression/click rates in `PropertyViewEvent.source`
+
+**Status:** Documented only. No UI/layout work until user explicitly requests.
 
 ---
 
@@ -137,9 +196,9 @@ Bangkok condo/house marketplace with:
 - [x] Role-based access (`role: admin`)
 
 ### Database
-- [x] Prisma 7 + SQLite (local dev)
-- [x] Models: User, UserProperty, UserSubscription, PhoneOtp, EmailOtp
-- [x] Migrations in `prisma/migrations/`
+- [x] Prisma 7 + PostgreSQL (Neon) — migrated from SQLite in session 11–12
+- [x] Models: User, UserProperty, UserSubscription, PhoneOtp, EmailOtp, Lead
+- [x] Migrations in `prisma/migrations/` (Postgres: `20260609150000_init_postgres`)
 
 ### Not in Phase 1 (intentionally deferred)
 - [-] Production deployment
@@ -150,16 +209,19 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 2 — Production & Intelligence (NEXT)
+## Phase 2 — Production & Intelligence (AFTER DEPLOY)
 
-**Goal:** Deploy to `condominium.in.th`, real verification, real AI, real payments.
+**Goal:** Real provider keys in production, flip paid features, scale SEO & AI.
 
-### Infrastructure
-- [x] Migrate SQLite → PostgreSQL (Neon) — schema + adapter + seed updated (session 9)
+### Infrastructure (deploy items → see Deploy phase above)
+- [x] Migrate SQLite → PostgreSQL (Neon) — schema + adapter + seed (sessions 9, 11–12)
 - [x] Update `src/lib/db.ts` for `@prisma/adapter-pg`
-- [ ] Deploy to Vercel (or similar)
-- [ ] Point DNS `condominium.in.th`
-- [ ] Production env vars (`AUTH_SECRET`, `DATABASE_URL`)
+- [x] Neon project provisioned (Singapore); `DATABASE_URL` in `.env`
+- [x] Fresh Postgres migration `20260609150000_init_postgres` + `scripts/setup-neon.ps1`
+- [~] Apply migrations to Neon (`prisma migrate deploy` + `db:seed`) — user may still need to run
+- [ ] Deploy to Vercel → **moved to Deploy phase**
+- [ ] Point DNS `condominium.in.th` → **moved to Deploy phase**
+- [ ] Production env vars on Vercel → **moved to Deploy phase**
 - [x] File storage for images — `src/lib/storage.ts` (Cloudinary signed upload + local-disk dev fallback), `POST /api/upload`, drag-to-upload UI in `ImageGalleryInput`
 
 ### Real verification
@@ -297,8 +359,33 @@ prisma generate + next build + lint all green
 
 ### In progress
 ```
-(none in flight)
-NEXT: Vercel deployment + DNS + Neon database provisioning (requires user's Neon connection string)
+1. Prod integration keys (LINE, Cloudinary, Resend, ThaiBulkSMS)
+2. Remaining EN translations: blog, areas, admin pages
+```
+
+### Done (2026-06-10, session 17 — Phase 2 i18n + notifications + analytics)
+```
+EN translations expanded: hero, homepage, buy, rent pages, areas section, CTA buttons
+i18n keys added for buy/rent/hero/homepage/blog/areas/search-filters (35+ new keys)
+Owner inquiry email notification (sendEmail fires on owner_direct lead — /api/leads)
+Browse filter search event logging (/api/analytics/search-filter + PropertySearch)
+```
+
+### Done (2026-06-09, session 16 — dashboard stats & partial i18n)
+```
+DNS condominium.in.th pointed to Vercel
+Owner listing stats in dashboard (views & inquiries count in MyProperties)
+Added EN translation keys (dashboard, login, property card types)
+```
+
+### Done (2026-06-09, session 15 — post-launch features)
+```
+Admin logout button
+TH/EN language switcher (zh/ja/ar hidden)
+Owner direct contact for non-agent listings + MatchingEvent logging
+SearchEvent + PropertyViewEvent analytics models
+/admin/analytics dashboard + CSV export
+Migration 20260609180000_analytics_matching
 ```
 
 ### Done (2026-06-09, session 3 — launch prep)
@@ -358,29 +445,58 @@ Applied to /api/ai-search (20/min/IP), /api/leads (5/min/IP), OTP senders (3/5mi
 DEPLOYMENT.md runbook (Postgres migration + Vercel checklist)
 ```
 
-### Up next (recommended order)
+### Done (2026-06-09, session 11–12 — Neon live)
 ```
-1. PRODUCTION LAUNCH (Postgres swap DONE — remaining steps):
-   - Provision Neon database + set DATABASE_URL in Vercel env
-   - Run prisma migrate deploy (or migrate dev --name init_postgres) against Neon
-   - npm run db:seed on production
-   - Deploy to Vercel + point condominium.in.th DNS
-   - Set prod env vars (AUTH_SECRET, ADMIN_*, PROMPTPAY_ID)
-2. Flip PAID_FEATURES_ENABLED = true (once PROMPTPAY_ID is set)
-3. Create real LINE Login channel; set LINE_LOGIN_* (+ prod callback URL)
-4. Add real keys to prod env (OPENAI / RESEND / THAIBULKSMS / CLOUDINARY / SLIPOK)
-5. Decide if phone verify should gate posting; enable non-Thai listing (policy)
-6. Phase 3 cont.: agent dashboard, auto-assign by BTS area, viewing scheduler
-7. Optional code: owner listing view-stats, admin audit log, AI listing summaries
+Neon PostgreSQL provisioned (ap-southeast-1, user connection string in .env)
+schema.prisma → postgresql (Prisma 7: url only in prisma.config.ts)
+db.ts + seed.ts → @prisma/adapter-pg + pg.Pool
+Removed old SQLite migration SQL; added 20260609150000_init_postgres
+scripts/setup-neon.ps1 + npm run db:deploy
+Fixed PrismaBetterSqlite3 → PrismaBetterSqlite3 naming during SQLite hotfix (reverted to pg)
 ```
 
-### Blocked / needs decision (for next model — ask the user)
+### Done (2026-06-09, session 13 — docs handoff)
 ```
-- DB provider: Neon CHOSEN ✓ — user needs to provision the database + provide connection string
-- Payment provider: PromptPay direct DONE ✓ — need PROMPTPAY_ID + flip PAID_FEATURES_ENABLED
-- Should phone (SMS) verification be REQUIRED to post, or stay additive? (user chose additive for now)
-- When to allow non-Thai users to post listings (currently blocked by policy)
-- Production API keys: OPENAI / RESEND / THAIBULKSMS / CLOUDINARY / LINE_LOGIN_* / SLIPOK
+All markdown docs updated for Deploy phase:
+- Launch prep marked DONE; new Deploy phase section in ROADMAP
+- DEPLOYMENT.md runbook (Neon setup, Vercel, DNS, smoke test)
+- README.md refreshed (Neon, LINE+Email verify, doc links)
+- CLAUDE.md: removed stale SQLite refs; deploy as current task
+- AGENTS.md handoff → session 13 Deploy phase
+```
+
+### Up next (recommended order — DEPLOY PHASE)
+```
+1. LOCAL NEON SETUP (if not done):
+   powershell -ExecutionPolicy Bypass -File scripts\setup-neon.ps1
+   npm run dev  → confirm homepage loads, admin login works
+
+2. VERCEL DEPLOY (see DEPLOYMENT.md):
+   - Push repo to GitHub (git init + remote if needed)
+   - vercel link + vercel --prod
+   - Set env: DATABASE_URL, AUTH_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
+   - Run prisma migrate deploy against prod Neon (or same DB)
+   - npm run db:seed on production Neon
+
+3. DNS: point condominium.in.th to Vercel
+
+4. POST-DEPLOY INTEGRATIONS:
+   - LINE_LOGIN_* (prod callback URL)
+   - CLOUDINARY_* (image uploads on Vercel)
+   - RESEND / THAIBULKSMS for real OTP
+   - PROMPTPAY_ID + SLIPOK → flip PAID_FEATURES_ENABLED
+
+5. PHASE 3: agent dashboard, viewing scheduler, listing view-stats
+```
+
+### Blocked / needs decision
+```
+- Neon tables applied? User must run setup-neon.ps1 if 500 / User table missing
+- GitHub repo + Vercel project not created yet (user had no git installed earlier)
+- PROMPTPAY_ID not set → paid features stay OFF
+- LINE_LOGIN prod channel not configured
+- Phone verify: stay additive (user chose) vs required later
+- Non-Thai listing: still blocked by policy
 ```
 
 ---
@@ -425,6 +541,13 @@ DEPLOYMENT.md runbook (Postgres migration + Vercel checklist)
 | 2026-06-09 | PromptPay QR via promptpay-qr + qrcode libs | Zero-cost EMVCo-compliant QR; no API dependency |
 | 2026-06-09 | SlipOK for automated slip verification | Free 100/month; admin manual fallback when not configured |
 | 2026-06-09 | Pending payment → slip upload → verify/admin review flow | No real-time webhook from Thai banks; slip is the standard approach |
+| 2026-06-09 | Neon Postgres as sole DB (dev + prod) | User provisioned Neon; SQLite retired after migration churn |
+| 2026-06-09 | Prisma 7: `url` only in `prisma.config.ts`, not `schema.prisma` | Required by Prisma 7 config model |
+| 2026-06-09 | `scripts/setup-neon.ps1` for one-shot Neon table creation | Fixes empty migration dirs (P3015) + migrate deploy + seed |
+| 2026-06-09 | TH/EN only for i18n launch; ZH/JA/AR hidden | User scope; full multilingual deferred |
+| 2026-06-09 | Owner direct contact when `poster.role !== agent` | Agent listings use platform CRM; owners contacted directly |
+| 2026-06-09 | Analytics in Postgres (not GA4-only) | Admin dashboard + CSV; works without `NEXT_PUBLIC_GA_ID` |
+| 2026-06-09 | Sponsored posts UI deferred | User asked to plan only; schema fields exist |
 
 ---
 

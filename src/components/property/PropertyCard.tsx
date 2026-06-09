@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice, t } from "@/lib/i18n";
+import { formatPrice, t, type Locale, defaultLocale } from "@/lib/i18n";
 import type { Property } from "@/types/property";
 
-export function PropertyCard({ property }: { property: Property }) {
+export function PropertyCard({ property, locale = defaultLocale }: { property: Property; locale?: Locale }) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
       <Link href={`/property/${property.slug}`} className="block">
@@ -17,7 +17,7 @@ export function PropertyCard({ property }: { property: Property }) {
           />
           <div className="absolute left-3 top-3 flex gap-2">
             <span className="rounded-full bg-teal-600 px-2.5 py-1 text-xs font-medium text-white">
-              {property.listingType === "rent" ? "เช่า" : "ขาย"}
+              {property.listingType === "rent" ? t("rent", locale) : t("sale", locale)}
             </span>
             {property.btsStation && (
               <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-slate-800">

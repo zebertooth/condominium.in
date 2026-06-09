@@ -119,9 +119,12 @@ export const leadSchema = z
     email: z.string().optional(),
     message: z.string().min(5, "กรุณากรอกข้อความอย่างน้อย 5 ตัวอักษร"),
     source: z.enum(["contact", "property", "ai-search"]).default("contact"),
+    contactMode: z.enum(["agent_team", "owner_direct"]).optional(),
     propertySlug: z.string().optional(),
     propertyTitle: z.string().optional(),
     btsStation: z.string().optional(),
+    ownerUserId: z.string().optional(),
+    posterRole: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const phone = data.phone?.trim() ?? "";

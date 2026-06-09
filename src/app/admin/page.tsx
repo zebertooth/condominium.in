@@ -9,6 +9,7 @@ export default async function AdminDashboardPage() {
     { label: "ประกาศเผยแพร่", value: stats.properties, href: "/admin/properties?status=published" },
     { label: "รออนุมัติ", value: stats.pendingProperties, href: "/admin/properties?status=pending", highlight: true },
     { label: "ลีดใหม่", value: stats.newLeads, href: "/admin/leads", highlight: stats.newLeads > 0 },
+    { label: "วิเคราะห์ข้อมูล", value: "→", href: "/admin/analytics" },
     { label: "รอตรวจชำระเงิน", value: stats.pendingPayments, href: "/admin/payments", highlight: stats.pendingPayments > 0 },
     { label: "รอยืนยันบัตร", value: stats.pendingVerifications, href: "/admin/users" },
   ];

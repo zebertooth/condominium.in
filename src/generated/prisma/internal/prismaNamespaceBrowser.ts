@@ -56,6 +56,9 @@ export const ModelName = {
   EmailOtp: 'EmailOtp',
   UserProperty: 'UserProperty',
   Lead: 'Lead',
+  SearchEvent: 'SearchEvent',
+  PropertyViewEvent: 'PropertyViewEvent',
+  MatchingEvent: 'MatchingEvent',
   UserSubscription: 'UserSubscription'
 } as const
 
@@ -160,9 +163,12 @@ export const LeadScalarFieldEnum = {
   email: 'email',
   message: 'message',
   source: 'source',
+  contactMode: 'contactMode',
   propertySlug: 'propertySlug',
   propertyTitle: 'propertyTitle',
   btsStation: 'btsStation',
+  ownerUserId: 'ownerUserId',
+  posterRole: 'posterRole',
   status: 'status',
   assignedToId: 'assignedToId',
   agentNote: 'agentNote',
@@ -171,6 +177,54 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const SearchEventScalarFieldEnum = {
+  id: 'id',
+  query: 'query',
+  listingType: 'listingType',
+  btsStation: 'btsStation',
+  district: 'district',
+  propertyType: 'propertyType',
+  filters: 'filters',
+  resultCount: 'resultCount',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type SearchEventScalarFieldEnum = (typeof SearchEventScalarFieldEnum)[keyof typeof SearchEventScalarFieldEnum]
+
+
+export const PropertyViewEventScalarFieldEnum = {
+  id: 'id',
+  propertySlug: 'propertySlug',
+  propertyType: 'propertyType',
+  listingType: 'listingType',
+  district: 'district',
+  btsStation: 'btsStation',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type PropertyViewEventScalarFieldEnum = (typeof PropertyViewEventScalarFieldEnum)[keyof typeof PropertyViewEventScalarFieldEnum]
+
+
+export const MatchingEventScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  propertySlug: 'propertySlug',
+  propertyTitle: 'propertyTitle',
+  ownerUserId: 'ownerUserId',
+  posterRole: 'posterRole',
+  leadId: 'leadId',
+  visitorName: 'visitorName',
+  visitorPhone: 'visitorPhone',
+  visitorEmail: 'visitorEmail',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type MatchingEventScalarFieldEnum = (typeof MatchingEventScalarFieldEnum)[keyof typeof MatchingEventScalarFieldEnum]
 
 
 export const UserSubscriptionScalarFieldEnum = {

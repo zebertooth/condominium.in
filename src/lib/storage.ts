@@ -76,6 +76,10 @@ async function uploadToLocal(buffer: Buffer, ext: string): Promise<UploadResult>
   return { url: `/uploads/${name}`, provider: "local" };
 }
 
+function isServerlessHost(): boolean {
+  return Boolean(process.env.VERCEL) || process.env.NODE_ENV === "production";
+}
+
 export async function uploadImage(buffer: Buffer, mime: string): Promise<UploadResult> {
   const ext = ALLOWED_IMAGE_TYPES[mime];
   if (!ext) throw new Error("UNSUPPORTED_TYPE");
@@ -83,5 +87,10 @@ export async function uploadImage(buffer: Buffer, mime: string): Promise<UploadR
   if (cloudinaryConfigured()) {
     return uploadToCloudinary(buffer, mime);
   }
+
+  if (isServerlessHost()) {
+    throw new Error("CLOUDINARY_REQUIRED");
+  }
+
   return uploadToLocal(buffer, ext);
 }
