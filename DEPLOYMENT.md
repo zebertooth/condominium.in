@@ -39,8 +39,8 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | 404 on `/property/[slug]` | Listing `pending` — approve in `/admin/properties`, or login as owner to preview |
 | LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
-| Vercel preview build fails on `prisma migrate deploy` | Add `DATABASE_URL` to Vercel **Preview** environment, OR build passes with migrate skipped (see `scripts/vercel-build.mjs`) |
-| `datasource.url property is required` on Vercel | Same as above — `DATABASE_URL` missing at build time |
+| `datasource.url property is required` on Vercel | `DATABASE_URL` missing at build time — preview skips migrate; add for runtime |
+| `pg_advisory_lock` timeout on migrate | Another deploy is migrating — wait and redeploy; set `DIRECT_DATABASE_URL` (Neon non-pooler); preview builds no longer run migrate |
 
 **Fallback:** `npx prisma db push` then `npm run db:seed` (skips migration history).
 
@@ -99,7 +99,17 @@ npx vercel --prod
 "vercel-build": "node scripts/vercel-build.mjs"
 ```
 
-**Vercel env scopes:** Set `DATABASE_URL` for **Production** and **Preview** (same Neon string) so PR deployments migrate and connect to DB.
+**Vercel env scopes:** Set `DATABASE_URL` for **Production** and **Preview** (pooled Neon URL is fine for runtime).
+
+**Migrations on deploy:** Only **Production** builds run `prisma migrate deploy` (preview skips — avoids advisory lock timeouts when multiple deploys run at once).
+
+**Neon direct URL (recommended for Production migrate):** In Neon Console, copy the **direct** connection string (not `-pooler`) and set as optional:
+
+```env
+DIRECT_DATABASE_URL=postgresql://...@ep-xxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+```
+
+If omitted, `DATABASE_URL` is used for migrate. If migrate fails with `pg_advisory_lock` timeout, use `DIRECT_DATABASE_URL` or redeploy after other builds finish.
 
 **Health check after deploy:**
 ```bash
