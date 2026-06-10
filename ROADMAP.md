@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 22 — Vercel CI fix + audit merged pending)  
-**Current phase:** **Phase 2** — merge PR → prod deploy → admin i18n next  
+**Last updated:** 2026-06-10 (session 23 — merged main + OTP fixes)  
+**Current phase:** **Phase 2/3** — production deploy → verify OTP/LINE → blog article EN
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -21,12 +21,14 @@
 
 | Area | State |
 |------|--------|
-| **GitHub** | Branch `session-21-audit-fixes` — 2 commits ready to merge to `main` |
-| **Production** | https://www.condominium.in.th — deploy after merge |
+| **GitHub** | `main` merged — OTP fixes + audit + day2-website PR |
+| **Production** | https://www.condominium.in.th — redeploy after push |
 | **Security audit** | Register admin hijack fixed, OTP empty-body fixed, owner leads validated, payment gates tightened |
-| **Dashboard i18n** | Full EN/TH (session 21) |
+| **Dashboard i18n** | Full EN/TH |
+| **Agent CRM** | `/dashboard/agent`, viewing scheduler, agent lead permissions |
 | **Vercel build** | `scripts/vercel-build.mjs` — conditional migrate; sitemap DB fallback |
-| **i18n remaining** | Admin panel + blog/area article bodies still Thai |
+| **OTP** | Email/SMS fallback codes when providers fail |
+| **i18n remaining** | Blog/area article bodies still Thai |
 | **Sponsored posts** | **Do not implement** until user asks |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
@@ -228,7 +230,7 @@ Bangkok condo/house marketplace with:
 ### Real verification
 - [x] SMS OTP — ThaiBulkSMS (preferred) + Twilio fallback (`src/lib/notifications.ts`)
 - [x] Email OTP — Resend (console fallback in dev)
-- [ ] Remove `devCode` from API responses in production
+- [x] Remove `devCode` from API responses in production (gated by NODE_ENV !== "development")
 - [ ] Optional: ID card photo upload + admin manual review
 
 ### Real payments
@@ -287,12 +289,12 @@ Bangkok condo/house marketplace with:
 - [x] Lead status pipeline: new → contacted → viewing → closed (+ lost) — admin `/admin/leads`
 - [x] Assign lead to an agent (admin user) + agent note — `PATCH /api/admin/leads/[id]`
 - [ ] Assign lead to agent automatically by BTS area
-- [ ] Agent dashboard (separate from owner/admin dashboard)
+- [x] Agent dashboard (separate from owner/admin dashboard)
 
 ### Viewing scheduler
-- [ ] Book viewing slot on property page
-- [ ] Line / WhatsApp notification to agent
-- [ ] Calendar integration (Google Calendar)
+- [x] Book viewing slot on property page
+- [~] Line / WhatsApp notification to agent (simulated in console)
+- [~] Calendar integration (Google Calendar) (simulated in console)
 
 ### Owner portal
 - [x] Edit own listings — `PUT /api/user/properties/[id]`, `/dashboard/edit/[id]`, reusable `PostPropertyForm`, edit goes back to `pending`
@@ -364,18 +366,23 @@ PromptPay payment integration:
 prisma generate + next build + lint all green
 ```
 
-### Next step plan (session 22+)
+### Done (2026-06-10, session 18 — Paid Features + Agent CRM)
+```
+Enabled paid features with PromptPay ID 0863048177
+Added viewingDate and viewingTime optional fields to Lead model
+Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agenda
+Configured agent-based lead updating API permissions
+```
+
+### Next step plan (session 23+)
 
 | Step | Action | Owner |
 |------|--------|-------|
-| **1** | Merge PR `session-21-audit-fixes` → `main` on GitHub | User |
-| **2** | Confirm Vercel Preview env has `DATABASE_URL` (same Neon as Production) | User |
-| **3** | Prod deploy: auto on merge or `npx vercel --prod` | Agent/User |
-| **4** | Smoke test: `/api/health`, register→verify→post, admin approve, EN dashboard toggle | Agent |
-| **5** | Code: admin panel EN i18n | Agent |
-| **6** | Code: blog + area article EN content | Agent |
-| **7** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
-| **8** | Phase 3: agent CRM + viewing scheduler | Agent |
+| **1** | Push merged `main` → Vercel prod deploy | Agent/User |
+| **2** | Smoke test: OTP email/SMS, LINE verify, `/api/health` | User |
+| **3** | Code: blog + area article EN content | Agent |
+| **4** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
+| **5** | **Sponsored posts UI** — do NOT implement until user asks | — |
 
 ### In progress
 ```

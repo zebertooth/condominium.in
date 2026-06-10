@@ -12,24 +12,23 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 22 — **audit fixes + Vercel CI**)
+> ## 🤝 HANDOFF (session 23 — **merged main + OTP fixes**)
 >
-> **Branch:** `session-21-audit-fixes` on GitHub (2 commits ahead of `main`)  
-> **Production:** https://www.condominium.in.th — still on previous `main` deploy until PR merged  
+> **Production:** https://www.condominium.in.th — deploy after push to `main`  
 >
-> **Done session 21–22:**
-> - Dashboard EN/TH i18n, property preview, integration status
-> - Security audit fixes (register admin hijack, OTP empty body, owner lead validation, payment gates)
-> - Vercel preview build fix: `scripts/vercel-build.mjs` skips migrate when `DATABASE_URL` missing
->
-> **Vercel CI note:** Preview deployments need `DATABASE_URL` in Vercel → Settings → Environment Variables → **Preview** (same Neon string as Production) for full DB preview. Without it, build still passes but migrate + sitemap user listings are skipped.
+> **Done (merged):**
+> - Dashboard EN/TH i18n, property preview, integration health status
+> - Security audit fixes (register role, OTP, leads, payment gates)
+> - Vercel CI: `scripts/vercel-build.mjs` skips migrate on preview without `DATABASE_URL`
+> - OTP email/SMS fallback codes when Resend/ThaiBulkSMS fails
+> - Agent CRM + viewing scheduler (from day2-website PR)
+> - Blog/areas/admin nav EN i18n
 >
 > **Next priorities:**
-> 1. Merge PR `session-21-audit-fixes` → `main`, deploy prod
-> 2. EN for **admin** panel + blog/area article bodies
+> 1. Verify OTP + LINE verify on production after deploy
+> 2. Blog/area article body EN content
 > 3. Optional keys: OPENAI, SLIPOK, GA4
-> 4. Agent CRM: viewing scheduler
-> 5. **Sponsored posts UI** — do NOT implement until user asks
+> 4. **Sponsored posts UI** — do NOT implement until user asks
 
 ---
 

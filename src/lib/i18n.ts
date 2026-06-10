@@ -221,6 +221,13 @@ const th = {
   pkgExtra10Desc: "ลงประกาศเพิ่มได้ 10 รายการ นาน 30 วัน",
   sponsorPkgName: "ประกาศเด่น (สปอนเซอร์)",
   sponsorPkgDesc: "ทำให้ประกาศขึ้นอันดับต้นและมีป้ายเด่น 7 วัน",
+  adminOverview: "ภาพรวม",
+  adminProperties: "ประกาศ",
+  adminUsers: "ผู้ใช้",
+  adminLeads: "ลีด",
+  adminPayments: "การชำระเงิน",
+  adminAnalytics: "วิเคราะห์ข้อมูล",
+  backToWebsite: "กลับเว็บไซต์",
 } as const;
 
 const en: Record<keyof typeof th, string> = {
@@ -436,6 +443,13 @@ const en: Record<keyof typeof th, string> = {
   pkgExtra10Desc: "Post 10 more listings for 30 days",
   sponsorPkgName: "Featured listing (sponsor)",
   sponsorPkgDesc: "Boost your listing to the top with a featured badge for 7 days",
+  adminOverview: "Overview",
+  adminProperties: "Properties",
+  adminUsers: "Users",
+  adminLeads: "Leads",
+  adminPayments: "Payments",
+  adminAnalytics: "Analytics",
+  backToWebsite: "Back to Site",
 };
 
 const translations: Record<Locale, Record<keyof typeof th, string>> = { th, en };

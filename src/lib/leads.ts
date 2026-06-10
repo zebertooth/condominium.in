@@ -22,6 +22,8 @@ export async function createLead(input: CreateLeadInput) {
       btsStation: input.btsStation || null,
       ownerUserId: input.ownerUserId || null,
       posterRole: input.posterRole || null,
+      viewingDate: input.viewingDate || null,
+      viewingTime: input.viewingTime || null,
     },
   });
 }

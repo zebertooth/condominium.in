@@ -125,6 +125,8 @@ export const leadSchema = z
     btsStation: z.string().optional(),
     ownerUserId: z.string().optional(),
     posterRole: z.string().optional(),
+    viewingDate: z.string().optional(),
+    viewingTime: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const phone = data.phone?.trim() ?? "";

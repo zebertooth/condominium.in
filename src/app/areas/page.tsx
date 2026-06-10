@@ -21,29 +21,39 @@ export default async function AreasPage() {
       <p className="mt-2 max-w-2xl text-slate-600">{t("areasCardDesc", locale)}</p>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
-        {areaGuides.map((area) => (
-          <Link
-            key={area.slug}
-            href={`/areas/${area.slug}`}
-            className="rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-teal-300 hover:shadow-md"
-          >
-            <p className="text-sm font-medium text-teal-700">
-              BTS {area.btsStation} · {t("btsLinePrefix", locale)}
-              {area.btsLine}
-            </p>
-            <h2 className="mt-2 text-xl font-bold text-slate-900">
-              {locale === "en" ? area.nameEn : area.name}
-            </h2>
-            <p className="mt-3 text-slate-600">{area.description}</p>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {area.highlights.map((h) => (
-                <li key={h} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-700">
-                  {h}
-                </li>
-              ))}
-            </ul>
-          </Link>
-        ))}
+        {areaGuides.map((area) => {
+          const name = locale === "en" ? area.nameEn : area.name;
+          const description = locale === "en" && area.descriptionEn ? area.descriptionEn : area.description;
+          const highlights = locale === "en" && area.highlightsEn ? area.highlightsEn : area.highlights;
+          const btsLine = locale === "en"
+            ? area.btsLine === "สุขุมวิท"
+              ? "Sukhumvit Line"
+              : area.btsLine === "สีลม"
+                ? "Silom Line"
+                : "Sukhumvit/Silom Interchange"
+            : `${t("btsLinePrefix", locale)}${area.btsLine}`;
+
+          return (
+            <Link
+              key={area.slug}
+              href={`/areas/${area.slug}`}
+              className="rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-teal-300 hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-teal-700">
+                BTS {area.nameEn} · {btsLine}
+              </p>
+              <h2 className="mt-2 text-xl font-bold text-slate-900">{name}</h2>
+              <p className="mt-3 text-slate-600">{description}</p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {highlights.map((h) => (
+                  <li key={h} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-700">
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

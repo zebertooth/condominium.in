@@ -99,3 +99,11 @@ export async function requireUser() {
   if (!user) throw new Error("UNAUTHORIZED");
   return user;
 }
+
+export async function requireAgentOrAdmin() {
+  const user = await getCurrentUser();
+  if (!user || (user.role !== "agent" && user.role !== "admin")) {
+    throw new Error("FORBIDDEN");
+  }
+  return user;
+}

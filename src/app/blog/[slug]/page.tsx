@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBlogPost } from "@/lib/blog";
 import { createMetadata, siteConfig } from "@/lib/seo";
+import { getLocale, LOCALE_COOKIE } from "@/lib/locale";
+import { t } from "@/lib/i18n";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -13,11 +16,14 @@ export async function generateMetadata({ params }: PageProps) {
   const post = getBlogPost(slug);
   if (!post) return {};
 
+  const cookieStore = await cookies();
+  const locale = cookieStore.get(LOCALE_COOKIE)?.value === "en" ? "en" : "th";
+
   return createMetadata({
-    title: post.seoTitle,
-    description: post.seoDescription,
+    title: locale === "en" && post.seoTitleEn ? post.seoTitleEn : post.seoTitle,
+    description: locale === "en" && post.seoDescriptionEn ? post.seoDescriptionEn : post.seoDescription,
     path: `/blog/${slug}`,
-    keywords: [post.category],
+    keywords: [locale === "en" && post.categoryEn ? post.categoryEn : post.category],
   });
 }
 
@@ -49,11 +55,18 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = getBlogPost(slug);
   if (!post) notFound();
 
+  const locale = await getLocale();
+
+  const title = locale === "en" && post.titleEn ? post.titleEn : post.title;
+  const excerpt = locale === "en" && post.excerptEn ? post.excerptEn : post.excerpt;
+  const content = locale === "en" && post.contentEn ? post.contentEn : post.content;
+  const category = locale === "en" && post.categoryEn ? post.categoryEn : post.category;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: post.title,
-    description: post.excerpt,
+    headline: title,
+    description: excerpt,
     datePublished: post.publishedAt,
     author: { "@type": "Organization", name: siteConfig.name },
     publisher: { "@type": "Organization", name: siteConfig.name },
@@ -64,32 +77,43 @@ export default async function BlogPostPage({ params }: PageProps) {
       <JsonLd data={jsonLd} />
 
       <nav className="mb-6 text-sm text-slate-500">
-        <Link href="/blog" className="hover:text-teal-700">บทความ</Link>
+        <Link href="/blog" className="hover:text-teal-700">
+          {t("blog", locale)}
+        </Link>
         {" / "}
-        <span className="text-slate-900">{post.title}</span>
+        <span className="text-slate-900">{title}</span>
       </nav>
 
       <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
-        {post.category}
+        {category}
       </span>
-      <h1 className="mt-4 text-3xl font-bold text-slate-900">{post.title}</h1>
+      <h1 className="mt-4 text-3xl font-bold text-slate-900">{title}</h1>
       <p className="mt-2 text-slate-500">
-        {new Date(post.publishedAt).toLocaleDateString("th-TH")} · {post.readTime} นาทีอ่าน
+        {new Date(post.publishedAt).toLocaleDateString(locale === "en" ? "en-US" : "th-TH", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}{" "}
+        · {post.readTime} {t("readTime", locale)}
       </p>
 
-      <div className="prose mt-8 max-w-none">{renderContent(post.content)}</div>
+      <div className="prose mt-8 max-w-none">{renderContent(content)}</div>
 
       <div className="mt-12 rounded-2xl bg-teal-50 p-6">
-        <h2 className="font-bold text-teal-900">พร้อมหาคอนโดแล้ว?</h2>
+        <h2 className="font-bold text-teal-900">
+          {locale === "en" ? "Ready to find your condo?" : "พร้อมหาคอนโดแล้ว?"}
+        </h2>
         <p className="mt-2 text-teal-800">
-          ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง
+          {locale === "en"
+            ? "Use AI search to find matching properties or contact our agent team."
+            : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
         </p>
         <div className="mt-4 flex gap-3">
           <Link href="/ai-search" className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white">
-            ค้นหาด้วย AI
+            {t("aiSearch", locale)}
           </Link>
           <Link href="/contact" className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800">
-            ติดต่อเรา
+            {t("contact", locale)}
           </Link>
         </div>
       </div>
