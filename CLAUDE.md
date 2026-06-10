@@ -19,18 +19,17 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 20)
+## Model transfer snapshot (session 22)
 
 | Item | Detail |
 |------|--------|
-| **Production** | https://www.condominium.in.th — Vercel creds configured (session 19) |
-| **Paid** | Auto-ON when `PROMPTPAY_ID` set — `paidFeatures: true` on prod `/api/health` |
-| **Property pages** | Published = public. Pending = owner/admin preview only (`getUserPropertyBySlugVisible`) |
-| **LINE Login** | Developing channel → add user as **Tester** in LINE Developers Console |
-| **LINE callback** | `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` |
-| **Health** | `GET /api/health` → `integrations` + `paidFeatures` |
-| **Optional keys** | OPENAI, SLIPOK, GA4 not required (app works without) |
-| **Next** | EN dashboard/admin, agent CRM; sponsored posts UI only when user asks |
+| **GitHub** | `session-21-audit-fixes` branch — merge to `main` pending |
+| **Production** | https://www.condominium.in.th — redeploy after merge |
+| **Security** | No admin via register; owner leads server-validated; payment amount gate |
+| **Vercel CI** | `node scripts/vercel-build.mjs` — migrate when `DATABASE_URL` present |
+| **Dashboard i18n** | EN/TH complete (session 21) |
+| **Admin i18n** | Still Thai — next code task |
+| **Next** | Merge PR → admin EN → agent CRM |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 

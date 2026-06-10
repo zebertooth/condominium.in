@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 20):** Live at **https://www.condominium.in.th**. All Vercel credentials configured by user. Paid features auto-enabled. Property preview + LINE troubleshooting deployed.
+**Current status (session 22):** Live at **https://www.condominium.in.th**. Pending merge of `session-21-audit-fixes` (audit fixes + dashboard i18n). Vercel build uses `scripts/vercel-build.mjs`.
 
 ---
 
@@ -39,6 +39,8 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | 404 on `/property/[slug]` | Listing `pending` — approve in `/admin/properties`, or login as owner to preview |
 | LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
+| Vercel preview build fails on `prisma migrate deploy` | Add `DATABASE_URL` to Vercel **Preview** environment, OR build passes with migrate skipped (see `scripts/vercel-build.mjs`) |
+| `datasource.url property is required` on Vercel | Same as above — `DATABASE_URL` missing at build time |
 
 **Fallback:** `npx prisma db push` then `npm run db:seed` (skips migration history).
 
@@ -79,7 +81,9 @@ npm run build
 npx vercel --prod
 ```
 
-This runs `vercel-build` → `prisma migrate deploy` + `next build` on Vercel's servers against your Neon DB.
+This runs `node scripts/vercel-build.mjs` → `prisma migrate deploy` (if `DATABASE_URL` set) + `next build`.
+
+**GitHub:** https://github.com/zebertooth/condominium.in — PR branch `session-21-audit-fixes`.
 
 **First-time setup:**
 ```bash
@@ -92,8 +96,10 @@ npx vercel --prod
 
 **Build:** Vercel runs `vercel-build` automatically:
 ```json
-"vercel-build": "prisma generate && prisma migrate deploy && next build"
+"vercel-build": "node scripts/vercel-build.mjs"
 ```
+
+**Vercel env scopes:** Set `DATABASE_URL` for **Production** and **Preview** (same Neon string) so PR deployments migrate and connect to DB.
 
 **Health check after deploy:**
 ```bash

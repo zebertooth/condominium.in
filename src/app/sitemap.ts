@@ -26,7 +26,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1 : 0.8,
   }));
 
-  const userListings = await getAllPublishedUserProperties();
+  let userListings: Awaited<ReturnType<typeof getAllPublishedUserProperties>> = [];
+  if (process.env.DATABASE_URL) {
+    try {
+      userListings = await getAllPublishedUserProperties();
+    } catch (error) {
+      console.warn("[sitemap] Could not fetch user listings:", error);
+    }
+  }
 
   const propertyPages = [
     ...properties.map((p) => ({

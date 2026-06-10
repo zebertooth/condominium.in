@@ -10,18 +10,26 @@ Instructions for AI coding agents working in this repository.
 2. Read [`CLAUDE.md`](./CLAUDE.md) — architecture, APIs, business rules
 3. Verify locally: `npm run db:deploy && npm run build && npm run lint`
 4. Production check: `GET https://www.condominium.in.th/api/health`
-5. Deploy after changes: `npx vercel --prod`
+5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 21 — **dashboard i18n EN**)
+> ## 🤝 HANDOFF (session 22 — **audit fixes + Vercel CI**)
 >
-> **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24)  
-> **Done this session:** Full EN/TH for owner **dashboard** — layout, quota, listings, verify, post form, package shop. Uses `useT()` / `useTf()` from `LocaleProvider`.
+> **Branch:** `session-21-audit-fixes` on GitHub (2 commits ahead of `main`)  
+> **Production:** https://www.condominium.in.th — still on previous `main` deploy until PR merged  
+>
+> **Done session 21–22:**
+> - Dashboard EN/TH i18n, property preview, integration status
+> - Security audit fixes (register admin hijack, OTP empty body, owner lead validation, payment gates)
+> - Vercel preview build fix: `scripts/vercel-build.mjs` skips migrate when `DATABASE_URL` missing
+>
+> **Vercel CI note:** Preview deployments need `DATABASE_URL` in Vercel → Settings → Environment Variables → **Preview** (same Neon string as Production) for full DB preview. Without it, build still passes but migrate + sitemap user listings are skipped.
 >
 > **Next priorities:**
-> 1. EN for **admin** panel + blog/area article bodies
-> 2. Optional Vercel keys: OPENAI, SLIPOK, GA4
-> 3. **Sponsored posts UI** — do NOT implement until user asks
+> 1. Merge PR `session-21-audit-fixes` → `main`, deploy prod
+> 2. EN for **admin** panel + blog/area article bodies
+> 3. Optional keys: OPENAI, SLIPOK, GA4
 > 4. Agent CRM: viewing scheduler
+> 5. **Sponsored posts UI** — do NOT implement until user asks
 
 ---
 
@@ -30,11 +38,11 @@ Instructions for AI coding agents working in this repository.
 | Item | Value |
 |------|-------|
 | Production | **https://www.condominium.in.th** |
-| Phase | **Phase 2** — prod keys live, paid ON, polish + CRM next |
-| Paid | Auto-ON when `PROMPTPAY_ID` on Vercel (`PAID_FEATURES_ENABLED` env-gated) |
-| Workspace | `C:\Users\NATTASIT\Projects\condominium` |
+| GitHub | https://github.com/zebertooth/condominium.in |
+| Phase | **Phase 2** — audit done; merge + admin i18n next |
+| Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 
-**Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. SMS additive. Owner listings → direct contact; agent listings → platform CRM.
+**Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
 
 ---
 
@@ -45,43 +53,37 @@ npm run build
 npx vercel --prod
 ```
 
-Redeploy after any Vercel env var change.
+Vercel runs `node scripts/vercel-build.mjs` (migrate only when `DATABASE_URL` is set).
 
 ---
 
 ## Key paths
 
 ```
-src/lib/user-properties.ts   getUserPropertyBySlugVisible — owner/admin preview
-src/lib/packages.ts          PAID_FEATURES_ENABLED (PROMPTPAY_ID env-gated)
-src/lib/integrations.ts      Provider status for /admin + /api/health
-src/lib/line.ts              LINE Login (Developing channel = testers only)
-src/components/dashboard/VerifyForm.tsx  LINE developing-status help
-src/app/property/[slug]/page.tsx       Preview banner for pending listings
+scripts/vercel-build.mjs     Vercel CI build (conditional migrate)
+src/lib/request.ts           Safe empty POST body parsing (OTP routes)
+src/lib/user-properties.ts   Preview + safe JSON parse + slug uniqueness
+src/app/api/leads/route.ts   Server-validated owner-direct inquiries
 ```
 
 ---
 
 ## Test credentials
 
-| Role | Login | Password |
-|------|-------|----------|
-| Admin | `admin@condominium.in.th` | `admin123456` |
-
-**Property flow:** Register (Thai) → verify LINE (Tester required) + Email → post → **admin approve** → public URL works.
+Admin: `admin@condominium.in.th` / `admin123456` (created via `npm run db:seed` only — never via register)
 
 ---
 
 ## Do NOT (unless user asks)
 
 - Implement sponsored posts UI
-- Commit `.env` or create git commits
-- Revert to SQLite
+- Commit `.env`
+- Auto-promote register users to admin
 
 ---
 
 ## Related
 
-- [`ROADMAP.md`](./ROADMAP.md) — phase tracker
+- [`ROADMAP.md`](./ROADMAP.md) — phase tracker + next step plan
 - [`CLAUDE.md`](./CLAUDE.md) — technical reference
-- [`DEPLOYMENT.md`](./DEPLOYMENT.md) — Vercel + troubleshooting
+- [`DEPLOYMENT.md`](./DEPLOYMENT.md) — Vercel env + troubleshooting

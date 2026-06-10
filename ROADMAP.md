@@ -1,14 +1,14 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 21 — dashboard i18n EN)  
-**Current phase:** **Phase 2** — production live; prod keys set; bugfixes deployed; i18n + CRM next  
+**Last updated:** 2026-06-10 (session 22 — Vercel CI fix + audit merged pending)  
+**Current phase:** **Phase 2** — merge PR → prod deploy → admin i18n next  
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
-> **DB:** Neon PostgreSQL — migrations through `20260609180000_analytics_matching`.  
-> Health: `GET /api/health` → `{ status: "ok", database: "connected" }`
+> **GitHub:** `session-21-audit-fixes` branch — merge to `main` then Vercel prod deploy.  
+> **Vercel CI:** Preview builds use `scripts/vercel-build.mjs` — skips migrate if `DATABASE_URL` unset. Set `DATABASE_URL` on **Preview** env for full PR testing.
 
 > **LAUNCH POLICY (current):** Paid features ON on production when `PROMPTPAY_ID` is set (auto). Local dev OFF unless `.env` has `PROMPTPAY_ID`. ID verification removed. Thai users verify **LINE + Email** to post (2 free listings). Non-Thai users verify email only and **cannot post** yet. Phone/SMS verification is wired (ThaiBulkSMS) but **additive** (not a posting gate yet).
 
@@ -17,17 +17,16 @@
 
 ---
 
-## Model transfer snapshot (session 20)
+## Model transfer snapshot (session 22)
 
 | Area | State |
 |------|--------|
-| **Production** | https://www.condominium.in.th — Vercel `next-js-oouu`, deploy via `npx vercel --prod` |
-| **Database** | Neon + migrations: `init_postgres`, `analytics_matching` |
-| **Prod keys** | All configured on Vercel (user, session 19). `/api/health` + `/admin` Integration Status |
-| **Paid** | Auto-ON when `PROMPTPAY_ID` set (`paidFeatures: true` on prod) |
-| **Property URLs** | `pending` → 404 public; **owner/admin preview** when logged in (session 20) |
-| **LINE Login** | Channel in **Developing** — only Testers can login; add in LINE Developers Console |
-| **i18n** | TH/EN: public pages + **owner dashboard** (session 21). Admin still Thai |
+| **GitHub** | Branch `session-21-audit-fixes` — 2 commits ready to merge to `main` |
+| **Production** | https://www.condominium.in.th — deploy after merge |
+| **Security audit** | Register admin hijack fixed, OTP empty-body fixed, owner leads validated, payment gates tightened |
+| **Dashboard i18n** | Full EN/TH (session 21) |
+| **Vercel build** | `scripts/vercel-build.mjs` — conditional migrate; sitemap DB fallback |
+| **i18n remaining** | Admin panel + blog/area article bodies still Thai |
 | **Sponsored posts** | **Do not implement** until user asks |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
@@ -365,11 +364,32 @@ PromptPay payment integration:
 prisma generate + next build + lint all green
 ```
 
+### Next step plan (session 22+)
+
+| Step | Action | Owner |
+|------|--------|-------|
+| **1** | Merge PR `session-21-audit-fixes` → `main` on GitHub | User |
+| **2** | Confirm Vercel Preview env has `DATABASE_URL` (same Neon as Production) | User |
+| **3** | Prod deploy: auto on merge or `npx vercel --prod` | Agent/User |
+| **4** | Smoke test: `/api/health`, register→verify→post, admin approve, EN dashboard toggle | Agent |
+| **5** | Code: admin panel EN i18n | Agent |
+| **6** | Code: blog + area article EN content | Agent |
+| **7** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
+| **8** | Phase 3: agent CRM + viewing scheduler | Agent |
+
 ### In progress
 ```
-1. EN translations: admin panel, blog/area article bodies
-2. Optional Vercel keys: OPENAI, SLIPOK, GA4
+1. Merge PR + prod deploy (session-21-audit-fixes)
+2. EN translations: admin panel, blog/area article bodies
 3. Agent CRM: viewing scheduler
+```
+
+### Done (2026-06-10, session 22 — Vercel CI + audit)
+```
+Vercel preview fix: scripts/vercel-build.mjs (skip migrate without DATABASE_URL)
+Sitemap graceful fallback when DB unavailable at build time
+Security audit: register, OTP, leads, payments, admin auth, slug/sitemap fixes
+Pushed to GitHub branch session-21-audit-fixes
 ```
 
 ### Done (2026-06-10, session 21 — dashboard i18n)
