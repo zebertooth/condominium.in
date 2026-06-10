@@ -2,6 +2,7 @@ import Link from "next/link";
 import { areaGuides } from "@/lib/areas";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -22,10 +23,11 @@ export default async function AreasPage() {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {areaGuides.map((area) => {
-          const name = locale === "en" ? area.nameEn : area.name;
-          const description = locale === "en" && area.descriptionEn ? area.descriptionEn : area.description;
-          const highlights = locale === "en" && area.highlightsEn ? area.highlightsEn : area.highlights;
-          const btsLine = locale === "en"
+          const enContent = usesEnglishContent(locale);
+          const name = enContent ? area.nameEn : area.name;
+          const description = enContent && area.descriptionEn ? area.descriptionEn : area.description;
+          const highlights = enContent && area.highlightsEn ? area.highlightsEn : area.highlights;
+          const btsLine = enContent
             ? area.btsLine === "สุขุมวิท"
               ? "Sukhumvit Line"
               : area.btsLine === "สีลม"

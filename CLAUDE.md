@@ -15,20 +15,19 @@ Handoff guide for AI agents and developers continuing this project.
 4. Agent team for real-world viewings
 5. Monetization via listing packages & sponsored posts
 
-**Language:** Thai-first + EN switcher (TH/EN active; ZH/JA/AR deferred).
+**Language:** Thai-first + **5 locales** (TH/EN/ZH/JA/AR) via cookie switcher.
 
 ---
 
-## Model transfer snapshot (session 25)
+## Model transfer snapshot (session 26)
 
 | Item | Detail |
 |------|--------|
-| **GitHub** | `main` @ `291bd67` + local session 25 work (admin i18n + owner stats + sponsor UI) |
-| **Production** | https://www.condominium.in.th — OTP/LINE verified OK |
-| **Owner stats** | `getOwnerPropertyStats()` — views, inquiries, contact clicks (all-time + 30d) |
-| **Sponsored posts** | Featured badge, sort boost, PromptPay purchase, post-submit upsell |
-| **SMS** | ThaiBulkSMS wired — **user to verify production next** |
-| **Next** | ThaiBulkSMS prod verify → Phase 4 locales (ZH, JA, AR) |
+| **Locales** | TH, EN, ZH, JA, AR — cookie + full UI translations |
+| **RTL** | Arabic layout via `dir="rtl"` |
+| **SEO** | hreflang alternates on all pages |
+| **Content** | Non-Thai locales use EN article/area/property fields |
+| **Next** | ThaiBulkSMS prod verify (user) → native ZH/JA/AR content |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -333,7 +332,7 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 1. **Minimize scope** — small focused diffs; match existing patterns
 2. **Server components by default** — `"use client"` only for forms, gallery, map picker, AI search UI
 3. **Business logic in `src/lib/`** — not in page files
-4. **Thai + English UI** — use `src/lib/i18n.ts` keys + `useT()` / `t(key, locale)`; dashboard and admin fully bilingual
+4. **Thai + English + Chinese + Japanese + Arabic UI** — use `src/lib/i18n.ts` keys + `useT()` / `t(key, locale)`
 5. **Images** — `next.config.ts` allows `images.unsplash.com`; extend `remotePatterns` for new hosts
 6. **Prisma imports** — `import { PrismaClient } from "@/generated/prisma/client"`
 7. **No commits** unless user explicitly asks
@@ -355,12 +354,11 @@ Done / env-gated:
 - [x] OpenAI AI search with rule-based fallback (`src/lib/openai.ts`)
 - [x] Agent CRM + viewing scheduler (`/dashboard/agent`, `/admin/leads`)
 - [x] GA4 analytics scaffold + dynamic OG image
-- [x] Full TH/EN i18n (public, dashboard, admin, blog/areas)
+- [x] Full 5-locale i18n (TH/EN/ZH/JA/AR) — public, dashboard, admin
 
 **Next code tasks:**
-- [x] Owner listing stats (views/inquiries/contact clicks, 30-day) in dashboard
-- [x] Sponsored posts UI — badges, sort boost, purchase flow, post-submit upsell
-- [ ] Phase 4 locales (ZH, JA, AR)
+- [ ] Native ZH/JA/AR blog/area/property content (beyond EN fallback)
+- [ ] Optional URL locale routing (`/zh/...`)
 - [ ] `middleware.ts` for auth (optional)
 
 ---

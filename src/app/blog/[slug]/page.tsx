@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBlogPost } from "@/lib/blog";
+import { getLocale } from "@/lib/locale";
+import { dateLocale, usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata, siteConfig } from "@/lib/seo";
-import { getLocale, LOCALE_COOKIE } from "@/lib/locale";
 import { t } from "@/lib/i18n";
 
 interface PageProps {
@@ -16,14 +16,14 @@ export async function generateMetadata({ params }: PageProps) {
   const post = getBlogPost(slug);
   if (!post) return {};
 
-  const cookieStore = await cookies();
-  const locale = cookieStore.get(LOCALE_COOKIE)?.value === "en" ? "en" : "th";
+  const locale = await getLocale();
+  const enContent = usesEnglishContent(locale);
 
   return createMetadata({
-    title: locale === "en" && post.seoTitleEn ? post.seoTitleEn : post.seoTitle,
-    description: locale === "en" && post.seoDescriptionEn ? post.seoDescriptionEn : post.seoDescription,
+    title: enContent && post.seoTitleEn ? post.seoTitleEn : post.seoTitle,
+    description: enContent && post.seoDescriptionEn ? post.seoDescriptionEn : post.seoDescription,
     path: `/blog/${slug}`,
-    keywords: [locale === "en" && post.categoryEn ? post.categoryEn : post.category],
+    keywords: [enContent && post.categoryEn ? post.categoryEn : post.category],
   });
 }
 
@@ -56,11 +56,12 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) notFound();
 
   const locale = await getLocale();
+  const enContent = usesEnglishContent(locale);
 
-  const title = locale === "en" && post.titleEn ? post.titleEn : post.title;
-  const excerpt = locale === "en" && post.excerptEn ? post.excerptEn : post.excerpt;
-  const content = locale === "en" && post.contentEn ? post.contentEn : post.content;
-  const category = locale === "en" && post.categoryEn ? post.categoryEn : post.category;
+  const title = enContent && post.titleEn ? post.titleEn : post.title;
+  const excerpt = enContent && post.excerptEn ? post.excerptEn : post.excerpt;
+  const content = enContent && post.contentEn ? post.contentEn : post.content;
+  const category = enContent && post.categoryEn ? post.categoryEn : post.category;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -89,7 +90,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       </span>
       <h1 className="mt-4 text-3xl font-bold text-slate-900">{title}</h1>
       <p className="mt-2 text-slate-500">
-        {new Date(post.publishedAt).toLocaleDateString(locale === "en" ? "en-US" : "th-TH", {
+        {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
           year: "numeric",
           month: "long",
           day: "numeric",
@@ -101,10 +102,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       <div className="mt-12 rounded-2xl bg-teal-50 p-6">
         <h2 className="font-bold text-teal-900">
-          {locale === "en" ? "Ready to find your condo?" : "พร้อมหาคอนโดแล้ว?"}
+          {enContent ? "Ready to find your condo?" : "พร้อมหาคอนโดแล้ว?"}
         </h2>
         <p className="mt-2 text-teal-800">
-          {locale === "en"
+          {enContent
             ? "Use AI search to find matching properties or contact our agent team."
             : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
         </p>

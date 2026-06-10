@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 25):** Live at **https://www.condominium.in.th**. Owner stats + sponsored posts UI added locally. Push to `main` for Vercel auto-deploy.
+**Current status (session 26):** Live at **https://www.condominium.in.th**. Phase 4 i18n (ZH/JA/AR + RTL + hreflang) ready to deploy.
 
 ---
 

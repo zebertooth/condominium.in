@@ -2,6 +2,8 @@ import { LeadForm } from "@/components/lead/LeadForm";
 import { OwnerContactCard } from "@/components/property/OwnerContactCard";
 import type { Locale } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
+import { usesEnglishContent } from "@/lib/locale-content";
+import { localizedPropertyTitle } from "@/lib/property-i18n";
 import type { Property } from "@/types/property";
 
 interface PropertyContactSectionProps {
@@ -11,6 +13,8 @@ interface PropertyContactSectionProps {
 
 export function PropertyContactSection({ property, locale }: PropertyContactSectionProps) {
   const isOwnerDirect = property.contactMode === "owner_direct" && property.poster;
+  const enContent = usesEnglishContent(locale);
+  const displayTitle = localizedPropertyTitle(property, locale);
 
   if (isOwnerDirect && property.poster) {
     return (
@@ -23,15 +27,14 @@ export function PropertyContactSection({ property, locale }: PropertyContactSect
         <OwnerContactCard
           poster={property.poster}
           propertySlug={property.slug}
-          propertyTitle={property.title}
+          propertyTitle={displayTitle}
           labels={{
             heading: t("ownerContactInfo", locale),
-            phone: locale === "en" ? "Phone" : "โทร",
-            email: locale === "en" ? "Email" : "อีเมล",
-            noContact:
-              locale === "en"
-                ? "Owner has not provided contact details yet."
-                : "เจ้าของยังไม่ได้ระบุช่องทางติดต่อ",
+            phone: enContent ? "Phone" : "โทร",
+            email: enContent ? "Email" : "อีเมล",
+            noContact: enContent
+              ? "Owner has not provided contact details yet."
+              : "เจ้าของยังไม่ได้ระบุช่องทางติดต่อ",
           }}
         />
 
@@ -44,16 +47,16 @@ export function PropertyContactSection({ property, locale }: PropertyContactSect
               ownerUserId={property.poster.userId}
               posterRole={property.poster.role}
               propertySlug={property.slug}
-              propertyTitle={property.title}
+              propertyTitle={displayTitle}
               btsStation={property.btsStation}
               defaultMessage={
-                locale === "en"
-                  ? `Interested in "${property.title}" — please contact me.`
-                  : `สนใจ "${property.title}" ต้องการสอบถามข้อมูลเพิ่มเติม`
+                enContent
+                  ? `Interested in "${displayTitle}" — please contact me.`
+                  : `สนใจ "${displayTitle}" ต้องการสอบถามข้อมูลเพิ่มเติม`
               }
-              submitLabel={locale === "en" ? "Send to owner" : "ส่งถึงเจ้าของ"}
+              submitLabel={enContent ? "Send to owner" : "ส่งถึงเจ้าของ"}
               successMessage={
-                locale === "en"
+                enContent
                   ? "Message sent. The owner may contact you directly."
                   : "ส่งข้อความถึงเจ้าของเรียบร้อย"
               }
@@ -73,14 +76,14 @@ export function PropertyContactSection({ property, locale }: PropertyContactSect
           source="property"
           contactMode="agent_team"
           propertySlug={property.slug}
-          propertyTitle={property.title}
+          propertyTitle={displayTitle}
           btsStation={property.btsStation}
           defaultMessage={
-            locale === "en"
-              ? `Interested in "${property.title}" — schedule a viewing.`
-              : `สนใจ "${property.title}" ต้องการสอบถามข้อมูลเพิ่มเติม / นัดชมทรัพย์`
+            enContent
+              ? `Interested in "${displayTitle}" — schedule a viewing.`
+              : `สนใจ "${displayTitle}" ต้องการสอบถามข้อมูลเพิ่มเติม / นัดชมทรัพย์`
           }
-          submitLabel={locale === "en" ? "Request viewing" : "ส่งคำขอนัดชม"}
+          submitLabel={enContent ? "Request viewing" : "ส่งคำขอนัดชม"}
         />
       </div>
     </div>

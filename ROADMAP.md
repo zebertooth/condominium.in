@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 25 — owner stats + sponsored posts UI)  
-**Current phase:** **Phase 3 → 4** — ThaiBulkSMS prod verify (user) → ZH/JA/AR i18n
+**Last updated:** 2026-06-10 (session 26 — Phase 4 ZH/JA/AR i18n)  
+**Current phase:** **Phase 4** — 5 locales live; ThaiBulkSMS verify (user) → optional keys
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -60,7 +60,7 @@ Bangkok condo/house marketplace with:
 | **Post-launch** | Logout, i18n TH/EN, owner contact, analytics | **Done** | 2026 Q2 |
 | **2** | Real provider keys, flip paid, SEO scale, sponsored UI | **Done** (sponsor UI session 25) | 2026 Q3 |
 | **3** | Agent CRM, owner portal, scheduling | Started | 2026 Q4 |
-| **4** | Multilingual (ZH, JA, AR) | Planned | 2027 Q1 |
+| **4** | Multilingual (ZH, JA, AR) | **Done** (UI + RTL + hreflang) | 2027 Q1 |
 
 ---
 
@@ -317,16 +317,20 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 4 — Internationalization
+## Phase 4 — Internationalization (DONE — session 26)
 
 **Goal:** Serve expat buyers/renters in Chinese, Japanese, Arabic.
 
-- [x] TH + EN UI via cookie (`condo_locale`) + `src/lib/i18n.ts` (~200+ keys)
-- [x] Blog + area guide EN content (`contentEn`, `descriptionEn`, etc.)
-- [ ] i18n routing (`/th`, `/en`, `/zh`, `/ja`, `/ar`) or next-intl
-- [ ] Translate property fields (title, description) per locale
-- [ ] hreflang tags for SEO
-- [ ] RTL layout for Arabic
+- [x] TH + EN UI via cookie (`condo_locale`) + `src/lib/i18n.ts` (~331 keys × 5 locales)
+- [x] ZH / JA / AR enabled in language switcher
+- [x] Full UI translations — `zh-overrides.ts`, `ja-overrides.ts`, `ar-overrides.ts`
+- [x] RTL layout for Arabic (`dir="rtl"` on `<html>`)
+- [x] hreflang tags (`th-TH`, `en-US`, `zh-Hans`, `ja-JP`, `ar-SA`) via `createMetadata()`
+- [x] Blog + area guide EN content for non-Thai locales (`usesEnglishContent()`)
+- [x] Property cards/detail use `titleEn` for non-Thai locales
+- [ ] i18n URL routing (`/th`, `/en`, `/zh`, …) — optional future
+- [ ] Native ZH/JA/AR property/blog/area content fields
+- [ ] Translate property fields per locale in DB
 
 ---
 
@@ -375,14 +379,23 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 25+)
+### Next step plan (session 26+)
 
 | Step | Action | Owner |
 |------|--------|-------|
 | **1** | ThaiBulkSMS production verify | User |
-| **2** | Phase 4: ZH / JA / AR locales | Agent |
-| **3** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
-| **4** | Admin audit log, dashboard charts (optional polish) | Agent |
+| **2** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
+| **3** | Native ZH/JA/AR blog/area/property content | Agent |
+| **4** | URL-based locale routing (optional SEO polish) | Agent |
+
+### Done (2026-06-10, session 26 — Phase 4 i18n)
+```
+Enabled ZH / JA / AR in language switcher + cookie locale API
+331 UI keys translated per locale (zh/ja/ar override files)
+RTL for Arabic; hreflang on all pages; usesEnglishContent() helper
+Property/blog/area pages use EN content fields for non-Thai locales
+All MD files updated for session 26 handoff
+```
 
 ### Done (2026-06-10, session 25 — owner stats + sponsored posts UI)
 ```

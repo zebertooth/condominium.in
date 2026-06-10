@@ -1,11 +1,13 @@
-export type Locale = "th" | "en";
+export type Locale = "th" | "en" | "zh" | "ja" | "ar";
 
 export const defaultLocale: Locale = "th";
 
-/** Active UI locales — zh/ja/ar deferred to Phase 4 */
 export const activeLocales: { code: Locale; label: string }[] = [
   { code: "th", label: "ไทย" },
   { code: "en", label: "EN" },
+  { code: "zh", label: "中文" },
+  { code: "ja", label: "日本語" },
+  { code: "ar", label: "العربية" },
 ];
 
 const th = {
@@ -678,7 +680,21 @@ const en: Record<keyof typeof th, string> = {
   statusDeleted: "Deleted",
 };
 
-const translations: Record<Locale, Record<keyof typeof th, string>> = { th, en };
+import { arOverrides } from "@/lib/i18n/ar-overrides";
+import { jaOverrides } from "@/lib/i18n/ja-overrides";
+import { zhOverrides } from "@/lib/i18n/zh-overrides";
+
+const zh: Record<keyof typeof th, string> = { ...en, ...zhOverrides };
+const ja: Record<keyof typeof th, string> = { ...en, ...jaOverrides };
+const ar: Record<keyof typeof th, string> = { ...en, ...arOverrides };
+
+const translations: Record<Locale, Record<keyof typeof th, string>> = {
+  th,
+  en,
+  zh,
+  ja,
+  ar,
+};
 
 export type TranslationKey = keyof typeof th;
 
@@ -699,7 +715,14 @@ export function tf(
 }
 
 export function formatPrice(price: number, unit: string, locale: Locale = defaultLocale): string {
-  const loc = locale === "en" ? "en-US" : "th-TH";
+  const locMap: Record<Locale, string> = {
+    th: "th-TH",
+    en: "en-US",
+    zh: "zh-CN",
+    ja: "ja-JP",
+    ar: "ar-SA",
+  };
+  const loc = locMap[locale];
   if (unit === "THB/month") {
     return `฿${price.toLocaleString(loc)}${t("perMonth", locale)}`;
   }

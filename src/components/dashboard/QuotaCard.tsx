@@ -1,10 +1,11 @@
 import type { UserQuota } from "@/lib/quota";
 import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { dateLocale } from "@/lib/locale-content";
 
 export async function QuotaCard({ quota }: { quota: UserQuota }) {
   const locale = await getLocale();
-  const dateLocale = locale === "en" ? "en-US" : "th-TH";
+  const dateLoc = dateLocale(locale);
 
   if (quota.unlimited) {
     return (
@@ -86,7 +87,7 @@ export async function QuotaCard({ quota }: { quota: UserQuota }) {
                 {tf("quotaPackageExpires", locale, {
                   id: p.packageId,
                   slots: p.extraSlots,
-                  date: new Date(p.expiresAt).toLocaleDateString(dateLocale),
+                  date: new Date(p.expiresAt).toLocaleDateString(dateLoc),
                 })}
               </li>
             ))}

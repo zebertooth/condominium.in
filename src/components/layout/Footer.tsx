@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n";
-import { siteConfig } from "@/lib/seo";
+
+function footerSectionLabel(locale: Locale, section: "menu" | "services" | "rights"): string {
+  const labels: Record<Locale, Record<typeof section, string>> = {
+    th: { menu: "เมนูหลัก", services: "บริการ", rights: "สงวนลิขสิทธิ์." },
+    en: { menu: "Menu", services: "Services", rights: "All rights reserved." },
+    zh: { menu: "菜单", services: "服务", rights: "保留所有权利。" },
+    ja: { menu: "メニュー", services: "サービス", rights: "All rights reserved." },
+    ar: { menu: "القائمة", services: "الخدمات", rights: "جميع الحقوق محفوظة." },
+  };
+  return labels[locale][section];
+}
 
 export function Footer({ locale }: { locale: Locale }) {
   return (
@@ -12,7 +22,7 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <div>
-          <h3 className="font-semibold text-white">{locale === "en" ? "Menu" : "เมนูหลัก"}</h3>
+          <h3 className="font-semibold text-white">{footerSectionLabel(locale, "menu")}</h3>
           <ul className="mt-3 space-y-2 text-sm">
             <li><Link href="/buy" className="hover:text-white">{t("buy", locale)}</Link></li>
             <li><Link href="/rent" className="hover:text-white">{t("rent", locale)}</Link></li>
@@ -23,7 +33,7 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <div>
-          <h3 className="font-semibold text-white">{locale === "en" ? "Services" : "บริการ"}</h3>
+          <h3 className="font-semibold text-white">{footerSectionLabel(locale, "services")}</h3>
           <ul className="mt-3 space-y-2 text-sm">
             <li><Link href="/agents" className="hover:text-white">{t("agents", locale)}</Link></li>
             <li><Link href="/blog" className="hover:text-white">{t("blog", locale)}</Link></li>
@@ -33,7 +43,7 @@ export function Footer({ locale }: { locale: Locale }) {
       </div>
 
       <div className="border-t border-slate-800 px-4 py-4 text-center text-xs text-slate-500 sm:px-6">
-        © {new Date().getFullYear()} {siteConfig.name}. {locale === "en" ? "All rights reserved." : "สงวนลิขสิทธิ์."}
+        © {new Date().getFullYear()} {t("siteName", locale)}. {footerSectionLabel(locale, "rights")}
       </div>
     </footer>
   );

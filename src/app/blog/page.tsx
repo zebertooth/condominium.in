@@ -1,17 +1,19 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { blogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
-import { getLocale, LOCALE_COOKIE } from "@/lib/locale";
+import { getLocale } from "@/lib/locale";
+import { dateLocale, usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata } from "@/lib/seo";
 
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get(LOCALE_COOKIE)?.value === "en" ? "en" : "th";
+  const locale = await getLocale();
+  const enContent = usesEnglishContent(locale);
 
   return createMetadata({
-    title: locale === "en" ? "Real Estate Articles | Condominium.in.th" : "บทความคอนโดและ BTS | Condominium.in.th",
-    description: locale === "en"
+    title: enContent
+      ? "Real Estate Articles | Condominium.in.th"
+      : "บทความคอนโดและ BTS | Condominium.in.th",
+    description: enContent
       ? "SEO-optimized articles regarding buying and renting condos in Bangkok, BTS area guides, and AI matching."
       : "บทความ SEO เรื่องเช่า-ซื้อคอนโด ย่านใกล้ BTS และการใช้ AI ค้นหาทรัพย์ในกรุงเทพฯ",
     path: "/blog",
@@ -21,6 +23,7 @@ export async function generateMetadata() {
 
 export default async function BlogPage() {
   const locale = await getLocale();
+  const enContent = usesEnglishContent(locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -29,9 +32,9 @@ export default async function BlogPage() {
 
       <div className="mt-10 space-y-6">
         {blogPosts.map((post) => {
-          const title = locale === "en" && post.titleEn ? post.titleEn : post.title;
-          const excerpt = locale === "en" && post.excerptEn ? post.excerptEn : post.excerpt;
-          const category = locale === "en" && post.categoryEn ? post.categoryEn : post.category;
+          const title = enContent && post.titleEn ? post.titleEn : post.title;
+          const excerpt = enContent && post.excerptEn ? post.excerptEn : post.excerpt;
+          const category = enContent && post.categoryEn ? post.categoryEn : post.category;
 
           return (
             <article
@@ -43,7 +46,7 @@ export default async function BlogPage() {
                   {category}
                 </span>
                 <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString(locale === "en" ? "en-US" : "th-TH", {
+                  {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
                     year: "numeric",
                     month: "long",
                     day: "numeric",

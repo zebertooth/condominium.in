@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getLocale } from "@/lib/locale";
+import { htmlLang, isRtlLocale } from "@/lib/locale-content";
 import { createMetadata, siteConfig } from "@/lib/seo";
 import "./globals.css";
 
@@ -30,7 +31,7 @@ const organizationJsonLd = {
     "@type": "City",
     name: "Bangkok",
   },
-  availableLanguage: ["Thai", "English"],
+  availableLanguage: ["Thai", "English", "Chinese", "Japanese", "Arabic"],
 };
 
 export default async function RootLayout({
@@ -39,9 +40,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const dir = isRtlLocale(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} className={`${notoSansThai.variable} h-full antialiased`}>
+    <html lang={htmlLang(locale)} dir={dir} className={`${notoSansThai.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <LocaleProvider locale={locale}>
           <JsonLd data={organizationJsonLd} />

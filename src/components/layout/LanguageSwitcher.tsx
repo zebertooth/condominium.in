@@ -26,7 +26,7 @@ export function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5 text-xs">
+    <div className="flex max-w-full flex-wrap items-center gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5 text-xs">
       {activeLocales.map((item) => (
         <button
           key={item.code}

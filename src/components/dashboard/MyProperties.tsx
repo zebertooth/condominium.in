@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale, useT, useTf } from "@/components/i18n/LocaleProvider";
 import { formatPrice } from "@/lib/i18n";
+import { dateLocale } from "@/lib/locale-content";
 import { PAID_FEATURES_ENABLED, PENDING_PAYMENT_STORAGE } from "@/lib/packages";
 import type { Property } from "@/types/property";
 
-function formatSponsorDate(iso: string, locale: "th" | "en") {
-  return new Date(iso).toLocaleDateString(locale === "en" ? "en-US" : "th-TH", {
+function formatSponsorDate(iso: string, locale: "th" | "en" | "zh" | "ja" | "ar") {
+  return new Date(iso).toLocaleDateString(dateLocale(locale), {
     day: "numeric",
     month: "short",
     year: "numeric",

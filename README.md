@@ -7,11 +7,11 @@
 
 ## Features
 
-- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search — **TH/EN**
-- Owner dashboard — verify LINE+Email, post listings, **views/inquiries/clicks stats**, sponsor boost — **TH/EN**
+- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search — **5 ภาษา (TH/EN/ZH/JA/AR)**
+- Owner dashboard — verify LINE+Email, post listings, stats, sponsor boost — **5 ภาษา**
 - Agent CRM — `/dashboard/agent`, viewing scheduler, lead pipeline
-- Admin panel — approve listings, users, leads, payments, analytics — **TH/EN**
-- Blog (5 articles) + 9 BTS area guides — **TH/EN content**
+- Admin panel — approve listings, users, leads, payments, analytics — **5 ภาษา**
+- Blog (5 articles) + 9 BTS area guides — **TH + EN content** (ZH/JA/AR UI uses EN articles)
 - Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS wired — user to verify prod next)
 - **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
 - Owner direct contact + security-hardened lead routing
@@ -38,7 +38,7 @@ Health check: `GET https://www.condominium.in.th/api/health`
 ## Next steps (see ROADMAP.md)
 
 1. ThaiBulkSMS production verify (user)
-2. Phase 4: ZH / JA / AR
+2. Native ZH/JA/AR blog/area/property content
 3. Optional Vercel keys: OPENAI, SLIPOK, GA4
 
 ## Documentation

@@ -30,6 +30,10 @@ body {
   margin-bottom: 0.75rem;
 }
 
+[dir="rtl"] .rtl-mirror {
+  transform: scaleX(-1);
+}
+
 .prose p {
   margin-bottom: 1rem;
   line-height: 1.75;

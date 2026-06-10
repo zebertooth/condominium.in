@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Locale } from "@/lib/i18n";
 
 export const siteConfig = {
   name: "Condominium.in.th",
@@ -20,6 +21,23 @@ export const siteConfig = {
   locale: "th_TH",
 };
 
+const HREFLANG_MAP: Record<Locale, string> = {
+  th: "th-TH",
+  en: "en-US",
+  zh: "zh-Hans",
+  ja: "ja-JP",
+  ar: "ar-SA",
+};
+
+export function hreflangAlternates(path = ""): Record<string, string> {
+  const url = `${siteConfig.url}${path}`;
+  const languages: Record<string, string> = { "x-default": url };
+  for (const loc of ["th", "en", "zh", "ja", "ar"] as Locale[]) {
+    languages[HREFLANG_MAP[loc]] = url;
+  }
+  return languages;
+}
+
 export function createMetadata({
   title,
   description,
@@ -38,7 +56,10 @@ export function createMetadata({
     title,
     description,
     keywords: [...siteConfig.keywords, ...keywords],
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: hreflangAlternates(path),
+    },
     openGraph: {
       title,
       description,

@@ -7,6 +7,8 @@ import { PropertyViewTracker } from "@/components/property/PropertyViewTracker";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { formatPrice, t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { usesEnglishContent } from "@/lib/locale-content";
+import { localizedPropertyTitle } from "@/lib/property-i18n";
 import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
 import { createMetadata, siteConfig } from "@/lib/seo";
@@ -42,6 +44,8 @@ export default async function PropertyPage({ params }: PageProps) {
 
   const isPublished = property.status === "published" || !property.status;
   const isPreview = !isPublished;
+  const enContent = usesEnglishContent(locale);
+  const displayTitle = localizedPropertyTitle(property, locale);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -80,10 +84,10 @@ export default async function PropertyPage({ params }: PageProps) {
       {isPreview && (
         <div className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {property.status === "pending"
-            ? locale === "en"
+            ? enContent
               ? "Preview only — this listing is pending admin approval and is not public yet."
               : "โหมดดูตัวอย่าง — ประกาศนี้รอแอดมินอนุมัติ ยังไม่แสดงต่อสาธารณะ"
-            : locale === "en"
+            : enContent
               ? "This listing was rejected and is not public."
               : "ประกาศนี้ถูกปฏิเสธ ยังไม่แสดงต่อสาธารณะ"}
         </div>
@@ -97,11 +101,11 @@ export default async function PropertyPage({ params }: PageProps) {
           {listingLabel}
         </Link>
         {" / "}
-        <span className="text-slate-900">{property.title}</span>
+        <span className="text-slate-900">{displayTitle}</span>
       </nav>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <PropertyImageGallery images={property.images} title={property.title} />
+        <PropertyImageGallery images={property.images} title={displayTitle} />
 
         <div>
           <div className="flex flex-wrap gap-2">

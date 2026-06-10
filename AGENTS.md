@@ -12,20 +12,22 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 25 — **owner stats + sponsored posts UI**)
+> ## 🤝 HANDOFF (session 26 — **Phase 4 i18n: ZH / JA / AR**)
 >
-> **Production:** https://www.condominium.in.th — OTP/LINE verified OK  
-> **User will handle next:** ThaiBulkSMS production verify → then Phase 4 i18n
+> **Production:** https://www.condominium.in.th  
+> **User will handle:** ThaiBulkSMS production verify
 >
 > **Done this session:**
-> - Owner listing stats: views, inquiries, contact clicks (all-time + 30-day) in dashboard
-> - Sponsored posts UI: featured badges, buy/rent sort boost, sponsor purchase flow polish
-> - Post-submit sponsor upsell banner; active sponsor expiry handling
+> - Enabled ZH / JA / AR in language switcher (cookie `condo_locale`)
+> - Full UI translations (~331 keys each) in `src/lib/i18n/*-overrides.ts`
+> - RTL layout for Arabic (`dir="rtl"` on `<html>`)
+> - hreflang tags on all pages via `createMetadata()`
+> - Blog/area/property content uses EN fields for non-Thai locales
 >
 > **Next priorities:**
 > 1. ThaiBulkSMS production verify (user)
-> 2. Phase 4 locales (ZH / JA / AR)
-> 3. Optional Vercel keys: OPENAI, SLIPOK, GA4
+> 2. Optional Vercel keys: OPENAI, SLIPOK, GA4
+> 3. Per-locale property/blog/area content fields (ZH/JA/AR native copy)
 
 ---
 
@@ -35,7 +37,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 3 → 4** — ThaiBulkSMS verify → multilingual |
+| Phase | **Phase 4** — 5 locales live (TH/EN/ZH/JA/AR) |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
@@ -49,18 +51,17 @@ npm run build
 npx vercel --prod
 ```
 
-Vercel runs `node scripts/vercel-build.mjs` (migrate only when `DATABASE_URL` is set).
-
 ---
 
 ## Key paths
 
 ```
-scripts/vercel-build.mjs       Vercel CI build (conditional migrate)
-src/lib/analytics.ts           getOwnerPropertyStats() + admin summary
-src/lib/user-properties.ts     isActiveSponsor(), listing conversion
-src/lib/listings.ts            Featured-first sort on buy/rent/home
-src/components/dashboard/      MyProperties stats, SponsorUpsellBanner
+src/lib/i18n.ts                 Locale type + t() + activeLocales (5 langs)
+src/lib/i18n/zh-overrides.ts    Simplified Chinese UI strings
+src/lib/i18n/ja-overrides.ts    Japanese UI strings
+src/lib/i18n/ar-overrides.ts    Arabic UI strings (+ RTL)
+src/lib/locale-content.ts         usesEnglishContent(), isRtlLocale(), dateLocale()
+src/lib/seo.ts                    hreflang alternates
 ```
 
 ---
