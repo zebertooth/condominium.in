@@ -8,6 +8,14 @@ import { formatPrice } from "@/lib/i18n";
 import { PAID_FEATURES_ENABLED, PENDING_PAYMENT_STORAGE } from "@/lib/packages";
 import type { Property } from "@/types/property";
 
+function formatSponsorDate(iso: string, locale: "th" | "en") {
+  return new Date(iso).toLocaleDateString(locale === "en" ? "en-US" : "th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export function MyProperties({
   properties,
   canPost,
@@ -81,75 +89,155 @@ export function MyProperties({
         )}
       </div>
 
+      {properties.length > 0 && (
+        <p className="mt-3 text-xs text-slate-500">{t("statsLegend")}</p>
+      )}
+
       {properties.length === 0 ? (
         <p className="mt-6 text-slate-600">{t("noListingsYet")}</p>
       ) : (
         <ul className="mt-6 space-y-4">
-          {properties.map((p) => (
-            <li
-              key={p.id}
-              className="flex flex-col gap-3 rounded-xl border border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <Link href={`/property/${p.slug}`} className="font-semibold text-slate-900 hover:text-teal-700">
-                  {p.title}
-                </Link>
-                <p className="text-sm text-teal-700">{formatPrice(p.price, p.priceUnit, locale)}</p>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {p.status === "pending" && (
-                    <span className="rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800">{t("statusPending")}</span>
-                  )}
-                  {p.status === "rejected" && (
-                    <span className="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">{t("statusRejected")}</span>
-                  )}
-                  {p.featured && (
-                    <span className="rounded bg-violet-100 px-2 py-0.5 text-xs text-violet-800">{t("statusFeatured")}</span>
+          {properties.map((p) => {
+            const canSponsor =
+              PAID_FEATURES_ENABLED && p.status === "published" && !p.featured;
+            const statsPending = p.status !== "published";
+
+            return (
+              <li
+                key={p.id}
+                className="flex flex-col gap-3 rounded-xl border border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/property/${p.slug}`}
+                    className="font-semibold text-slate-900 hover:text-teal-700"
+                  >
+                    {p.title}
+                  </Link>
+                  <p className="text-sm text-teal-700">
+                    {formatPrice(p.price, p.priceUnit, locale)}
+                  </p>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {p.status === "pending" && (
+                      <span className="rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800">
+                        {t("statusPending")}
+                      </span>
+                    )}
+                    {p.status === "rejected" && (
+                      <span className="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">
+                        {t("statusRejected")}
+                      </span>
+                    )}
+                    {p.featured && (
+                      <span className="rounded bg-violet-100 px-2 py-0.5 text-xs text-violet-800">
+                        {t("statusFeatured")}
+                        {p.sponsoredUntil
+                          ? ` · ${tf("sponsoredUntilLabel", {
+                              date: formatSponsorDate(p.sponsoredUntil, locale),
+                            })}`
+                          : ""}
+                      </span>
+                    )}
+                  </div>
+
+                  {statsPending ? (
+                    <p className="mt-2 text-xs text-slate-400">{t("statsPendingNote")}</p>
+                  ) : (
+                    <>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                          {p.viewsCount ?? 0} {t("viewsLabel")}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                            />
+                          </svg>
+                          {p.inquiriesCount ?? 0} {t("inquiriesLabel")}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            />
+                          </svg>
+                          {p.contactClicksCount ?? 0} {t("contactClicksLabel")}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-400">
+                        {tf("statsLast30Days", {
+                          views: p.viewsCount30d ?? 0,
+                          inquiries: p.inquiriesCount30d ?? 0,
+                          clicks: p.contactClicksCount30d ?? 0,
+                        })}
+                      </p>
+                    </>
                   )}
                 </div>
-                <div className="mt-2 flex items-center gap-4 text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    {p.viewsCount ?? 0} {t("viewsLabel")}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
-                    {p.inquiriesCount ?? 0} {t("inquiriesLabel")}
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Link
-                  href={`/dashboard/edit/${p.id}`}
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  {t("editBtn")}
-                </Link>
-                {PAID_FEATURES_ENABLED && p.status === "published" && (
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  <Link
+                    href={`/dashboard/edit/${p.id}`}
+                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                  >
+                    {t("editBtn")}
+                  </Link>
+                  {canSponsor && (
+                    <button
+                      type="button"
+                      onClick={() => sponsorProperty(p.id)}
+                      disabled={loading === `sponsor-${p.id}`}
+                      className="rounded-lg border border-amber-300 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-50"
+                    >
+                      {t("sponsorBtn")}
+                    </button>
+                  )}
                   <button
                     type="button"
-                    onClick={() => sponsorProperty(p.id)}
-                    disabled={loading === `sponsor-${p.id}`}
-                    className="rounded-lg border border-amber-300 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-50"
+                    onClick={() => deleteProperty(p.id)}
+                    disabled={loading === p.id}
+                    className="rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50"
                   >
-                    {t("sponsorBtn")}
+                    {t("deleteBtn")}
                   </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => deleteProperty(p.id)}
-                  disabled={loading === p.id}
-                  className="rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50"
-                >
-                  {t("deleteBtn")}
-                </button>
-              </div>
-            </li>
-          ))}
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

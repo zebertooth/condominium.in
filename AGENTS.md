@@ -12,23 +12,20 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 23 — **merged main + OTP fixes**)
+> ## 🤝 HANDOFF (session 25 — **owner stats + sponsored posts UI**)
 >
-> **Production:** https://www.condominium.in.th — deploy after push to `main`  
+> **Production:** https://www.condominium.in.th — OTP/LINE verified OK  
+> **User will handle next:** ThaiBulkSMS production verify → then Phase 4 i18n
 >
-> **Done (merged):**
-> - Dashboard EN/TH i18n, property preview, integration health status
-> - Security audit fixes (register role, OTP, leads, payment gates)
-> - Vercel CI: `scripts/vercel-build.mjs` skips migrate on preview without `DATABASE_URL`
-> - OTP email/SMS fallback codes when Resend/ThaiBulkSMS fails
-> - Agent CRM + viewing scheduler (from day2-website PR)
-> - Blog/areas/admin nav EN i18n
+> **Done this session:**
+> - Owner listing stats: views, inquiries, contact clicks (all-time + 30-day) in dashboard
+> - Sponsored posts UI: featured badges, buy/rent sort boost, sponsor purchase flow polish
+> - Post-submit sponsor upsell banner; active sponsor expiry handling
 >
 > **Next priorities:**
-> 1. Verify OTP + LINE verify on production after deploy
-> 2. Blog/area article body EN content
-> 3. Optional keys: OPENAI, SLIPOK, GA4
-> 4. **Sponsored posts UI** — do NOT implement until user asks
+> 1. ThaiBulkSMS production verify (user)
+> 2. Phase 4 locales (ZH / JA / AR)
+> 3. Optional Vercel keys: OPENAI, SLIPOK, GA4
 
 ---
 
@@ -38,7 +35,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 2** — audit done; merge + admin i18n next |
+| Phase | **Phase 3 → 4** — ThaiBulkSMS verify → multilingual |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
@@ -59,10 +56,11 @@ Vercel runs `node scripts/vercel-build.mjs` (migrate only when `DATABASE_URL` is
 ## Key paths
 
 ```
-scripts/vercel-build.mjs     Vercel CI build (conditional migrate)
-src/lib/request.ts           Safe empty POST body parsing (OTP routes)
-src/lib/user-properties.ts   Preview + safe JSON parse + slug uniqueness
-src/app/api/leads/route.ts   Server-validated owner-direct inquiries
+scripts/vercel-build.mjs       Vercel CI build (conditional migrate)
+src/lib/analytics.ts           getOwnerPropertyStats() + admin summary
+src/lib/user-properties.ts     isActiveSponsor(), listing conversion
+src/lib/listings.ts            Featured-first sort on buy/rent/home
+src/components/dashboard/      MyProperties stats, SponsorUpsellBanner
 ```
 
 ---
@@ -75,7 +73,6 @@ Admin: `admin@condominium.in.th` / `admin123456` (created via `npm run db:seed` 
 
 ## Do NOT (unless user asks)
 
-- Implement sponsored posts UI
 - Commit `.env`
 - Auto-promote register users to admin
 
@@ -83,6 +80,6 @@ Admin: `admin@condominium.in.th` / `admin123456` (created via `npm run db:seed` 
 
 ## Related
 
-- [`ROADMAP.md`](./ROADMAP.md) — phase tracker + next step plan
+- [`ROADMAP.md`](./ROADMAP.md) — phase tracker + session log
 - [`CLAUDE.md`](./CLAUDE.md) — technical reference
 - [`DEPLOYMENT.md`](./DEPLOYMENT.md) — Vercel env + troubleshooting

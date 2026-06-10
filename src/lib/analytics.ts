@@ -48,6 +48,95 @@ export async function logPropertyView(input: LogPropertyViewInput) {
   });
 }
 
+export interface OwnerPropertyStats {
+  viewsCount: number;
+  inquiriesCount: number;
+  contactClicksCount: number;
+  viewsCount30d: number;
+  inquiriesCount30d: number;
+  contactClicksCount30d: number;
+}
+
+const CONTACT_CLICK_TYPES = ["owner_phone_click", "owner_email_click"] as const;
+
+function slugCountMap(
+  rows: { propertySlug: string | null; _count: number }[],
+): Record<string, number> {
+  const map: Record<string, number> = {};
+  for (const row of rows) {
+    if (row.propertySlug) map[row.propertySlug] = row._count;
+  }
+  return map;
+}
+
+/** Per-slug view/inquiry/contact-click totals for owner dashboard. */
+export async function getOwnerPropertyStats(
+  propertySlugs: string[],
+): Promise<Record<string, OwnerPropertyStats>> {
+  if (propertySlugs.length === 0) return {};
+
+  const since30 = new Date(Date.now() - DAYS_30 * 24 * 60 * 60 * 1000);
+  const slugFilter = { propertySlug: { in: propertySlugs } };
+
+  const [viewsAll, views30, inquiriesAll, inquiries30, clicksAll, clicks30] =
+    await Promise.all([
+      prisma.propertyViewEvent.groupBy({
+        by: ["propertySlug"],
+        where: slugFilter,
+        _count: true,
+      }),
+      prisma.propertyViewEvent.groupBy({
+        by: ["propertySlug"],
+        where: { ...slugFilter, createdAt: { gte: since30 } },
+        _count: true,
+      }),
+      prisma.matchingEvent.groupBy({
+        by: ["propertySlug"],
+        where: { ...slugFilter, eventType: "owner_inquiry" },
+        _count: true,
+      }),
+      prisma.matchingEvent.groupBy({
+        by: ["propertySlug"],
+        where: { ...slugFilter, eventType: "owner_inquiry", createdAt: { gte: since30 } },
+        _count: true,
+      }),
+      prisma.matchingEvent.groupBy({
+        by: ["propertySlug"],
+        where: { ...slugFilter, eventType: { in: [...CONTACT_CLICK_TYPES] } },
+        _count: true,
+      }),
+      prisma.matchingEvent.groupBy({
+        by: ["propertySlug"],
+        where: {
+          ...slugFilter,
+          eventType: { in: [...CONTACT_CLICK_TYPES] },
+          createdAt: { gte: since30 },
+        },
+        _count: true,
+      }),
+    ]);
+
+  const viewsMap = slugCountMap(viewsAll);
+  const views30Map = slugCountMap(views30);
+  const inquiriesMap = slugCountMap(inquiriesAll);
+  const inquiries30Map = slugCountMap(inquiries30);
+  const clicksMap = slugCountMap(clicksAll);
+  const clicks30Map = slugCountMap(clicks30);
+
+  const result: Record<string, OwnerPropertyStats> = {};
+  for (const slug of propertySlugs) {
+    result[slug] = {
+      viewsCount: viewsMap[slug] ?? 0,
+      inquiriesCount: inquiriesMap[slug] ?? 0,
+      contactClicksCount: clicksMap[slug] ?? 0,
+      viewsCount30d: views30Map[slug] ?? 0,
+      inquiriesCount30d: inquiries30Map[slug] ?? 0,
+      contactClicksCount30d: clicks30Map[slug] ?? 0,
+    };
+  }
+  return result;
+}
+
 export interface AnalyticsSummary {
   searchTotal: number;
   viewTotal: number;

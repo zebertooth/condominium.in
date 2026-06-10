@@ -1,14 +1,14 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 23 — merged main + OTP fixes)  
-**Current phase:** **Phase 2/3** — production deploy → verify OTP/LINE → blog article EN
+**Last updated:** 2026-06-10 (session 25 — owner stats + sponsored posts UI)  
+**Current phase:** **Phase 3 → 4** — ThaiBulkSMS prod verify (user) → ZH/JA/AR i18n
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
+> **GitHub:** `main` — auto-deploy on push (if Vercel connected).  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
-> **GitHub:** `session-21-audit-fixes` branch — merge to `main` then Vercel prod deploy.  
-> **Vercel CI:** Preview builds use `scripts/vercel-build.mjs` — skips migrate if `DATABASE_URL` unset. Set `DATABASE_URL` on **Preview** env for full PR testing.
+> **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
 > **LAUNCH POLICY (current):** Paid features ON on production when `PROMPTPAY_ID` is set (auto). Local dev OFF unless `.env` has `PROMPTPAY_ID`. ID verification removed. Thai users verify **LINE + Email** to post (2 free listings). Non-Thai users verify email only and **cannot post** yet. Phone/SMS verification is wired (ThaiBulkSMS) but **additive** (not a posting gate yet).
 
@@ -17,19 +17,16 @@
 
 ---
 
-## Model transfer snapshot (session 22)
+## Model transfer snapshot (session 25)
 
 | Area | State |
 |------|--------|
-| **GitHub** | `main` merged — OTP fixes + audit + day2-website PR |
-| **Production** | https://www.condominium.in.th — redeploy after push |
-| **Security audit** | Register admin hijack fixed, OTP empty-body fixed, owner leads validated, payment gates tightened |
-| **Dashboard i18n** | Full EN/TH |
-| **Agent CRM** | `/dashboard/agent`, viewing scheduler, agent lead permissions |
-| **Vercel build** | `scripts/vercel-build.mjs` — conditional migrate; sitemap DB fallback |
-| **OTP** | Email/SMS fallback codes when providers fail |
-| **i18n remaining** | Blog/area article bodies still Thai |
-| **Sponsored posts** | **Do not implement** until user asks |
+| **GitHub** | `main` @ `291bd67` + local session 25 (admin i18n, owner stats, sponsor UI) |
+| **Production** | https://www.condominium.in.th — OTP/LINE verified OK |
+| **Owner stats** | Views, inquiries, contact clicks — all-time + 30-day in `MyProperties` |
+| **Sponsored posts** | Featured badge, sort boost, PromptPay purchase, post-submit upsell |
+| **SMS** | ThaiBulkSMS wired — user to verify production next |
+| **Next** | ThaiBulkSMS prod verify → Phase 4 locales |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -61,7 +58,7 @@ Bangkok condo/house marketplace with:
 | **Launch** | LINE+Email verify, paid env-gated, Neon DB | **Done** | 2026 Q2 |
 | **Deploy** | Vercel + DNS + prod env vars | **Done** (live, DNS done) | 2026 Q2 |
 | **Post-launch** | Logout, i18n TH/EN, owner contact, analytics | **Done** | 2026 Q2 |
-| **2** | Real provider keys, flip paid, SEO scale, sponsored UI | **In Progress** | 2026 Q3 |
+| **2** | Real provider keys, flip paid, SEO scale, sponsored UI | **Done** (sponsor UI session 25) | 2026 Q3 |
 | **3** | Agent CRM, owner portal, scheduling | Started | 2026 Q4 |
 | **4** | Multilingual (ZH, JA, AR) | Planned | 2027 Q1 |
 
@@ -116,7 +113,7 @@ Bangkok condo/house marketplace with:
 - [x] Language switcher in public header (`LanguageSwitcher`, cookie `condo_locale`)
 - [x] `src/lib/i18n.ts` — Thai + English translation tables
 - [x] ZH / JA / AR hidden (deferred to Phase 4)
-- [~] Full EN coverage (home, buy, rent, blog, areas, contact, **dashboard** done; admin, article bodies still Thai)
+- [x] Full EN coverage — home, buy, rent, blog, areas, contact, dashboard, **admin panel** (session 24)
 
 ### Lead matching — owner vs agent
 - [x] Non-agent listings (`role !== agent`) → owner direct contact on property page
@@ -124,7 +121,7 @@ Bangkok condo/house marketplace with:
 - [x] `Lead.contactMode` — `owner_direct` | `agent_team`
 - [x] `MatchingEvent` model — logs views, clicks, inquiries
 - [x] Notify owner on inquiry via email (via `sendEmail` in `/api/leads`) — session 17
-- [x] Owner dashboard: inquiries + views per listing — session 16
+- [x] Owner dashboard: inquiries + views + contact clicks per listing (all-time + 30-day) — session 16 + 25
 
 ### Analytics & admin dashboard
 - [x] `SearchEvent` — AI search queries logged
@@ -136,18 +133,18 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Future: Sponsored posts & monetization (DO NOT IMPLEMENT YET)
+## Sponsored posts & monetization (DONE — session 25)
 
-**User requirement:** When owners post, offer platform-managed premium packages and dedicated **Sponsored Posts** placement on homepage/search results.
-
-**Design notes for future agent:**
-- Reuse `UserProperty.isSponsored` + `sponsoredUntil` (already in schema)
-- Dedicated homepage carousel / sidebar slot above organic listings
-- Post-submit upsell flow in `/dashboard/post` after listing created
-- Flip `PAID_FEATURES_ENABLED` + `PROMPTPAY_ID` before enabling purchase UI
-- Analytics: track sponsored impression/click rates in `PropertyViewEvent.source`
-
-**Status:** Documented only. No UI/layout work until user explicitly requests.
+- [x] `UserProperty.isSponsored` + `sponsoredUntil` — active sponsor via `isActiveSponsor()`
+- [x] Owner purchase flow — `/api/packages/sponsor` + PromptPay checkout in `PackageShop`
+- [x] Featured badge on `PropertyCard` + property detail page
+- [x] Sort boost — featured listings first on `/`, `/buy`, `/rent`
+- [x] Homepage featured section (`getFeaturedListings()`)
+- [x] Post-submit upsell banner (`/dashboard?posted=1`)
+- [x] Owner dashboard — sponsor button, expiry date, block duplicate pending orders
+- [x] Analytics — `PropertyViewEvent.source` = `sponsored` for featured listing views
+- [ ] Dedicated carousel / sidebar slots (optional polish)
+- [ ] Renewal reminders for sponsored posts
 
 ---
 
@@ -229,8 +226,9 @@ Bangkok condo/house marketplace with:
 
 ### Real verification
 - [x] SMS OTP — ThaiBulkSMS (preferred) + Twilio fallback (`src/lib/notifications.ts`)
-- [x] Email OTP — Resend (console fallback in dev)
-- [x] Remove `devCode` from API responses in production (gated by NODE_ENV !== "development")
+- [x] Email OTP — Resend with on-screen fallback if delivery fails
+- [x] Remove public LINE troubleshooting UI from verify page
+- [~] ThaiBulkSMS production delivery verify — **skipped for now** (user request)
 - [ ] Optional: ID card photo upload + admin manual review
 
 ### Real payments
@@ -266,15 +264,17 @@ Bangkok condo/house marketplace with:
 - [ ] CMS or MDX blog pipeline (weekly articles)
 - [ ] Google Search Console setup
 
-### UX fixes (session 20)
+### UX fixes (session 20–23)
 - [x] Owner/admin preview for `pending` listings on `/property/[slug]` (`getUserPropertyBySlugVisible`)
 - [x] Preview banner (TH/EN); contact hidden until published
-- [x] LINE Developing-channel help on `/dashboard/verify` (Tester instructions)
+- [x] Removed LINE Developing-channel help box from `/dashboard/verify` (user request)
+- [x] OTP email/SMS fallback codes when providers fail (session 23)
 
 ### Admin enhancements
 - [ ] Admin login separate from public (optional)
 - [x] Bulk approve/reject — `POST /api/admin/properties/bulk`, checkboxes + bulk bar in `AdminPropertyTable`
 - [x] Listing edit by admin — `PUT /api/admin/properties/[id]`, `/admin/properties/[id]/edit`, reuses `PostPropertyForm` (keeps status)
+- [x] Admin panel EN/TH i18n — overview, properties, users, leads, payments, analytics (session 24)
 - [ ] Audit log for admin actions
 - [ ] Dashboard charts (listings over time)
 
@@ -298,7 +298,7 @@ Bangkok condo/house marketplace with:
 
 ### Owner portal
 - [x] Edit own listings — `PUT /api/user/properties/[id]`, `/dashboard/edit/[id]`, reusable `PostPropertyForm`, edit goes back to `pending`
-- [ ] View stats (views, inquiries) per listing
+- [x] View stats (views, inquiries, contact clicks) per listing — `getOwnerPropertyStats()` + `MyProperties` (session 25)
 - [ ] Renewal reminders for sponsored posts
 - [ ] Package expiry notifications
 
@@ -321,9 +321,10 @@ Bangkok condo/house marketplace with:
 
 **Goal:** Serve expat buyers/renters in Chinese, Japanese, Arabic.
 
+- [x] TH + EN UI via cookie (`condo_locale`) + `src/lib/i18n.ts` (~200+ keys)
+- [x] Blog + area guide EN content (`contentEn`, `descriptionEn`, etc.)
 - [ ] i18n routing (`/th`, `/en`, `/zh`, `/ja`, `/ar`) or next-intl
-- [ ] Translate UI strings (scaffold in `src/lib/i18n.ts`)
-- [ ] Translated property fields (title, description)
+- [ ] Translate property fields (title, description) per locale
 - [ ] hreflang tags for SEO
 - [ ] RTL layout for Arabic
 
@@ -374,21 +375,40 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 23+)
+### Next step plan (session 25+)
 
 | Step | Action | Owner |
 |------|--------|-------|
-| **1** | Push merged `main` → Vercel prod deploy | Agent/User |
-| **2** | Smoke test: OTP email/SMS, LINE verify, `/api/health` | User |
-| **3** | Code: blog + area article EN content | Agent |
-| **4** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
-| **5** | **Sponsored posts UI** — do NOT implement until user asks | — |
+| **1** | ThaiBulkSMS production verify | User |
+| **2** | Phase 4: ZH / JA / AR locales | Agent |
+| **3** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
+| **4** | Admin audit log, dashboard charts (optional polish) | Agent |
 
-### In progress
+### Done (2026-06-10, session 25 — owner stats + sponsored posts UI)
 ```
-1. Merge PR + prod deploy (session-21-audit-fixes)
-2. EN translations: admin panel, blog/area article bodies
-3. Agent CRM: viewing scheduler
+Owner stats: getOwnerPropertyStats() — views, inquiries, contact clicks (all-time + 30d)
+MyProperties: stats legend, pending note, sponsored-until badge
+Sponsored UI: PropertyCard + detail badges, featured-first sort on buy/rent/home
+Post-submit sponsor upsell banner; isActiveSponsor() expiry; duplicate order guard
+PropertyViewEvent.source=sponsored for featured listings
+All MD files updated for session 25 handoff
+```
+
+### Done (2026-06-10, session 24 — admin panel EN i18n)
+```
+Full EN/TH for admin: overview, properties, users, leads, payments, analytics
+Lead status/source labels locale-aware (lead-constants.ts)
+Area detail pages show EN highlights
+All MD files updated for session 24 handoff (docs refreshed: owner stats marked done, session log fixes)
+```
+
+### Done (2026-06-10, session 23 — merge + OTP fixes)
+```
+Merged day2-website PR + audit fixes + OTP delivery to main
+OTP email/SMS: on-screen fallback when Resend/ThaiBulkSMS fails
+Removed LINE Developing-channel help box from VerifyForm (user request)
+Security audit, Vercel Production-only migrate
+Production OTP/LINE verify confirmed OK by user
 ```
 
 ### Done (2026-06-10, session 22 — Vercel CI + audit)
@@ -404,7 +424,6 @@ Pushed to GitHub branch session-21-audit-fixes
 EN/TH for owner dashboard: layout, QuotaCard, MyProperties, VerifyForm,
 PackageShop, PostPropertyForm, post/verify/edit pages
 Added tf() helper + useTf() hook for interpolated strings
-Removed LINE developing-status help box from VerifyForm (user request)
 ```
 
 ### Done (2026-06-10, session 20 — bugfixes + handoff)
@@ -412,7 +431,6 @@ Removed LINE developing-status help box from VerifyForm (user request)
 Property 404 fix: owner/admin preview pending listings on /property/[slug]
 Preview banner (TH/EN); contact hidden until published
 getUserPropertyBySlugVisible() in user-properties.ts
-LINE verify help: Developing channel / Tester instructions on VerifyForm
 Deployed to www.condominium.in.th
 All MD files updated for token-restart handoff
 ```
@@ -616,7 +634,8 @@ All markdown docs updated for Deploy phase:
 | 2026-06-09 | TH/EN only for i18n launch; ZH/JA/AR hidden | User scope; full multilingual deferred |
 | 2026-06-09 | Owner direct contact when `poster.role !== agent` | Agent listings use platform CRM; owners contacted directly |
 | 2026-06-09 | Analytics in Postgres (not GA4-only) | Admin dashboard + CSV; works without `NEXT_PUBLIC_GA_ID` |
-| 2026-06-09 | Sponsored posts UI deferred | User asked to plan only; schema fields exist |
+| 2026-06-09 | Sponsored posts UI deferred | Schema only until session 25 |
+| 2026-06-10 | Sponsored posts UI built | User requested — badges, sort boost, PromptPay flow |
 
 ---
 

@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useLocale, useT } from "@/components/i18n/LocaleProvider";
 import {
-  LEAD_CONTACT_MODE_LABEL,
-  LEAD_SOURCE_LABEL,
-  LEAD_STATUSES,
-  leadStatusLabel,
+  getLeadStatuses,
+  leadContactModeLabelFor,
+  leadSourceLabelFor,
+  leadStatusLabelFor,
 } from "@/lib/lead-constants";
 
 export interface LeadView {
@@ -49,7 +50,10 @@ export function AdminLeadTable({
   agents: AgentOption[];
 }) {
   const router = useRouter();
+  const t = useT();
+  const locale = useLocale();
   const [loading, setLoading] = useState<string | null>(null);
+  const leadStatuses = getLeadStatuses(locale);
 
   async function patchLead(id: string, payload: Record<string, unknown>) {
     setLoading(id);
@@ -63,7 +67,7 @@ export function AdminLeadTable({
   }
 
   if (leads.length === 0) {
-    return <p className="text-slate-600">ยังไม่มีลีด</p>;
+    return <p className="text-slate-600">{t("adminNoLeads")}</p>;
   }
 
   return (
@@ -79,13 +83,13 @@ export function AdminLeadTable({
                     statusStyle[lead.status] ?? "bg-slate-100 text-slate-700"
                   }`}
                 >
-                  {leadStatusLabel[lead.status] ?? lead.status}
+                  {leadStatusLabelFor(lead.status, locale)}
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-500">
-                {LEAD_SOURCE_LABEL[lead.source] ?? lead.source}
+                {leadSourceLabelFor(lead.source, locale)}
                 {" · "}
-                {LEAD_CONTACT_MODE_LABEL[lead.contactMode] ?? lead.contactMode}
+                {leadContactModeLabelFor(lead.contactMode, locale)}
                 {" · "}
                 {lead.createdAt}
               </p>
@@ -98,7 +102,7 @@ export function AdminLeadTable({
 
           {lead.propertyTitle && (
             <p className="mt-2 text-sm text-slate-600">
-              สนใจ:{" "}
+              {t("adminInterestIn")}{" "}
               {lead.propertySlug ? (
                 <Link href={`/property/${lead.propertySlug}`} className="text-teal-700 hover:underline">
                   {lead.propertyTitle}
@@ -114,7 +118,7 @@ export function AdminLeadTable({
           </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            {LEAD_STATUSES.map((s) => (
+            {leadStatuses.map((s) => (
               <button
                 key={s.value}
                 type="button"
@@ -133,14 +137,14 @@ export function AdminLeadTable({
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="text-sm">
-              <span className="text-slate-600">มอบหมายเอเจนต์</span>
+              <span className="text-slate-600">{t("adminAssignAgent")}</span>
               <select
                 value={lead.assignedToId ?? ""}
                 disabled={loading === lead.id}
                 onChange={(e) => patchLead(lead.id, { assignedToId: e.target.value })}
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none ring-teal-500 focus:ring-2"
               >
-                <option value="">— ยังไม่มอบหมาย —</option>
+                <option value="">{t("adminUnassigned")}</option>
                 {agents.map((a) => (
                   <option key={a.id} value={a.id}>
                     {a.name}
@@ -150,12 +154,12 @@ export function AdminLeadTable({
             </label>
 
             <label className="text-sm">
-              <span className="text-slate-600">บันทึกของเอเจนต์</span>
+              <span className="text-slate-600">{t("adminAgentNote")}</span>
               <input
                 type="text"
                 defaultValue={lead.agentNote ?? ""}
                 disabled={loading === lead.id}
-                placeholder="เช่น โทรแล้ว นัดชมศุกร์นี้"
+                placeholder={t("adminAgentNotePlaceholder")}
                 onBlur={(e) => {
                   if (e.target.value !== (lead.agentNote ?? "")) {
                     patchLead(lead.id, { agentNote: e.target.value });

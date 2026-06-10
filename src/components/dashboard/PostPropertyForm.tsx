@@ -79,7 +79,11 @@ export function PostPropertyForm({
       return;
     }
 
-    router.push(redirectTo);
+    if (!isEdit && httpMethod === "POST") {
+      router.push("/dashboard?posted=1");
+    } else {
+      router.push(redirectTo);
+    }
     router.refresh();
   }
 

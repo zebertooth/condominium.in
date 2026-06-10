@@ -2,51 +2,48 @@ import { redirect } from "next/navigation";
 import { MyProperties } from "@/components/dashboard/MyProperties";
 import { PackageShop } from "@/components/dashboard/PackageShop";
 import { QuotaCard } from "@/components/dashboard/QuotaCard";
+import { SponsorUpsellBanner } from "@/components/dashboard/SponsorUpsellBanner";
 import { getCurrentUser } from "@/lib/auth";
+import { getOwnerPropertyStats } from "@/lib/analytics";
 import { prisma } from "@/lib/db";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing } from "@/lib/user-properties";
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: Promise<{ posted?: string }>;
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
+  const { posted } = await searchParams;
   const quota = await getUserQuota(user.id);
   const rows = await prisma.userProperty.findMany({
     where: { userId: user.id, status: { not: "deleted" } },
     orderBy: { createdAt: "desc" },
   });
-  
-  // Fetch stats for all properties
-  const propertySlugs = rows.map((r) => r.slug);
-  const [views, inquiries] = await Promise.all([
-    prisma.propertyViewEvent.groupBy({
-      by: ["propertySlug"],
-      where: { propertySlug: { in: propertySlugs } },
-      _count: true,
-    }),
-    prisma.matchingEvent.groupBy({
-      by: ["propertySlug"],
-      where: {
-        propertySlug: { in: propertySlugs },
-        eventType: "owner_inquiry",
-      },
-      _count: true,
-    }),
-  ]);
 
-  const viewCountMap = Object.fromEntries(views.map((v) => [v.propertySlug, v._count]));
-  const inquiryCountMap = Object.fromEntries(inquiries.map((i) => [i.propertySlug, i._count]));
+  const propertySlugs = rows.map((r) => r.slug);
+  const statsMap = await getOwnerPropertyStats(propertySlugs);
 
   const properties = rows.map((row) => {
     const p = dbPropertyToListing(row);
-    p.viewsCount = viewCountMap[p.slug] || 0;
-    p.inquiriesCount = inquiryCountMap[p.slug] || 0;
+    const stats = statsMap[p.slug];
+    if (stats) {
+      p.viewsCount = stats.viewsCount;
+      p.inquiriesCount = stats.inquiriesCount;
+      p.contactClicksCount = stats.contactClicksCount;
+      p.viewsCount30d = stats.viewsCount30d;
+      p.inquiriesCount30d = stats.inquiriesCount30d;
+      p.contactClicksCount30d = stats.contactClicksCount30d;
+    }
     return p;
   });
 
   return (
     <div className="space-y-8">
+      {posted === "1" && <SponsorUpsellBanner />}
       <QuotaCard quota={quota} />
       <MyProperties properties={properties} canPost={quota.canPost} />
       {quota.canBuyPackages && <PackageShop />}

@@ -1,5 +1,7 @@
 import { AdminPropertyTable } from "@/components/admin/AdminPropertyTable";
 import { prisma } from "@/lib/db";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { dbPropertyToListing } from "@/lib/user-properties";
 
 interface PageProps {
@@ -7,7 +9,7 @@ interface PageProps {
 }
 
 export default async function AdminPropertiesPage({ searchParams }: PageProps) {
-  const { status } = await searchParams;
+  const [{ status }, locale] = await Promise.all([searchParams, getLocale()]);
   const filterStatus = status && ["pending", "published", "rejected"].includes(status) ? status : undefined;
 
   const rows = await prisma.userProperty.findMany({
@@ -25,16 +27,18 @@ export default async function AdminPropertiesPage({ searchParams }: PageProps) {
     ownerEmail: p.user.email,
   }));
 
+  const tabs = [
+    { label: t("adminFilterAll", locale), value: undefined },
+    { label: t("statusPending", locale), value: "pending" },
+    { label: t("statusPublished", locale), value: "published" },
+    { label: t("statusRejected", locale), value: "rejected" },
+  ] as const;
+
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">จัดการประกาศ</h1>
+      <h1 className="text-2xl font-bold text-slate-900">{t("adminPropertiesTitle", locale)}</h1>
       <div className="mt-4 flex gap-2 text-sm">
-        {[
-          { label: "ทั้งหมด", value: undefined },
-          { label: "รออนุมัติ", value: "pending" },
-          { label: "เผยแพร่", value: "published" },
-          { label: "ปฏิเสธ", value: "rejected" },
-        ].map((tab) => (
+        {tabs.map((tab) => (
           <a
             key={tab.label}
             href={tab.value ? `/admin/properties?status=${tab.value}` : "/admin/properties"}

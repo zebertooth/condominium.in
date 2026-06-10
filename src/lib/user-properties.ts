@@ -71,6 +71,14 @@ type DbProperty = {
   };
 };
 
+export function isActiveSponsor(
+  isSponsored: boolean,
+  sponsoredUntil: Date | null,
+  now = new Date(),
+): boolean {
+  return isSponsored && (!sponsoredUntil || sponsoredUntil > now);
+}
+
 export function dbPropertyToListing(p: DbProperty): Property {
   const poster =
     p.user && p.user.id && p.user.role
@@ -84,6 +92,7 @@ export function dbPropertyToListing(p: DbProperty): Property {
       : undefined;
 
   const ownerDirect = poster ? isOwnerDirectListing(poster.role) : false;
+  const activeSponsor = isActiveSponsor(p.isSponsored, p.sponsoredUntil);
 
   return {
     id: p.id,
@@ -107,7 +116,8 @@ export function dbPropertyToListing(p: DbProperty): Property {
     longitude: p.longitude ?? undefined,
     features: parseJsonArray(p.features),
     images: parseJsonArray(p.images),
-    featured: p.isSponsored,
+    featured: activeSponsor,
+    sponsoredUntil: p.sponsoredUntil?.toISOString() ?? undefined,
     publishedAt: p.createdAt.toISOString().slice(0, 10),
     status: p.status as Property["status"],
     poster,
@@ -125,19 +135,13 @@ const userSelect = {
 } as const;
 
 export async function getAllPublishedUserProperties(): Promise<Property[]> {
-  const now = new Date();
   const rows = await prisma.userProperty.findMany({
     where: { status: "published" },
     orderBy: [{ isSponsored: "desc" }, { createdAt: "desc" }],
     include: { user: { select: userSelect } },
   });
 
-  return rows.map((p) =>
-    dbPropertyToListing({
-      ...p,
-      isSponsored: p.isSponsored && (!p.sponsoredUntil || p.sponsoredUntil > now),
-    }),
-  );
+  return rows.map((p) => dbPropertyToListing(p));
 }
 
 export async function getUserPropertyBySlug(slug: string): Promise<Property | null> {

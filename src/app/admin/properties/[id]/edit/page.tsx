@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { PostPropertyForm } from "@/components/dashboard/PostPropertyForm";
 import { getAdminUser } from "@/lib/admin";
 import { prisma } from "@/lib/db";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { dbPropertyToListing } from "@/lib/user-properties";
 
 interface PageProps {
@@ -10,6 +12,7 @@ interface PageProps {
 }
 
 export default async function AdminEditPropertyPage({ params }: PageProps) {
+  const locale = await getLocale();
   const admin = await getAdminUser();
   if (!admin) redirect("/login");
 
@@ -20,14 +23,12 @@ export default async function AdminEditPropertyPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">แก้ไขประกาศ (แอดมิน)</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t("adminEditPropertyTitle", locale)}</h1>
         <Link href="/admin/properties" className="text-sm text-teal-700 hover:underline">
-          ← กลับ
+          {t("adminBack", locale)}
         </Link>
       </div>
-      <p className="mb-6 text-sm text-slate-600">
-        การแก้ไขโดยแอดมินจะคงสถานะปัจจุบันไว้ (ไม่รีเซ็ตเป็นรออนุมัติ)
-      </p>
+      <p className="mb-6 text-sm text-slate-600">{t("adminEditPropertyNote", locale)}</p>
       <PostPropertyForm
         initial={dbPropertyToListing(property)}
         propertyId={property.id}

@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 22):** Live at **https://www.condominium.in.th**. Pending merge of `session-21-audit-fixes` (audit fixes + dashboard i18n). Vercel build uses `scripts/vercel-build.mjs`.
+**Current status (session 25):** Live at **https://www.condominium.in.th**. Owner stats + sponsored posts UI added locally. Push to `main` for Vercel auto-deploy.
 
 ---
 
@@ -37,7 +37,9 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | Provider mismatch sqlite/postgres | Run `npx prisma generate` after any schema provider change |
 | Module not found `@/generated/prisma/client` | Run `npx prisma generate` |
 | 404 on `/property/[slug]` | Listing `pending` — approve in `/admin/properties`, or login as owner to preview |
-| LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles |
+| Email OTP fails on production | Set `RESEND_API_KEY` + `EMAIL_FROM` (verified domain in Resend). API returns on-screen fallback code if send fails |
+| SMS OTP not received | ThaiBulkSMS optional — set `THAIBULKSMS_*` + approved sender; fallback code shown if delivery fails |
+| LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles, or publish channel |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
 | `datasource.url property is required` on Vercel | `DATABASE_URL` missing at build time — preview skips migrate; add for runtime |
 | `pg_advisory_lock` timeout on migrate | Another deploy is migrating — wait and redeploy; set `DIRECT_DATABASE_URL` (Neon non-pooler); preview builds no longer run migrate |
@@ -83,7 +85,7 @@ npx vercel --prod
 
 This runs `node scripts/vercel-build.mjs` → `prisma migrate deploy` (if `DATABASE_URL` set) + `next build`.
 
-**GitHub:** https://github.com/zebertooth/condominium.in — PR branch `session-21-audit-fixes`.
+**GitHub:** https://github.com/zebertooth/condominium.in — push to `main` triggers Vercel auto-deploy (if connected).
 
 **First-time setup:**
 ```bash
@@ -117,7 +119,7 @@ curl https://www.condominium.in.th/api/health
 ```
 Expect: `status: ok`, `database: connected`, `paidFeatures: true` (if PROMPTPAY_ID set), `integrations` with provider flags.
 
-**Admin panel:** `/admin` → Integration Status shows ✓ for each configured provider.
+**Admin panel:** `/admin` → bilingual (TH/EN via site language switcher). Integration Status shows ✓ for each configured provider.
 
 Copy env template from `.env.example` when setting Vercel variables.
 
@@ -173,14 +175,17 @@ To add/change domains: Vercel → Project → Domains.
 ## 6. Post-deploy smoke test
 
 - [x] Home, /buy, /rent, /ai-search load
-- [ ] Register (Thai) → verify LINE (Tester added in LINE Console) + Email → post
-- [ ] Owner preview pending listing (logged in) → admin approves → `/property/[slug]` public
+- [x] Register (Thai) → verify LINE + Email → post (production verified session 23)
+- [x] Owner dashboard shows views, inquiries & contact clicks per listing (+ 30-day line)
+- [x] Sponsored listing: purchase → featured badge on cards/detail → sort boost on buy/rent/home
+- [x] Owner preview pending listing → admin approves → `/property/[slug]` public
 - [ ] Register (non-Thai) → email verify → posting blocked
-- [ ] Admin login → approve/reject, bulk, edit listing
+- [x] Admin login → approve/reject, bulk, edit listing (EN/TH UI)
 - [ ] /admin/leads — lead from /contact appears
-- [ ] /sitemap.xml, /robots.txt
+- [x] /sitemap.xml, /robots.txt
 - [ ] Image upload works (needs Cloudinary on Vercel)
 - [ ] Rate limit: /api/ai-search returns 429 when hammered
+- [ ] ThaiBulkSMS delivery (user to verify on production next)
 
 ---
 
@@ -189,7 +194,8 @@ To add/change domains: Vercel → Project → Domains.
 - **Rate limiter** is in-memory (`src/lib/rate-limit.ts`) — per-instance on serverless. Use Upstash Redis for strict global limits.
 - **Local uploads** (`public/uploads`) don't persist on Vercel — configure Cloudinary.
 - **Paid features** auto-ON when `PROMPTPAY_ID` set on Vercel.
-- **LINE Developing channel** only allows Testers until channel is Published.
+- **OTP fallback:** If Resend/ThaiBulkSMS fails, authenticated users see the OTP code on `/dashboard/verify` so verification can still complete.
+- **LINE Developing channel** only allows Testers until channel is Published (no troubleshooting UI shown to users).
 - **Pending listings** return 404 publicly until admin approves; owner can preview when logged in.
 - **Rotate Neon password** if connection string was shared in chat.
 

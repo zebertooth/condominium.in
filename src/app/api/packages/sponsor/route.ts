@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAID_FEATURES_ENABLED, SPONSOR_PACKAGE } from "@/lib/packages";
+import { isActiveSponsor } from "@/lib/user-properties";
 import {
   generatePromptPayQR,
   generateTransactionRef,
@@ -33,6 +34,27 @@ export async function POST(request: Request) {
 
     if (!property) {
       return NextResponse.json({ error: "ไม่พบประกาศ" }, { status: 404 });
+    }
+
+    if (isActiveSponsor(property.isSponsored, property.sponsoredUntil)) {
+      return NextResponse.json(
+        { error: "ประกาศนี้เป็นประกาศเด่นอยู่แล้ว" },
+        { status: 400 },
+      );
+    }
+
+    const pendingOrder = await prisma.userSubscription.findFirst({
+      where: {
+        userId: user.id,
+        packageId: `sponsor_${propertyId}`,
+        paymentStatus: { in: ["pending", "pending_review"] },
+      },
+    });
+    if (pendingOrder) {
+      return NextResponse.json(
+        { error: "มีคำสั่งซื้อประกาศเด่นที่รอชำระอยู่แล้ว — ดูที่แพ็กด้านล่าง" },
+        { status: 400 },
+      );
     }
 
     const transactionRef = generateTransactionRef();

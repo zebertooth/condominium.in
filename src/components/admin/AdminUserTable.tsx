@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useT } from "@/components/i18n/LocaleProvider";
 
 interface AdminUser {
   id: string;
@@ -17,21 +18,25 @@ interface AdminUser {
   _count: { properties: number };
 }
 
-const roleLabel: Record<string, string> = {
-  user: "ผู้ใช้",
-  agent: "เอเจนต์",
-  admin: "แอดมิน",
-};
-
-const roleBadge: Record<string, string> = {
-  user: "bg-slate-100 text-slate-700",
-  agent: "bg-sky-100 text-sky-800",
-  admin: "bg-violet-100 text-violet-800",
-};
-
 export function AdminUserTable({ users }: { users: AdminUser[] }) {
   const router = useRouter();
+  const t = useT();
   const [loading, setLoading] = useState<string | null>(null);
+
+  const roleLabel = useMemo(
+    () => ({
+      user: t("adminRoleUser"),
+      agent: t("adminRoleAgent"),
+      admin: t("adminRoleAdmin"),
+    }),
+    [t],
+  );
+
+  const roleBadge: Record<string, string> = {
+    user: "bg-slate-100 text-slate-700",
+    agent: "bg-sky-100 text-sky-800",
+    admin: "bg-violet-100 text-violet-800",
+  };
 
   async function patchUser(id: string, data: Record<string, boolean | string | number | null>) {
     setLoading(id);
@@ -49,12 +54,12 @@ export function AdminUserTable({ users }: { users: AdminUser[] }) {
       <table className="w-full text-left text-sm">
         <thead className="border-b bg-slate-50 text-slate-600">
           <tr>
-            <th className="px-4 py-3">ผู้ใช้</th>
-            <th className="px-4 py-3">ยืนยัน</th>
-            <th className="px-4 py-3">ประกาศ</th>
-            <th className="px-4 py-3">บทบาท</th>
-            <th className="px-4 py-3">โควตาประกาศ</th>
-            <th className="px-4 py-3">จัดการ</th>
+            <th className="px-4 py-3">{t("adminUsers")}</th>
+            <th className="px-4 py-3">{t("adminColVerify")}</th>
+            <th className="px-4 py-3">{t("adminColListings")}</th>
+            <th className="px-4 py-3">{t("adminColRole")}</th>
+            <th className="px-4 py-3">{t("adminColQuota")}</th>
+            <th className="px-4 py-3">{t("adminColActions")}</th>
           </tr>
         </thead>
         <tbody>
@@ -67,13 +72,13 @@ export function AdminUserTable({ users }: { users: AdminUser[] }) {
                   <p className="font-medium">{u.fullName}</p>
                   <p className="text-xs text-slate-500">{u.phone ?? u.email}</p>
                   <span className={`mt-1 inline-block rounded px-2 py-0.5 text-xs ${roleBadge[u.role] ?? roleBadge.user}`}>
-                    {roleLabel[u.role] ?? u.role}
+                    {roleLabel[u.role as keyof typeof roleLabel] ?? u.role}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-xs">
-                  <p>{u.phoneVerified ? "✓ โทร" : "✗ โทร"}</p>
-                  <p>{u.emailVerified ? "✓ อีเมล" : "✗ อีเมล"}</p>
-                  <p>{u.idVerified ? "✓ บัตร" : "✗ บัตร"}</p>
+                  <p>{u.phoneVerified ? t("adminVerifyPhoneOk") : t("adminVerifyPhoneNo")}</p>
+                  <p>{u.emailVerified ? t("adminVerifyEmailOk") : t("adminVerifyEmailNo")}</p>
+                  <p>{u.idVerified ? t("adminVerifyIdOk") : t("adminVerifyIdNo")}</p>
                 </td>
                 <td className="px-4 py-3">{u._count.properties}</td>
                 <td className="px-4 py-3">
@@ -83,14 +88,14 @@ export function AdminUserTable({ users }: { users: AdminUser[] }) {
                     onChange={(e) => patchUser(u.id, { role: e.target.value })}
                     className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs outline-none ring-teal-500 focus:ring-2"
                   >
-                    <option value="user">ผู้ใช้</option>
-                    <option value="agent">เอเจนต์</option>
-                    <option value="admin">แอดมิน</option>
+                    <option value="user">{t("adminRoleUser")}</option>
+                    <option value="agent">{t("adminRoleAgent")}</option>
+                    <option value="admin">{t("adminRoleAdmin")}</option>
                   </select>
                 </td>
                 <td className="px-4 py-3">
                   {isAdmin ? (
-                    <span className="text-xs text-violet-700">ไม่จำกัด</span>
+                    <span className="text-xs text-violet-700">{t("unlimited")}</span>
                   ) : (
                     <div className="flex items-center gap-1">
                       <input
@@ -110,7 +115,9 @@ export function AdminUserTable({ users }: { users: AdminUser[] }) {
                         }}
                         className="w-20 rounded-lg border border-slate-300 px-2 py-1.5 text-xs outline-none ring-teal-500 focus:ring-2"
                       />
-                      <span className="text-xs text-slate-400">{isAgent ? "(เอเจนต์)" : "(ฟรี+แพ็ก)"}</span>
+                      <span className="text-xs text-slate-400">
+                        {isAgent ? t("adminQuotaAgent") : t("adminQuotaUser")}
+                      </span>
                     </div>
                   )}
                 </td>
@@ -123,7 +130,7 @@ export function AdminUserTable({ users }: { users: AdminUser[] }) {
                         onClick={() => patchUser(u.id, { idVerified: true })}
                         className="rounded bg-teal-600 px-2 py-1 text-xs text-white"
                       >
-                        ยืนยันบัตร
+                        {t("adminVerifyIdBtn")}
                       </button>
                     )}
                   </div>

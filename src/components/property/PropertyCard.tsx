@@ -15,7 +15,12 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
             className="object-cover transition duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
-          <div className="absolute left-3 top-3 flex gap-2">
+          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+            {property.featured && (
+              <span className="rounded-full bg-violet-600 px-2.5 py-1 text-xs font-medium text-white">
+                {t("statusFeatured", locale)}
+              </span>
+            )}
             <span className="rounded-full bg-teal-600 px-2.5 py-1 text-xs font-medium text-white">
               {property.listingType === "rent" ? t("rent", locale) : t("sale", locale)}
             </span>

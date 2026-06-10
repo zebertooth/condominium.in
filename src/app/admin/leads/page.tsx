@@ -1,10 +1,13 @@
 import { getAdminUser } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { AdminLeadTable, type AgentOption, type LeadView } from "@/components/admin/AdminLeadTable";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminLeadsPage() {
+  const locale = await getLocale();
   await getAdminUser();
 
   const [leads, agents] = await Promise.all([
@@ -18,6 +21,8 @@ export default async function AdminLeadsPage() {
       orderBy: { fullName: "asc" },
     }),
   ]);
+
+  const dateLoc = locale === "en" ? "en-US" : "th-TH";
 
   const leadViews: LeadView[] = leads.map((lead) => ({
     id: lead.id,
@@ -34,7 +39,7 @@ export default async function AdminLeadsPage() {
     assignedToId: lead.assignedToId,
     assignedToName: lead.assignedTo?.fullName ?? null,
     agentNote: lead.agentNote,
-    createdAt: lead.createdAt.toLocaleDateString("th-TH", {
+    createdAt: lead.createdAt.toLocaleDateString(dateLoc, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -47,10 +52,8 @@ export default async function AdminLeadsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">ลีด / ลูกค้าที่สนใจ</h1>
-      <p className="mt-1 text-slate-600">
-        จัดการคำขอติดต่อจากฟอร์มและหน้าประกาศ มอบหมายเอเจนต์ และติดตามสถานะ
-      </p>
+      <h1 className="text-2xl font-bold text-slate-900">{t("adminLeadsTitle", locale)}</h1>
+      <p className="mt-1 text-slate-600">{t("adminLeadsDesc", locale)}</p>
 
       <div className="mt-8">
         <AdminLeadTable leads={leadViews} agents={agentOptions} />

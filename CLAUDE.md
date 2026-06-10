@@ -19,17 +19,16 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 22)
+## Model transfer snapshot (session 25)
 
 | Item | Detail |
 |------|--------|
-| **GitHub** | `session-21-audit-fixes` branch — merge to `main` pending |
-| **Production** | https://www.condominium.in.th — redeploy after merge |
-| **Security** | No admin via register; owner leads server-validated; payment amount gate |
-| **Vercel CI** | `node scripts/vercel-build.mjs` — migrate when `DATABASE_URL` present |
-| **Dashboard i18n** | EN/TH complete (session 21) |
-| **Admin i18n** | Still Thai — next code task |
-| **Next** | Merge PR → admin EN → agent CRM |
+| **GitHub** | `main` @ `291bd67` + local session 25 work (admin i18n + owner stats + sponsor UI) |
+| **Production** | https://www.condominium.in.th — OTP/LINE verified OK |
+| **Owner stats** | `getOwnerPropertyStats()` — views, inquiries, contact clicks (all-time + 30d) |
+| **Sponsored posts** | Featured badge, sort boost, PromptPay purchase, post-submit upsell |
+| **SMS** | ThaiBulkSMS wired — **user to verify production next** |
+| **Next** | ThaiBulkSMS prod verify → Phase 4 locales (ZH, JA, AR) |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -110,7 +109,7 @@ LINE_LOGIN_CHANNEL_SECRET=
 LINE_LOGIN_CALLBACK_URL=
 ```
 
-Still pending: Flip `PAID_FEATURES_ENABLED` once `PROMPTPAY_ID` is set.
+Still pending: Set optional keys on Vercel (OPENAI, SLIPOK, GA4). User to verify ThaiBulkSMS on production next.
 
 PromptPay payment (env-gated):
 ```env
@@ -131,6 +130,7 @@ src/
 │   │   ├── users/, leads/  # manage users + lead pipeline
 │   ├── dashboard/          # User dashboard (auth required)
 │   │   ├── post/, verify/  # create listing, LINE+Email(+phone) verify
+│   │   ├── agent/          # agent CRM dashboard
 │   │   └── edit/[id]/      # owner edit own listing
 │   ├── api/
 │   │   ├── auth/           # register, login, logout, OTP (phone/email), verify-id (unused), line/{start,callback,dev-verify}
@@ -146,7 +146,7 @@ src/
 │   ├── sitemap.ts, robots.ts
 │   └── layout.tsx
 ├── components/
-│   ├── admin/              # AdminPropertyTable (bulk+edit), AdminUserTable, AdminLeadTable
+│   ├── admin/              # AdminPropertyTable, AdminUserTable, AdminLeadTable, AdminPaymentTable, AdminAnalyticsDashboard, IntegrationStatus
 │   ├── auth/               # RegisterForm (nationality), LoginForm, LogoutButton
 │   ├── dashboard/          # VerifyForm, PostPropertyForm (create+edit), QuotaCard, PackageShop, MyProperties
 │   ├── property/           # Cards, Gallery, Map, LocationPicker, ImageGalleryInput
@@ -167,8 +167,10 @@ src/
 │   ├── openai.ts           # OpenAI chat client (REST)
 │   ├── ai-search.ts        # LLM filter-extract + rule-based fallback
 │   ├── storage.ts          # image upload (Cloudinary / local disk)
+│   ├── integrations.ts     # getIntegrationStatus() for /api/health + admin panel
+│   ├── request.ts          # Safe empty POST body parsing (OTP routes)
 │   ├── rate-limit.ts       # in-memory fixed-window limiter + getClientIp
-│   ├── leads.ts, lead-constants.ts   # CRM helpers (+ client-safe consts)
+│   ├── leads.ts, lead-constants.ts   # CRM helpers (+ locale-aware labels)
 │   ├── listings.ts         # Merge static + DB published listings
 │   ├── properties.ts       # Static seed listings (demo)
 │   ├── user-properties.ts  # dbPropertyToListing, uniqueSlug
@@ -208,7 +210,7 @@ prisma/
 - Owner-submitted listings
 - `status`: `pending` → admin approves → `published` | `rejected` | `deleted`
 - `images`: JSON string array (Cloudinary URLs or `/uploads/*` local paths)
-- `isSponsored`, `sponsoredUntil`: for future sponsored placement (UI not built)
+- `isSponsored`, `sponsoredUntil`: sponsored placement (7-day boost via PromptPay; UI live)
 - Poster `User.role` drives contact: `agent` → platform CRM; `user` → owner direct
 
 ### SearchEvent / PropertyViewEvent / MatchingEvent
@@ -226,9 +228,9 @@ prisma/
 ## Key business rules
 
 ### Launch policy (current)
-- **Paid features OFF** — `PAID_FEATURES_ENABLED = false` in `src/lib/packages.ts` disables package purchase + sponsor (API returns 403, UI hidden). Flip to `true` once a payment gateway is live.
+- **Paid features ON** in production when `PROMPTPAY_ID` is set (`PAID_FEATURES_ENABLED` env-gated in `src/lib/packages.ts`). Override with `PAID_FEATURES_ENABLED=false` to force-disable.
 - **ID verification removed** from the posting gate.
-- **SMS/phone verification is additive** — ThaiBulkSMS/Twilio wired; does not gate posting.
+- **SMS/phone verification is additive** — ThaiBulkSMS/Twilio wired; does not gate posting. Production SMS verify skipped for now.
 
 ### Verification by role/nationality
 - **admin** — unlimited listings; no verification needed; can edit/check any user.
@@ -244,7 +246,7 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 - **Free:** 2 active listings for verified Thai users (`pending` + `published` count)
 - **Agent:** admin-set cap (default 5), no packages
 - **Admin:** unlimited
-- **Packages/Sponsor:** defined in `src/lib/packages.ts` but **disabled at launch** (`PAID_FEATURES_ENABLED`)
+- **Packages/Sponsor:** active when `PROMPTPAY_ID` set on Vercel
 
 ### Listing visibility
 - User posts → `pending`
@@ -254,8 +256,9 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 
 ### Admin access
 - `role === "admin"` on User
-- Seed: `npm run db:seed` or register with `ADMIN_EMAIL`
-- Layout guard: `src/app/admin/layout.tsx` → `getAdminUser()`
+- Seed: `npm run db:seed` only — **never** promote via `/api/auth/register`
+- Layout guard: `src/app/admin/layout.tsx` → non-admin redirected to `/dashboard`
+- Admin UI bilingual (TH/EN) via site language cookie
 - Admin manages roles + per-user listing limits + lead pipeline at `/admin/users` and `/admin/leads`
 - To create an **agent**: `/admin/users` → set role to `agent` + listing limit
 
@@ -306,12 +309,12 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 
 ---
 
-## OTP / payments (dev mode)
+## OTP / payments
 
-- Email OTP: real send via Resend when configured, else **logged/returned as `devCode`** in development (`src/lib/notifications.ts`)
-- SMS OTP: ThaiBulkSMS (preferred) → Twilio → console fallback; `devCode` only in development
-- LINE: real OAuth when configured, else dev-only manual verify button
-- Payments: PromptPay QR + slip upload integrated; **`PAID_FEATURES_ENABLED = false`** until `PROMPTPAY_ID` is set; admin can manually approve/reject slips at `/admin/payments`
+- **Email OTP:** Resend when `RESEND_API_KEY` + `EMAIL_FROM` set; on-screen fallback code if delivery fails (`src/lib/email-otp.ts`)
+- **SMS OTP:** ThaiBulkSMS (preferred) → Twilio → console; on-screen fallback if delivery fails
+- **LINE:** real OAuth when configured; dev-only manual verify when not
+- **Payments:** PromptPay QR + slip upload; auto-enabled when `PROMPTPAY_ID` set; admin approve/reject at `/admin/payments`
 
 ---
 
@@ -330,7 +333,7 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 1. **Minimize scope** — small focused diffs; match existing patterns
 2. **Server components by default** — `"use client"` only for forms, gallery, map picker, AI search UI
 3. **Business logic in `src/lib/`** — not in page files
-4. **Thai UI copy** — user-facing text in Thai unless i18n phase
+4. **Thai + English UI** — use `src/lib/i18n.ts` keys + `useT()` / `t(key, locale)`; dashboard and admin fully bilingual
 5. **Images** — `next.config.ts` allows `images.unsplash.com`; extend `remotePatterns` for new hosts
 6. **Prisma imports** — `import { PrismaClient } from "@/generated/prisma/client"`
 7. **No commits** unless user explicitly asks
@@ -339,30 +342,26 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 
 ## Status of integrations
 
-Done / env-gated (work in dev, need keys for prod):
+Production (check `/api/health`):
+- [x] Resend email OTP (`RESEND_API_KEY` + `EMAIL_FROM`)
+- [x] LINE Login
+- [x] Cloudinary uploads
+- [x] PromptPay paid packages
+- [~] ThaiBulkSMS SMS — wired; user to verify production delivery next
+- [ ] OpenAI, SlipOK, GA4 — optional keys not set
+
+Done / env-gated:
 - [x] Image file upload — Cloudinary or local fallback (`src/lib/storage.ts`)
 - [x] OpenAI AI search with rule-based fallback (`src/lib/openai.ts`)
-- [x] Email OTP via Resend (console fallback)
-- [x] LINE verification via LINE Login (dev fallback)
-- [x] Agent CRM lead capture + pipeline (`/admin/leads`)
+- [x] Agent CRM + viewing scheduler (`/dashboard/agent`, `/admin/leads`)
 - [x] GA4 analytics scaffold + dynamic OG image
+- [x] Full TH/EN i18n (public, dashboard, admin, blog/areas)
 
-Partially done:
-- [~] SMS phone verification — ThaiBulkSMS + Twilio provider wired (`src/lib/notifications.ts`); phone OTP step is additive in verify flow (does not yet gate posting). Add `THAIBULKSMS_*` keys for prod.
-
-**Deploy phase (current — see `DEPLOYMENT.md`):**
-- [ ] Neon tables applied (`db:deploy` + `db:seed` on user's machine)
-- [ ] GitHub repo + push to `main`
-- [ ] Vercel production deploy
-- [ ] DNS `condominium.in.th` → Vercel
-- [ ] Production env vars (`AUTH_SECRET`, `DATABASE_URL`, `ADMIN_*`, provider keys)
-
-**Post-deploy / Phase 3:**
-- [ ] Flip `PAID_FEATURES_ENABLED` when `PROMPTPAY_ID` set
-- [ ] Non-Thai user listing (blocked by policy for now)
-- [ ] Viewing scheduler / agent dashboard
-- [ ] Multilingual pages (ZH, JA, AR)
-- [ ] `middleware.ts` for auth
+**Next code tasks:**
+- [x] Owner listing stats (views/inquiries/contact clicks, 30-day) in dashboard
+- [x] Sponsored posts UI — badges, sort boost, purchase flow, post-submit upsell
+- [ ] Phase 4 locales (ZH, JA, AR)
+- [ ] `middleware.ts` for auth (optional)
 
 ---
 

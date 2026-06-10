@@ -6,9 +6,16 @@ import {
 } from "@/lib/user-properties";
 import type { Property, SearchFilters } from "@/types/property";
 
+function sortListingsFeaturedFirst(list: Property[]): Property[] {
+  return [...list].sort((a, b) => {
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    return b.publishedAt.localeCompare(a.publishedAt);
+  });
+}
+
 export async function getAllListings(): Promise<Property[]> {
   const userListings = await getAllPublishedUserProperties();
-  return [...userListings, ...staticProperties];
+  return sortListingsFeaturedFirst([...userListings, ...staticProperties]);
 }
 
 export async function getListingBySlug(
@@ -49,7 +56,7 @@ function applyFilters(list: Property[], filters: SearchFilters): Property[] {
 
 export async function filterListings(filters: SearchFilters): Promise<Property[]> {
   const all = await getAllListings();
-  return applyFilters(all, filters);
+  return sortListingsFeaturedFirst(applyFilters(all, filters));
 }
 
 export async function getFeaturedListings(): Promise<Property[]> {

@@ -3,13 +3,17 @@
 ตลาดคอนโดและบ้าน ซื้อ-เช่า ในกรุงเทพฯ เน้นย่านใกล้ BTS พร้อม AI ค้นหาอัจฉริยะและทีมเอเจนต์พาไปชมทรัพย์จริง
 
 **Production:** [www.condominium.in.th](https://www.condominium.in.th)  
-**GitHub:** [github.com/zebertooth/condominium.in](https://github.com/zebertooth/condominium.in)
+**GitHub:** [github.com/zebertooth/condominium.in](https://github.com/zebertooth/condominium.in) (`main`)
 
 ## Features
 
-- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search — TH/EN
-- Owner dashboard — bilingual (verify LINE+Email, post, PromptPay packages)
-- แอดมินอนุมัติประกาศ + analytics + integration status
+- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search — **TH/EN**
+- Owner dashboard — verify LINE+Email, post listings, **views/inquiries/clicks stats**, sponsor boost — **TH/EN**
+- Agent CRM — `/dashboard/agent`, viewing scheduler, lead pipeline
+- Admin panel — approve listings, users, leads, payments, analytics — **TH/EN**
+- Blog (5 articles) + 9 BTS area guides — **TH/EN content**
+- Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS wired — user to verify prod next)
+- **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
 - Owner direct contact + security-hardened lead routing
 
 ## Local setup
@@ -27,19 +31,21 @@ npm run build
 npx vercel --prod
 ```
 
-Vercel CI runs `node scripts/vercel-build.mjs` (migrates DB only when `DATABASE_URL` is set).
+Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate when `DATABASE_URL` set; Preview skips migrate).
+
+Health check: `GET https://www.condominium.in.th/api/health`
 
 ## Next steps (see ROADMAP.md)
 
-1. Merge PR `session-21-audit-fixes` → `main`
-2. Admin panel EN i18n
-3. Agent CRM / viewing scheduler
+1. ThaiBulkSMS production verify (user)
+2. Phase 4: ZH / JA / AR
+3. Optional Vercel keys: OPENAI, SLIPOK, GA4
 
 ## Documentation
 
 | File | Purpose |
 |------|---------|
-| [AGENTS.md](./AGENTS.md) | AI handoff |
-| [ROADMAP.md](./ROADMAP.md) | Phase status + next step plan |
-| [CLAUDE.md](./CLAUDE.md) | Architecture |
-| [DEPLOYMENT.md](./DEPLOYMENT.md) | Vercel + env vars |
+| [AGENTS.md](./AGENTS.md) | AI agent handoff (start here) |
+| [ROADMAP.md](./ROADMAP.md) | Phase status + session log |
+| [CLAUDE.md](./CLAUDE.md) | Architecture & API reference |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Vercel + env vars + troubleshooting |

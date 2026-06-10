@@ -74,6 +74,7 @@ export default async function PropertyPage({ params }: PageProps) {
           listingType={property.listingType}
           district={property.district}
           btsStation={property.btsStation}
+          source={property.featured ? "sponsored" : "direct"}
         />
       )}
       {isPreview && (
@@ -104,6 +105,11 @@ export default async function PropertyPage({ params }: PageProps) {
 
         <div>
           <div className="flex flex-wrap gap-2">
+            {property.featured && (
+              <span className="rounded-full bg-violet-100 px-3 py-1 text-sm font-medium text-violet-800">
+                {t("statusFeatured", locale)}
+              </span>
+            )}
             <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
               {listingLabel}
             </span>

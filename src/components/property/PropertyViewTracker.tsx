@@ -8,6 +8,7 @@ interface PropertyViewTrackerProps {
   listingType?: string;
   district?: string;
   btsStation?: string;
+  source?: string;
 }
 
 export function PropertyViewTracker({
@@ -16,6 +17,7 @@ export function PropertyViewTracker({
   listingType,
   district,
   btsStation,
+  source = "direct",
 }: PropertyViewTrackerProps) {
   const sent = useRef(false);
 
@@ -25,9 +27,16 @@ export function PropertyViewTracker({
     void fetch("/api/analytics/property-view", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ propertySlug, propertyType, listingType, district, btsStation }),
+      body: JSON.stringify({
+        propertySlug,
+        propertyType,
+        listingType,
+        district,
+        btsStation,
+        source,
+      }),
     });
-  }, [propertySlug, propertyType, listingType, district, btsStation]);
+  }, [propertySlug, propertyType, listingType, district, btsStation, source]);
 
   return null;
 }

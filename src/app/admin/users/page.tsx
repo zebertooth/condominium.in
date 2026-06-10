@@ -1,7 +1,10 @@
 import { AdminUserTable } from "@/components/admin/AdminUserTable";
 import { prisma } from "@/lib/db";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
 export default async function AdminUsersPage() {
+  const locale = await getLocale();
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
     select: {
@@ -26,10 +29,8 @@ export default async function AdminUsersPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">จัดการผู้ใช้</h1>
-      <p className="mt-1 text-slate-600">
-        ยืนยันบัตรประชาชน ตั้งบทบาท (ผู้ใช้/เอเจนต์/แอดมิน) และกำหนดโควตาประกาศรายคน
-      </p>
+      <h1 className="text-2xl font-bold text-slate-900">{t("adminUsersTitle", locale)}</h1>
+      <p className="mt-1 text-slate-600">{t("adminUsersDesc", locale)}</p>
       <div className="mt-6">
         <AdminUserTable users={serialized} />
       </div>

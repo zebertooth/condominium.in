@@ -98,6 +98,16 @@ export default async function AreaPage({ params }: PageProps) {
         </div>
       </div>
 
+      {(locale === "en" && area.highlightsEn ? area.highlightsEn : area.highlights).length > 0 && (
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {(locale === "en" && area.highlightsEn ? area.highlightsEn : area.highlights).map((h) => (
+            <li key={h} className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
+              {h}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className="mt-10 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 p-6 text-white">
         <h2 className="text-xl font-bold">
           {locale === "en"

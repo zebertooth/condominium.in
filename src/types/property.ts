@@ -43,6 +43,12 @@ export interface Property {
   isUserListing?: boolean;
   viewsCount?: number;
   inquiriesCount?: number;
+  contactClicksCount?: number;
+  viewsCount30d?: number;
+  inquiriesCount30d?: number;
+  contactClicksCount30d?: number;
+  /** ISO date — active sponsored placement expiry */
+  sponsoredUntil?: string;
 }
 
 export interface AreaGuide {

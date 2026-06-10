@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useT, useTf } from "@/components/i18n/LocaleProvider";
 import type { AnalyticsSummary } from "@/lib/analytics";
 
 function BarChart({
@@ -6,11 +9,13 @@ function BarChart({
   items,
   labelKey,
   countKey,
+  emptyLabel,
 }: {
   title: string;
   items: Record<string, string | number>[];
   labelKey: string;
   countKey: string;
+  emptyLabel: string;
 }) {
   const max = Math.max(...items.map((i) => Number(i[countKey])), 1);
 
@@ -18,7 +23,7 @@ function BarChart({
     <div className="rounded-2xl border border-slate-200 bg-white p-6">
       <h3 className="font-semibold text-slate-900">{title}</h3>
       {items.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500">ยังไม่มีข้อมูล</p>
+        <p className="mt-4 text-sm text-slate-500">{emptyLabel}</p>
       ) : (
         <ul className="mt-4 space-y-3">
           {items.map((item) => {
@@ -44,26 +49,29 @@ function BarChart({
 }
 
 export function AdminAnalyticsDashboard({ summary }: { summary: AnalyticsSummary }) {
+  const t = useT();
+  const tf = useTf();
+
   const exportTypes = [
-    { type: "searches", label: "คำค้นหา" },
-    { type: "views", label: "การดูประกาศ" },
-    { type: "matching", label: "Matching events" },
-    { type: "leads", label: "ลีดทั้งหมด" },
+    { type: "searches", label: t("adminExportSearches") },
+    { type: "views", label: t("adminExportViews") },
+    { type: "matching", label: t("adminExportMatching") },
+    { type: "leads", label: t("adminExportLeads") },
   ];
 
   const statCards = [
-    { label: "คำค้นหา (30 วัน)", value: summary.searchTotal },
-    { label: "การดูประกาศ", value: summary.viewTotal },
-    { label: "Matching events", value: summary.matchingTotal },
-    { label: "ลีดเจ้าของโดยตรง", value: summary.ownerDirectLeads },
+    { label: t("adminSearchTotal"), value: summary.searchTotal },
+    { label: t("adminViewTotal"), value: summary.viewTotal },
+    { label: t("adminMatchingTotal"), value: summary.matchingTotal },
+    { label: t("adminOwnerLeadsTotal"), value: summary.ownerDirectLeads },
   ];
 
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">วิเคราะห์ข้อมูล</h1>
-          <p className="mt-1 text-slate-600">คำค้นหา ยอดนิยม และการติดต่อเจ้าของ (30 วันล่าสุด)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t("adminAnalytics")}</h1>
+          <p className="mt-1 text-slate-600">{t("adminAnalyticsDesc")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {exportTypes.map((e) => (
@@ -72,7 +80,7 @@ export function AdminAnalyticsDashboard({ summary }: { summary: AnalyticsSummary
               href={`/api/admin/analytics/export?type=${e.type}&days=30`}
               className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
-              Export {e.label} (CSV)
+              {tf("adminExportCsv", { label: e.label })}
             </a>
           ))}
         </div>
@@ -89,46 +97,52 @@ export function AdminAnalyticsDashboard({ summary }: { summary: AnalyticsSummary
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <BarChart
-          title="คำค้นหายอดนิยม"
+          title={t("adminChartTopSearches")}
           items={summary.topSearchQueries.map((r) => ({ query: r.query, count: r.count }))}
           labelKey="query"
           countKey="count"
+          emptyLabel={t("adminNoData")}
         />
         <BarChart
-          title="ประเภททรัพย์ที่ถูกดูมาก"
+          title={t("adminChartTopTypes")}
           items={summary.topPropertyTypes.map((r) => ({ propertyType: r.propertyType, count: r.count }))}
           labelKey="propertyType"
           countKey="count"
+          emptyLabel={t("adminNoData")}
         />
         <BarChart
-          title="ย่าน/เขตยอดนิยม"
+          title={t("adminChartTopDistricts")}
           items={summary.topDistricts.map((r) => ({ district: r.district, count: r.count }))}
           labelKey="district"
           countKey="count"
+          emptyLabel={t("adminNoData")}
         />
         <BarChart
-          title="สถานี BTS ยอดนิยม"
+          title={t("adminChartTopBts")}
           items={summary.topBtsStations.map((r) => ({ btsStation: r.btsStation, count: r.count }))}
           labelKey="btsStation"
           countKey="count"
+          emptyLabel={t("adminNoData")}
         />
         <BarChart
-          title="ประกาศที่ถูกดูมาก"
+          title={t("adminChartTopProperties")}
           items={summary.topViewedProperties.map((r) => ({ propertySlug: r.propertySlug, count: r.count }))}
           labelKey="propertySlug"
           countKey="count"
+          emptyLabel={t("adminNoData")}
         />
         <BarChart
-          title="Matching events ตามประเภท"
+          title={t("adminChartMatching")}
           items={summary.matchingByType.map((r) => ({ eventType: r.eventType, count: r.count }))}
           labelKey="eventType"
           countKey="count"
+          emptyLabel={t("adminNoData")}
         />
       </div>
 
       <p className="mt-8 text-sm text-slate-500">
         <Link href="/admin/leads" className="text-teal-700 hover:underline">
-          ดูลีดทั้งหมด →
+          {t("adminViewAllLeads")}
         </Link>
       </p>
     </div>
