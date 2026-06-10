@@ -1,36 +1,34 @@
 /**
  * Provider-agnostic notification senders.
  *
- * Each sender activates a real provider only when its env vars are set; otherwise
- * it logs to the console (dev fallback) and reports `delivered: false`.
- *
  * Email:  Resend       -> RESEND_API_KEY, EMAIL_FROM
- * SMS:    ThaiBulkSMS  -> THAIBULKSMS_API_KEY, THAIBULKSMS_API_SECRET, THAIBULKSMS_SENDER (preferred for TH)
- *         Twilio       -> TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM (fallback)
+ * SMS:    ThaiBulkSMS  -> THAIBULKSMS_* (preferred for TH)
+ *         Twilio       -> TWILIO_* (fallback)
  */
 
 export interface SendResult {
   delivered: boolean;
   provider: string;
+  error?: string;
 }
 
 export function emailProviderConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
+  return Boolean(process.env.RESEND_API_KEY?.trim() && process.env.EMAIL_FROM?.trim());
 }
 
 export function thaiBulkSmsConfigured(): boolean {
   return Boolean(
-    process.env.THAIBULKSMS_API_KEY &&
-      process.env.THAIBULKSMS_API_SECRET &&
-      process.env.THAIBULKSMS_SENDER,
+    process.env.THAIBULKSMS_API_KEY?.trim() &&
+      process.env.THAIBULKSMS_API_SECRET?.trim() &&
+      process.env.THAIBULKSMS_SENDER?.trim(),
   );
 }
 
 export function twilioConfigured(): boolean {
   return Boolean(
-    process.env.TWILIO_ACCOUNT_SID &&
-      process.env.TWILIO_AUTH_TOKEN &&
-      process.env.TWILIO_FROM,
+    process.env.TWILIO_ACCOUNT_SID?.trim() &&
+      process.env.TWILIO_AUTH_TOKEN?.trim() &&
+      process.env.TWILIO_FROM?.trim(),
   );
 }
 
@@ -38,11 +36,19 @@ export function smsProviderConfigured(): boolean {
   return thaiBulkSmsConfigured() || twilioConfigured();
 }
 
-/** ThaiBulkSMS expects local format without leading +66 (e.g. 0812345678). */
 function toThaiLocalNumber(phone: string): string {
   if (phone.startsWith("+66")) return `0${phone.slice(3)}`;
   if (phone.startsWith("66")) return `0${phone.slice(2)}`;
   return phone;
+}
+
+async function readErrorBody(res: Response): Promise<string> {
+  try {
+    const text = await res.text();
+    return text.slice(0, 500);
+  } catch {
+    return "";
+  }
 }
 
 async function sendViaThaiBulkSms(to: string, body: string): Promise<SendResult> {
@@ -54,6 +60,7 @@ async function sendViaThaiBulkSms(to: string, body: string): Promise<SendResult>
     const res = await fetch("https://api-v2.thaibulksms.com/sms", {
       method: "POST",
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString("base64")}`,
       },
@@ -65,13 +72,18 @@ async function sendViaThaiBulkSms(to: string, body: string): Promise<SendResult>
     });
 
     if (!res.ok) {
-      console.error(`[sms:thaibulksms] failed ${res.status}`);
-      return { delivered: false, provider: "thaibulksms" };
+      const detail = await readErrorBody(res);
+      console.error(`[sms:thaibulksms] failed ${res.status}`, detail);
+      return {
+        delivered: false,
+        provider: "thaibulksms",
+        error: detail || `HTTP ${res.status}`,
+      };
     }
     return { delivered: true, provider: "thaibulksms" };
   } catch (err) {
     console.error("[sms:thaibulksms] error", err);
-    return { delivered: false, provider: "thaibulksms" };
+    return { delivered: false, provider: "thaibulksms", error: String(err) };
   }
 }
 
@@ -81,10 +93,13 @@ export async function sendEmail(
   text: string,
 ): Promise<SendResult> {
   if (!emailProviderConfigured()) {
+    const missing = !process.env.RESEND_API_KEY?.trim()
+      ? "RESEND_API_KEY"
+      : "EMAIL_FROM";
     if (process.env.NODE_ENV === "development") {
       console.log(`[email:console] to=${to} subject="${subject}"\n${text}`);
     }
-    return { delivered: false, provider: "console" };
+    return { delivered: false, provider: "console", error: `${missing} not set` };
   }
 
   try {
@@ -102,18 +117,22 @@ export async function sendEmail(
       }),
     });
     if (!res.ok) {
-      console.error(`[email:resend] failed ${res.status}`);
-      return { delivered: false, provider: "resend" };
+      const detail = await readErrorBody(res);
+      console.error(`[email:resend] failed ${res.status}`, detail);
+      return {
+        delivered: false,
+        provider: "resend",
+        error: detail || `HTTP ${res.status}`,
+      };
     }
     return { delivered: true, provider: "resend" };
   } catch (err) {
     console.error("[email:resend] error", err);
-    return { delivered: false, provider: "resend" };
+    return { delivered: false, provider: "resend", error: String(err) };
   }
 }
 
 export async function sendSms(to: string, body: string): Promise<SendResult> {
-  // Prefer ThaiBulkSMS for Thai numbers; fall back to Twilio, then console.
   if (thaiBulkSmsConfigured()) {
     return sendViaThaiBulkSms(to, body);
   }
@@ -122,7 +141,7 @@ export async function sendSms(to: string, body: string): Promise<SendResult> {
     if (process.env.NODE_ENV === "development") {
       console.log(`[sms:console] to=${to}\n${body}`);
     }
-    return { delivered: false, provider: "console" };
+    return { delivered: false, provider: "console", error: "SMS provider not configured" };
   }
 
   try {
@@ -142,12 +161,13 @@ export async function sendSms(to: string, body: string): Promise<SendResult> {
       },
     );
     if (!res.ok) {
-      console.error(`[sms:twilio] failed ${res.status}`);
-      return { delivered: false, provider: "twilio" };
+      const detail = await readErrorBody(res);
+      console.error(`[sms:twilio] failed ${res.status}`, detail);
+      return { delivered: false, provider: "twilio", error: detail || `HTTP ${res.status}` };
     }
     return { delivered: true, provider: "twilio" };
   } catch (err) {
     console.error("[sms:twilio] error", err);
-    return { delivered: false, provider: "twilio" };
+    return { delivered: false, provider: "twilio", error: String(err) };
   }
 }

@@ -56,7 +56,7 @@ export function VerifyForm({
       setError(data.error);
       return;
     }
-    setMessage(t("phoneOtpSent"));
+    setMessage(data.message || t("phoneOtpSent"));
     if (data.devCode) setDevPhoneCode(data.devCode);
   }
 
@@ -89,7 +89,7 @@ export function VerifyForm({
       setError(data.error);
       return;
     }
-    setMessage(t("emailOtpSent"));
+    setMessage(data.message || t("emailOtpSent"));
     if (data.devCode) setDevEmailCode(data.devCode);
   }
 

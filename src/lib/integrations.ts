@@ -1,6 +1,7 @@
 import { lineConfigured } from "@/lib/line";
 import { promptPayConfigured } from "@/lib/promptpay";
 import { cloudinaryConfigured } from "@/lib/storage";
+import { emailProviderConfigured, thaiBulkSmsConfigured } from "@/lib/notifications";
 
 export interface IntegrationStatus {
   openai: boolean;
@@ -17,8 +18,8 @@ export interface IntegrationStatus {
 export function getIntegrationStatus(): IntegrationStatus {
   return {
     openai: Boolean(process.env.OPENAI_API_KEY),
-    resend: Boolean(process.env.RESEND_API_KEY),
-    thaibulksms: Boolean(process.env.THAIBULKSMS_API_KEY),
+    resend: emailProviderConfigured(),
+    thaibulksms: thaiBulkSmsConfigured(),
     twilio: Boolean(process.env.TWILIO_ACCOUNT_SID),
     cloudinary: cloudinaryConfigured(),
     line: lineConfigured(),
