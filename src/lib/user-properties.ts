@@ -125,10 +125,36 @@ const userSelect = {
 } as const;
 
 export async function getUserPropertyBySlug(slug: string): Promise<Property | null> {
+  return getUserPropertyBySlugVisible(slug, { publishedOnly: true });
+}
+
+export interface PropertyViewer {
+  userId?: string;
+  isAdmin?: boolean;
+}
+
+/** Public: published only. Owner/admin: can preview pending/rejected listings. */
+export async function getUserPropertyBySlugVisible(
+  slug: string,
+  viewer?: PropertyViewer & { publishedOnly?: boolean },
+): Promise<Property | null> {
+  const normalized = decodeURIComponent(slug).trim();
   const p = await prisma.userProperty.findFirst({
-    where: { slug, status: "published" },
+    where: { slug: normalized },
     include: { user: { select: userSelect } },
   });
-  if (!p) return null;
-  return dbPropertyToListing(p);
+  if (!p || p.status === "deleted") return null;
+
+  if (p.status === "published") {
+    return dbPropertyToListing(p);
+  }
+
+  if (viewer?.publishedOnly) return null;
+
+  const isOwner = viewer?.userId && p.userId === viewer.userId;
+  if (viewer?.isAdmin || isOwner) {
+    return dbPropertyToListing(p);
+  }
+
+  return null;
 }

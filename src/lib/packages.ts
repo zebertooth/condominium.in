@@ -5,9 +5,11 @@ export const AGENT_DEFAULT_LIMIT = 5;
 
 /**
  * Master switch for paid features (package purchase + sponsor boost).
- * Disabled for launch — re-enable once a payment gateway (Omise/PromptPay) is live.
+ * Auto-enables when PROMPTPAY_ID is set on Vercel/local .env.
+ * Override with PAID_FEATURES_ENABLED=false to force-disable.
  */
-export const PAID_FEATURES_ENABLED = false;
+export const PAID_FEATURES_ENABLED =
+  process.env.PAID_FEATURES_ENABLED !== "false" && Boolean(process.env.PROMPTPAY_ID?.trim());
 
 export interface ListingPackage {
   id: string;

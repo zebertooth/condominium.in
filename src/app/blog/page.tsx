@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { blogPosts } from "@/lib/blog";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -10,13 +12,14 @@ export const metadata = createMetadata({
   keywords: ["บทความคอนโด", "คู่มือเช่าคอนโด", "BTS"],
 });
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const locale = await getLocale();
+  const dateLoc = locale === "en" ? "en-US" : "th-TH";
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">บทความ</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">
-        เนื้อหาคุณภาพสำหรับ SEO ช่วยดึงทราฟฟิกจาก Google เรื่องคอนโด เช่า-ซื้อ และย่านใกล้ BTS
-      </p>
+      <h1 className="text-3xl font-bold text-slate-900">{t("blogPageTitle", locale)}</h1>
+      <p className="mt-2 max-w-2xl text-slate-600">{t("blogPageDesc", locale)}</p>
 
       <div className="mt-10 space-y-6">
         {blogPosts.map((post) => (
@@ -29,9 +32,11 @@ export default function BlogPage() {
                 {post.category}
               </span>
               <time dateTime={post.publishedAt}>
-                {new Date(post.publishedAt).toLocaleDateString("th-TH")}
+                {new Date(post.publishedAt).toLocaleDateString(dateLoc)}
               </time>
-              <span>{post.readTime} นาทีอ่าน</span>
+              <span>
+                {post.readTime} {t("readTime", locale)}
+              </span>
             </div>
             <h2 className="mt-3 text-xl font-bold text-slate-900">
               <Link href={`/blog/${post.slug}`} className="hover:text-teal-700">
@@ -43,7 +48,7 @@ export default function BlogPage() {
               href={`/blog/${post.slug}`}
               className="mt-4 inline-block text-sm font-medium text-teal-700 hover:underline"
             >
-              อ่านต่อ →
+              {t("readMore", locale)} →
             </Link>
           </article>
         ))}

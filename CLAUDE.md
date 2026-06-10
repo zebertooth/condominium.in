@@ -6,7 +6,7 @@ Handoff guide for AI agents and developers continuing this project.
 
 **Condominium.in.th** is a Thai real-estate marketplace (condos & houses, buy/rent) focused on Bangkok BTS areas. Inspired by DDproperty, PropertyHub, and Baania.
 
-**Domain:** `condominium.in.th` (not deployed yet)
+**Domain:** https://www.condominium.in.th (live on Vercel)
 
 **Primary goals:**
 1. SEO traffic (area pages, blog, structured data)
@@ -15,21 +15,22 @@ Handoff guide for AI agents and developers continuing this project.
 4. Agent team for real-world viewings
 5. Monetization via listing packages & sponsored posts
 
-**Language:** Thai-first. i18n scaffold exists for Chinese, Japanese, Arabic (not implemented).
+**Language:** Thai-first + EN switcher (TH/EN active; ZH/JA/AR deferred).
 
 ---
 
-## Model transfer snapshot (session 15)
+## Model transfer snapshot (session 20)
 
 | Item | Detail |
 |------|--------|
-| **Production** | Vercel: `https://next-js-two-beta.vercel.app` |
-| **DB** | Neon PostgreSQL. Migrations: `init_postgres`, `analytics_matching`. |
-| **i18n** | Cookie `condo_locale` (`th`/`en`). `LanguageSwitcher` in header. |
-| **Contact routing** | Agent listing → `LeadForm` (agent_team). Owner listing → `OwnerContactCard` + owner_direct lead. |
-| **Analytics** | `SearchEvent`, `PropertyViewEvent`, `MatchingEvent`. Admin: `/admin/analytics`. |
-| **Sponsored posts** | Planned only — do not implement until requested. |
-| **Next** | DNS, full EN copy, owner stats, flip paid when ready. |
+| **Production** | https://www.condominium.in.th — Vercel creds configured (session 19) |
+| **Paid** | Auto-ON when `PROMPTPAY_ID` set — `paidFeatures: true` on prod `/api/health` |
+| **Property pages** | Published = public. Pending = owner/admin preview only (`getUserPropertyBySlugVisible`) |
+| **LINE Login** | Developing channel → add user as **Tester** in LINE Developers Console |
+| **LINE callback** | `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` |
+| **Health** | `GET /api/health` → `integrations` + `paidFeatures` |
+| **Optional keys** | OPENAI, SLIPOK, GA4 not required (app works without) |
+| **Next** | EN dashboard/admin, agent CRM; sponsored posts UI only when user asks |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -249,7 +250,8 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 ### Listing visibility
 - User posts → `pending`
 - Admin approves at `/admin/properties` → `published`
-- Only `published` user listings appear on `/buy`, `/rent`, AI search, `/property/[slug]`
+- Only `published` listings appear on `/buy`, `/rent`, AI search, sitemap
+- `/property/[slug]`: public sees **published** only; **owner** (logged in) and **admin** can preview `pending`/`rejected` with amber banner; contact form hidden until published
 
 ### Admin access
 - `role === "admin"` on User

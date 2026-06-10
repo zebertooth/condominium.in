@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { areaGuides } from "@/lib/areas";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -10,14 +12,13 @@ export const metadata = createMetadata({
   keywords: ["ย่าน BTS", "คอนโดใกล้ BTS", "ทำเลคอนโด"],
 });
 
-export default function AreasPage() {
+export default async function AreasPage() {
+  const locale = await getLocale();
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">ย่านใกล้ BTS กรุงเทพฯ</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">
-        คู่มือทำเลคอนโดใกล้รถไฟฟ้า BTS ช่วยเลือกย่านที่เหมาะกับไลฟ์สไตล์และงบประมาณ
-        แต่ละหน้ามีข้อมูล SEO สำหรับดึงทราฟฟิกจาก Google
-      </p>
+      <h1 className="text-3xl font-bold text-slate-900">{t("areasPageTitle", locale)}</h1>
+      <p className="mt-2 max-w-2xl text-slate-600">{t("areasCardDesc", locale)}</p>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {areaGuides.map((area) => (
@@ -27,9 +28,12 @@ export default function AreasPage() {
             className="rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-teal-300 hover:shadow-md"
           >
             <p className="text-sm font-medium text-teal-700">
-              BTS {area.btsStation} · สาย{area.btsLine}
+              BTS {area.btsStation} · {t("btsLinePrefix", locale)}
+              {area.btsLine}
             </p>
-            <h2 className="mt-2 text-xl font-bold text-slate-900">{area.name}</h2>
+            <h2 className="mt-2 text-xl font-bold text-slate-900">
+              {locale === "en" ? area.nameEn : area.name}
+            </h2>
             <p className="mt-3 text-slate-600">{area.description}</p>
             <ul className="mt-4 flex flex-wrap gap-2">
               {area.highlights.map((h) => (

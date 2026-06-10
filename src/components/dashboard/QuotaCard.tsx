@@ -1,12 +1,17 @@
 import type { UserQuota } from "@/lib/quota";
+import { t, tf } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
-export function QuotaCard({ quota }: { quota: UserQuota }) {
+export async function QuotaCard({ quota }: { quota: UserQuota }) {
+  const locale = await getLocale();
+  const dateLocale = locale === "en" ? "en-US" : "th-TH";
+
   if (quota.unlimited) {
     return (
       <div className="rounded-2xl border border-violet-200 bg-violet-50 p-6">
-        <h2 className="font-bold text-violet-900">โควตาประกาศของคุณ</h2>
+        <h2 className="font-bold text-violet-900">{t("quotaAdminTitle", locale)}</h2>
         <p className="mt-3 text-violet-800">
-          บัญชีแอดมิน — ลงประกาศได้ <span className="font-bold">ไม่จำกัด</span> (ใช้แล้ว {quota.used} รายการ)
+          {tf("quotaAdminDesc", locale, { used: quota.used })}
         </p>
       </div>
     );
@@ -15,24 +20,22 @@ export function QuotaCard({ quota }: { quota: UserQuota }) {
   if (quota.role === "agent") {
     return (
       <div className="rounded-2xl border border-sky-200 bg-sky-50 p-6">
-        <h2 className="font-bold text-sky-900">โควตาประกาศของเอเจนต์</h2>
+        <h2 className="font-bold text-sky-900">{t("quotaAgentTitle", locale)}</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl bg-white p-4 text-center">
             <p className="text-2xl font-bold text-sky-800">{quota.used}</p>
-            <p className="text-sm text-sky-700">ใช้แล้ว</p>
+            <p className="text-sm text-sky-700">{t("quotaUsed", locale)}</p>
           </div>
           <div className="rounded-xl bg-white p-4 text-center">
             <p className="text-2xl font-bold text-slate-900">{quota.maxAllowed}</p>
-            <p className="text-sm text-slate-600">สูงสุด</p>
+            <p className="text-sm text-slate-600">{t("quotaMax", locale)}</p>
           </div>
           <div className="rounded-xl bg-white p-4 text-center">
             <p className="text-2xl font-bold text-sky-800">{quota.remaining}</p>
-            <p className="text-sm text-sky-700">เหลือ</p>
+            <p className="text-sm text-sky-700">{t("quotaRemaining", locale)}</p>
           </div>
         </div>
-        <p className="mt-4 text-sm text-sky-800">
-          โควตาเอเจนต์กำหนดโดยแอดมิน — หากต้องการเพิ่ม กรุณาติดต่อแอดมิน
-        </p>
+        <p className="mt-4 text-sm text-sky-800">{t("quotaAgentNote", locale)}</p>
       </div>
     );
   }
@@ -40,50 +43,51 @@ export function QuotaCard({ quota }: { quota: UserQuota }) {
   if (quota.postingBlocked) {
     return (
       <div className="rounded-2xl border border-sky-200 bg-sky-50 p-6">
-        <h2 className="font-bold text-sky-900">โควตาประกาศ</h2>
-        <p className="mt-3 text-sky-800">
-          บัญชีชาวต่างชาติยังลงประกาศไม่ได้ในช่วงนี้ — ยืนยันอีเมลเพื่อใช้งานเว็บไซต์และติดต่อทีมเอเจนต์
-        </p>
+        <h2 className="font-bold text-sky-900">{t("quotaNonThaiTitle", locale)}</h2>
+        <p className="mt-3 text-sky-800">{t("quotaNonThaiDesc", locale)}</p>
       </div>
     );
   }
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="font-bold text-slate-900">โควตาประกาศของคุณ</h2>
+      <h2 className="font-bold text-slate-900">{t("quotaTitle", locale)}</h2>
 
       {!quota.fullyVerified ? (
         <p className="mt-3 text-amber-700">
-          ยืนยัน LINE และอีเมลก่อน เพื่อลงประกาศได้ {quota.freeLimit} รายการฟรี
+          {tf("quotaVerifyFirst", locale, { limit: quota.freeLimit })}
         </p>
       ) : (
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl bg-teal-50 p-4 text-center">
             <p className="text-2xl font-bold text-teal-800">{quota.used}</p>
-            <p className="text-sm text-teal-700">ใช้แล้ว</p>
+            <p className="text-sm text-teal-700">{t("quotaUsed", locale)}</p>
           </div>
           <div className="rounded-xl bg-slate-50 p-4 text-center">
             <p className="text-2xl font-bold text-slate-900">{quota.maxAllowed}</p>
-            <p className="text-sm text-slate-600">สูงสุด</p>
+            <p className="text-sm text-slate-600">{t("quotaMax", locale)}</p>
           </div>
           <div className="rounded-xl bg-violet-50 p-4 text-center">
             <p className="text-2xl font-bold text-violet-800">{quota.remaining}</p>
-            <p className="text-sm text-violet-700">เหลือ</p>
+            <p className="text-sm text-violet-700">{t("quotaRemaining", locale)}</p>
           </div>
         </div>
       )}
 
       <div className="mt-4 text-sm text-slate-600">
         <p>
-          ฟรี: {quota.freeLimit} ประกาศ
-          {quota.canBuyPackages && ` · แพ็กเพิ่ม: +${quota.extraSlots} ประกาศ`}
+          {tf("quotaFreeLine", locale, { free: quota.freeLimit })}
+          {quota.canBuyPackages && tf("quotaExtraLine", locale, { extra: quota.extraSlots })}
         </p>
         {quota.canBuyPackages && quota.activePackages.length > 0 && (
           <ul className="mt-2 space-y-1">
             {quota.activePackages.map((p) => (
               <li key={p.id}>
-                แพ็ก {p.packageId} (+{p.extraSlots}) หมดอายุ{" "}
-                {new Date(p.expiresAt).toLocaleDateString("th-TH")}
+                {tf("quotaPackageExpires", locale, {
+                  id: p.packageId,
+                  slots: p.extraSlots,
+                  date: new Date(p.expiresAt).toLocaleDateString(dateLocale),
+                })}
               </li>
             ))}
           </ul>

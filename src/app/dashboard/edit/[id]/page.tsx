@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { PostPropertyForm } from "@/components/dashboard/PostPropertyForm";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { dbPropertyToListing } from "@/lib/user-properties";
 
 interface EditPageProps {
@@ -9,7 +11,7 @@ interface EditPageProps {
 }
 
 export default async function EditPropertyPage({ params }: EditPageProps) {
-  const user = await getCurrentUser();
+  const [user, locale] = await Promise.all([getCurrentUser(), getLocale()]);
   if (!user) redirect("/login");
 
   const { id } = await params;
@@ -21,10 +23,8 @@ export default async function EditPropertyPage({ params }: EditPageProps) {
 
   return (
     <div>
-      <h2 className="mb-2 text-xl font-bold text-slate-900">แก้ไขประกาศ</h2>
-      <p className="mb-6 text-sm text-slate-600">
-        เมื่อบันทึกแล้ว ประกาศจะถูกส่งให้แอดมินตรวจสอบอีกครั้งก่อนเผยแพร่
-      </p>
+      <h2 className="mb-2 text-xl font-bold text-slate-900">{t("editListingTitle", locale)}</h2>
+      <p className="mb-6 text-sm text-slate-600">{t("editListingDesc", locale)}</p>
       <PostPropertyForm initial={dbPropertyToListing(property)} propertyId={property.id} />
     </div>
   );

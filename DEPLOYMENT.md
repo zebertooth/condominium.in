@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 15):** Live on Vercel (`next-js-two-beta.vercel.app`). Neon migrated through `analytics_matching`. Custom domain pending.
+**Current status (session 20):** Live at **https://www.condominium.in.th**. All Vercel credentials configured by user. Paid features auto-enabled. Property preview + LINE troubleshooting deployed.
 
 ---
 
@@ -36,6 +36,9 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | `P1013` invalid database string | `DATABASE_URL` must start with `postgresql://` — check `.env` |
 | Provider mismatch sqlite/postgres | Run `npx prisma generate` after any schema provider change |
 | Module not found `@/generated/prisma/client` | Run `npx prisma generate` |
+| 404 on `/property/[slug]` | Listing `pending` — approve in `/admin/properties`, or login as owner to preview |
+| LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles |
+| LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
 
 **Fallback:** `npx prisma db push` then `npm run db:seed` (skips migration history).
 
@@ -68,21 +71,37 @@ git push -u origin main
 
 ## 3. Vercel deploy
 
-**Option A — GitHub (recommended):** Connect `https://github.com/zebertooth/condominium.in` in Vercel dashboard → Import → set env vars → Deploy.
+**After local changes work** (`npm run dev` + `npm run build` pass):
 
-**Option B — CLI:**
-```bash
-npx vercel login
-npx vercel link
+```powershell
+cd C:\Users\NATTASIT\Projects\condominium
+npm run build
 npx vercel --prod
 ```
+
+This runs `vercel-build` → `prisma migrate deploy` + `next build` on Vercel's servers against your Neon DB.
+
+**First-time setup:**
+```bash
+npx vercel login
+npx vercel link    # link to existing project next-js-oouu
+npx vercel --prod
+```
+
+**GitHub auto-deploy (optional):** Connect `https://github.com/zebertooth/condominium.in` in Vercel dashboard for deploy-on-push.
 
 **Build:** Vercel runs `vercel-build` automatically:
 ```json
 "vercel-build": "prisma generate && prisma migrate deploy && next build"
 ```
 
-**Health check after deploy:** `GET /api/health` → `{ "status": "ok", "database": "connected" }`
+**Health check after deploy:**
+```bash
+curl https://www.condominium.in.th/api/health
+```
+Expect: `status: ok`, `database: connected`, `paidFeatures: true` (if PROMPTPAY_ID set), `integrations` with provider flags.
+
+**Admin panel:** `/admin` → Integration Status shows ✓ for each configured provider.
 
 Copy env template from `.env.example` when setting Vercel variables.
 
@@ -115,28 +134,31 @@ CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 LINE_LOGIN_CHANNEL_ID=
 LINE_LOGIN_CHANNEL_SECRET=
-LINE_LOGIN_CALLBACK_URL=https://condominium.in.th/api/auth/line/callback
+LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback
 PROMPTPAY_ID=
 SLIPOK_API_KEY=
 SLIPOK_BRANCH_ID=
 ```
 
-After `PROMPTPAY_ID` is set, flip `PAID_FEATURES_ENABLED = true` in `src/lib/packages.ts`.
+After `PROMPTPAY_ID` is set, paid features turn on automatically (`PAID_FEATURES_ENABLED` env-gated in `src/lib/packages.ts`). Set `PAID_FEATURES_ENABLED=false` on Vercel to force-disable.
 
 ---
 
-## 5. DNS — point condominium.in.th
+## 5. DNS — point condominium.in.th ✅
 
-1. Vercel → Project → Domains → add `condominium.in.th` and `www`
-2. At domain registrar, add DNS records Vercel shows (A or CNAME)
-3. Wait for SSL (automatic)
+DNS configured. Production URLs:
+- https://www.condominium.in.th
+- https://condominium.in.th (if apex configured)
+
+To add/change domains: Vercel → Project → Domains.
 
 ---
 
 ## 6. Post-deploy smoke test
 
-- [ ] Home, /buy, /rent, /property/[slug], /ai-search load
-- [ ] Register (Thai) → verify LINE + Email → post → admin approves → public
+- [x] Home, /buy, /rent, /ai-search load
+- [ ] Register (Thai) → verify LINE (Tester added in LINE Console) + Email → post
+- [ ] Owner preview pending listing (logged in) → admin approves → `/property/[slug]` public
 - [ ] Register (non-Thai) → email verify → posting blocked
 - [ ] Admin login → approve/reject, bulk, edit listing
 - [ ] /admin/leads — lead from /contact appears
@@ -150,7 +172,9 @@ After `PROMPTPAY_ID` is set, flip `PAID_FEATURES_ENABLED = true` in `src/lib/pac
 
 - **Rate limiter** is in-memory (`src/lib/rate-limit.ts`) — per-instance on serverless. Use Upstash Redis for strict global limits.
 - **Local uploads** (`public/uploads`) don't persist on Vercel — configure Cloudinary.
-- **Paid features OFF** until `PAID_FEATURES_ENABLED=true` and `PROMPTPAY_ID` set.
+- **Paid features** auto-ON when `PROMPTPAY_ID` set on Vercel.
+- **LINE Developing channel** only allows Testers until channel is Published.
+- **Pending listings** return 404 publicly until admin approves; owner can preview when logged in.
 - **Rotate Neon password** if connection string was shared in chat.
 
 ---

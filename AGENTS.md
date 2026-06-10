@@ -1,40 +1,27 @@
 # AGENTS.md — Condominium.in.th
 
-Instructions for AI coding agents (Cursor, Claude, Copilot, etc.) working in this repository.
+Instructions for AI coding agents working in this repository.
 
 ---
 
-## Start here (every new session)
+## Start here (every new session / after token restart)
 
-1. **Read** [`CLAUDE.md`](./CLAUDE.md) — architecture, business rules, API map, conventions
-2. **Read** [`ROADMAP.md`](./ROADMAP.md) — what's done, current phase, what to build next
-3. **Verify** the project runs:
-   ```bash
-   npm install
-   npx prisma generate
-   npm run db:deploy
-   npm run build
-   npm run lint
-   npm run dev
-   ```
-4. **Check** ROADMAP "In progress" — don't duplicate work already started
-5. **Update** `ROADMAP.md` when you finish a feature (checkbox + date)
+1. Read [`ROADMAP.md`](./ROADMAP.md) — current phase + session log
+2. Read [`CLAUDE.md`](./CLAUDE.md) — architecture, APIs, business rules
+3. Verify locally: `npm run db:deploy && npm run build && npm run lint`
+4. Production check: `GET https://www.condominium.in.th/api/health`
+5. Deploy after changes: `npx vercel --prod`
 
-> ## 🤝 HANDOFF (session 17 — **Phase 2 in progress**)
+> ## 🤝 HANDOFF (session 21 — **dashboard i18n EN**)
 >
-> **Deployed:** Vercel production live (`condominium.in.th` DNS done). Neon Postgres migrated through `20260609180000_analytics_matching`.
+> **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24)  
+> **Done this session:** Full EN/TH for owner **dashboard** — layout, quota, listings, verify, post form, package shop. Uses `useT()` / `useTf()` from `LocaleProvider`.
 >
-> **Done this session:**
-> - **i18n expansion:** 35+ new translation keys added; hero, homepage, `/buy`, `/rent` pages fully bilingual (TH+EN). Areas name shows EN when locale=en.
-> - **Owner inquiry notification:** When an owner-direct inquiry is submitted, the owner gets an email (via Resend when configured, console fallback in dev).
-> - **Browse filter analytics:** `/api/analytics/search-filter` endpoint + `PropertySearch` logs filter events to `SearchEvent` table. Admin analytics now includes browse searches.
->
-> **NOT done (next priorities):**
-> 1. Set Production keys on Vercel: `LINE_LOGIN_*`, `CLOUDINARY_*`, `RESEND_*`, `THAIBULKSMS_*`
-> 2. Flip `PAID_FEATURES_ENABLED` to true when `PROMPTPAY_ID` is set
-> 3. EN translations for: blog pages, areas pages, admin UI
-> 4. Agent CRM: viewing scheduler, agent dashboard
-> 5. **Sponsored posts layout** — planned, do NOT implement until user asks
+> **Next priorities:**
+> 1. EN for **admin** panel + blog/area article bodies
+> 2. Optional Vercel keys: OPENAI, SLIPOK, GA4
+> 3. **Sponsored posts UI** — do NOT implement until user asks
+> 4. Agent CRM: viewing scheduler
 
 ---
 
@@ -42,79 +29,35 @@ Instructions for AI coding agents (Cursor, Claude, Copilot, etc.) working in thi
 
 | Item | Value |
 |------|-------|
-| Name | Condominium.in.th |
-| Type | Bangkok condo/house marketplace (buy + rent) |
-| Production | Vercel — `https://next-js-two-beta.vercel.app` |
-| Phase | **Post-launch features** — i18n, analytics, owner contact done; sponsored posts planned |
-| Language | Thai-first + EN switcher (partial coverage) |
+| Production | **https://www.condominium.in.th** |
+| Phase | **Phase 2** — prod keys live, paid ON, polish + CRM next |
+| Paid | Auto-ON when `PROMPTPAY_ID` on Vercel (`PAID_FEATURES_ENABLED` env-gated) |
 | Workspace | `C:\Users\NATTASIT\Projects\condominium` |
 
-> **Launch policy:** Paid OFF. Thai = LINE+Email to post. Non-Thai blocked. SMS additive. Agent listings → platform lead flow; owner listings → direct contact.
+**Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. SMS additive. Owner listings → direct contact; agent listings → platform CRM.
 
 ---
 
-## Documentation map
+## Deploy workflow
 
-| File | Purpose |
-|------|---------|
-| **AGENTS.md** (this file) | Agent workflow & handoff |
-| **CLAUDE.md** | Deep technical context |
-| **ROADMAP.md** | Timeline & state tracker |
-| **DEPLOYMENT.md** | Production runbook |
-| **README.md** | Human quick start |
-
----
-
-## Agent workflow
-
-### Before making changes
-1. Understand request against ROADMAP phase
-2. Search codebase — prefer extending `src/lib/`
-3. Small, focused diffs
-
-### After making changes
-```bash
+```powershell
 npm run build
-npm run lint
-npm run db:deploy   # if schema changed
+npx vercel --prod
 ```
-Update `ROADMAP.md` checkboxes + decision log.
 
-### Do NOT (unless user asks)
-- Create git commits / deploy
-- Implement **sponsored posts UI** (future roadmap only)
-- Revert to SQLite
-- Commit `.env` or secrets
+Redeploy after any Vercel env var change.
 
 ---
 
-## Priority queue
-
-When user says "continue" without specifics:
-
-1. Custom domain + prod env vars on Vercel
-2. Complete EN translations across all pages
-3. Owner listing stats in dashboard
-4. Flip paid features when `PROMPTPAY_ID` ready
-5. **Sponsored posts** — design only until explicitly requested
-6. Agent CRM: viewing scheduler, agent dashboard
-7. Phase 4: ZH/JA/AR i18n (currently disabled in UI)
-
----
-
-## Key paths (new in session 15)
+## Key paths
 
 ```
-src/lib/locale.ts              Cookie-based locale (th/en)
-src/lib/i18n.ts                TH + EN translations
-src/lib/analytics.ts           Search/view aggregation + CSV helper
-src/lib/matching.ts            Owner contact event logging
-src/components/layout/LanguageSwitcher.tsx
-src/components/property/OwnerContactCard.tsx
-src/components/property/PropertyContactSection.tsx
-src/app/admin/analytics/       Analytics dashboard
-src/app/api/analytics/         property-view, matching
-src/app/api/admin/analytics/export/  CSV download
+src/lib/user-properties.ts   getUserPropertyBySlugVisible — owner/admin preview
+src/lib/packages.ts          PAID_FEATURES_ENABLED (PROMPTPAY_ID env-gated)
+src/lib/integrations.ts      Provider status for /admin + /api/health
+src/lib/line.ts              LINE Login (Developing channel = testers only)
+src/components/dashboard/VerifyForm.tsx  LINE developing-status help
+src/app/property/[slug]/page.tsx       Preview banner for pending listings
 ```
 
 ---
@@ -125,11 +68,20 @@ src/app/api/admin/analytics/export/  CSV download
 |------|-------|----------|
 | Admin | `admin@condominium.in.th` | `admin123456` |
 
-**Owner-direct contact test:** Register as Thai user → post listing → admin approve → open `/property/[slug]` → see owner contact card (if poster `role !== agent`).
+**Property flow:** Register (Thai) → verify LINE (Tester required) + Email → post → **admin approve** → public URL works.
+
+---
+
+## Do NOT (unless user asks)
+
+- Implement sponsored posts UI
+- Commit `.env` or create git commits
+- Revert to SQLite
 
 ---
 
 ## Related
 
-- Architecture → [`CLAUDE.md`](./CLAUDE.md)
-- Phase status → [`ROADMAP.md`](./ROADMAP.md)
+- [`ROADMAP.md`](./ROADMAP.md) — phase tracker
+- [`CLAUDE.md`](./CLAUDE.md) — technical reference
+- [`DEPLOYMENT.md`](./DEPLOYMENT.md) — Vercel + troubleshooting

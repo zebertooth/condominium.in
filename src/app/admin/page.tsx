@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { IntegrationStatus } from "@/components/admin/IntegrationStatus";
 import { getAdminStats } from "@/lib/admin";
 
 export default async function AdminDashboardPage() {
@@ -33,6 +34,8 @@ export default async function AdminDashboardPage() {
           </Link>
         ))}
       </div>
+
+      <IntegrationStatus />
     </div>
   );
 }

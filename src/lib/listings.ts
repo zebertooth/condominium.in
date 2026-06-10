@@ -1,7 +1,8 @@
 import { properties as staticProperties } from "@/lib/properties";
 import {
   getAllPublishedUserProperties,
-  getUserPropertyBySlug,
+  getUserPropertyBySlugVisible,
+  type PropertyViewer,
 } from "@/lib/user-properties";
 import type { Property, SearchFilters } from "@/types/property";
 
@@ -10,10 +11,14 @@ export async function getAllListings(): Promise<Property[]> {
   return [...userListings, ...staticProperties];
 }
 
-export async function getListingBySlug(slug: string): Promise<Property | undefined> {
-  const userListing = await getUserPropertyBySlug(slug);
+export async function getListingBySlug(
+  slug: string,
+  viewer?: PropertyViewer,
+): Promise<Property | undefined> {
+  const normalized = decodeURIComponent(slug).trim();
+  const userListing = await getUserPropertyBySlugVisible(normalized, viewer);
   if (userListing) return userListing;
-  return staticProperties.find((p) => p.slug === slug);
+  return staticProperties.find((p) => p.slug === normalized);
 }
 
 function applyFilters(list: Property[], filters: SearchFilters): Property[] {

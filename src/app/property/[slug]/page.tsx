@@ -7,6 +7,7 @@ import { PropertyViewTracker } from "@/components/property/PropertyViewTracker";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { formatPrice, t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
 import { createMetadata, siteConfig } from "@/lib/seo";
 
@@ -29,8 +30,18 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function PropertyPage({ params }: PageProps) {
   const { slug } = await params;
-  const [property, locale] = await Promise.all([getListingBySlug(slug), getLocale()]);
+  const user = await getCurrentUser();
+  const viewer = user
+    ? { userId: user.id, isAdmin: user.role === "admin" }
+    : undefined;
+  const [property, locale] = await Promise.all([
+    getListingBySlug(slug, viewer),
+    getLocale(),
+  ]);
   if (!property) notFound();
+
+  const isPublished = property.status === "published" || !property.status;
+  const isPreview = !isPublished;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -56,14 +67,27 @@ export default async function PropertyPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <PropertyViewTracker
-        propertySlug={property.slug}
-        propertyType={property.propertyType}
-        listingType={property.listingType}
-        district={property.district}
-        btsStation={property.btsStation}
-      />
-      <JsonLd data={jsonLd} />
+      {isPublished && (
+        <PropertyViewTracker
+          propertySlug={property.slug}
+          propertyType={property.propertyType}
+          listingType={property.listingType}
+          district={property.district}
+          btsStation={property.btsStation}
+        />
+      )}
+      {isPreview && (
+        <div className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {property.status === "pending"
+            ? locale === "en"
+              ? "Preview only — this listing is pending admin approval and is not public yet."
+              : "โหมดดูตัวอย่าง — ประกาศนี้รอแอดมินอนุมัติ ยังไม่แสดงต่อสาธารณะ"
+            : locale === "en"
+              ? "This listing was rejected and is not public."
+              : "ประกาศนี้ถูกปฏิเสธ ยังไม่แสดงต่อสาธารณะ"}
+        </div>
+      )}
+      {isPublished && <JsonLd data={jsonLd} />}
 
       <nav className="mb-6 text-sm text-slate-500">
         <Link href="/" className="hover:text-teal-700">{t("home", locale)}</Link>
@@ -145,7 +169,7 @@ export default async function PropertyPage({ params }: PageProps) {
         <PropertyMap latitude={property.latitude} longitude={property.longitude} address={property.address} />
       )}
 
-      <PropertyContactSection property={property} locale={locale} />
+      {isPublished && <PropertyContactSection property={property} locale={locale} />}
     </div>
   );
 }

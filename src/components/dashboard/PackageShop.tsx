@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useCallback } from "react";
+import { useT, useTf } from "@/components/i18n/LocaleProvider";
 import { LISTING_PACKAGES, SPONSOR_PACKAGE } from "@/lib/packages";
 
 interface PendingPayment {
@@ -14,6 +15,8 @@ interface PendingPayment {
 
 export function PackageShop() {
   const router = useRouter();
+  const t = useT();
+  const tf = useTf();
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "info">("info");
@@ -58,7 +61,7 @@ export function PackageShop() {
       showMessage(data.message, "info");
     } catch {
       setLoading(null);
-      showMessage("เกิดข้อผิดพลาด กรุณาลองใหม่", "error");
+      showMessage(t("genericError"), "error");
     }
   }
 
@@ -69,7 +72,6 @@ export function PackageShop() {
     const file = fileInputRef.current.files[0];
 
     try {
-      // Upload slip image via existing /api/upload endpoint
       const formData = new FormData();
       formData.append("file", file);
 
@@ -79,7 +81,7 @@ export function PackageShop() {
       });
 
       if (!uploadRes.ok) {
-        showMessage("อัปโหลดสลิปไม่สำเร็จ", "error");
+        showMessage(t("slipUploadFailed"), "error");
         setSlipUploading(false);
         return;
       }
@@ -87,7 +89,6 @@ export function PackageShop() {
       const uploadData = await uploadRes.json();
       const slipUrl = uploadData.url;
 
-      // Confirm payment with uploaded slip
       const confirmRes = await fetch("/api/packages/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -111,11 +112,11 @@ export function PackageShop() {
       } else if (confirmData.status === "amount_mismatch") {
         showMessage(confirmData.message, "error");
       } else {
-        showMessage(confirmData.error ?? "เกิดข้อผิดพลาด", "error");
+        showMessage(confirmData.error ?? t("genericError"), "error");
       }
     } catch {
       setSlipUploading(false);
-      showMessage("อัปโหลดสลิปไม่สำเร็จ กรุณาลองใหม่", "error");
+      showMessage(t("slipUploadRetry"), "error");
     }
   }
 
@@ -134,10 +135,8 @@ export function PackageShop() {
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="font-bold text-slate-900">ซื้อแพ็กเพิ่มประกาศ</h2>
-      <p className="mt-1 text-sm text-slate-600">
-        ลงประกาศเกิน 2 รายการได้ด้วยแพ็กรายเดือน — ชำระผ่าน PromptPay
-      </p>
+      <h2 className="font-bold text-slate-900">{t("packageShopTitle")}</h2>
+      <p className="mt-1 text-sm text-slate-600">{t("packageShopDesc")}</p>
 
       {message && (
         <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${msgBg}`}>
@@ -145,11 +144,10 @@ export function PackageShop() {
         </div>
       )}
 
-      {/* PromptPay QR Modal */}
       {pendingPayment && !paymentStatus && (
         <div className="mt-6 rounded-xl border-2 border-violet-300 bg-violet-50 p-6">
           <h3 className="text-center text-lg font-bold text-violet-900">
-            ชำระเงินผ่าน PromptPay
+            {t("payPromptPayTitle")}
           </h3>
           <p className="mt-1 text-center text-sm text-violet-700">
             {pendingPayment.packageName} — ฿{pendingPayment.amount}
@@ -169,22 +167,22 @@ export function PackageShop() {
             </div>
           ) : (
             <div className="mt-4 rounded-lg bg-amber-50 p-3 text-center text-sm text-amber-800">
-              PromptPay ยังไม่ได้ตั้งค่า กรุณาโอนเงินและอัปโหลดสลิป
+              {t("promptPayNotConfigured")}
             </div>
           )}
 
           <div className="mt-4 text-center text-sm text-violet-700">
-            <p className="font-medium">ขั้นตอน:</p>
+            <p className="font-medium">{t("payStepsTitle")}</p>
             <ol className="mt-1 list-inside list-decimal text-left text-xs text-violet-600">
-              <li>สแกน QR ด้วยแอปธนาคาร</li>
-              <li>ชำระเงิน ฿{pendingPayment.amount}</li>
-              <li>บันทึกหน้าจอ (สลิป) แล้วอัปโหลดด้านล่าง</li>
+              <li>{t("payStep1")}</li>
+              <li>{tf("payStep2", { amount: pendingPayment.amount })}</li>
+              <li>{t("payStep3")}</li>
             </ol>
           </div>
 
           <div className="mt-4">
             <label className="block text-sm font-medium text-violet-800">
-              อัปโหลดสลิปการโอน
+              {t("uploadSlipLabel")}
             </label>
             <input
               ref={fileInputRef}
@@ -201,27 +199,24 @@ export function PackageShop() {
               disabled={slipUploading}
               className="flex-1 rounded-lg bg-violet-600 py-2.5 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
             >
-              {slipUploading ? "กำลังตรวจสอบ..." : "ยืนยันการชำระเงิน"}
+              {slipUploading ? t("verifyingPayment") : t("confirmPaymentBtn")}
             </button>
             <button
               type="button"
               onClick={cancelPayment}
               className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50"
             >
-              ยกเลิก
+              {t("cancelBtn")}
             </button>
           </div>
         </div>
       )}
 
-      {/* Pending review status */}
       {paymentStatus === "pending_review" && (
         <div className="mt-6 rounded-xl border-2 border-amber-300 bg-amber-50 p-5 text-center">
           <div className="text-3xl">⏳</div>
-          <h3 className="mt-2 font-bold text-amber-900">รอตรวจสอบสลิป</h3>
-          <p className="mt-1 text-sm text-amber-700">
-            แอดมินจะตรวจสอบสลิปของคุณ ปกติไม่เกิน 30 นาที
-          </p>
+          <h3 className="mt-2 font-bold text-amber-900">{t("pendingReviewTitle")}</h3>
+          <p className="mt-1 text-sm text-amber-700">{t("pendingReviewDesc")}</p>
           <button
             type="button"
             onClick={() => {
@@ -231,23 +226,19 @@ export function PackageShop() {
             }}
             className="mt-3 text-sm text-amber-600 underline hover:text-amber-800"
           >
-            ปิด
+            {t("closeBtn")}
           </button>
         </div>
       )}
 
-      {/* Payment confirmed */}
       {paymentStatus === "confirmed" && (
         <div className="mt-6 rounded-xl border-2 border-emerald-300 bg-emerald-50 p-5 text-center">
           <div className="text-3xl">✅</div>
-          <h3 className="mt-2 font-bold text-emerald-900">ชำระเงินสำเร็จ!</h3>
-          <p className="mt-1 text-sm text-emerald-700">
-            แพ็กเกจเปิดใช้งานแล้ว คุณสามารถลงประกาศเพิ่มได้ทันที
-          </p>
+          <h3 className="mt-2 font-bold text-emerald-900">{t("paymentSuccessTitle")}</h3>
+          <p className="mt-1 text-sm text-emerald-700">{t("paymentSuccessDesc")}</p>
         </div>
       )}
 
-      {/* Package cards — hide when payment is in progress */}
       {!pendingPayment && !paymentStatus && (
         <>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -268,7 +259,7 @@ export function PackageShop() {
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  ชำระผ่าน PromptPay
+                  {t("payViaPromptPay")}
                 </div>
                 <button
                   type="button"
@@ -276,7 +267,7 @@ export function PackageShop() {
                   disabled={loading === pkg.id}
                   className="mt-4 w-full rounded-lg bg-violet-600 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
                 >
-                  {loading === pkg.id ? "กำลังสร้างคำสั่งซื้อ..." : "ซื้อแพ็ก"}
+                  {loading === pkg.id ? t("creatingOrder") : t("buyPackageBtn")}
                 </button>
               </div>
             ))}
@@ -286,9 +277,7 @@ export function PackageShop() {
             <h3 className="font-semibold text-amber-900">{SPONSOR_PACKAGE.name}</h3>
             <p className="text-sm text-amber-800">{SPONSOR_PACKAGE.description}</p>
             <p className="mt-2 font-bold text-amber-900">฿{SPONSOR_PACKAGE.priceBaht}</p>
-            <p className="mt-1 text-xs text-amber-700">
-              กดปุ่ม &quot;ทำประกาศเด่น&quot; ที่รายการประกาศของคุณในหน้าแดชบอร์ด
-            </p>
+            <p className="mt-1 text-xs text-amber-700">{t("sponsorPackageHint")}</p>
           </div>
         </>
       )}

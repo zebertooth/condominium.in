@@ -1,32 +1,34 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-09 (session 15 — post-launch features)  
-**Current phase:** **Post-launch features** — deployed on Vercel; analytics, i18n TH/EN, owner contact done  
+**Last updated:** 2026-06-10 (session 21 — dashboard i18n EN)  
+**Current phase:** **Phase 2** — production live; prod keys set; bugfixes deployed; i18n + CRM next  
 
 > ## Build status
-> **Production:** https://next-js-two-beta.vercel.app (Vercel project `next-js-oouu`).  
+> **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
+> **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **DB:** Neon PostgreSQL — migrations through `20260609180000_analytics_matching`.  
-> `npm run db:deploy` after pull if schema changed. `npm run build` must pass.
+> Health: `GET /api/health` → `{ status: "ok", database: "connected" }`
 
-> **LAUNCH POLICY (current):** Paid features OFF (`PAID_FEATURES_ENABLED=false`). ID verification removed. Thai users verify **LINE + Email** to post (2 free listings). Non-Thai users verify email only and **cannot post** yet. Phone/SMS verification is wired (ThaiBulkSMS) but **additive** (not a posting gate yet).
+> **LAUNCH POLICY (current):** Paid features ON on production when `PROMPTPAY_ID` is set (auto). Local dev OFF unless `.env` has `PROMPTPAY_ID`. ID verification removed. Thai users verify **LINE + Email** to post (2 free listings). Non-Thai users verify email only and **cannot post** yet. Phone/SMS verification is wired (ThaiBulkSMS) but **additive** (not a posting gate yet).
 
 > Update this file when completing features, changing priorities, or deploying.  
 > Mark items: `[x]` done · `[~]` in progress · `[ ]` planned · `[-]` cancelled
 
 ---
 
-## Model transfer snapshot (session 15)
+## Model transfer snapshot (session 20)
 
 | Area | State |
 |------|--------|
-| **Production** | Vercel live. Custom domain `condominium.in.th` not pointed yet. |
-| **Database** | Neon + migrations: `init_postgres`, `analytics_matching`. |
-| **i18n** | TH + EN switcher (cookie). ZH/JA/AR disabled in UI. Many pages still Thai-only. |
-| **Lead routing** | `role=agent` → agent team form. `role=user` owner → direct contact + `MatchingEvent` log. |
-| **Analytics** | `/admin/analytics` + CSV export. AI searches + property views tracked in DB. |
-| **Sponsored posts** | **Do not implement** — future monetization layout (see below). |
-| **Paid** | Still OFF until `PROMPTPAY_ID` + `PAID_FEATURES_ENABLED=true`. |
+| **Production** | https://www.condominium.in.th — Vercel `next-js-oouu`, deploy via `npx vercel --prod` |
+| **Database** | Neon + migrations: `init_postgres`, `analytics_matching` |
+| **Prod keys** | All configured on Vercel (user, session 19). `/api/health` + `/admin` Integration Status |
+| **Paid** | Auto-ON when `PROMPTPAY_ID` set (`paidFeatures: true` on prod) |
+| **Property URLs** | `pending` → 404 public; **owner/admin preview** when logged in (session 20) |
+| **LINE Login** | Channel in **Developing** — only Testers can login; add in LINE Developers Console |
+| **i18n** | TH/EN: public pages + **owner dashboard** (session 21). Admin still Thai |
+| **Sponsored posts** | **Do not implement** until user asks |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -55,7 +57,7 @@ Bangkok condo/house marketplace with:
 | Phase | Focus | Status | Target |
 |-------|--------|--------|--------|
 | **1** | Website, SEO, MVP listings, auth, admin | **Done** | 2026 Q2 |
-| **Launch** | LINE+Email verify, paid OFF, Neon DB | **Done** | 2026 Q2 |
+| **Launch** | LINE+Email verify, paid env-gated, Neon DB | **Done** | 2026 Q2 |
 | **Deploy** | Vercel + DNS + prod env vars | **Done** (live, DNS done) | 2026 Q2 |
 | **Post-launch** | Logout, i18n TH/EN, owner contact, analytics | **Done** | 2026 Q2 |
 | **2** | Real provider keys, flip paid, SEO scale, sponsored UI | **In Progress** | 2026 Q3 |
@@ -76,31 +78,31 @@ Bangkok condo/house marketplace with:
 - [x] Quota gate: Thai = LINE + Email to post; non-Thai = `postingBlocked`
 - [x] Registration nationality selector (คนไทย / ชาวต่างชาติ); email required
 - [x] Verify page/form rebuilt: LINE + Email; non-Thai notice; ID/phone removed
-- [ ] Configure real LINE Login channel keys for production
+- [x] Configure real LINE Login channel keys for production (Vercel env)
 
-### Paid features OFF for launch
-- [x] `PAID_FEATURES_ENABLED = false` master flag in `src/lib/packages.ts`
-- [x] `purchase` / `sponsor` APIs return 403 when disabled
-- [x] PackageShop + sponsor button hidden in dashboard
-- [x] Quota ignores package slots while disabled
+### Paid features (env-gated — ON in production)
+- [x] `PAID_FEATURES_ENABLED` auto-ON when `PROMPTPAY_ID` set (`src/lib/packages.ts`)
+- [x] `purchase` / `sponsor` APIs return 403 when disabled (no PROMPTPAY_ID)
+- [x] PackageShop + sponsor visible on prod when paid enabled
+- [x] Override: set `PAID_FEATURES_ENABLED=false` on Vercel to force-disable
 
 ### SMS (additive — done)
 - [x] ThaiBulkSMS provider in `src/lib/notifications.ts` (preferred for TH, Twilio fallback, console dev)
 - [x] Phone (SMS) OTP step re-added to verify flow for Thai users (additive)
 - [x] `THAIBULKSMS_*` env placeholders
 - [x] Phone verify stays additive (not a posting gate) — policy decided
-- [ ] Add real ThaiBulkSMS keys + approved sender in prod (post-deploy)
+- [x] Add real ThaiBulkSMS keys + approved sender in prod (Vercel env)
 
 ---
 
-## Deploy phase (ALMOST DONE)
+## Deploy phase (DONE)
 
 - [x] Vercel production deploy (`vercel --prod`, Node 24)
 - [x] `vercel-build` runs migrate deploy on build
-- [x] Health check `/api/health`
-- [~] Production env vars on Vercel (partial — verify `AUTH_SECRET`, `DATABASE_URL`)
-- [ ] Point DNS `condominium.in.th` to Vercel
-- [ ] LINE / Cloudinary / Resend / ThaiBulkSMS prod keys
+- [x] Health check `/api/health` (verified on production)
+- [x] DNS `condominium.in.th` / `www.condominium.in.th` → Vercel
+- [x] Local changes pushed to Vercel (session 18 — `npx vercel --prod`)
+- [x] Production env vars on Vercel (all credentials configured by user — session 19)
 
 ---
 
@@ -113,7 +115,7 @@ Bangkok condo/house marketplace with:
 - [x] Language switcher in public header (`LanguageSwitcher`, cookie `condo_locale`)
 - [x] `src/lib/i18n.ts` — Thai + English translation tables
 - [x] ZH / JA / AR hidden (deferred to Phase 4)
-- [~] Full EN coverage on all pages (hero, homepage, buy, rent pages done; blog, areas, admin still Thai)
+- [~] Full EN coverage (home, buy, rent, blog, areas, contact, **dashboard** done; admin, article bodies still Thai)
 
 ### Lead matching — owner vs agent
 - [x] Non-agent listings (`role !== agent`) → owner direct contact on property page
@@ -218,10 +220,10 @@ Bangkok condo/house marketplace with:
 - [x] Update `src/lib/db.ts` for `@prisma/adapter-pg`
 - [x] Neon project provisioned (Singapore); `DATABASE_URL` in `.env`
 - [x] Fresh Postgres migration `20260609150000_init_postgres` + `scripts/setup-neon.ps1`
-- [~] Apply migrations to Neon (`prisma migrate deploy` + `db:seed`) — user may still need to run
-- [ ] Deploy to Vercel → **moved to Deploy phase**
-- [ ] Point DNS `condominium.in.th` → **moved to Deploy phase**
-- [ ] Production env vars on Vercel → **moved to Deploy phase**
+- [x] Apply migrations to Neon (`prisma migrate deploy` + `db:seed`)
+- [x] Deploy to Vercel
+- [x] Point DNS `condominium.in.th`
+- [x] Production env vars on Vercel (all credentials configured — session 19)
 - [x] File storage for images — `src/lib/storage.ts` (Cloudinary signed upload + local-disk dev fallback), `POST /api/upload`, drag-to-upload UI in `ImageGalleryInput`
 
 ### Real verification
@@ -239,8 +241,9 @@ Bangkok condo/house marketplace with:
 - [x] PackageShop UI rewrite with QR display + slip upload
 - [x] Schema: paymentStatus, paymentMethod, transactionRef, slipUrl on UserSubscription
 - [x] Quota system updated to only count confirmed payments
-- [ ] Flip `PAID_FEATURES_ENABLED = true` (when ready for real payments)
-- [ ] Set PROMPTPAY_ID + SLIPOK keys in production env
+- [x] `PAID_FEATURES_ENABLED` auto-ON when `PROMPTPAY_ID` set (session 19)
+- [x] PROMPTPAY_ID set on Vercel (paid live on prod)
+- [ ] SLIPOK keys optional (admin manual slip approval works without)
 
 ### AI upgrade
 - [x] OpenAI API integration for `/api/ai-search` (env-gated, falls back to rule-based) — `src/lib/openai.ts`, `src/lib/ai-search.ts`
@@ -251,7 +254,7 @@ Bangkok condo/house marketplace with:
 ### Real verification (provider layer)
 - [x] Provider abstraction `src/lib/notifications.ts` — `sendSms` (Twilio) + `sendEmail` (Resend), console fallback
 - [x] OTP modules wired to providers; `devCode` only returned in development
-- [ ] Add/confirm real provider keys in production env
+- [x] Real provider keys on Vercel (session 19) — check `/api/health` integrations
 - [ ] Optional: ID card photo upload + admin manual review
 
 ### SEO & content scale
@@ -261,6 +264,11 @@ Bangkok condo/house marketplace with:
 - [x] Analytics (GA4) scaffold — `src/components/analytics/Analytics.tsx` (env-gated `NEXT_PUBLIC_GA_ID`)
 - [ ] CMS or MDX blog pipeline (weekly articles)
 - [ ] Google Search Console setup
+
+### UX fixes (session 20)
+- [x] Owner/admin preview for `pending` listings on `/property/[slug]` (`getUserPropertyBySlugVisible`)
+- [x] Preview banner (TH/EN); contact hidden until published
+- [x] LINE Developing-channel help on `/dashboard/verify` (Tester instructions)
 
 ### Admin enhancements
 - [ ] Admin login separate from public (optional)
@@ -359,8 +367,44 @@ prisma generate + next build + lint all green
 
 ### In progress
 ```
-1. Prod integration keys (LINE, Cloudinary, Resend, ThaiBulkSMS)
-2. Remaining EN translations: blog, areas, admin pages
+1. EN translations: admin panel, blog/area article bodies
+2. Optional Vercel keys: OPENAI, SLIPOK, GA4
+3. Agent CRM: viewing scheduler
+```
+
+### Done (2026-06-10, session 21 — dashboard i18n)
+```
+EN/TH for owner dashboard: layout, QuotaCard, MyProperties, VerifyForm,
+PackageShop, PostPropertyForm, post/verify/edit pages
+Added tf() helper + useTf() hook for interpolated strings
+Removed LINE developing-status help box from VerifyForm (user request)
+```
+
+### Done (2026-06-10, session 20 — bugfixes + handoff)
+```
+Property 404 fix: owner/admin preview pending listings on /property/[slug]
+Preview banner (TH/EN); contact hidden until published
+getUserPropertyBySlugVisible() in user-properties.ts
+LINE verify help: Developing channel / Tester instructions on VerifyForm
+Deployed to www.condominium.in.th
+All MD files updated for token-restart handoff
+```
+
+### Done (2026-06-10, session 19 — prod keys + monetization)
+```
+All Vercel credentials configured by user
+PAID_FEATURES_ENABLED auto-enables when PROMPTPAY_ID set
+Integration status panel on /admin + /api/health
+i18n: blog, areas, contact pages bilingual
+Deployed to www.condominium.in.th
+```
+
+### Done (2026-06-10, session 18 — Vercel sync)
+```
+npx vercel --prod — production deployment synced with local codebase
+Migrations applied on Vercel build (analytics_matching — no pending)
+Health check OK on https://www.condominium.in.th/api/health
+All MD files updated for session 18 handoff
 ```
 
 ### Done (2026-06-10, session 17 — Phase 2 i18n + notifications + analytics)
@@ -489,14 +533,12 @@ All markdown docs updated for Deploy phase:
 5. PHASE 3: agent dashboard, viewing scheduler, listing view-stats
 ```
 
-### Blocked / needs decision
+### Blocked / needs user action (not code)
 ```
-- Neon tables applied? User must run setup-neon.ps1 if 500 / User table missing
-- GitHub repo + Vercel project not created yet (user had no git installed earlier)
-- PROMPTPAY_ID not set → paid features stay OFF
-- LINE_LOGIN prod channel not configured
-- Phone verify: stay additive (user chose) vs required later
-- Non-Thai listing: still blocked by policy
+- LINE channel in Developing mode → add LINE ID as Tester in developers.line.biz
+- Pending listings 404 for public → admin must approve at /admin/properties
+- Optional keys not on Vercel: OPENAI, SLIPOK, GA4 (app works without)
+- Phone verify: stay additive (policy); non-Thai posting still blocked
 ```
 
 ---
