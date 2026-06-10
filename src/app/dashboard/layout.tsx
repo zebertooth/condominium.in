@@ -19,7 +19,10 @@ export default async function DashboardLayout({
         <div>
           <h1 className="text-2xl font-bold text-slate-900">{t("dashboard", locale)}</h1>
           <p className="text-sm text-slate-600">
-            {tf("dashHello", locale, { name: user.fullName, phone: user.phone })}
+            {tf("dashHello", locale, {
+              name: user.fullName,
+              phone: user.phone ?? user.email ?? "—",
+            })}
           </p>
         </div>
         <nav className="flex flex-wrap items-center gap-2 text-sm">

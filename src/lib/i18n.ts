@@ -214,6 +214,13 @@ const th = {
   formEditFail: "แก้ไขไม่สำเร็จ",
   formPostFail: "ลงประกาศไม่สำเร็จ",
   unlimited: "ไม่จำกัด",
+  pkgExtra4Name: "แพ็กเพิ่ม 4 ประกาศ",
+  pkgExtra4Desc: "ลงประกาศเพิ่มได้ 4 รายการ นาน 30 วัน",
+  pkgExtra4Badge: "ยอดนิยม",
+  pkgExtra10Name: "แพ็กเพิ่ม 10 ประกาศ",
+  pkgExtra10Desc: "ลงประกาศเพิ่มได้ 10 รายการ นาน 30 วัน",
+  sponsorPkgName: "ประกาศเด่น (สปอนเซอร์)",
+  sponsorPkgDesc: "ทำให้ประกาศขึ้นอันดับต้นและมีป้ายเด่น 7 วัน",
 } as const;
 
 const en: Record<keyof typeof th, string> = {
@@ -422,6 +429,13 @@ const en: Record<keyof typeof th, string> = {
   formEditFail: "Update failed",
   formPostFail: "Failed to post listing",
   unlimited: "Unlimited",
+  pkgExtra4Name: "Extra 4 listings",
+  pkgExtra4Desc: "Post 4 more listings for 30 days",
+  pkgExtra4Badge: "Popular",
+  pkgExtra10Name: "Extra 10 listings",
+  pkgExtra10Desc: "Post 10 more listings for 30 days",
+  sponsorPkgName: "Featured listing (sponsor)",
+  sponsorPkgDesc: "Boost your listing to the top with a featured badge for 7 days",
 };
 
 const translations: Record<Locale, Record<keyof typeof th, string>> = { th, en };

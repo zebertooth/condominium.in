@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useCallback } from "react";
 import { useT, useTf } from "@/components/i18n/LocaleProvider";
-import { LISTING_PACKAGES, SPONSOR_PACKAGE } from "@/lib/packages";
+import type { TranslationKey } from "@/lib/i18n";
+import { LISTING_PACKAGES, PENDING_PAYMENT_STORAGE, SPONSOR_PACKAGE } from "@/lib/packages";
 
 interface PendingPayment {
   subscriptionId: string;
@@ -13,6 +14,11 @@ interface PendingPayment {
   packageName: string;
 }
 
+const PACKAGE_KEYS: Record<string, { name: TranslationKey; desc: TranslationKey; badge?: TranslationKey }> = {
+  extra_4_monthly: { name: "pkgExtra4Name", desc: "pkgExtra4Desc", badge: "pkgExtra4Badge" },
+  extra_10_monthly: { name: "pkgExtra10Name", desc: "pkgExtra10Desc" },
+};
+
 export function PackageShop() {
   const router = useRouter();
   const t = useT();
@@ -20,7 +26,19 @@ export function PackageShop() {
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "info">("info");
-  const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(null);
+  const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(() => {
+    if (typeof window === "undefined") return null;
+    const raw = sessionStorage.getItem(PENDING_PAYMENT_STORAGE);
+    if (!raw) return null;
+    try {
+      const payment = JSON.parse(raw) as PendingPayment;
+      sessionStorage.removeItem(PENDING_PAYMENT_STORAGE);
+      return payment;
+    } catch {
+      sessionStorage.removeItem(PENDING_PAYMENT_STORAGE);
+      return null;
+    }
+  });
   const [slipUploading, setSlipUploading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,6 +47,21 @@ export function PackageShop() {
     setMessage(msg);
     setMessageType(type);
   }, []);
+
+  function packageName(id: string, fallback: string) {
+    const keys = PACKAGE_KEYS[id];
+    return keys ? t(keys.name) : fallback;
+  }
+
+  function packageDesc(id: string, fallback: string) {
+    const keys = PACKAGE_KEYS[id];
+    return keys ? t(keys.desc) : fallback;
+  }
+
+  function packageBadge(id: string, fallback?: string) {
+    const keys = PACKAGE_KEYS[id];
+    return keys?.badge ? t(keys.badge) : fallback;
+  }
 
   async function buyPackage(packageId: string) {
     setLoading(packageId);
@@ -56,7 +89,7 @@ export function PackageShop() {
         transactionRef: data.transactionRef,
         amount: data.amount,
         qrDataUrl: data.qrDataUrl,
-        packageName: pkg?.name ?? packageId,
+        packageName: packageName(packageId, pkg?.name ?? packageId),
       });
       showMessage(data.message, "info");
     } catch {
@@ -247,13 +280,13 @@ export function PackageShop() {
                 key={pkg.id}
                 className="relative rounded-xl border border-violet-200 bg-violet-50 p-5"
               >
-                {pkg.badge && (
+                {packageBadge(pkg.id, pkg.badge) && (
                   <span className="absolute -top-2 right-3 rounded-full bg-violet-600 px-2 py-0.5 text-xs text-white">
-                    {pkg.badge}
+                    {packageBadge(pkg.id, pkg.badge)}
                   </span>
                 )}
-                <h3 className="font-bold text-violet-900">{pkg.name}</h3>
-                <p className="mt-1 text-sm text-violet-800">{pkg.description}</p>
+                <h3 className="font-bold text-violet-900">{packageName(pkg.id, pkg.name)}</h3>
+                <p className="mt-1 text-sm text-violet-800">{packageDesc(pkg.id, pkg.description)}</p>
                 <p className="mt-3 text-2xl font-bold text-violet-900">฿{pkg.priceBaht}</p>
                 <div className="mt-1 flex items-center gap-1.5 text-xs text-violet-600">
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -274,8 +307,8 @@ export function PackageShop() {
           </div>
 
           <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <h3 className="font-semibold text-amber-900">{SPONSOR_PACKAGE.name}</h3>
-            <p className="text-sm text-amber-800">{SPONSOR_PACKAGE.description}</p>
+            <h3 className="font-semibold text-amber-900">{t("sponsorPkgName")}</h3>
+            <p className="text-sm text-amber-800">{t("sponsorPkgDesc")}</p>
             <p className="mt-2 font-bold text-amber-900">฿{SPONSOR_PACKAGE.priceBaht}</p>
             <p className="mt-1 text-xs text-amber-700">{t("sponsorPackageHint")}</p>
           </div>

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "@/components/auth/LogoutButton";
-import { getAdminUser } from "@/lib/admin";
+import { getCurrentUser } from "@/lib/auth";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const admin = await getAdminUser();
-  if (!admin) redirect("/login");
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.role !== "admin") redirect("/dashboard");
 
   return (
     <div className="min-h-screen bg-slate-100">

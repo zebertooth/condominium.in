@@ -52,3 +52,6 @@ export const SPONSOR_PACKAGE = {
 export function getPackageById(id: string): ListingPackage | undefined {
   return LISTING_PACKAGES.find((p) => p.id === id);
 }
+
+/** Session storage key for resuming PromptPay checkout after sponsor click. */
+export const PENDING_PAYMENT_STORAGE = "condo_pending_payment";

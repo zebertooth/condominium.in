@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
@@ -11,6 +12,13 @@ export async function requireAdmin() {
   const admin = await getAdminUser();
   if (!admin) throw new Error("FORBIDDEN");
   return admin;
+}
+
+export function adminRouteError(error: unknown, fallbackMessage: string) {
+  if (error instanceof Error && error.message === "FORBIDDEN") {
+    return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });
+  }
+  return NextResponse.json({ error: fallbackMessage }, { status: 500 });
 }
 
 export async function getAdminStats() {

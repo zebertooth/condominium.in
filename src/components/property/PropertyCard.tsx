@@ -29,7 +29,7 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
 
         <div className="p-4">
           <p className="text-xl font-bold text-teal-700">
-            {formatPrice(property.price, property.priceUnit)}
+            {formatPrice(property.price, property.priceUnit, locale)}
           </p>
           <h3 className="mt-1 line-clamp-2 font-semibold text-slate-900">
             {property.title}
@@ -38,9 +38,9 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
             {property.district} · {property.btsStation ? `BTS ${property.btsStation}` : property.address}
           </p>
           <div className="mt-3 flex gap-4 text-sm text-slate-600">
-            <span>{property.bedrooms} {t("bedrooms")}</span>
-            <span>{property.bathrooms} {t("bathrooms")}</span>
-            <span>{property.areaSqm} {t("sqm")}</span>
+            <span>{property.bedrooms} {t("bedrooms", locale)}</span>
+            <span>{property.bathrooms} {t("bathrooms", locale)}</span>
+            <span>{property.areaSqm} {t("sqm", locale)}</span>
           </div>
         </div>
       </Link>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/admin";
+import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -58,8 +58,8 @@ export async function PUT(request: Request, context: RouteContext) {
       property: dbPropertyToListing(property),
       message: "บันทึกการแก้ไขแล้ว",
     });
-  } catch {
-    return NextResponse.json({ error: "แก้ไขประกาศไม่สำเร็จ" }, { status: 400 });
+  } catch (error) {
+    return adminRouteError(error, "แก้ไขประกาศไม่สำเร็จ");
   }
 }
 
@@ -79,7 +79,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     });
 
     return NextResponse.json({ property });
-  } catch {
-    return NextResponse.json({ error: "อัปเดตไม่สำเร็จ" }, { status: 400 });
+  } catch (error) {
+    return adminRouteError(error, "อัปเดตไม่สำเร็จ");
   }
 }

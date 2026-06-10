@@ -8,13 +8,20 @@ export async function GET() {
     return NextResponse.json({ user: null }, { status: 401 });
   }
 
-  const quota = await getUserQuota(user.id);
+  try {
+    const quota = await getUserQuota(user.id);
 
-  return NextResponse.json({
-    user: {
-      ...user,
-      contactVerified: user.phoneVerified || user.emailVerified,
-    },
-    quota,
-  });
+    return NextResponse.json({
+      user: {
+        ...user,
+        contactVerified: user.phoneVerified || user.emailVerified,
+      },
+      quota,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message === "USER_NOT_FOUND") {
+      return NextResponse.json({ user: null }, { status: 401 });
+    }
+    return NextResponse.json({ error: "เกิดข้อผิดพลาด" }, { status: 500 });
+  }
 }

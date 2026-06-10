@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/admin";
+import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { LEAD_STATUSES } from "@/lib/lead-constants";
 
@@ -42,7 +42,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const lead = await prisma.lead.update({ where: { id }, data });
     return NextResponse.json({ lead });
-  } catch {
-    return NextResponse.json({ error: "อัปเดตไม่สำเร็จ" }, { status: 400 });
+  } catch (error) {
+    return adminRouteError(error, "อัปเดตไม่สำเร็จ");
   }
 }

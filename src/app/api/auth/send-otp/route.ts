@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { sendPhoneOtp } from "@/lib/otp";
 import { rateLimit } from "@/lib/rate-limit";
+import { parseRequestJson } from "@/lib/request";
 import { phoneSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
+    const body = await parseRequestJson(request);
     const parsed = phoneSchema.safeParse(body.phone ?? user.phone);
 
     if (!parsed.success) {

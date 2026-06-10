@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
+import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
-import { requireAdmin } from "@/lib/admin";
 
 /**
  * GET /api/admin/payments — List all pending and recent payments.
@@ -29,11 +29,8 @@ export async function GET() {
     });
 
     return NextResponse.json({ payments });
-  } catch {
-    return NextResponse.json(
-      { error: "ดึงข้อมูลไม่สำเร็จ" },
-      { status: 500 },
-    );
+  } catch (error) {
+    return adminRouteError(error, "ดึงข้อมูลไม่สำเร็จ");
   }
 }
 
@@ -65,6 +62,13 @@ export async function PATCH(request: Request) {
     }
 
     if (action === "approve") {
+      if (!["pending", "pending_review"].includes(subscription.paymentStatus)) {
+        return NextResponse.json(
+          { error: "คำสั่งซื้อนี้ไม่อยู่ในสถานะที่อนุมัติได้" },
+          { status: 400 },
+        );
+      }
+
       await prisma.userSubscription.update({
         where: { id: subscriptionId },
         data: {
@@ -107,10 +111,7 @@ export async function PATCH(request: Request) {
     }
 
     return NextResponse.json({ error: "action ไม่ถูกต้อง" }, { status: 400 });
-  } catch {
-    return NextResponse.json(
-      { error: "อัปเดตไม่สำเร็จ" },
-      { status: 500 },
-    );
+  } catch (error) {
+    return adminRouteError(error, "อัปเดตไม่สำเร็จ");
   }
 }

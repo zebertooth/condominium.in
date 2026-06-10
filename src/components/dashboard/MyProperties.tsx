@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale, useT, useTf } from "@/components/i18n/LocaleProvider";
 import { formatPrice } from "@/lib/i18n";
-import { PAID_FEATURES_ENABLED } from "@/lib/packages";
+import { PAID_FEATURES_ENABLED, PENDING_PAYMENT_STORAGE } from "@/lib/packages";
 import type { Property } from "@/types/property";
 
 export function MyProperties({
@@ -24,8 +24,13 @@ export function MyProperties({
   async function deleteProperty(id: string) {
     if (!confirm(t("deleteConfirm"))) return;
     setLoading(id);
-    await fetch(`/api/user/properties/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/user/properties/${id}`, { method: "DELETE" });
     setLoading(null);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      alert((data as { error?: string }).error ?? t("genericError"));
+      return;
+    }
     router.refresh();
   }
 
@@ -38,8 +43,21 @@ export function MyProperties({
     });
     const data = await res.json();
     setLoading(null);
-    if (res.ok) alert(data.message);
-    else alert(data.error);
+    if (!res.ok) {
+      alert(data.error ?? t("genericError"));
+      return;
+    }
+    sessionStorage.setItem(
+      PENDING_PAYMENT_STORAGE,
+      JSON.stringify({
+        subscriptionId: data.subscriptionId,
+        transactionRef: data.transactionRef,
+        amount: data.amount,
+        qrDataUrl: data.qrDataUrl,
+        packageName: t("sponsorPkgName"),
+      }),
+    );
+    router.push("/dashboard");
     router.refresh();
   }
 

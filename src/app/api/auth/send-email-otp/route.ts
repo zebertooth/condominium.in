@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { sendEmailOtp } from "@/lib/email-otp";
 import { rateLimit } from "@/lib/rate-limit";
+import { parseRequestJson } from "@/lib/request";
 import { emailSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
+    const body = await parseRequestJson(request);
     const parsed = emailSchema.safeParse(body.email ?? user.email);
 
     if (!parsed.success) {

@@ -45,7 +45,7 @@ export async function expireOldSubscriptions(userId: string) {
 export async function getUserQuota(userId: string): Promise<UserQuota> {
   await expireOldSubscriptions(userId);
 
-  const user = await prisma.user.findUniqueOrThrow({
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       role: true,
@@ -57,6 +57,10 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
       idVerified: true,
     },
   });
+
+  if (!user) {
+    throw new Error("USER_NOT_FOUND");
+  }
 
   const used = await prisma.userProperty.count({
     where: {

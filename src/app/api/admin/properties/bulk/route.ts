@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/admin";
+import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 
 const ALLOWED = ["pending", "published", "rejected", "deleted"];
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ updated: result.count });
-  } catch {
-    return NextResponse.json({ error: "อัปเดตไม่สำเร็จ" }, { status: 400 });
+  } catch (error) {
+    return adminRouteError(error, "อัปเดตไม่สำเร็จ");
   }
 }

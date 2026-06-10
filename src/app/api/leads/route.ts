@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createLead } from "@/lib/leads";
-import { logMatchingEvent } from "@/lib/matching";
+import { isOwnerDirectListing, logMatchingEvent } from "@/lib/matching";
 import { sendEmail } from "@/lib/notifications";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { leadSchema } from "@/lib/validation";
@@ -9,7 +9,7 @@ import { leadSchema } from "@/lib/validation";
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
-    const limit = rateLimit(`lead:${ip}`, 5, 60_000); // 5 inquiries / minute / IP
+    const limit = rateLimit(`lead:${ip}`, 5, 60_000);
     if (!limit.allowed) {
       return NextResponse.json(
         { error: "ส่งคำขอบ่อยเกินไป กรุณารอสักครู่" },
@@ -27,38 +27,70 @@ export async function POST(request: Request) {
       );
     }
 
-    const lead = await createLead(parsed.data);
+    let ownerUserId = parsed.data.ownerUserId;
+    let propertyTitle = parsed.data.propertyTitle;
+    let posterRole = parsed.data.posterRole;
+
+    if (parsed.data.contactMode === "owner_direct") {
+      if (!parsed.data.propertySlug) {
+        return NextResponse.json({ error: "ไม่พบประกาศ" }, { status: 400 });
+      }
+
+      const property = await prisma.userProperty.findFirst({
+        where: {
+          slug: decodeURIComponent(parsed.data.propertySlug).trim(),
+          status: "published",
+        },
+        include: {
+          user: { select: { id: true, role: true, email: true, fullName: true } },
+        },
+      });
+
+      if (!property?.user || !isOwnerDirectListing(property.user.role)) {
+        return NextResponse.json({ error: "ประกาศนี้ไม่รองรับการติดต่อเจ้าของโดยตรง" }, { status: 400 });
+      }
+
+      ownerUserId = property.user.id;
+      propertyTitle = property.title;
+      posterRole = property.user.role;
+    }
+
+    const lead = await createLead({
+      ...parsed.data,
+      ownerUserId,
+      propertyTitle,
+      posterRole,
+    });
 
     if (parsed.data.contactMode === "owner_direct") {
       await logMatchingEvent({
         eventType: "owner_inquiry",
         propertySlug: parsed.data.propertySlug,
-        propertyTitle: parsed.data.propertyTitle,
-        ownerUserId: parsed.data.ownerUserId,
-        posterRole: parsed.data.posterRole,
+        propertyTitle,
+        ownerUserId,
+        posterRole,
         leadId: lead.id,
         visitorName: parsed.data.name,
         visitorPhone: parsed.data.phone,
         visitorEmail: parsed.data.email,
       });
 
-      // Notify the owner by email (fires-and-forgets; never blocks response)
-      if (parsed.data.ownerUserId) {
+      if (ownerUserId) {
         const owner = await prisma.user.findUnique({
-          where: { id: parsed.data.ownerUserId },
+          where: { id: ownerUserId },
           select: { email: true, fullName: true },
         });
         if (owner?.email) {
-          const propertyTitle = parsed.data.propertyTitle ?? "ประกาศของคุณ";
+          const title = propertyTitle ?? "ประกาศของคุณ";
           const visitorName = parsed.data.name;
           const visitorContact = [parsed.data.phone, parsed.data.email].filter(Boolean).join(" / ");
           void sendEmail(
             owner.email,
-            `มีคนสนใจ: ${propertyTitle}`,
+            `มีคนสนใจ: ${title}`,
             [
               `สวัสดีคุณ ${owner.fullName},`,
               "",
-              `${visitorName} สนใจประกาศ "${propertyTitle}" ของคุณและฝากข้อความไว้:`,
+              `${visitorName} สนใจประกาศ "${title}" ของคุณและฝากข้อความไว้:`,
               "",
               `"${parsed.data.message}"`,
               "",

@@ -1,6 +1,18 @@
 import { prisma } from "@/lib/db";
 import { isOwnerDirectListing } from "@/lib/matching";
+import { properties as staticProperties } from "@/lib/properties";
 import type { Property } from "@/types/property";
+
+const staticSlugs = new Set(staticProperties.map((p) => p.slug));
+
+function parseJsonArray(value: string): string[] {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
 
 function slugify(text: string): string {
   return text
@@ -16,7 +28,10 @@ export async function uniqueSlug(title: string): Promise<string> {
   let slug = base;
   let i = 1;
 
-  while (await prisma.userProperty.findUnique({ where: { slug } })) {
+  while (
+    staticSlugs.has(slug) ||
+    (await prisma.userProperty.findUnique({ where: { slug } }))
+  ) {
     slug = `${base}-${i++}`;
   }
 
@@ -90,8 +105,8 @@ export function dbPropertyToListing(p: DbProperty): Property {
     address: p.address,
     latitude: p.latitude ?? undefined,
     longitude: p.longitude ?? undefined,
-    features: JSON.parse(p.features) as string[],
-    images: JSON.parse(p.images) as string[],
+    features: parseJsonArray(p.features),
+    images: parseJsonArray(p.images),
     featured: p.isSponsored,
     publishedAt: p.createdAt.toISOString().slice(0, 10),
     status: p.status as Property["status"],
@@ -101,11 +116,20 @@ export function dbPropertyToListing(p: DbProperty): Property {
   };
 }
 
+const userSelect = {
+  id: true,
+  fullName: true,
+  phone: true,
+  email: true,
+  role: true,
+} as const;
+
 export async function getAllPublishedUserProperties(): Promise<Property[]> {
   const now = new Date();
   const rows = await prisma.userProperty.findMany({
     where: { status: "published" },
     orderBy: [{ isSponsored: "desc" }, { createdAt: "desc" }],
+    include: { user: { select: userSelect } },
   });
 
   return rows.map((p) =>
@@ -115,14 +139,6 @@ export async function getAllPublishedUserProperties(): Promise<Property[]> {
     }),
   );
 }
-
-const userSelect = {
-  id: true,
-  fullName: true,
-  phone: true,
-  email: true,
-  role: true,
-} as const;
 
 export async function getUserPropertyBySlug(slug: string): Promise<Property | null> {
   return getUserPropertyBySlugVisible(slug, { publishedOnly: true });

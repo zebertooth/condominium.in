@@ -33,7 +33,6 @@ export async function POST(request: Request) {
     }
 
     const passwordHash = await hashPassword(parsed.data.password);
-    const isAdmin = email && email === process.env.ADMIN_EMAIL?.toLowerCase();
 
     const user = await prisma.user.create({
       data: {
@@ -41,7 +40,7 @@ export async function POST(request: Request) {
         email,
         fullName: parsed.data.fullName,
         passwordHash,
-        role: isAdmin ? "admin" : "user",
+        role: "user",
         isThai: parsed.data.isThai ?? true,
       },
     });
