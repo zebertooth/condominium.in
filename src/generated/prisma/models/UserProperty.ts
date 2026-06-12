@@ -52,6 +52,7 @@ export type UserPropertyMinAggregateOutputType = {
   slug: string | null
   title: string | null
   description: string | null
+  highlights: string | null
   listingType: string | null
   propertyType: string | null
   price: number | null
@@ -81,6 +82,7 @@ export type UserPropertyMaxAggregateOutputType = {
   slug: string | null
   title: string | null
   description: string | null
+  highlights: string | null
   listingType: string | null
   propertyType: string | null
   price: number | null
@@ -110,6 +112,7 @@ export type UserPropertyCountAggregateOutputType = {
   slug: number
   title: number
   description: number
+  highlights: number
   listingType: number
   propertyType: number
   price: number
@@ -161,6 +164,7 @@ export type UserPropertyMinAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  highlights?: true
   listingType?: true
   propertyType?: true
   price?: true
@@ -190,6 +194,7 @@ export type UserPropertyMaxAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  highlights?: true
   listingType?: true
   propertyType?: true
   price?: true
@@ -219,6 +224,7 @@ export type UserPropertyCountAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  highlights?: true
   listingType?: true
   propertyType?: true
   price?: true
@@ -335,6 +341,7 @@ export type UserPropertyGroupByOutputType = {
   slug: string
   title: string
   description: string
+  highlights: string
   listingType: string
   propertyType: string
   price: number
@@ -387,6 +394,7 @@ export type UserPropertyWhereInput = {
   slug?: Prisma.StringFilter<"UserProperty"> | string
   title?: Prisma.StringFilter<"UserProperty"> | string
   description?: Prisma.StringFilter<"UserProperty"> | string
+  highlights?: Prisma.StringFilter<"UserProperty"> | string
   listingType?: Prisma.StringFilter<"UserProperty"> | string
   propertyType?: Prisma.StringFilter<"UserProperty"> | string
   price?: Prisma.IntFilter<"UserProperty"> | number
@@ -417,6 +425,7 @@ export type UserPropertyOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -450,6 +459,7 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"UserProperty"> | string
   title?: Prisma.StringFilter<"UserProperty"> | string
   description?: Prisma.StringFilter<"UserProperty"> | string
+  highlights?: Prisma.StringFilter<"UserProperty"> | string
   listingType?: Prisma.StringFilter<"UserProperty"> | string
   propertyType?: Prisma.StringFilter<"UserProperty"> | string
   price?: Prisma.IntFilter<"UserProperty"> | number
@@ -480,6 +490,7 @@ export type UserPropertyOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -517,6 +528,7 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   title?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   description?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  highlights?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   listingType?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   propertyType?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   price?: Prisma.IntWithAggregatesFilter<"UserProperty"> | number
@@ -545,6 +557,7 @@ export type UserPropertyCreateInput = {
   slug: string
   title: string
   description: string
+  highlights?: string
   listingType: string
   propertyType?: string
   price: number
@@ -575,6 +588,7 @@ export type UserPropertyUncheckedCreateInput = {
   slug: string
   title: string
   description: string
+  highlights?: string
   listingType: string
   propertyType?: string
   price: number
@@ -603,6 +617,7 @@ export type UserPropertyUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -633,6 +648,7 @@ export type UserPropertyUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -662,6 +678,7 @@ export type UserPropertyCreateManyInput = {
   slug: string
   title: string
   description: string
+  highlights?: string
   listingType: string
   propertyType?: string
   price: number
@@ -690,6 +707,7 @@ export type UserPropertyUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -719,6 +737,7 @@ export type UserPropertyUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -758,6 +777,7 @@ export type UserPropertyCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -797,6 +817,7 @@ export type UserPropertyMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -826,6 +847,7 @@ export type UserPropertyMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -922,6 +944,7 @@ export type UserPropertyCreateWithoutUserInput = {
   slug: string
   title: string
   description: string
+  highlights?: string
   listingType: string
   propertyType?: string
   price: number
@@ -950,6 +973,7 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   slug: string
   title: string
   description: string
+  highlights?: string
   listingType: string
   propertyType?: string
   price: number
@@ -1008,6 +1032,7 @@ export type UserPropertyScalarWhereInput = {
   slug?: Prisma.StringFilter<"UserProperty"> | string
   title?: Prisma.StringFilter<"UserProperty"> | string
   description?: Prisma.StringFilter<"UserProperty"> | string
+  highlights?: Prisma.StringFilter<"UserProperty"> | string
   listingType?: Prisma.StringFilter<"UserProperty"> | string
   propertyType?: Prisma.StringFilter<"UserProperty"> | string
   price?: Prisma.IntFilter<"UserProperty"> | number
@@ -1036,6 +1061,7 @@ export type UserPropertyCreateManyUserInput = {
   slug: string
   title: string
   description: string
+  highlights?: string
   listingType: string
   propertyType?: string
   price: number
@@ -1064,6 +1090,7 @@ export type UserPropertyUpdateWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1092,6 +1119,7 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1120,6 +1148,7 @@ export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1151,6 +1180,7 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   slug?: boolean
   title?: boolean
   description?: boolean
+  highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
   price?: boolean
@@ -1181,6 +1211,7 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   slug?: boolean
   title?: boolean
   description?: boolean
+  highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
   price?: boolean
@@ -1211,6 +1242,7 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   slug?: boolean
   title?: boolean
   description?: boolean
+  highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
   price?: boolean
@@ -1241,6 +1273,7 @@ export type UserPropertySelectScalar = {
   slug?: boolean
   title?: boolean
   description?: boolean
+  highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
   price?: boolean
@@ -1264,7 +1297,7 @@ export type UserPropertySelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "features" | "images" | "status" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "features" | "images" | "status" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1286,6 +1319,7 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     slug: string
     title: string
     description: string
+    highlights: string
     listingType: string
     propertyType: string
     price: number
@@ -1736,6 +1770,7 @@ export interface UserPropertyFieldRefs {
   readonly slug: Prisma.FieldRef<"UserProperty", 'String'>
   readonly title: Prisma.FieldRef<"UserProperty", 'String'>
   readonly description: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly highlights: Prisma.FieldRef<"UserProperty", 'String'>
   readonly listingType: Prisma.FieldRef<"UserProperty", 'String'>
   readonly propertyType: Prisma.FieldRef<"UserProperty", 'String'>
   readonly price: Prisma.FieldRef<"UserProperty", 'Int'>

@@ -88,6 +88,7 @@ export function PostPropertyForm({
       body: JSON.stringify({
         title: form.get("title"),
         description: form.get("description"),
+        highlights: String(form.get("highlights") || ""),
         listingType: form.get("listingType"),
         propertyType: "condo",
         price: Number(form.get("price")),
@@ -136,6 +137,19 @@ export function PostPropertyForm({
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("formDescription")}</label>
         <textarea name="description" required rows={4} minLength={20} defaultValue={initial?.description} className={inputClass} />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700">{t("formHighlights")}</label>
+        <p className="mt-1 text-xs text-slate-500">{t("formHighlightsHint")}</p>
+        <textarea
+          name="highlights"
+          rows={4}
+          maxLength={2000}
+          placeholder={t("formHighlightsPlaceholder")}
+          defaultValue={initial?.highlights ?? ""}
+          className={inputClass}
+        />
       </div>
 
       <ImageGalleryInput images={images} onChange={setImages} />

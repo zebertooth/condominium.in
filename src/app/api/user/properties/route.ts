@@ -82,6 +82,7 @@ export async function POST(request: Request) {
         slug,
         title: data.title,
         description: data.description,
+        highlights: data.highlights ?? "",
         listingType: data.listingType,
         propertyType: data.propertyType,
         price: data.price,

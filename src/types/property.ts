@@ -15,6 +15,8 @@ export interface Property {
   title: string;
   titleEn: string;
   description: string;
+  /** Nearby places, schools, malls — free text for search matching */
+  highlights?: string;
   listingType: ListingType;
   propertyType: PropertyType;
   price: number;

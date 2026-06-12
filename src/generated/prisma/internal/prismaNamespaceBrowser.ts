@@ -214,6 +214,7 @@ export const UserPropertyScalarFieldEnum = {
   slug: 'slug',
   title: 'title',
   description: 'description',
+  highlights: 'highlights',
   listingType: 'listingType',
   propertyType: 'propertyType',
   price: 'price',

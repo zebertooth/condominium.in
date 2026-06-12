@@ -164,6 +164,13 @@ export default async function PropertyPage({ params }: PageProps) {
 
           <p className="mt-6 leading-relaxed text-slate-700">{displayDescription}</p>
 
+          {property.highlights?.trim() && (
+            <div className="mt-6">
+              <h2 className="font-semibold text-slate-900">{t("listingHighlights", locale)}</h2>
+              <p className="mt-2 whitespace-pre-line leading-relaxed text-slate-700">{property.highlights}</p>
+            </div>
+          )}
+
           <div className="mt-6">
             <h2 className="font-semibold text-slate-900">{t("amenities", locale)}</h2>
             <ul className="mt-2 flex flex-wrap gap-2">

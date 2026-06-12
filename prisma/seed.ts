@@ -4,13 +4,14 @@ import bcrypt from "bcryptjs";
 import { PrismaClient } from "../src/generated/prisma/client";
 import pg from "pg";
 import { DEFAULT_BLOG_POSTS, DEFAULT_TEAM_AGENTS } from "../src/lib/default-content";
+import { normalizeDatabaseUrl } from "../src/lib/database-url";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
   throw new Error("DATABASE_URL is not set");
 }
 
-const pool = new pg.Pool({ connectionString });
+const pool = new pg.Pool({ connectionString: normalizeDatabaseUrl(connectionString) });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 

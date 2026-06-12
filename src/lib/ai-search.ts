@@ -1,5 +1,6 @@
 import { getAllListings, filterListings } from "@/lib/listings";
 import { hasOpenAI, openaiChat } from "@/lib/openai";
+import { textMatchScore } from "@/lib/property-search-text";
 import type { AISearchRequest, AISearchResult, Property } from "@/types/property";
 
 interface SearchFilters {
@@ -53,7 +54,7 @@ function scoreProperty(property: Property, query: string, prefs: {
   maxPrice?: number;
   listingType?: "sale" | "rent";
 }): number {
-  let score = 0;
+  let score = textMatchScore(property, query);
   const q = query.toLowerCase();
 
   if (prefs.listingType && property.listingType === prefs.listingType) score += 30;
@@ -159,10 +160,11 @@ async function selectResults(
     .map((p) => ({
       property: p,
       score: scoreProperty(p, query.toLowerCase(), { btsStation, bedrooms, maxPrice, listingType }),
+      textScore: textMatchScore(p, query),
     }))
-    .filter(({ score, property }) => {
+    .filter(({ score, property, textScore }) => {
       if (listingType && property.listingType !== listingType) return false;
-      if (btsStation && property.btsStation !== btsStation) return false;
+      if (btsStation && property.btsStation !== btsStation && textScore < 12) return false;
       if (bedrooms && property.bedrooms < bedrooms) return false;
       if (maxPrice && property.price > maxPrice) return false;
       return score > 0;
@@ -174,7 +176,7 @@ async function selectResults(
   if (scored.length > 0) return scored;
 
   return (
-    await filterListings({ listingType, btsStation, bedrooms, maxPrice, query: btsStation })
+    await filterListings({ listingType, btsStation, bedrooms, maxPrice, query })
   ).slice(0, 6);
 }
 
@@ -203,10 +205,10 @@ async function llmSummary(
   if (results.length === 0) return fallback;
 
   const listingLines = results
-    .map(
-      (p) =>
-        `- ${p.title} | ${p.listingType === "rent" ? "เช่า" : "ขาย"} ฿${p.price.toLocaleString("th-TH")} | ${p.bedrooms} นอน | BTS ${p.btsStation ?? "-"}`,
-    )
+    .map((p) => {
+      const extras = [p.highlights, p.description].filter(Boolean).join(" · ");
+      return `- ${p.title} | ${p.listingType === "rent" ? "เช่า" : "ขาย"} ฿${p.price.toLocaleString("th-TH")} | ${p.bedrooms} นอน | BTS ${p.btsStation ?? "-"}${extras ? ` | ${extras.slice(0, 120)}` : ""}`;
+    })
     .join("\n");
 
   const content = await openaiChat({

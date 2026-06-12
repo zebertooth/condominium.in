@@ -133,6 +133,7 @@ model UserProperty {
   slug           String    @unique
   title          String
   description    String
+  highlights     String    @default("")
   listingType    String
   propertyType   String    @default("condo")
   price          Int

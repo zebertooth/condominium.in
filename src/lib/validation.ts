@@ -101,6 +101,7 @@ export const verifyIdSchema = z.object({
 export const propertySchema = z.object({
   title: z.string().min(5),
   description: z.string().min(20),
+  highlights: z.string().max(2000).optional().default(""),
   listingType: z.enum(["sale", "rent"]),
   propertyType: z.enum(["condo", "house", "townhouse", "apartment"]).default("condo"),
   price: z.number().int().positive(),

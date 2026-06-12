@@ -36,6 +36,7 @@ export async function PUT(request: Request, context: RouteContext) {
       data: {
         title: data.title,
         description: data.description,
+        highlights: data.highlights ?? "",
         listingType: data.listingType,
         propertyType: data.propertyType,
         price: data.price,

@@ -1,4 +1,5 @@
 import { properties as staticProperties } from "@/lib/properties";
+import { getPropertySearchText } from "@/lib/property-search-text";
 import {
   getAllPublishedUserProperties,
   getUserPropertyBySlugVisible,
@@ -37,18 +38,9 @@ function applyFilters(list: Property[], filters: SearchFilters): Property[] {
     if (filters.minPrice && p.price < filters.minPrice) return false;
     if (filters.maxPrice && p.price > filters.maxPrice) return false;
     if (filters.query) {
-      const q = filters.query.toLowerCase();
-      const haystack = [
-        p.title,
-        p.titleEn,
-        p.description,
-        p.district,
-        p.btsStation ?? "",
-        p.address,
-      ]
-        .join(" ")
-        .toLowerCase();
-      if (!haystack.includes(q)) return false;
+      const tokens = filters.query.toLowerCase().split(/[\s,]+/).filter((t) => t.length >= 2);
+      const haystack = getPropertySearchText(p);
+      if (tokens.length > 0 && !tokens.some((t) => haystack.includes(t))) return false;
     }
     return true;
   });
