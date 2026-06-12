@@ -273,6 +273,8 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 |--------|------|------|---------|
 | POST | `/api/auth/register` | — | Create user |
 | POST | `/api/auth/login` | — | Login (phone or email) |
+| POST | `/api/auth/forgot-password` | — | Email reset link (all roles; rate-limited) |
+| POST | `/api/auth/reset-password` | — | Set new password from email token |
 | POST | `/api/auth/logout` | — | Clear session |
 | GET | `/api/auth/me` | user | Profile + quota |
 | POST | `/api/auth/send-otp` | user | Phone OTP |

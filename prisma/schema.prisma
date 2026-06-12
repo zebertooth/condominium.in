@@ -31,6 +31,37 @@ model User {
   assignedLeads Lead[]             @relation("AgentLeads")
 }
 
+model SiteSettings {
+  id                String   @id @default("default")
+  homeTitle         String
+  homeDescription   String
+  homeTitleEn       String   @default("")
+  homeDescriptionEn String   @default("")
+  keywords          String   @default("")
+  titleSuffix       String   @default("| Condominium.in.th")
+  adSlotHomeLeaderboard String @default("")
+  adSlotHomeMid         String @default("")
+  adSlotListingTop      String @default("")
+  adSlotListingInfeed   String @default("")
+  adSlotPropertyTop     String @default("")
+  adSlotPropertySidebar String @default("")
+  adSlotBlogTop         String @default("")
+  adSlotBlogInarticle   String @default("")
+  adSlotFooter          String @default("")
+  updatedAt         DateTime @updatedAt
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
 model PhoneOtp {
   id        String   @id @default(cuid())
   phone     String

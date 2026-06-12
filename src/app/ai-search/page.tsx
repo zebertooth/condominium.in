@@ -2,13 +2,15 @@ import { Suspense } from "react";
 import { AISearchClient } from "@/components/ai/AISearchClient";
 import { createMetadata } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "ค้นหาคอนโดด้วย AI | Condominium.in.th",
+export async function generateMetadata() {
+  return createMetadata({
+  title: "ค้นหาคอนโดด้วย AI",
   description:
     "บอกความต้องการเป็นภาษาพูด AI วิเคราะห์ประกาศทั้งหมดและแนะนำคอนโดใกล้ BTS ที่ตรงใจในกรุงเทพฯ",
   path: "/ai-search",
   keywords: ["AI ค้นหาคอนโด", "คอนโดใกล้ BTS", "แนะนำคอนโด"],
-});
+  });
+}
 
 export default function AISearchPage() {
   return (

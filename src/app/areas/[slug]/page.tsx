@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: PageProps) {
     description: areaSeoDescription(area, locale),
     path: `/areas/${slug}`,
     keywords: [area.nameEn, area.name, `BTS ${area.nameEn}`, "condo"],
+    locale,
   });
 }
 

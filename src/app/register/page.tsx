@@ -1,11 +1,13 @@
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { createMetadata } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "สมัครสมาชิก | Condominium.in.th",
+export async function generateMetadata() {
+  return createMetadata({
+  title: "สมัครสมาชิก",
   description: "สมัครสมาชิกเพื่อลงประกาศคอนโด คนไทยยืนยัน LINE และอีเมล ลงได้สูงสุด 2 รายการฟรี",
   path: "/register",
-});
+  });
+}
 
 export default function RegisterPage() {
   return (

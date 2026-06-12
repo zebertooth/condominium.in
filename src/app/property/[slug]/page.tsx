@@ -1,3 +1,4 @@
+import { AdSlot } from "@/components/ads/AdSlot";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PropertyContactSection } from "@/components/property/PropertyContactSection";
@@ -22,14 +23,15 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const property = await getListingBySlug(slug);
+  const [property, locale] = await Promise.all([getListingBySlug(slug), getLocale()]);
   if (!property) return {};
 
   return createMetadata({
-    title: `${property.title} | ${siteConfig.name}`,
-    description: property.description,
+    title: localizedPropertyTitle(property, locale),
+    description: localizedPropertyDescription(property, locale).slice(0, 160),
     path: `/property/${slug}`,
     keywords: [property.district, property.btsStation ?? "", property.listingType === "rent" ? "เช่า" : "ขาย"],
+    locale,
   });
 }
 
@@ -108,6 +110,10 @@ export default async function PropertyPage({ params }: PageProps) {
         <span className="text-slate-900">{displayTitle}</span>
       </nav>
 
+      <AdSlot position="propertyTop" format="auto" className="mb-8" />
+
+      <div className="grid gap-8 xl:grid-cols-3">
+        <div className="xl:col-span-2">
       <div className="grid gap-8 lg:grid-cols-2">
         <PropertyImageGallery images={property.images} title={displayTitle} />
 
@@ -177,6 +183,14 @@ export default async function PropertyPage({ params }: PageProps) {
             </div>
           )}
         </div>
+      </div>
+        </div>
+
+        <aside className="hidden xl:block">
+          <div className="sticky top-24">
+            <AdSlot position="propertySidebar" format="vertical" className="min-h-[600px]" />
+          </div>
+        </aside>
       </div>
 
       {property.latitude != null && property.longitude != null && (

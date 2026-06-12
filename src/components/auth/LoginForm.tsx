@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const resetSuccess = searchParams.get("reset") === "1";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +46,11 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      {resetSuccess && (
+        <div className="rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-800">
+          ตั้งรหัสผ่านใหม่เรียบร้อยแล้ว — เข้าสู่ระบบได้เลย
+        </div>
+      )}
       {error && <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
       <div>
@@ -54,7 +61,12 @@ export function LoginForm() {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-slate-700">รหัสผ่าน</label>
+        <div className="flex items-center justify-between gap-2">
+          <label htmlFor="password" className="block text-sm font-medium text-slate-700">รหัสผ่าน</label>
+          <Link href="/forgot-password" className="text-sm font-medium text-teal-700 hover:underline">
+            ลืมรหัสผ่าน?
+          </Link>
+        </div>
         <input id="password" name="password" type="password" required className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-teal-500 focus:ring-2" />
       </div>
 

@@ -105,6 +105,17 @@ export function RegisterForm() {
         <input id="password" name="password" type="password" minLength={6} required className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-teal-500 focus:ring-2" />
       </div>
 
+      <p className="text-xs text-slate-500">
+        การสมัครสมาชิกถือว่ายอมรับ{" "}
+        <Link href="/terms" className="text-teal-700 hover:underline">
+          ข้อกำหนดการให้บริการ
+        </Link>{" "}
+        และ{" "}
+        <Link href="/privacy" className="text-teal-700 hover:underline">
+          นโยบายความเป็นส่วนตัว
+        </Link>
+      </p>
+
       <button type="submit" disabled={loading} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
         {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
       </button>

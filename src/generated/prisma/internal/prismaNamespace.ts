@@ -385,6 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  SiteSettings: 'SiteSettings',
+  PasswordResetToken: 'PasswordResetToken',
   PhoneOtp: 'PhoneOtp',
   EmailOtp: 'EmailOtp',
   UserProperty: 'UserProperty',
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription"
+    modelProps: "user" | "siteSettings" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,6 +485,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    SiteSettings: {
+      payload: Prisma.$SiteSettingsPayload<ExtArgs>
+      fields: Prisma.SiteSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SiteSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SiteSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.SiteSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SiteSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.SiteSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.SiteSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.SiteSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SiteSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.SiteSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>
+        }
+        update: {
+          args: Prisma.SiteSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.SiteSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SiteSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SiteSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.SiteSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.SiteSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSiteSettings>
+        }
+        groupBy: {
+          args: Prisma.SiteSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SiteSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    PasswordResetToken: {
+      payload: Prisma.$PasswordResetTokenPayload<ExtArgs>
+      fields: Prisma.PasswordResetTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PasswordResetTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PasswordResetTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.PasswordResetTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PasswordResetTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        findMany: {
+          args: Prisma.PasswordResetTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        create: {
+          args: Prisma.PasswordResetTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        createMany: {
+          args: Prisma.PasswordResetTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PasswordResetTokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        delete: {
+          args: Prisma.PasswordResetTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        update: {
+          args: Prisma.PasswordResetTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.PasswordResetTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PasswordResetTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PasswordResetTokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.PasswordResetTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.PasswordResetTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePasswordResetToken>
+        }
+        groupBy: {
+          args: Prisma.PasswordResetTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenCountAggregateOutputType> | number
         }
       }
     }
@@ -1140,6 +1290,41 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const SiteSettingsScalarFieldEnum = {
+  id: 'id',
+  homeTitle: 'homeTitle',
+  homeDescription: 'homeDescription',
+  homeTitleEn: 'homeTitleEn',
+  homeDescriptionEn: 'homeDescriptionEn',
+  keywords: 'keywords',
+  titleSuffix: 'titleSuffix',
+  adSlotHomeLeaderboard: 'adSlotHomeLeaderboard',
+  adSlotHomeMid: 'adSlotHomeMid',
+  adSlotListingTop: 'adSlotListingTop',
+  adSlotListingInfeed: 'adSlotListingInfeed',
+  adSlotPropertyTop: 'adSlotPropertyTop',
+  adSlotPropertySidebar: 'adSlotPropertySidebar',
+  adSlotBlogTop: 'adSlotBlogTop',
+  adSlotBlogInarticle: 'adSlotBlogInarticle',
+  adSlotFooter: 'adSlotFooter',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
 export const PhoneOtpScalarFieldEnum = {
   id: 'id',
   phone: 'phone',
@@ -1490,6 +1675,8 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  siteSettings?: Prisma.SiteSettingsOmit
+  passwordResetToken?: Prisma.PasswordResetTokenOmit
   phoneOtp?: Prisma.PhoneOtpOmit
   emailOtp?: Prisma.EmailOtpOmit
   userProperty?: Prisma.UserPropertyOmit

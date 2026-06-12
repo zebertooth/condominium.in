@@ -14,11 +14,11 @@ export async function generateMetadata() {
   const locale = await getLocale();
 
   const titles: Record<string, string> = {
-    th: "บทความคอนโดและ BTS | Condominium.in.th",
-    en: "Real Estate Articles | Condominium.in.th",
-    zh: "曼谷房地产文章 | Condominium.in.th",
-    ja: "不動産記事 | Condominium.in.th",
-    ar: "مقالات العقارات | Condominium.in.th",
+    th: "บทความคอนโดและ BTS",
+    en: "Real Estate Articles",
+    zh: "曼谷房地产文章",
+    ja: "不動産記事",
+    ar: "مقالات العقارات",
   };
 
   const descriptions: Record<string, string> = {
@@ -34,6 +34,7 @@ export async function generateMetadata() {
     description: descriptions[locale],
     path: "/blog",
     keywords: ["บทความคอนโด", "คู่มือเช่าคอนโด", "BTS", "Bangkok condo guides"],
+    locale,
   });
 }
 

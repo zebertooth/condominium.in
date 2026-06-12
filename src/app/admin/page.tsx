@@ -8,13 +8,14 @@ export default async function AdminDashboardPage() {
   const [stats, locale] = await Promise.all([getAdminStats(), getLocale()]);
 
   const cards = [
-    { label: t("adminStatUsers", locale), value: stats.users, href: "/admin/users" },
-    { label: t("adminStatPublished", locale), value: stats.properties, href: "/admin/properties?status=published" },
-    { label: t("adminStatPending", locale), value: stats.pendingProperties, href: "/admin/properties?status=pending", highlight: true },
-    { label: t("adminStatNewLeads", locale), value: stats.newLeads, href: "/admin/leads", highlight: stats.newLeads > 0 },
-    { label: t("adminAnalytics", locale), value: "→", href: "/admin/analytics" },
-    { label: t("adminStatPendingPayments", locale), value: stats.pendingPayments, href: "/admin/payments", highlight: stats.pendingPayments > 0 },
-    { label: t("adminStatPendingId", locale), value: stats.pendingVerifications, href: "/admin/users" },
+    { id: "users", label: t("adminStatUsers", locale), value: stats.users, href: "/admin/users" },
+    { id: "published", label: t("adminStatPublished", locale), value: stats.properties, href: "/admin/properties?status=published" },
+    { id: "pending", label: t("adminStatPending", locale), value: stats.pendingProperties, href: "/admin/properties?status=pending", highlight: true },
+    { id: "leads", label: t("adminStatNewLeads", locale), value: stats.newLeads, href: "/admin/leads", highlight: stats.newLeads > 0 },
+    { id: "analytics", label: t("adminAnalytics", locale), value: "→", href: "/admin/analytics" },
+    { id: "seo", label: t("adminSeo", locale), value: "→", href: "/admin/seo" },
+    { id: "payments", label: t("adminStatPendingPayments", locale), value: stats.pendingPayments, href: "/admin/payments", highlight: stats.pendingPayments > 0 },
+    { id: "pending-id", label: t("adminStatPendingId", locale), value: stats.pendingVerifications, href: "/admin/users" },
   ];
 
   return (
@@ -25,7 +26,7 @@ export default async function AdminDashboardPage() {
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
           <Link
-            key={card.href}
+            key={card.id}
             href={card.href}
             className={`rounded-2xl border p-6 transition hover:shadow-md ${
               card.highlight ? "border-amber-300 bg-amber-50" : "border-slate-200 bg-white"

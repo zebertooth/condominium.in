@@ -3,13 +3,15 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { createMetadata } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "ลงประกาศคอนโด | Condominium.in.th",
+export async function generateMetadata() {
+  return createMetadata({
+  title: "ลงประกาศคอนโด",
   description:
     "ลงประกาศขาย-เช่าคอนโดด้วยตัวเอง ฟรี 2 รายการ สำหรับคนไทยหลังยืนยัน LINE และอีเมล",
   path: "/list-property",
   keywords: ["ลงประกาศคอนโด", "ฝากขายคอนโด", "ฝากเช่าคอนโด"],
-});
+  });
+}
 
 export default async function ListPropertyPage() {
   const user = await getCurrentUser();

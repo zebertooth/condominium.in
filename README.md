@@ -13,6 +13,8 @@
 - Admin panel — approve listings, users, leads, payments, analytics — **5 ภาษา**
 - Blog (5 articles) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
 - Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS wired — user to verify prod next)
+- **Forgot password** — email reset link (all roles; no SMS)
+- **Privacy / Terms** + cookie consent (GA4 opt-in)
 - **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
 - Owner direct contact + security-hardened lead routing
 

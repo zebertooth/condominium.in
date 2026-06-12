@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdSlot } from "@/components/ads/AdSlot";
 import { Hero } from "@/components/home/Hero";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { areaGuides } from "@/lib/areas";
@@ -7,13 +8,27 @@ import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { areaName, numberLocale } from "@/lib/locale-content";
 import { getFeaturedListings } from "@/lib/listings";
+import { createHomeMetadata } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/site-settings";
+
+export async function generateMetadata() {
+  return createHomeMetadata();
+}
 
 export default async function HomePage() {
-  const [featured, locale] = await Promise.all([getFeaturedListings(), getLocale()]);
+  const [featured, locale, settings] = await Promise.all([
+    getFeaturedListings(),
+    getLocale(),
+    getSiteSettings(),
+  ]);
 
   return (
     <>
       <Hero locale={locale} />
+
+      <div className="mx-auto max-w-7xl px-4 pt-2 sm:px-6">
+        <AdSlot position="homeLeaderboard" format="auto" />
+      </div>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="mb-8 flex items-end justify-between">
@@ -25,8 +40,16 @@ export default async function HomePage() {
             {t("viewAll", locale)} →
           </Link>
         </div>
-        <PropertyGrid properties={featured} locale={locale} />
+        <PropertyGrid
+          properties={featured}
+          locale={locale}
+          infeedSlotId={settings.adSlots.listingInfeed}
+        />
       </section>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <AdSlot position="homeMid" format="auto" />
+      </div>
 
       <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">

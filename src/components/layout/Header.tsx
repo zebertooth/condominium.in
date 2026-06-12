@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HeaderAuth } from "@/components/layout/HeaderAuth";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { SiteLogo, siteLogoAltText } from "@/components/brand/SiteLogo";
 import { t, type Locale } from "@/lib/i18n";
 
 function navLinks(locale: Locale) {
@@ -21,13 +22,8 @@ export function Header({ locale }: { locale: Locale }) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link href="/" className="flex shrink-0 flex-col">
-          <span className="text-lg font-bold text-teal-700 sm:text-xl">
-            {t("siteName", locale)}
-          </span>
-          <span className="hidden text-xs text-slate-500 sm:block">
-            {t("tagline", locale)}
-          </span>
+        <Link href="/" className="shrink-0" aria-label={siteLogoAltText()}>
+          <SiteLogo locale={locale} />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">

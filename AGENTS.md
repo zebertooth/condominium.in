@@ -12,15 +12,15 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 27 — **Phase 5 native content**)
+> ## 🤝 HANDOFF (session 28 — **Phase 6 auth + legal**)
 >
 > **Production:** https://www.condominium.in.th — 5 locales live  
 > **User will handle:** ThaiBulkSMS production verify, optional Vercel keys
 >
 > **Done this session:**
-> - Native ZH/JA/AR content for 9 BTS area guides, 5 blog posts, 9 static listings
-> - `resolveLocalized()` fallback chain: locale → en → th
-> - Area/blog/property helpers in `src/lib/locale-content.ts`
+> - Email-only forgot/reset password for all roles (`PasswordResetToken`, Resend link)
+> - `/privacy`, `/terms`, cookie consent banner, GA4 gated on consent
+> - Footer legal links; register terms notice
 >
 > **Next priorities:**
 > 1. ThaiBulkSMS production verify (user)
@@ -36,7 +36,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 5** — native content for areas/blog/static listings |
+| Phase | **Phase 6** — listing DB i18n → optional URL routing |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
@@ -46,6 +46,9 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
+src/lib/password-reset.ts             Email reset token + Resend link
+src/lib/content/legal.ts              Privacy + terms (TH/EN)
+src/components/layout/CookieConsent.tsx  Banner + AnalyticsLoader (GA4 consent)
 src/lib/locale-content.ts           resolveLocalized + area/blog/property helpers
 src/lib/content/areas-locale.ts     9 area guides × ZH/JA/AR
 src/lib/content/blog-locale.ts      5 blog posts × ZH/JA/AR (full content)

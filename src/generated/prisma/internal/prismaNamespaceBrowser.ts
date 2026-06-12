@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  SiteSettings: 'SiteSettings',
+  PasswordResetToken: 'PasswordResetToken',
   PhoneOtp: 'PhoneOtp',
   EmailOtp: 'EmailOtp',
   UserProperty: 'UserProperty',
@@ -99,6 +101,41 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SiteSettingsScalarFieldEnum = {
+  id: 'id',
+  homeTitle: 'homeTitle',
+  homeDescription: 'homeDescription',
+  homeTitleEn: 'homeTitleEn',
+  homeDescriptionEn: 'homeDescriptionEn',
+  keywords: 'keywords',
+  titleSuffix: 'titleSuffix',
+  adSlotHomeLeaderboard: 'adSlotHomeLeaderboard',
+  adSlotHomeMid: 'adSlotHomeMid',
+  adSlotListingTop: 'adSlotListingTop',
+  adSlotListingInfeed: 'adSlotListingInfeed',
+  adSlotPropertyTop: 'adSlotPropertyTop',
+  adSlotPropertySidebar: 'adSlotPropertySidebar',
+  adSlotBlogTop: 'adSlotBlogTop',
+  adSlotBlogInarticle: 'adSlotBlogInarticle',
+  adSlotFooter: 'adSlotFooter',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
 export const PhoneOtpScalarFieldEnum = {

@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { createMetadata } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "ทีมเอเจนต์อสังหาริมทรัพย์ | Condominium.in.th",
+export async function generateMetadata() {
+  return createMetadata({
+  title: "ทีมเอเจนต์อสังหาริมทรัพย์",
   description:
     "ทีมเอเจนต์มืออาชีพพาไปชมคอนโดและบ้านจริง ให้คำปรึกษาและดูแลจนปิดดีลในกรุงเทพฯ",
   path: "/agents",
   keywords: ["เอเจนต์อสังหา", "นัดชมคอนโด", "ตัวแทนขายคอนโด"],
-});
+  });
+}
 
 const agents = [
   {

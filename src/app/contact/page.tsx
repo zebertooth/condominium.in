@@ -3,12 +3,14 @@ import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { createMetadata } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "ติดต่อเรา | Condominium.in.th",
+export async function generateMetadata() {
+  return createMetadata({
+  title: "ติดต่อเรา",
   description:
     "ติดต่อ Condominium.in.th สอบถามเรื่องเช่า-ซื้อคอนโด นัดชมทรัพย์ หรือลงประกาศกับเรา",
   path: "/contact",
-});
+  });
+}
 
 export default async function ContactPage() {
   const locale = await getLocale();

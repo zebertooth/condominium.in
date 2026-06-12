@@ -5,13 +5,15 @@ import { areaBtsLineLabel, areaDescription, areaHighlights, areaName } from "@/l
 import { getLocale } from "@/lib/locale";
 import { createMetadata } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "ย่านใกล้ BTS กรุงเทพ | Condominium.in.th",
+export async function generateMetadata() {
+  return createMetadata({
+  title: "ย่านใกล้ BTS กรุงเทพ",
   description:
     "คู่มือย่านใกล้ BTS ในกรุงเทพฯ อโศก ทองหล่อ สาทร เอกมัย พญาไท ราคาเช่าและขายคอนโด",
   path: "/areas",
   keywords: ["ย่าน BTS", "คอนโดใกล้ BTS", "ทำเลคอนโด"],
-});
+  });
+}
 
 export default async function AreasPage() {
   const locale = await getLocale();

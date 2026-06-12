@@ -39,6 +39,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/analytics" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
               {t("adminAnalytics", locale)}
             </Link>
+            <Link href="/admin/seo" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
+              {t("adminSeo", locale)}
+            </Link>
             <Link href="/" className="rounded-lg border border-slate-600 px-3 py-1.5 hover:bg-slate-800">
               {t("backToWebsite", locale)}
             </Link>

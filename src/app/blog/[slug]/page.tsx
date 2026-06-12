@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdSlot } from "@/components/ads/AdSlot";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBlogPost } from "@/lib/blog";
 import {
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: PageProps) {
     description: blogSeoDescription(post, locale),
     path: `/blog/${slug}`,
     keywords: [blogCategory(post, locale)],
+    locale,
   });
 }
 
@@ -93,6 +95,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         <span className="text-slate-900">{title}</span>
       </nav>
 
+      <AdSlot position="blogTop" format="auto" className="mb-6" />
+
       <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
         {category}
       </span>
@@ -105,6 +109,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         })}{" "}
         · {post.readTime} {t("readTime", locale)}
       </p>
+
+      <AdSlot position="blogInarticle" format="rectangle" className="my-8" />
 
       <div className="prose mt-8 max-w-none">{renderContent(content)}</div>
 

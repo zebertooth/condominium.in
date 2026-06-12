@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 27 — Phase 5 native content)  
-**Current phase:** **Phase 5** — user listing DB i18n → optional URL routing
+**Last updated:** 2026-06-10 (session 28 — Phase 6 auth + legal)  
+**Current phase:** **Phase 6** — user listing DB i18n → optional URL routing
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -334,6 +334,20 @@ Bangkok condo/house marketplace with:
 
 ---
 
+## Phase 6 — Auth recovery & legal (DONE — session 28)
+
+**Goal:** Forgot password (email-only, all roles), privacy/terms pages, cookie consent.
+
+- [x] `PasswordResetToken` model + migration
+- [x] `POST /api/auth/forgot-password` + `POST /api/auth/reset-password` (rate-limited, no user enumeration)
+- [x] `/forgot-password` + `/reset-password?token=…` pages
+- [x] Login link “ลืมรหัสผ่าน?” — email reset only (no SMS quota)
+- [x] `/privacy` + `/terms` (TH/EN content, cookie section)
+- [x] Cookie consent banner — essential vs analytics; GA4 gated on consent
+- [x] Footer legal links + register terms notice
+
+---
+
 ## State tracker (living checklist)
 
 Use this section for week-to-week progress. Move items between columns.
@@ -379,7 +393,7 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 27+)
+### Next step plan (session 28+)
 
 | Step | Action | Owner |
 |------|--------|-------|
@@ -387,6 +401,14 @@ Configured agent-based lead updating API permissions
 | **2** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
 | **3** | User listing title/description per locale (DB) | Agent |
 | **4** | URL-based locale routing (optional SEO polish) | Agent |
+
+### Done (2026-06-10, session 28 — Phase 6 auth + legal)
+```
+Email-only forgot/reset password (user, agent, admin) — PasswordResetToken + Resend link
+/forgot-password, /reset-password, login forgot link
+/privacy, /terms (TH/EN), cookie consent banner, GA4 consent gate
+Footer legal links; register terms notice
+```
 
 ### Done (2026-06-10, session 27 — Phase 5 native content)
 ```

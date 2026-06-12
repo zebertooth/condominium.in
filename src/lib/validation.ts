@@ -75,6 +75,15 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(32, "ลิงก์ไม่ถูกต้อง"),
+  password: z.string().min(6, "รหัสผ่านอย่างน้อย 6 ตัวอักษร"),
+});
+
 export const verifyIdSchema = z.object({
   idCardNumber: z
     .string()

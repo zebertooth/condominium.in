@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
-import { Analytics } from "@/components/analytics/Analytics";
+import { AdSenseScript } from "@/components/ads/AdSenseScript";
+import { AdSlot } from "@/components/ads/AdSlot";
+import { AnalyticsLoader, CookieConsent } from "@/components/layout/CookieConsent";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getLocale } from "@/lib/locale";
 import { htmlLang, isRtlLocale } from "@/lib/locale-content";
-import { createMetadata, siteConfig } from "@/lib/seo";
+import { createRootMetadata, siteConfig } from "@/lib/seo";
+import { getSiteSettings, resolveHomeMeta } from "@/lib/site-settings";
 import "./globals.css";
 
 const notoSansThai = Noto_Sans_Thai({
@@ -16,41 +19,47 @@ const notoSansThai = Noto_Sans_Thai({
   weight: ["400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = createMetadata({
-  title: `${siteConfig.name} | ซื้อ-เช่าคอนโดใกล้ BTS กรุงเทพฯ`,
-  description: siteConfig.description,
-});
-
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
-  name: siteConfig.name,
-  url: siteConfig.url,
-  description: siteConfig.description,
-  areaServed: {
-    "@type": "City",
-    name: "Bangkok",
-  },
-  availableLanguage: ["Thai", "English", "Chinese", "Japanese", "Arabic"],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return createRootMetadata();
+}
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
+  const [locale, settings] = await Promise.all([getLocale(), getSiteSettings()]);
   const dir = isRtlLocale(locale) ? "rtl" : "ltr";
+  const homeMeta = resolveHomeMeta(settings, locale);
+
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}/logo.svg`,
+    description: homeMeta.description,
+    areaServed: {
+      "@type": "City",
+      name: "Bangkok",
+    },
+    availableLanguage: ["Thai", "English", "Chinese", "Japanese", "Arabic"],
+  };
 
   return (
     <html lang={htmlLang(locale)} dir={dir} className={`${notoSansThai.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <LocaleProvider locale={locale}>
           <JsonLd data={organizationJsonLd} />
-          <Analytics />
+          <AnalyticsLoader />
+          <AdSenseScript />
           <Header locale={locale} />
           <main className="flex-1">{children}</main>
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+            <AdSlot position="footer" format="auto" className="mb-4" />
+          </div>
           <Footer locale={locale} />
+          <CookieConsent />
         </LocaleProvider>
       </body>
     </html>
