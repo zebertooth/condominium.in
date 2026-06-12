@@ -12,22 +12,21 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 26 — **Phase 4 i18n: ZH / JA / AR**)
+> ## 🤝 HANDOFF (session 27 — **Phase 5 native content**)
 >
-> **Production:** https://www.condominium.in.th  
-> **User will handle:** ThaiBulkSMS production verify
+> **Production:** https://www.condominium.in.th — 5 locales live  
+> **User will handle:** ThaiBulkSMS production verify, optional Vercel keys
 >
 > **Done this session:**
-> - Enabled ZH / JA / AR in language switcher (cookie `condo_locale`)
-> - Full UI translations (~331 keys each) in `src/lib/i18n/*-overrides.ts`
-> - RTL layout for Arabic (`dir="rtl"` on `<html>`)
-> - hreflang tags on all pages via `createMetadata()`
-> - Blog/area/property content uses EN fields for non-Thai locales
+> - Native ZH/JA/AR content for 9 BTS area guides, 5 blog posts, 9 static listings
+> - `resolveLocalized()` fallback chain: locale → en → th
+> - Area/blog/property helpers in `src/lib/locale-content.ts`
 >
 > **Next priorities:**
 > 1. ThaiBulkSMS production verify (user)
-> 2. Optional Vercel keys: OPENAI, SLIPOK, GA4
-> 3. Per-locale property/blog/area content fields (ZH/JA/AR native copy)
+> 2. Optional keys: OPENAI, SLIPOK, GA4 (user)
+> 3. User-submitted listing translations in DB (schema fields)
+> 4. URL locale routing (`/zh/...`) — optional SEO polish
 
 ---
 
@@ -37,50 +36,30 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 4** — 5 locales live (TH/EN/ZH/JA/AR) |
+| Phase | **Phase 5** — native content for areas/blog/static listings |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
 
 ---
 
-## Deploy workflow
-
-```powershell
-npm run build
-npx vercel --prod
-```
-
----
-
 ## Key paths
 
 ```
-src/lib/i18n.ts                 Locale type + t() + activeLocales (5 langs)
-src/lib/i18n/zh-overrides.ts    Simplified Chinese UI strings
-src/lib/i18n/ja-overrides.ts    Japanese UI strings
-src/lib/i18n/ar-overrides.ts    Arabic UI strings (+ RTL)
-src/lib/locale-content.ts         usesEnglishContent(), isRtlLocale(), dateLocale()
-src/lib/seo.ts                    hreflang alternates
+src/lib/locale-content.ts           resolveLocalized + area/blog/property helpers
+src/lib/content/areas-locale.ts     9 area guides × ZH/JA/AR
+src/lib/content/blog-locale.ts      5 blog posts × ZH/JA/AR (full content)
+src/lib/content/properties-locale.ts  9 static listings × ZH/JA/AR
 ```
 
 ---
 
 ## Test credentials
 
-Admin: `admin@condominium.in.th` / `admin123456` (created via `npm run db:seed` only — never via register)
-
----
-
-## Do NOT (unless user asks)
-
-- Commit `.env`
-- Auto-promote register users to admin
+Admin: `admin@condominium.in.th` / `admin123456` (via `npm run db:seed` only)
 
 ---
 
 ## Related
 
-- [`ROADMAP.md`](./ROADMAP.md) — phase tracker + session log
-- [`CLAUDE.md`](./CLAUDE.md) — technical reference
-- [`DEPLOYMENT.md`](./DEPLOYMENT.md) — Vercel env + troubleshooting
+- [`ROADMAP.md`](./ROADMAP.md) · [`CLAUDE.md`](./CLAUDE.md) · [`DEPLOYMENT.md`](./DEPLOYMENT.md)

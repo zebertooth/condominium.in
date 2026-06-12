@@ -42,12 +42,12 @@ export async function POST(request: Request) {
       return NextResponse.json({
         message: "ระบบ SMS ยังไม่ได้ตั้งค่า — ใช้รหัสด้านล่างเพื่อยืนยัน",
         devCode: result.devCode,
-        warning: "Set THAIBULKSMS_* on Vercel",
+        warning: "Set THAIBULKSMS_API_KEY and THAIBULKSMS_API_SECRET on Vercel",
       });
     }
 
     return NextResponse.json({
-      message: "ส่ง SMS ไม่สำเร็จ — ใช้รหัสด้านล่างเพื่อยืนยัน (ตรวจสอบ THAIBULKSMS sender)",
+      message: "ส่ง SMS ไม่สำเร็จ — ใช้รหัสด้านล่างเพื่อยืนยัน (ตรวจสอบ sender CDMNINTH)",
       devCode: result.devCode,
       warning: result.deliveryError,
     });

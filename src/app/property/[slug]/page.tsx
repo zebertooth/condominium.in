@@ -7,8 +7,11 @@ import { PropertyViewTracker } from "@/components/property/PropertyViewTracker";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { formatPrice, t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
-import { usesEnglishContent } from "@/lib/locale-content";
-import { localizedPropertyTitle } from "@/lib/property-i18n";
+import {
+  isNonThaiLocale,
+  localizedPropertyDescription,
+  localizedPropertyTitle,
+} from "@/lib/locale-content";
 import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
 import { createMetadata, siteConfig } from "@/lib/seo";
@@ -44,8 +47,9 @@ export default async function PropertyPage({ params }: PageProps) {
 
   const isPublished = property.status === "published" || !property.status;
   const isPreview = !isPublished;
-  const enContent = usesEnglishContent(locale);
+  const nonTh = isNonThaiLocale(locale);
   const displayTitle = localizedPropertyTitle(property, locale);
+  const displayDescription = localizedPropertyDescription(property, locale);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,10 +88,10 @@ export default async function PropertyPage({ params }: PageProps) {
       {isPreview && (
         <div className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {property.status === "pending"
-            ? enContent
+            ? nonTh
               ? "Preview only — this listing is pending admin approval and is not public yet."
               : "โหมดดูตัวอย่าง — ประกาศนี้รอแอดมินอนุมัติ ยังไม่แสดงต่อสาธารณะ"
-            : enContent
+            : nonTh
               ? "This listing was rejected and is not public."
               : "ประกาศนี้ถูกปฏิเสธ ยังไม่แสดงต่อสาธารณะ"}
         </div>
@@ -130,7 +134,7 @@ export default async function PropertyPage({ params }: PageProps) {
             )}
           </div>
 
-          <h1 className="mt-4 text-3xl font-bold text-slate-900">{property.title}</h1>
+          <h1 className="mt-4 text-3xl font-bold text-slate-900">{displayTitle}</h1>
           <p className="mt-2 text-3xl font-bold text-teal-700">
             {formatPrice(property.price, property.priceUnit, locale)}
           </p>
@@ -151,7 +155,7 @@ export default async function PropertyPage({ params }: PageProps) {
             </div>
           </div>
 
-          <p className="mt-6 leading-relaxed text-slate-700">{property.description}</p>
+          <p className="mt-6 leading-relaxed text-slate-700">{displayDescription}</p>
 
           <div className="mt-6">
             <h2 className="font-semibold text-slate-900">{t("amenities", locale)}</h2>

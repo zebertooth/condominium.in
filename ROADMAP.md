@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 26 — Phase 4 ZH/JA/AR i18n)  
-**Current phase:** **Phase 4** — 5 locales live; ThaiBulkSMS verify (user) → optional keys
+**Last updated:** 2026-06-10 (session 27 — Phase 5 native content)  
+**Current phase:** **Phase 5** — user listing DB i18n → optional URL routing
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -328,9 +328,9 @@ Bangkok condo/house marketplace with:
 - [x] hreflang tags (`th-TH`, `en-US`, `zh-Hans`, `ja-JP`, `ar-SA`) via `createMetadata()`
 - [x] Blog + area guide EN content for non-Thai locales (`usesEnglishContent()`)
 - [x] Property cards/detail use `titleEn` for non-Thai locales
+- [x] Native ZH/JA/AR area/blog/static listing content — session 27
 - [ ] i18n URL routing (`/th`, `/en`, `/zh`, …) — optional future
-- [ ] Native ZH/JA/AR property/blog/area content fields
-- [ ] Translate property fields per locale in DB
+- [ ] User-submitted property fields per locale in DB
 
 ---
 
@@ -379,14 +379,21 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 26+)
+### Next step plan (session 27+)
 
 | Step | Action | Owner |
 |------|--------|-------|
 | **1** | ThaiBulkSMS production verify | User |
 | **2** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
-| **3** | Native ZH/JA/AR blog/area/property content | Agent |
+| **3** | User listing title/description per locale (DB) | Agent |
 | **4** | URL-based locale routing (optional SEO polish) | Agent |
+
+### Done (2026-06-10, session 27 — Phase 5 native content)
+```
+Native ZH/JA/AR: 9 area guides, 5 blog posts (full content), 9 static listings
+src/lib/content/*-locale.ts + resolveLocalized() in locale-content.ts
+All MD files updated for session 27 handoff
+```
 
 ### Done (2026-06-10, session 26 — Phase 4 i18n)
 ```

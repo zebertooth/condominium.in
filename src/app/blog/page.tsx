@@ -1,21 +1,37 @@
 import Link from "next/link";
 import { blogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
+import {
+  blogCategory,
+  blogExcerpt,
+  blogTitle,
+  dateLocale,
+} from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
-import { dateLocale, usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata } from "@/lib/seo";
 
 export async function generateMetadata() {
   const locale = await getLocale();
-  const enContent = usesEnglishContent(locale);
+
+  const titles: Record<string, string> = {
+    th: "บทความคอนโดและ BTS | Condominium.in.th",
+    en: "Real Estate Articles | Condominium.in.th",
+    zh: "曼谷房地产文章 | Condominium.in.th",
+    ja: "不動産記事 | Condominium.in.th",
+    ar: "مقالات العقارات | Condominium.in.th",
+  };
+
+  const descriptions: Record<string, string> = {
+    th: "บทความ SEO เรื่องเช่า-ซื้อคอนโด ย่านใกล้ BTS และการใช้ AI ค้นหาทรัพย์ในกรุงเทพฯ",
+    en: "SEO articles on buying and renting Bangkok condos, BTS guides, and AI matching.",
+    zh: "曼谷公寓租售、BTS 区域指南与 AI 找房相关 SEO 文章。",
+    ja: "バンコクのコンド賃貸・購入、BTSエリアガイド、AI検索に関するSEO記事。",
+    ar: "مقالات SEO حول إيجار وشراء شقق بانكوك، وأدلة BTS، والبحث بالذكاء الاصطناعي.",
+  };
 
   return createMetadata({
-    title: enContent
-      ? "Real Estate Articles | Condominium.in.th"
-      : "บทความคอนโดและ BTS | Condominium.in.th",
-    description: enContent
-      ? "SEO-optimized articles regarding buying and renting condos in Bangkok, BTS area guides, and AI matching."
-      : "บทความ SEO เรื่องเช่า-ซื้อคอนโด ย่านใกล้ BTS และการใช้ AI ค้นหาทรัพย์ในกรุงเทพฯ",
+    title: titles[locale],
+    description: descriptions[locale],
     path: "/blog",
     keywords: ["บทความคอนโด", "คู่มือเช่าคอนโด", "BTS", "Bangkok condo guides"],
   });
@@ -23,7 +39,6 @@ export async function generateMetadata() {
 
 export default async function BlogPage() {
   const locale = await getLocale();
-  const enContent = usesEnglishContent(locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -32,9 +47,9 @@ export default async function BlogPage() {
 
       <div className="mt-10 space-y-6">
         {blogPosts.map((post) => {
-          const title = enContent && post.titleEn ? post.titleEn : post.title;
-          const excerpt = enContent && post.excerptEn ? post.excerptEn : post.excerpt;
-          const category = enContent && post.categoryEn ? post.categoryEn : post.category;
+          const title = blogTitle(post, locale);
+          const excerpt = blogExcerpt(post, locale);
+          const category = blogCategory(post, locale);
 
           return (
             <article

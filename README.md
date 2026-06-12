@@ -11,7 +11,7 @@
 - Owner dashboard — verify LINE+Email, post listings, stats, sponsor boost — **5 ภาษา**
 - Agent CRM — `/dashboard/agent`, viewing scheduler, lead pipeline
 - Admin panel — approve listings, users, leads, payments, analytics — **5 ภาษา**
-- Blog (5 articles) + 9 BTS area guides — **TH + EN content** (ZH/JA/AR UI uses EN articles)
+- Blog (5 articles) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
 - Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS wired — user to verify prod next)
 - **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
 - Owner direct contact + security-hardened lead routing
@@ -38,8 +38,8 @@ Health check: `GET https://www.condominium.in.th/api/health`
 ## Next steps (see ROADMAP.md)
 
 1. ThaiBulkSMS production verify (user)
-2. Native ZH/JA/AR blog/area/property content
-3. Optional Vercel keys: OPENAI, SLIPOK, GA4
+2. Optional Vercel keys: OPENAI, SLIPOK, GA4
+3. User-submitted listing translations in DB
 
 ## Documentation
 

@@ -16,12 +16,23 @@ export function emailProviderConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim() && process.env.EMAIL_FROM?.trim());
 }
 
+export const THAIBULKSMS_DEFAULT_SENDER = "CDMNINTH";
+
+export function getThaiBulkSmsSender(): string {
+  return process.env.THAIBULKSMS_SENDER?.trim() || THAIBULKSMS_DEFAULT_SENDER;
+}
+
 export function thaiBulkSmsConfigured(): boolean {
   return Boolean(
     process.env.THAIBULKSMS_API_KEY?.trim() &&
-      process.env.THAIBULKSMS_API_SECRET?.trim() &&
-      process.env.THAIBULKSMS_SENDER?.trim(),
+      process.env.THAIBULKSMS_API_SECRET?.trim(),
   );
+}
+
+function thaiBulkSmsAuthHeader(): string {
+  const key = process.env.THAIBULKSMS_API_KEY as string;
+  const secret = process.env.THAIBULKSMS_API_SECRET as string;
+  return `Basic ${Buffer.from(`${key}:${secret}`).toString("base64")}`;
 }
 
 export function twilioConfigured(): boolean {
@@ -51,18 +62,62 @@ async function readErrorBody(res: Response): Promise<string> {
   }
 }
 
+interface ThaiBulkSmsPhoneResult {
+  status?: string;
+  message?: string;
+}
+
+interface ThaiBulkSmsSendResponse {
+  phone_number_list?: ThaiBulkSmsPhoneResult[];
+}
+
+export interface ThaiBulkSmsCreditResult {
+  ok: boolean;
+  credit?: number;
+  sender: string;
+  error?: string;
+}
+
+export async function checkThaiBulkSmsCredit(): Promise<ThaiBulkSmsCreditResult> {
+  const sender = getThaiBulkSmsSender();
+  if (!thaiBulkSmsConfigured()) {
+    return { ok: false, sender, error: "THAIBULKSMS_API_KEY/SECRET not set" };
+  }
+
+  try {
+    const res = await fetch("https://api-v2.thaibulksms.com/credit", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: thaiBulkSmsAuthHeader(),
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      const detail = await readErrorBody(res);
+      console.error(`[sms:thaibulksms] credit check failed ${res.status}`, detail);
+      return { ok: false, sender, error: detail || `HTTP ${res.status}` };
+    }
+
+    const data = (await res.json()) as { remaining_credit?: number };
+    return { ok: true, sender, credit: data.remaining_credit };
+  } catch (err) {
+    console.error("[sms:thaibulksms] credit check error", err);
+    return { ok: false, sender, error: String(err) };
+  }
+}
+
 async function sendViaThaiBulkSms(to: string, body: string): Promise<SendResult> {
   try {
-    const key = process.env.THAIBULKSMS_API_KEY as string;
-    const secret = process.env.THAIBULKSMS_API_SECRET as string;
-    const sender = process.env.THAIBULKSMS_SENDER as string;
+    const sender = getThaiBulkSmsSender();
 
     const res = await fetch("https://api-v2.thaibulksms.com/sms", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString("base64")}`,
+        Authorization: thaiBulkSmsAuthHeader(),
       },
       body: new URLSearchParams({
         msisdn: toThaiLocalNumber(to),
@@ -71,15 +126,28 @@ async function sendViaThaiBulkSms(to: string, body: string): Promise<SendResult>
       }).toString(),
     });
 
+    const raw = await readErrorBody(res);
     if (!res.ok) {
-      const detail = await readErrorBody(res);
-      console.error(`[sms:thaibulksms] failed ${res.status}`, detail);
+      console.error(`[sms:thaibulksms] failed ${res.status}`, raw);
       return {
         delivered: false,
         provider: "thaibulksms",
-        error: detail || `HTTP ${res.status}`,
+        error: raw || `HTTP ${res.status}`,
       };
     }
+
+    try {
+      const data = JSON.parse(raw) as ThaiBulkSmsSendResponse;
+      const phoneResult = data.phone_number_list?.[0];
+      if (phoneResult?.status && phoneResult.status !== "success") {
+        const detail = phoneResult.message || phoneResult.status;
+        console.error("[sms:thaibulksms] rejected", detail);
+        return { delivered: false, provider: "thaibulksms", error: detail };
+      }
+    } catch {
+      // Non-JSON success body — treat HTTP 2xx as delivered.
+    }
+
     return { delivered: true, provider: "thaibulksms" };
   } catch (err) {
     console.error("[sms:thaibulksms] error", err);

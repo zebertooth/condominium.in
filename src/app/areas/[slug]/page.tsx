@@ -4,8 +4,17 @@ import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { getAreaBySlug } from "@/lib/areas";
 import { t } from "@/lib/i18n";
 import { filterListings } from "@/lib/listings";
+import {
+  areaBtsLineLabel,
+  areaDescription,
+  areaHighlights,
+  areaName,
+  areaSeoTitle,
+  areaSeoDescription,
+  isNonThaiLocale,
+  numberLocale,
+} from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
-import { numberLocale, usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata } from "@/lib/seo";
 
 interface PageProps {
@@ -18,21 +27,13 @@ export async function generateMetadata({ params }: PageProps) {
   if (!area) return {};
 
   const locale = await getLocale();
-  const enContent = usesEnglishContent(locale);
 
   return createMetadata({
-    title: enContent && area.seoTitleEn ? area.seoTitleEn : area.seoTitle,
-    description: enContent && area.seoDescriptionEn ? area.seoDescriptionEn : area.seoDescription,
+    title: areaSeoTitle(area, locale),
+    description: areaSeoDescription(area, locale),
     path: `/areas/${slug}`,
     keywords: [area.nameEn, area.name, `BTS ${area.nameEn}`, "condo"],
   });
-}
-
-function btsLineLabel(btsLine: string, enContent: boolean): string {
-  if (!enContent) return `สาย${btsLine}`;
-  if (btsLine === "สุขุมวิท") return "Sukhumvit Line";
-  if (btsLine === "สีลม") return "Silom Line";
-  return "Sukhumvit/Silom Interchange";
 }
 
 export default async function AreaPage({ params }: PageProps) {
@@ -45,12 +46,12 @@ export default async function AreaPage({ params }: PageProps) {
     getLocale(),
   ]);
 
-  const enContent = usesEnglishContent(locale);
+  const name = areaName(area, locale);
+  const description = areaDescription(area, locale);
+  const btsLine = areaBtsLineLabel(area.btsLine, locale);
+  const highlights = areaHighlights(area, locale);
+  const nonTh = isNonThaiLocale(locale);
   const numLoc = numberLocale(locale);
-  const name = enContent ? area.nameEn : area.name;
-  const description = enContent && area.descriptionEn ? area.descriptionEn : area.description;
-  const btsLine = btsLineLabel(area.btsLine, enContent);
-  const highlights = enContent && area.highlightsEn ? area.highlightsEn : area.highlights;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -63,8 +64,14 @@ export default async function AreaPage({ params }: PageProps) {
       </nav>
 
       <h1 className="text-3xl font-bold text-slate-900">
-        {enContent
-          ? `Condos near BTS ${area.nameEn} (${name})`
+        {nonTh
+          ? locale === "zh"
+            ? `BTS ${area.nameEn} 附近公寓 (${name})`
+            : locale === "ja"
+              ? `BTS ${area.nameEn} 近くのコンド (${name})`
+              : locale === "ar"
+                ? `شقق قرب BTS ${area.nameEn} (${name})`
+                : `Condos near BTS ${area.nameEn} (${name})`
           : `คอนโดใกล้ BTS ${area.btsStation} (${area.name})`}
       </h1>
       <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">{description}</p>
@@ -74,24 +81,45 @@ export default async function AreaPage({ params }: PageProps) {
           <p className="text-sm text-teal-700">{t("avgRentPrice", locale)}</p>
           <p className="text-xl font-bold text-teal-900">
             ฿{area.avgRentPrice.toLocaleString(numLoc)}
-            {enContent ? "/mo" : "/เดือน"}
+            {nonTh ? (locale === "ar" ? "/شهر" : locale === "zh" ? "/月" : locale === "ja" ? "/月" : "/mo") : "/เดือน"}
           </p>
         </div>
         <div className="rounded-xl bg-slate-50 p-4">
           <p className="text-sm text-slate-600">{t("avgSalePrice", locale)}</p>
           <p className="text-xl font-bold text-slate-900">
             ฿{area.avgSalePrice.toLocaleString(numLoc)}
-            {enContent ? "/sqm" : "/ตร.ม."}
+            {nonTh ? (locale === "ar" ? "/م²" : locale === "zh" ? "/㎡" : locale === "ja" ? "/㎡" : "/sqm") : "/ตร.ม."}
           </p>
         </div>
         <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-sm text-slate-600">{enContent ? "BTS Line" : "สาย BTS"}</p>
+          <p className="text-sm text-slate-600">
+            {locale === "th" ? "สาย BTS" : locale === "zh" ? "BTS 线路" : locale === "ja" ? "BTS路線" : locale === "ar" ? "خط BTS" : "BTS Line"}
+          </p>
           <p className="text-xl font-bold text-slate-900">{btsLine}</p>
         </div>
         <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-sm text-slate-600">{enContent ? "Active Listings" : "ประกาศในระบบ"}</p>
+          <p className="text-sm text-slate-600">
+            {locale === "th"
+              ? "ประกาศในระบบ"
+              : locale === "zh"
+                ? "在架房源"
+                : locale === "ja"
+                  ? "掲載物件"
+                  : locale === "ar"
+                    ? "الإعلانات النشطة"
+                    : "Active Listings"}
+          </p>
           <p className="text-xl font-bold text-slate-900">
-            {properties.length} {enContent ? "listings" : "รายการ"}
+            {properties.length}{" "}
+            {locale === "th"
+              ? "รายการ"
+              : locale === "zh"
+                ? "套"
+                : locale === "ja"
+                  ? "件"
+                  : locale === "ar"
+                    ? "إعلان"
+                    : "listings"}
           </p>
         </div>
       </div>
@@ -108,14 +136,26 @@ export default async function AreaPage({ params }: PageProps) {
 
       <div className="mt-10 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 p-6 text-white">
         <h2 className="text-xl font-bold">
-          {enContent
-            ? `Find Condos near BTS ${area.nameEn} with AI`
-            : `หาคอนโดใกล้ BTS ${area.btsStation} ด้วย AI`}
+          {locale === "zh"
+            ? `用 AI 搜索 BTS ${area.nameEn} 附近公寓`
+            : locale === "ja"
+              ? `AIでBTS ${area.nameEn}近くのコンドを探す`
+              : locale === "ar"
+                ? `ابحث عن شقق قرب BTS ${area.nameEn} بالذكاء الاصطناعي`
+                : nonTh
+                  ? `Find Condos near BTS ${area.nameEn} with AI`
+                  : `หาคอนโดใกล้ BTS ${area.btsStation} ด้วย AI`}
         </h2>
         <p className="mt-2 text-violet-100">
-          {enContent
-            ? `Tell us what you want, e.g. "2 bedrooms near BTS ${area.nameEn}, budget 30,000". AI will find matches.`
-            : `บอกความต้องการ เช่น "2 ห้องนอน ใกล้ BTS ${area.btsStation} งบ 30,000" AI จะแนะนำทรัพย์ที่ตรงใจ`}
+          {locale === "zh"
+            ? `描述您的需求，例如"BTS ${area.nameEn} 附近两居室，预算 30,000 泰铢"。AI 将为您匹配房源。`
+            : locale === "ja"
+              ? `「BTS ${area.nameEn}近く2BR、予算3万バーツ」など、希望条件を入力するとAIが物件を提案します。`
+              : locale === "ar"
+                ? `صف احتياجك، مثل "غرفتان قرب BTS ${area.nameEn}، ميزانية 30,000 بات".`
+                : nonTh
+                  ? `Tell us what you want, e.g. "2 bedrooms near BTS ${area.nameEn}, budget 30,000". AI will find matches.`
+                  : `บอกความต้องการ เช่น "2 ห้องนอน ใกล้ BTS ${area.btsStation} งบ 30,000" AI จะแนะนำทรัพย์ที่ตรงใจ`}
         </p>
         <Link
           href={`/ai-search?q=ใกล้+BTS+${area.btsStation}&type=rent`}
@@ -127,9 +167,15 @@ export default async function AreaPage({ params }: PageProps) {
 
       <div className="mt-12">
         <h2 className="mb-6 text-xl font-semibold">
-          {enContent
-            ? `Listings near BTS ${area.nameEn}`
-            : `ประกาศใกล้ BTS ${area.btsStation}`}
+          {locale === "zh"
+            ? `BTS ${area.nameEn} 附近房源`
+            : locale === "ja"
+              ? `BTS ${area.nameEn}近くの物件`
+              : locale === "ar"
+                ? `إعلانات قرب BTS ${area.nameEn}`
+                : nonTh
+                  ? `Listings near BTS ${area.nameEn}`
+                  : `ประกาศใกล้ BTS ${area.btsStation}`}
         </h2>
         <PropertyGrid properties={properties} locale={locale} />
       </div>

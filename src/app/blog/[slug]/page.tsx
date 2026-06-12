@@ -2,8 +2,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBlogPost } from "@/lib/blog";
+import {
+  blogCategory,
+  blogContent,
+  blogExcerpt,
+  blogSeoDescription,
+  blogSeoTitle,
+  blogTitle,
+  dateLocale,
+  isNonThaiLocale,
+} from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
-import { dateLocale, usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata, siteConfig } from "@/lib/seo";
 import { t } from "@/lib/i18n";
 
@@ -17,13 +26,12 @@ export async function generateMetadata({ params }: PageProps) {
   if (!post) return {};
 
   const locale = await getLocale();
-  const enContent = usesEnglishContent(locale);
 
   return createMetadata({
-    title: enContent && post.seoTitleEn ? post.seoTitleEn : post.seoTitle,
-    description: enContent && post.seoDescriptionEn ? post.seoDescriptionEn : post.seoDescription,
+    title: blogSeoTitle(post, locale),
+    description: blogSeoDescription(post, locale),
     path: `/blog/${slug}`,
-    keywords: [enContent && post.categoryEn ? post.categoryEn : post.category],
+    keywords: [blogCategory(post, locale)],
   });
 }
 
@@ -56,12 +64,12 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) notFound();
 
   const locale = await getLocale();
-  const enContent = usesEnglishContent(locale);
+  const nonTh = isNonThaiLocale(locale);
 
-  const title = enContent && post.titleEn ? post.titleEn : post.title;
-  const excerpt = enContent && post.excerptEn ? post.excerptEn : post.excerpt;
-  const content = enContent && post.contentEn ? post.contentEn : post.content;
-  const category = enContent && post.categoryEn ? post.categoryEn : post.category;
+  const title = blogTitle(post, locale);
+  const excerpt = blogExcerpt(post, locale);
+  const content = blogContent(post, locale);
+  const category = blogCategory(post, locale);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -102,12 +110,26 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       <div className="mt-12 rounded-2xl bg-teal-50 p-6">
         <h2 className="font-bold text-teal-900">
-          {enContent ? "Ready to find your condo?" : "พร้อมหาคอนโดแล้ว?"}
+          {locale === "zh"
+            ? "准备好找公寓了吗？"
+            : locale === "ja"
+              ? "コンド探しの準備はできましたか？"
+              : locale === "ar"
+                ? "هل أنت مستعد للعثور على شقتك؟"
+                : nonTh
+                  ? "Ready to find your condo?"
+                  : "พร้อมหาคอนโดแล้ว?"}
         </h2>
         <p className="mt-2 text-teal-800">
-          {enContent
-            ? "Use AI search to find matching properties or contact our agent team."
-            : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
+          {locale === "zh"
+            ? "使用 AI 搜索匹配房源，或联系我们的经纪人团队。"
+            : locale === "ja"
+              ? "AI検索で物件を見つけるか、エージェントチームにお問い合わせください。"
+              : locale === "ar"
+                ? "استخدم البحث بالذكاء الاصطناعي أو تواصل مع فريق الوكلاء لدينا."
+                : nonTh
+                  ? "Use AI search to find matching properties or contact our agent team."
+                  : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
         </p>
         <div className="mt-4 flex gap-3">
           <Link href="/ai-search" className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white">

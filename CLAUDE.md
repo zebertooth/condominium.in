@@ -19,15 +19,14 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 26)
+## Model transfer snapshot (session 27)
 
 | Item | Detail |
 |------|--------|
-| **Locales** | TH, EN, ZH, JA, AR — cookie + full UI translations |
-| **RTL** | Arabic layout via `dir="rtl"` |
-| **SEO** | hreflang alternates on all pages |
-| **Content** | Non-Thai locales use EN article/area/property fields |
-| **Next** | ThaiBulkSMS prod verify (user) → native ZH/JA/AR content |
+| **Locales** | TH, EN, ZH, JA, AR — UI + native content for areas/blog/static listings |
+| **Content packs** | `src/lib/content/*-locale.ts` keyed by slug |
+| **Fallback** | `resolveLocalized()` — locale → en → th |
+| **Next** | User listing DB i18n; ThaiBulkSMS verify (user) |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -96,7 +95,7 @@ RESEND_API_KEY=            # real email OTP (else console in dev)
 EMAIL_FROM=
 THAIBULKSMS_API_KEY=       # real SMS for TH numbers (preferred); else Twilio, else console
 THAIBULKSMS_API_SECRET=
-THAIBULKSMS_SENDER=
+THAIBULKSMS_SENDER=CDMNINTH  # approved sender; defaults to CDMNINTH if omitted
 TWILIO_ACCOUNT_SID=        # SMS fallback
 TWILIO_AUTH_TOKEN=
 TWILIO_FROM=

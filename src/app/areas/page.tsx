@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { areaGuides } from "@/lib/areas";
 import { t } from "@/lib/i18n";
+import { areaBtsLineLabel, areaDescription, areaHighlights, areaName } from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
-import { usesEnglishContent } from "@/lib/locale-content";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -23,17 +23,10 @@ export default async function AreasPage() {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {areaGuides.map((area) => {
-          const enContent = usesEnglishContent(locale);
-          const name = enContent ? area.nameEn : area.name;
-          const description = enContent && area.descriptionEn ? area.descriptionEn : area.description;
-          const highlights = enContent && area.highlightsEn ? area.highlightsEn : area.highlights;
-          const btsLine = enContent
-            ? area.btsLine === "สุขุมวิท"
-              ? "Sukhumvit Line"
-              : area.btsLine === "สีลม"
-                ? "Silom Line"
-                : "Sukhumvit/Silom Interchange"
-            : `${t("btsLinePrefix", locale)}${area.btsLine}`;
+          const name = areaName(area, locale);
+          const description = areaDescription(area, locale);
+          const highlights = areaHighlights(area, locale);
+          const btsLine = areaBtsLineLabel(area.btsLine, locale);
 
           return (
             <Link

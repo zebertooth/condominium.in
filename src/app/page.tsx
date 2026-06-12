@@ -5,7 +5,7 @@ import { areaGuides } from "@/lib/areas";
 import { blogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
-import { numberLocale, usesEnglishContent } from "@/lib/locale-content";
+import { areaName, numberLocale } from "@/lib/locale-content";
 import { getFeaturedListings } from "@/lib/listings";
 
 export default async function HomePage() {
@@ -41,7 +41,7 @@ export default async function HomePage() {
               >
                 <p className="text-sm font-medium text-teal-700">BTS {area.btsStation}</p>
                 <h3 className="mt-1 text-lg font-bold text-slate-900">
-                  {usesEnglishContent(locale) ? area.nameEn : area.name}
+                  {areaName(area, locale)}
                 </h3>
                 <p className="mt-2 line-clamp-2 text-sm text-slate-600">{area.description}</p>
                 <p className="mt-3 text-sm text-slate-500">

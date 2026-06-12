@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 26):** Live at **https://www.condominium.in.th**. Phase 4 i18n (ZH/JA/AR + RTL + hreflang) ready to deploy.
+**Current status (session 27):** Live at **https://www.condominium.in.th**. Phase 5 native ZH/JA/AR content ready to deploy.
 
 ---
 
@@ -38,7 +38,7 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | Module not found `@/generated/prisma/client` | Run `npx prisma generate` |
 | 404 on `/property/[slug]` | Listing `pending` — approve in `/admin/properties`, or login as owner to preview |
 | Email OTP fails on production | Set `RESEND_API_KEY` + `EMAIL_FROM` (verified domain in Resend). API returns on-screen fallback code if send fails |
-| SMS OTP not received | ThaiBulkSMS optional — set `THAIBULKSMS_*` + approved sender; fallback code shown if delivery fails |
+| SMS OTP not received | ThaiBulkSMS optional — set `THAIBULKSMS_API_KEY` + `THAIBULKSMS_API_SECRET`; sender defaults to `CDMNINTH` |
 | LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles, or publish channel |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
 | `datasource.url property is required` on Vercel | `DATABASE_URL` missing at build time — preview skips migrate; add for runtime |
@@ -146,7 +146,7 @@ RESEND_API_KEY=
 EMAIL_FROM=
 THAIBULKSMS_API_KEY=
 THAIBULKSMS_API_SECRET=
-THAIBULKSMS_SENDER=
+THAIBULKSMS_SENDER=CDMNINTH
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=

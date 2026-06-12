@@ -2,12 +2,12 @@ export type Locale = "th" | "en" | "zh" | "ja" | "ar";
 
 export const defaultLocale: Locale = "th";
 
-export const activeLocales: { code: Locale; label: string }[] = [
-  { code: "th", label: "ไทย" },
-  { code: "en", label: "EN" },
-  { code: "zh", label: "中文" },
-  { code: "ja", label: "日本語" },
-  { code: "ar", label: "العربية" },
+export const activeLocales: { code: Locale; label: string; flag: string }[] = [
+  { code: "th", label: "ไทย", flag: "🇹🇭" },
+  { code: "en", label: "EN", flag: "🇬🇧" },
+  { code: "zh", label: "中文", flag: "🇨🇳" },
+  { code: "ja", label: "日本語", flag: "🇯🇵" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
 ];
 
 const th = {
