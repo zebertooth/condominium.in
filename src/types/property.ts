@@ -38,8 +38,10 @@ export interface Property {
   publishedAt: string;
   /** Set for user-submitted listings */
   poster?: ListingPoster;
-  /** owner_direct when posted by non-agent; agent_team for agent/static listings */
+  /** owner_direct when owner handles contact; agent_team for agent/admin or agent-managed */
   contactMode?: "owner_direct" | "agent_team";
+  /** Owner opted in for platform agent to handle all inquiries */
+  agentManaged?: boolean;
   isUserListing?: boolean;
   viewsCount?: number;
   inquiriesCount?: number;
@@ -85,6 +87,8 @@ export interface BlogPost {
   seoTitleEn?: string;
   seoDescription: string;
   seoDescriptionEn?: string;
+  /** Cover / hero image for list and article page */
+  imageUrl?: string;
 }
 
 export interface SearchFilters {

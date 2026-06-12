@@ -117,8 +117,9 @@ export async function createRootMetadata(locale?: Locale): Promise<Metadata> {
       template: `%s ${settings.titleSuffix}`.replace(/\s+/g, " ").trim(),
     },
     icons: {
-      icon: "/logo.svg",
+      icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
       shortcut: "/logo.svg",
+      apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
     },
   };
 }

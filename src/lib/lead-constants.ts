@@ -82,6 +82,7 @@ export interface CreateLeadInput {
   btsStation?: string;
   ownerUserId?: string;
   posterRole?: string;
+  assignedToId?: string | null;
   viewingDate?: string;
   viewingTime?: string;
 }

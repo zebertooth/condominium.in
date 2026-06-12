@@ -76,7 +76,7 @@ export default async function PostPropertyPage() {
               max: quota.maxAllowed,
             })}
       </p>
-      <PostPropertyForm />
+      <PostPropertyForm showAgentManaged={user.role === "user"} />
     </div>
   );
 }

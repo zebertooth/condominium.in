@@ -386,6 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   SiteSettings: 'SiteSettings',
+  TeamAgent: 'TeamAgent',
+  BlogArticle: 'BlogArticle',
   PasswordResetToken: 'PasswordResetToken',
   PhoneOtp: 'PhoneOtp',
   EmailOtp: 'EmailOtp',
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siteSettings" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription"
+    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -559,6 +561,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SiteSettingsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SiteSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    TeamAgent: {
+      payload: Prisma.$TeamAgentPayload<ExtArgs>
+      fields: Prisma.TeamAgentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TeamAgentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TeamAgentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>
+        }
+        findFirst: {
+          args: Prisma.TeamAgentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TeamAgentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>
+        }
+        findMany: {
+          args: Prisma.TeamAgentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>[]
+        }
+        create: {
+          args: Prisma.TeamAgentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>
+        }
+        createMany: {
+          args: Prisma.TeamAgentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TeamAgentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>[]
+        }
+        delete: {
+          args: Prisma.TeamAgentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>
+        }
+        update: {
+          args: Prisma.TeamAgentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>
+        }
+        deleteMany: {
+          args: Prisma.TeamAgentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TeamAgentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TeamAgentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>[]
+        }
+        upsert: {
+          args: Prisma.TeamAgentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamAgentPayload>
+        }
+        aggregate: {
+          args: Prisma.TeamAgentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTeamAgent>
+        }
+        groupBy: {
+          args: Prisma.TeamAgentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeamAgentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TeamAgentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeamAgentCountAggregateOutputType> | number
+        }
+      }
+    }
+    BlogArticle: {
+      payload: Prisma.$BlogArticlePayload<ExtArgs>
+      fields: Prisma.BlogArticleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BlogArticleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BlogArticleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>
+        }
+        findFirst: {
+          args: Prisma.BlogArticleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BlogArticleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>
+        }
+        findMany: {
+          args: Prisma.BlogArticleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>[]
+        }
+        create: {
+          args: Prisma.BlogArticleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>
+        }
+        createMany: {
+          args: Prisma.BlogArticleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BlogArticleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>[]
+        }
+        delete: {
+          args: Prisma.BlogArticleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>
+        }
+        update: {
+          args: Prisma.BlogArticleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>
+        }
+        deleteMany: {
+          args: Prisma.BlogArticleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BlogArticleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BlogArticleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>[]
+        }
+        upsert: {
+          args: Prisma.BlogArticleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogArticlePayload>
+        }
+        aggregate: {
+          args: Prisma.BlogArticleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBlogArticle>
+        }
+        groupBy: {
+          args: Prisma.BlogArticleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogArticleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BlogArticleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogArticleCountAggregateOutputType> | number
         }
       }
     }
@@ -1313,6 +1463,50 @@ export const SiteSettingsScalarFieldEnum = {
 export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
 
 
+export const TeamAgentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  role: 'role',
+  roleEn: 'roleEn',
+  areas: 'areas',
+  languages: 'languages',
+  deals: 'deals',
+  imageUrl: 'imageUrl',
+  sortOrder: 'sortOrder',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeamAgentScalarFieldEnum = (typeof TeamAgentScalarFieldEnum)[keyof typeof TeamAgentScalarFieldEnum]
+
+
+export const BlogArticleScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  titleEn: 'titleEn',
+  excerpt: 'excerpt',
+  excerptEn: 'excerptEn',
+  content: 'content',
+  contentEn: 'contentEn',
+  category: 'category',
+  categoryEn: 'categoryEn',
+  imageUrl: 'imageUrl',
+  publishedAt: 'publishedAt',
+  readTime: 'readTime',
+  seoTitle: 'seoTitle',
+  seoTitleEn: 'seoTitleEn',
+  seoDescription: 'seoDescription',
+  seoDescriptionEn: 'seoDescriptionEn',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogArticleScalarFieldEnum = (typeof BlogArticleScalarFieldEnum)[keyof typeof BlogArticleScalarFieldEnum]
+
+
 export const PasswordResetTokenScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1373,6 +1567,7 @@ export const UserPropertyScalarFieldEnum = {
   status: 'status',
   isSponsored: 'isSponsored',
   sponsoredUntil: 'sponsoredUntil',
+  agentManaged: 'agentManaged',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1676,6 +1871,8 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   siteSettings?: Prisma.SiteSettingsOmit
+  teamAgent?: Prisma.TeamAgentOmit
+  blogArticle?: Prisma.BlogArticleOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
   phoneOtp?: Prisma.PhoneOtpOmit
   emailOtp?: Prisma.EmailOtpOmit

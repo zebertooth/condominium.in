@@ -15,6 +15,7 @@ import {
 } from "@/lib/locale-content";
 import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
+import { formatNearbyStation } from "@/lib/locations";
 import { createMetadata, siteConfig } from "@/lib/seo";
 
 interface PageProps {
@@ -129,7 +130,7 @@ export default async function PropertyPage({ params }: PageProps) {
             </span>
             {property.btsStation && (
               <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800">
-                BTS {property.btsStation}
+                {formatNearbyStation(property.btsStation)}
                 {property.distanceToBtsMeters ? ` (${property.distanceToBtsMeters}m)` : ""}
               </span>
             )}

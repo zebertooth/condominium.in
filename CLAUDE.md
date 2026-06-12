@@ -19,14 +19,16 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 27)
+## Model transfer snapshot (session 29)
 
 | Item | Detail |
 |------|--------|
 | **Locales** | TH, EN, ZH, JA, AR — UI + native content for areas/blog/static listings |
-| **Content packs** | `src/lib/content/*-locale.ts` keyed by slug |
-| **Fallback** | `resolveLocalized()` — locale → en → th |
-| **Next** | User listing DB i18n; ThaiBulkSMS verify (user) |
+| **Brand** | `SiteLogo` (DD-style), `public/logo.svg`, favicon `src/app/icon.svg` |
+| **SEO** | `SiteSettings` in DB; admin `/admin/seo`; dynamic `createRootMetadata()` |
+| **AdSense** | 9 placements; `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs; cookie-gated |
+| **Auth/legal** | Password reset email flow; `/privacy`, `/terms`; cookie consent |
+| **Next** | Phase 7: user listing title/description per locale in DB |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -90,8 +92,9 @@ Optional integrations (env-gated — blank = dev fallback):
 ```env
 OPENAI_API_KEY=            # enables LLM AI search (else rule-based)
 OPENAI_MODEL=gpt-4o-mini
-NEXT_PUBLIC_GA_ID=         # GA4 analytics
-RESEND_API_KEY=            # real email OTP (else console in dev)
+NEXT_PUBLIC_GA_ID=         # GA4 analytics (loads after cookie consent)
+NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-...  # AdSense publisher ID (loads after cookie consent)
+RESEND_API_KEY=            # real email OTP + password reset (else console in dev)
 EMAIL_FROM=
 THAIBULKSMS_API_KEY=       # real SMS for TH numbers (preferred); else Twilio, else console
 THAIBULKSMS_API_SECRET=
@@ -107,7 +110,7 @@ LINE_LOGIN_CHANNEL_SECRET=
 LINE_LOGIN_CALLBACK_URL=
 ```
 
-Still pending: Set optional keys on Vercel (OPENAI, SLIPOK, GA4). User to verify ThaiBulkSMS on production next.
+Still pending: Set optional keys on Vercel (OPENAI, SLIPOK, GA4, ADSENSE). User to verify ThaiBulkSMS on production. Paste AdSense slot IDs at `/admin/seo`.
 
 PromptPay payment (env-gated):
 ```env
@@ -125,14 +128,17 @@ src/
 ├── app/                    # Next.js App Router pages & API routes
 │   ├── admin/              # Admin panel (role=admin only)
 │   │   ├── properties/     # list + [id]/edit (admin listing edit)
+│   │   ├── seo/            # home SEO + AdSense slot IDs (SiteSettings)
 │   │   ├── users/, leads/  # manage users + lead pipeline
 │   ├── dashboard/          # User dashboard (auth required)
 │   │   ├── post/, verify/  # create listing, LINE+Email(+phone) verify
 │   │   ├── agent/          # agent CRM dashboard
 │   │   └── edit/[id]/      # owner edit own listing
+│   ├── forgot-password/, reset-password/, privacy/, terms/
+│   ├── icon.svg, apple-icon.svg  # favicon (Next.js file metadata)
 │   ├── api/
-│   │   ├── auth/           # register, login, logout, OTP (phone/email), verify-id (unused), line/{start,callback,dev-verify}
-│   │   ├── admin/          # stats, users/[id], properties/[id] (PATCH+PUT), properties/bulk, leads/[id]
+│   │   ├── auth/           # register, login, logout, forgot/reset password, OTP, line/*
+│   │   ├── admin/          # stats, users, properties, leads, payments, site-settings
 │   │   ├── user/           # properties (GET/POST), properties/[id] (PUT/DELETE), quota
 │   │   ├── packages/       # purchase, sponsor, confirm, status (PromptPay flow)
 │   │   ├── leads/          # public lead capture
@@ -144,14 +150,20 @@ src/
 │   ├── sitemap.ts, robots.ts
 │   └── layout.tsx
 ├── components/
-│   ├── admin/              # AdminPropertyTable, AdminUserTable, AdminLeadTable, AdminPaymentTable, AdminAnalyticsDashboard, IntegrationStatus
-│   ├── auth/               # RegisterForm (nationality), LoginForm, LogoutButton
-│   ├── dashboard/          # VerifyForm, PostPropertyForm (create+edit), QuotaCard, PackageShop, MyProperties
+│   ├── admin/              # AdminPropertyTable, AdminSeoForm, AdminAnalyticsDashboard, ...
+│   ├── ads/                # AdPlacement, AdSlot, AdSenseScript
+│   ├── auth/               # RegisterForm, LoginForm, LogoutButton
+│   ├── brand/              # SiteLogo, SiteLogoMark
+│   ├── dashboard/          # VerifyForm, PostPropertyForm, QuotaCard, PackageShop, MyProperties
 │   ├── property/           # Cards, Gallery, Map, LocationPicker, ImageGalleryInput
 │   ├── lead/               # LeadForm
-│   ├── analytics/          # GA4 Analytics
-│   ├── home/, layout/, seo/, ai/
-├── lib/                    # Business logic (prefer adding here)
+│   ├── layout/             # Header, Footer, LanguageSwitcher, CookieConsent
+│   ├── home/, seo/, ai/
+├── lib/
+│   ├── site-settings.ts    # getSiteSettings(), resolveHomeMeta(), ad slot mapping
+│   ├── adsense.ts          # AD_SLOT_CATALOG (9 positions)
+│   ├── password-reset.ts   # token hash, Resend reset email
+│   ├── content/legal.ts    # privacy + terms copy (TH/EN)
 │   ├── db.ts               # Prisma singleton (@prisma/adapter-pg)
 │   ├── auth.ts             # Session, getCurrentUser, hashPassword/IdCard
 │   ├── admin.ts            # requireAdmin, getAdminUser, getAdminStats
@@ -178,9 +190,9 @@ src/
 └── generated/prisma/       # Prisma client (auto-generated)
 
 prisma/
-├── schema.prisma           # User, UserProperty, UserSubscription, PhoneOtp, EmailOtp, Lead
+├── schema.prisma           # User, UserProperty, SiteSettings, PasswordResetToken, Lead, ...
 ├── migrations/
-└── seed.ts                 # Admin user seed
+└── seed.ts                 # Admin user + default SiteSettings seed
 ```
 
 ---
@@ -203,6 +215,14 @@ prisma/
 - `ownerUserId`, `posterRole` — set for owner-direct inquiries
 - `status`: `new → contacted → viewing → closed | lost`
 - Managed at `/admin/leads`
+
+### SiteSettings (singleton row `id=default`)
+- Home SEO: `homeTitle`, `homeDescription`, `homeTitleEn`, `homeDescriptionEn`, `keywords`, `titleSuffix`
+- AdSense slot IDs: `adSlotHomeLeaderboard`, `adSlotHomeMid`, `adSlotListingTop`, `adSlotListingInfeed`, `adSlotPropertyTop`, `adSlotPropertySidebar`, `adSlotBlogTop`, `adSlotBlogInarticle`, `adSlotFooter`
+- Edited at `/admin/seo`; read by `getSiteSettings()` for metadata + ad components
+
+### PasswordResetToken
+- Email-only password reset for all roles; 1-hour expiry; hashed token in DB
 
 ### UserProperty
 - Owner-submitted listings
@@ -287,7 +307,8 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 | POST | `/api/auth/line/dev-verify` | user | Dev-only manual LINE verify |
 | POST | `/api/upload` | user | Image upload (Cloudinary or local) |
 | POST | `/api/leads` | — | Capture lead (contact/property; contactMode owner_direct/agent_team) |
-| POST | `/api/locale` | — | Set language cookie (th/en) |
+| POST | `/api/locale` | — | Set language cookie (th/en/zh/ja/ar) |
+| GET/PATCH | `/api/admin/site-settings` | admin | Read/update home SEO + AdSense slot IDs |
 | POST | `/api/analytics/property-view` | — | Log property page view |
 | POST | `/api/analytics/matching` | — | Log owner contact interaction |
 | GET | `/api/admin/analytics/export` | admin | CSV export (searches/views/matching/leads) |
@@ -318,13 +339,23 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 
 ---
 
-## SEO
+## SEO & brand
 
-- Metadata via `src/lib/seo.ts` → `createMetadata()`
-- JSON-LD in layout + property/blog pages
+- Metadata via `src/lib/seo.ts` → `createRootMetadata()` / `createMetadata()` (reads `SiteSettings`)
+- Favicon: `src/app/icon.svg` + `apple-icon.svg`; mark also at `public/logo.svg`
+- Brand header: `src/components/brand/SiteLogo.tsx`
+- JSON-LD in layout + property/blog pages (`logo` URL → `/logo.svg`)
 - Dynamic sitemap: `src/app/sitemap.ts`
 - Area landing pages: `/areas/[slug]` (9 BTS stations)
 - Blog: 5 SEO articles in `src/lib/blog.ts`
+- Admin SEO editor: `/admin/seo`
+
+## AdSense
+
+- Env: `NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-…`
+- Slot IDs stored in `SiteSettings`; catalog in `src/lib/adsense.ts`
+- Script + ad units render only after cookie consent “Accept all”
+- Placements: home (leaderboard + mid), buy/rent (top + in-feed every 6 cards), property (top + sidebar), blog (top + mid), footer
 
 ---
 
@@ -343,22 +374,26 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 ## Status of integrations
 
 Production (check `/api/health`):
-- [x] Resend email OTP (`RESEND_API_KEY` + `EMAIL_FROM`)
+- [x] Resend email OTP + password reset (`RESEND_API_KEY` + `EMAIL_FROM`)
 - [x] LINE Login
 - [x] Cloudinary uploads
 - [x] PromptPay paid packages
-- [~] ThaiBulkSMS SMS — wired; user to verify production delivery next
-- [ ] OpenAI, SlipOK, GA4 — optional keys not set
+- [x] Cookie consent + GA4 opt-in scaffold
+- [~] ThaiBulkSMS SMS — wired; sender `CDMNINTH`; user to verify production delivery
+- [ ] OpenAI, SlipOK — optional keys not set
+- [ ] AdSense — set `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo` (user)
 
 Done / env-gated:
 - [x] Image file upload — Cloudinary or local fallback (`src/lib/storage.ts`)
 - [x] OpenAI AI search with rule-based fallback (`src/lib/openai.ts`)
 - [x] Agent CRM + viewing scheduler (`/dashboard/agent`, `/admin/leads`)
-- [x] GA4 analytics scaffold + dynamic OG image
+- [x] Dynamic OG image + admin-editable home SEO
 - [x] Full 5-locale i18n (TH/EN/ZH/JA/AR) — public, dashboard, admin
+- [x] Native ZH/JA/AR area/blog/static listing content
+- [x] Brand logo + favicon; AdSense placement scaffold
 
-**Next code tasks:**
-- [ ] Native ZH/JA/AR blog/area/property content (beyond EN fallback)
+**Next code tasks (Phase 7):**
+- [ ] User-submitted listing title/description per locale in DB + post/edit UI
 - [ ] Optional URL locale routing (`/zh/...`)
 - [ ] `middleware.ts` for auth (optional)
 

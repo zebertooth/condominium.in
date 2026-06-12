@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 28 — Phase 6 auth + legal)  
-**Current phase:** **Phase 6** — user listing DB i18n → optional URL routing
+**Last updated:** 2026-06-10 (session 29 — brand, SEO admin, AdSense, favicon)  
+**Current phase:** **Phase 7** — user listing DB i18n → optional URL locale routing
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -17,16 +17,18 @@
 
 ---
 
-## Model transfer snapshot (session 25)
+## Model transfer snapshot (session 29)
 
 | Area | State |
 |------|--------|
-| **GitHub** | `main` @ `291bd67` + local session 25 (admin i18n, owner stats, sponsor UI) |
+| **GitHub** | `main` @ `59711b7` (+ session 29 favicon if not yet pushed) |
 | **Production** | https://www.condominium.in.th — OTP/LINE verified OK |
-| **Owner stats** | Views, inquiries, contact clicks — all-time + 30-day in `MyProperties` |
-| **Sponsored posts** | Featured badge, sort boost, PromptPay purchase, post-submit upsell |
-| **SMS** | ThaiBulkSMS wired — user to verify production next |
-| **Next** | ThaiBulkSMS prod verify → Phase 4 locales |
+| **Brand** | DD-style `SiteLogo` + teal building mark; favicon `src/app/icon.svg` |
+| **SEO admin** | `/admin/seo` — home title/description/keywords + AdSense slot IDs in DB |
+| **AdSense** | 9 placements; script + slots gated on cookie “Accept all” |
+| **Auth/legal** | Forgot/reset password, `/privacy`, `/terms`, cookie consent |
+| **SMS** | ThaiBulkSMS sender `CDMNINTH` — user to verify production delivery |
+| **Next** | Phase 7: user listing title/description per locale in DB |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -61,6 +63,10 @@ Bangkok condo/house marketplace with:
 | **2** | Real provider keys, flip paid, SEO scale, sponsored UI | **Done** (sponsor UI session 25) | 2026 Q3 |
 | **3** | Agent CRM, owner portal, scheduling | Started | 2026 Q4 |
 | **4** | Multilingual (ZH, JA, AR) | **Done** (UI + RTL + hreflang) | 2027 Q1 |
+| **5** | Native ZH/JA/AR content (areas, blog, static listings) | **Done** | 2027 Q1 |
+| **6** | Auth recovery, legal, cookie consent | **Done** | 2027 Q1 |
+| **6b** | Brand logo, SEO admin, AdSense, favicon | **Done** (session 29) | 2027 Q1 |
+| **7** | User listing DB i18n + optional URL routing | **Next** | 2027 Q1 |
 
 ---
 
@@ -348,6 +354,60 @@ Bangkok condo/house marketplace with:
 
 ---
 
+## Phase 6b — Brand, SEO admin & AdSense (DONE — session 29)
+
+**Goal:** Professional brand identity, editable SEO metadata, monetization via AdSense.
+
+### Brand & favicon
+- [x] `SiteLogo` — DDproperty-style: teal building mark + name + tagline (`src/components/brand/SiteLogo.tsx`)
+- [x] `public/logo.svg` — mark-only SVG for schema/OG references
+- [x] Favicon — `src/app/icon.svg` + `src/app/apple-icon.svg` (Next.js file metadata)
+- [x] Metadata icons in `src/lib/seo.ts` aligned with logo mark
+
+### SEO admin
+- [x] `SiteSettings` model + migration (`20260612190000_site_settings`)
+- [x] Admin page `/admin/seo` + `GET/PATCH /api/admin/site-settings`
+- [x] Dynamic root metadata via `getSiteSettings()` + `createRootMetadata()` / `createMetadata()`
+- [x] Home title/description (TH + EN), keywords, title suffix editable in admin
+
+### Google AdSense
+- [x] `SiteSettings` ad slot ID fields + migration (`20260612210000_adsense_slots`)
+- [x] Slot catalog — 9 positions in `src/lib/adsense.ts` (home, buy/rent, property, blog, footer)
+- [x] `AdPlacement`, `AdSlot`, `AdSenseScript` components
+- [x] Placements wired on home, buy/rent (top + in-feed every 6 cards), property, blog, footer
+- [x] Admin SEO form section to paste AdSense unit slot IDs
+- [x] AdSense + GA4 load only after cookie “Accept all” (`CookieConsent.tsx`)
+- [x] Env: `NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-…`
+
+### UX polish
+- [x] Language switcher — dropdown with flag + locale code (`LanguageSwitcher.tsx`)
+- [x] ThaiBulkSMS default sender `CDMNINTH` in env + docs
+- [x] Admin dashboard duplicate React key fix (`/admin/users` card `id`)
+
+---
+
+## Phase 7 — User listing i18n (NEXT)
+
+**Goal:** Owner-submitted listings readable in all 5 locales; optional SEO-friendly URL routing.
+
+### Database i18n (priority)
+- [ ] Add per-locale fields on `UserProperty` (e.g. `titleEn`, `titleZh`, `descriptionEn`, …) or JSON `translations` column
+- [ ] Post/edit form — optional EN (and later ZH/JA/AR) title + description fields
+- [ ] Property detail + cards use localized owner fields with fallback chain (locale → en → th)
+- [ ] Admin edit form supports same fields
+- [ ] Migration + backfill existing listings from Thai title/description
+
+### Optional SEO polish
+- [ ] URL locale routing (`/en/buy`, `/zh/property/…`) — requires middleware + hreflang update
+- [ ] Separate marketing vs analytics cookie categories (if AdSense policy requires)
+
+### User / ops (not code)
+- [ ] ThaiBulkSMS production SMS delivery verify
+- [ ] Optional Vercel keys: `OPENAI_API_KEY`, `SLIPOK_*`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_ADSENSE_CLIENT`
+- [ ] Google Search Console + AdSense approval (user)
+
+---
+
 ## State tracker (living checklist)
 
 Use this section for week-to-week progress. Move items between columns.
@@ -393,14 +453,28 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 28+)
+### Next step plan (session 29+)
 
-| Step | Action | Owner |
-|------|--------|-------|
-| **1** | ThaiBulkSMS production verify | User |
-| **2** | Optional: OPENAI / SLIPOK / GA4 keys on Vercel | User |
-| **3** | User listing title/description per locale (DB) | Agent |
-| **4** | URL-based locale routing (optional SEO polish) | Agent |
+| Step | Action | Owner | Priority |
+|------|--------|-------|----------|
+| **1** | **Phase 7:** `UserProperty` i18n fields + post/edit UI + display fallback | Agent | **High** |
+| **2** | Push session 29 favicon commit if not on `main` | Agent | Medium |
+| **3** | ThaiBulkSMS production SMS verify | User | Medium |
+| **4** | Set `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo`; AdSense approval | User | Medium |
+| **5** | Optional: OPENAI / SLIPOK / GA4 on Vercel | User | Low |
+| **6** | URL locale routing (`/zh/…`) — after DB i18n | Agent | Low |
+
+### Done (2026-06-10, session 29 — brand, SEO admin, AdSense, favicon)
+```
+DD-style SiteLogo + public/logo.svg + app/icon.svg favicon
+SiteSettings model — admin /admin/seo for home SEO + keywords
+Dynamic metadata via getSiteSettings() + createRootMetadata()
+AdSense: 9 slot positions, admin slot IDs, cookie-gated script
+Language switcher dropdown (flag + locale code)
+ThaiBulkSMS sender CDMNINTH default; admin dashboard key fix
+Migrations: 20260612190000_site_settings, 20260612210000_adsense_slots
+All MD files updated for session 29 handoff
+```
 
 ### Done (2026-06-10, session 28 — Phase 6 auth + legal)
 ```
@@ -678,6 +752,10 @@ All markdown docs updated for Deploy phase:
 | 2026-06-09 | Analytics in Postgres (not GA4-only) | Admin dashboard + CSV; works without `NEXT_PUBLIC_GA_ID` |
 | 2026-06-09 | Sponsored posts UI deferred | Schema only until session 25 |
 | 2026-06-10 | Sponsored posts UI built | User requested — badges, sort boost, PromptPay flow |
+| 2026-06-10 | SiteSettings in DB for SEO + AdSense slots | Admin-editable without redeploy |
+| 2026-06-10 | AdSense/GA4 gated on cookie consent | GDPR-style; essential cookies only until accept |
+| 2026-06-10 | Favicon via Next.js `app/icon.svg` | Reliable tab icon; matches brand mark |
+| 2026-06-10 | ThaiBulkSMS sender defaults to `CDMNINTH` | Approved sender name in prod |
 
 ---
 
@@ -719,7 +797,11 @@ When starting a new chat/session:
 | Listings merge | `src/lib/listings.ts`, `src/lib/user-properties.ts` |
 | AI search | `src/lib/ai-search.ts` |
 | Admin | `src/lib/admin.ts`, `src/app/admin/*` |
-| SEO | `src/lib/seo.ts`, `src/app/sitemap.ts` |
+| SEO | `src/lib/seo.ts`, `src/lib/site-settings.ts`, `src/app/admin/seo`, `src/app/sitemap.ts` |
+| Brand | `src/components/brand/SiteLogo.tsx`, `public/logo.svg`, `src/app/icon.svg` |
+| AdSense | `src/lib/adsense.ts`, `src/components/ads/*`, `SiteSettings` ad slot fields |
+| Password reset | `src/lib/password-reset.ts`, `/api/auth/forgot-password`, `/api/auth/reset-password` |
+| Legal / cookies | `src/lib/content/legal.ts`, `src/components/layout/CookieConsent.tsx` |
 | Areas/Blog content | `src/lib/areas.ts`, `src/lib/blog.ts` |
 | Map | `src/lib/locations.ts`, `src/components/property/PropertyMap.tsx` |
 | Gallery | `src/components/property/PropertyImageGallery.tsx`, `ImageGalleryInput.tsx` |

@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import {
+  resolveLeadAssigneeId,
+  resolveListingContactMode,
+} from "@/lib/contact-routing";
 import { createLead } from "@/lib/leads";
-import { isOwnerDirectListing, logMatchingEvent } from "@/lib/matching";
-import { sendEmail } from "@/lib/notifications";
+import {
+  notifyAgentManagedInquiry,
+  notifyOwnerInquiry,
+  notifyPosterInquiry,
+} from "@/lib/lead-notifications";
+import { logMatchingEvent } from "@/lib/matching";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { leadSchema } from "@/lib/validation";
 
@@ -27,102 +35,104 @@ export async function POST(request: Request) {
       );
     }
 
+    const visitor = {
+      name: parsed.data.name,
+      phone: parsed.data.phone,
+      email: parsed.data.email,
+      message: parsed.data.message,
+      viewingDate: parsed.data.viewingDate,
+      viewingTime: parsed.data.viewingTime,
+    };
+
+    let contactMode = parsed.data.contactMode ?? "agent_team";
     let ownerUserId = parsed.data.ownerUserId;
     let propertyTitle = parsed.data.propertyTitle;
     let posterRole = parsed.data.posterRole;
+    let assignedToId: string | null = null;
+    let propertySlug = parsed.data.propertySlug;
 
-    if (parsed.data.contactMode === "owner_direct") {
-      if (!parsed.data.propertySlug) {
-        return NextResponse.json({ error: "ไม่พบประกาศ" }, { status: 400 });
-      }
-
+    if (propertySlug) {
+      const slug = decodeURIComponent(propertySlug).trim();
       const property = await prisma.userProperty.findFirst({
-        where: {
-          slug: decodeURIComponent(parsed.data.propertySlug).trim(),
-          status: "published",
-        },
+        where: { slug, status: "published" },
         include: {
           user: { select: { id: true, role: true, email: true, fullName: true } },
         },
       });
 
-      if (!property?.user || !isOwnerDirectListing(property.user.role)) {
-        return NextResponse.json({ error: "ประกาศนี้ไม่รองรับการติดต่อเจ้าของโดยตรง" }, { status: 400 });
+      if (!property?.user) {
+        return NextResponse.json({ error: "ไม่พบประกาศ" }, { status: 400 });
       }
 
+      contactMode = resolveListingContactMode(property.user.role, property.agentManaged);
       ownerUserId = property.user.id;
       propertyTitle = property.title;
       posterRole = property.user.role;
+      propertySlug = slug;
+      assignedToId = resolveLeadAssigneeId(
+        property.user.role,
+        property.user.id,
+        property.agentManaged,
+      );
+
+      const lead = await createLead({
+        ...parsed.data,
+        contactMode,
+        propertySlug,
+        propertyTitle,
+        ownerUserId,
+        posterRole,
+        assignedToId,
+      });
+
+      if (contactMode === "owner_direct") {
+        await logMatchingEvent({
+          eventType: "owner_inquiry",
+          propertySlug,
+          propertyTitle,
+          ownerUserId,
+          posterRole,
+          leadId: lead.id,
+          visitorName: visitor.name,
+          visitorPhone: visitor.phone,
+          visitorEmail: visitor.email,
+        });
+        await notifyOwnerInquiry(property.user, propertyTitle, visitor);
+      } else if (property.agentManaged && property.user.role === "user") {
+        await notifyAgentManagedInquiry(propertyTitle, property.user.fullName, visitor);
+      } else {
+        await notifyPosterInquiry(property.user, propertyTitle, visitor);
+      }
+
+      return NextResponse.json({
+        message:
+          contactMode === "owner_direct"
+            ? "ส่งข้อความถึงเจ้าของเรียบร้อย"
+            : property.agentManaged
+              ? "ส่งคำขอแล้ว ทีมเอเจนต์จะติดต่อกลับโดยเร็ว"
+              : "ส่งข้อความเรียบร้อย ผู้ลงประกาศจะติดต่อกลับโดยเร็ว",
+      });
     }
 
     const lead = await createLead({
       ...parsed.data,
+      contactMode,
       ownerUserId,
       propertyTitle,
       posterRole,
+      assignedToId,
     });
 
-    if (parsed.data.contactMode === "owner_direct") {
-      await logMatchingEvent({
-        eventType: "owner_inquiry",
-        propertySlug: parsed.data.propertySlug,
-        propertyTitle,
-        ownerUserId,
-        posterRole,
-        leadId: lead.id,
-        visitorName: parsed.data.name,
-        visitorPhone: parsed.data.phone,
-        visitorEmail: parsed.data.email,
-      });
-
-      if (ownerUserId) {
-        const owner = await prisma.user.findUnique({
-          where: { id: ownerUserId },
-          select: { email: true, fullName: true },
-        });
-        if (owner?.email) {
-          const title = propertyTitle ?? "ประกาศของคุณ";
-          const visitorName = parsed.data.name;
-          const visitorContact = [parsed.data.phone, parsed.data.email].filter(Boolean).join(" / ");
-          const viewingText = parsed.data.viewingDate
-            ? `\nต้องการนัดชมทรัพย์ในวันที่: ${parsed.data.viewingDate} เวลา: ${parsed.data.viewingTime ?? "ไม่ระบุ"}`
-            : "";
-
-          void sendEmail(
-            owner.email,
-            `มีคนสนใจ: ${title}`,
-            [
-              `สวัสดีคุณ ${owner.fullName},`,
-              "",
-              `${visitorName} สนใจประกาศ "${title}" ของคุณและฝากข้อความไว้:`,
-              "",
-              `"${parsed.data.message}"${viewingText}`,
-              "",
-              `ช่องทางติดต่อ: ${visitorContact || "ไม่ระบุ"}`,
-              "",
-              "กรุณาติดต่อกลับโดยตรงเพื่อนัดชมทรัพย์",
-              "",
-              "— ทีม Condominium.in.th",
-            ].join("\n"),
-          );
-        }
-      }
-    } else {
-      // agent_team contact mode: simulate Line / WhatsApp notification to agent & Google Calendar integration
-      if (parsed.data.viewingDate) {
-        console.log(`[viewing-scheduler] SIMULATION:
+    if (parsed.data.viewingDate) {
+      console.log(`[viewing-scheduler] SIMULATION:
 - LINE / WhatsApp Alert sent to Agent Team about viewing request for property "${parsed.data.propertyTitle}"
 - Details: Date ${parsed.data.viewingDate}, Time ${parsed.data.viewingTime ?? "not specified"}
 - Google Calendar API: Inserted viewing slot calendar event.`);
-      }
     }
 
-    const message =
-      parsed.data.contactMode === "owner_direct"
-        ? "ส่งข้อความถึงเจ้าของเรียบร้อย"
-        : "ส่งข้อความเรียบร้อย ทีมงานจะติดต่อกลับโดยเร็ว";
-
-    return NextResponse.json({ message });
+    return NextResponse.json({
+      message: "ส่งข้อความเรียบร้อย ทีมงานจะติดต่อกลับโดยเร็ว",
+    });
   } catch {
     return NextResponse.json({ error: "ส่งข้อความไม่สำเร็จ" }, { status: 500 });
   }

@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   SiteSettings: 'SiteSettings',
+  TeamAgent: 'TeamAgent',
+  BlogArticle: 'BlogArticle',
   PasswordResetToken: 'PasswordResetToken',
   PhoneOtp: 'PhoneOtp',
   EmailOtp: 'EmailOtp',
@@ -126,6 +128,50 @@ export const SiteSettingsScalarFieldEnum = {
 export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
 
 
+export const TeamAgentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  role: 'role',
+  roleEn: 'roleEn',
+  areas: 'areas',
+  languages: 'languages',
+  deals: 'deals',
+  imageUrl: 'imageUrl',
+  sortOrder: 'sortOrder',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeamAgentScalarFieldEnum = (typeof TeamAgentScalarFieldEnum)[keyof typeof TeamAgentScalarFieldEnum]
+
+
+export const BlogArticleScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  titleEn: 'titleEn',
+  excerpt: 'excerpt',
+  excerptEn: 'excerptEn',
+  content: 'content',
+  contentEn: 'contentEn',
+  category: 'category',
+  categoryEn: 'categoryEn',
+  imageUrl: 'imageUrl',
+  publishedAt: 'publishedAt',
+  readTime: 'readTime',
+  seoTitle: 'seoTitle',
+  seoTitleEn: 'seoTitleEn',
+  seoDescription: 'seoDescription',
+  seoDescriptionEn: 'seoDescriptionEn',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogArticleScalarFieldEnum = (typeof BlogArticleScalarFieldEnum)[keyof typeof BlogArticleScalarFieldEnum]
+
+
 export const PasswordResetTokenScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -186,6 +232,7 @@ export const UserPropertyScalarFieldEnum = {
   status: 'status',
   isSponsored: 'isSponsored',
   sponsoredUntil: 'sponsoredUntil',
+  agentManaged: 'agentManaged',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

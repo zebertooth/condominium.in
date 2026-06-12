@@ -22,6 +22,7 @@ export async function createLead(input: CreateLeadInput) {
       btsStation: input.btsStation || null,
       ownerUserId: input.ownerUserId || null,
       posterRole: input.posterRole || null,
+      assignedToId: input.assignedToId ?? null,
       viewingDate: input.viewingDate || null,
       viewingTime: input.viewingTime || null,
     },

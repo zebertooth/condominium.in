@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, t, type Locale, defaultLocale } from "@/lib/i18n";
+import { formatNearbyStation } from "@/lib/locations";
 import { localizedPropertyDistrict, localizedPropertyTitle } from "@/lib/property-i18n";
 import type { Property } from "@/types/property";
 
@@ -29,7 +30,7 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
             </span>
             {property.btsStation && (
               <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-slate-800">
-                BTS {property.btsStation}
+                {formatNearbyStation(property.btsStation)}
               </span>
             )}
           </div>
@@ -43,7 +44,7 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
             {title}
           </h3>
           <p className="mt-1 text-sm text-slate-500">
-            {district} · {property.btsStation ? `BTS ${property.btsStation}` : property.address}
+            {district} · {property.btsStation ? formatNearbyStation(property.btsStation) : property.address}
           </p>
           <div className="mt-3 flex gap-4 text-sm text-slate-600">
             <span>{property.bedrooms} {t("bedrooms", locale)}</span>

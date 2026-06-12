@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { areaGuides } from "@/lib/areas";
-import { blogPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog";
 import { properties } from "@/lib/properties";
 import { siteConfig } from "@/lib/seo";
 import { getAllPublishedUserProperties } from "@/lib/user-properties";
@@ -58,6 +58,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly" as const,
     priority: 0.85,
   }));
+
+  const blogPosts = await getAllBlogPosts();
 
   const blogPages = blogPosts.map((b) => ({
     url: `${base}/blog/${b.slug}`,

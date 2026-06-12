@@ -1,0 +1,1 @@
+ALTER TABLE "UserProperty" ADD COLUMN IF NOT EXISTS "agentManaged" BOOLEAN NOT NULL DEFAULT false;

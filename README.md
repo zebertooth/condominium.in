@@ -7,14 +7,17 @@
 
 ## Features
 
-- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search — **5 ภาษา (TH/EN/ZH/JA/AR)**
+- หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + AI Search — **5 ภาษา (TH/EN/ZH/JA/AR)** with flag dropdown switcher
+- **Brand logo** — DDproperty-style header + teal building favicon
 - Owner dashboard — verify LINE+Email, post listings, stats, sponsor boost — **5 ภาษา**
 - Agent CRM — `/dashboard/agent`, viewing scheduler, lead pipeline
-- Admin panel — approve listings, users, leads, payments, analytics — **5 ภาษา**
+- Admin panel — approve listings, users, leads, payments, analytics, **SEO + AdSense slots** — **5 ภาษา**
 - Blog (5 articles) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
-- Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS wired — user to verify prod next)
+- Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS, sender `CDMNINTH`)
 - **Forgot password** — email reset link (all roles; no SMS)
-- **Privacy / Terms** + cookie consent (GA4 opt-in)
+- **Privacy / Terms** + cookie consent (GA4 + AdSense opt-in on “Accept all”)
+- **Google AdSense** — 9 ad placements; slot IDs editable at `/admin/seo`
+- **Admin SEO editor** — home title/description/keywords without redeploy
 - **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
 - Owner direct contact + security-hardened lead routing
 
@@ -37,11 +40,12 @@ Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate when `DA
 
 Health check: `GET https://www.condominium.in.th/api/health`
 
-## Next steps (see ROADMAP.md)
+## Next steps (see ROADMAP.md — Phase 7)
 
-1. ThaiBulkSMS production verify (user)
-2. Optional Vercel keys: OPENAI, SLIPOK, GA4
-3. User-submitted listing translations in DB
+1. **User listing i18n in DB** — title/description per locale on owner listings
+2. ThaiBulkSMS production verify (user)
+3. AdSense: `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo` (user)
+4. Optional: URL locale routing (`/en/buy`, `/zh/...`)
 
 ## Documentation
 

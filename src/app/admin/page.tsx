@@ -14,6 +14,8 @@ export default async function AdminDashboardPage() {
     { id: "leads", label: t("adminStatNewLeads", locale), value: stats.newLeads, href: "/admin/leads", highlight: stats.newLeads > 0 },
     { id: "analytics", label: t("adminAnalytics", locale), value: "→", href: "/admin/analytics" },
     { id: "seo", label: t("adminSeo", locale), value: "→", href: "/admin/seo" },
+    { id: "team", label: t("adminTeam", locale), value: "→", href: "/admin/agents" },
+    { id: "blog", label: t("adminBlog", locale), value: "→", href: "/admin/blog" },
     { id: "payments", label: t("adminStatPendingPayments", locale), value: stats.pendingPayments, href: "/admin/payments", highlight: stats.pendingPayments > 0 },
     { id: "pending-id", label: t("adminStatPendingId", locale), value: stats.pendingVerifications, href: "/admin/users" },
   ];

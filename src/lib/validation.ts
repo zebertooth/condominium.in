@@ -70,6 +70,12 @@ export const registerSchema = z
     }
   });
 
+export const adminCreateUserSchema = registerSchema.extend({
+  role: z.enum(["user", "agent", "admin"]).default("user"),
+  phoneVerified: z.boolean().optional(),
+  emailVerified: z.boolean().optional(),
+});
+
 export const loginSchema = z.object({
   login: z.string().min(1, "กรุณากรอกเบอร์โทรหรืออีเมล"),
   password: z.string().min(1),
@@ -119,6 +125,7 @@ export const propertySchema = z.object({
     )
     .min(1)
     .max(10),
+  agentManaged: z.boolean().optional(),
 });
 
 export const leadSchema = z

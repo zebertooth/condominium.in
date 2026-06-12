@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getBlogPost } from "@/lib/blog";
+import { getBlogPostBySlug } from "@/lib/blog";
 import {
   blogCategory,
   blogContent,
@@ -23,7 +24,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) return {};
 
   const locale = await getLocale();
@@ -62,7 +63,7 @@ function renderContent(content: string) {
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
   const locale = await getLocale();
@@ -96,6 +97,19 @@ export default async function BlogPostPage({ params }: PageProps) {
       </nav>
 
       <AdSlot position="blogTop" format="auto" className="mb-6" />
+
+      {post.imageUrl && (
+        <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100">
+          <Image
+            src={post.imageUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 768px"
+            priority
+          />
+        </div>
+      )}
 
       <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
         {category}

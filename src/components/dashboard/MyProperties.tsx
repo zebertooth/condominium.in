@@ -20,15 +20,19 @@ function formatSponsorDate(iso: string, locale: "th" | "en" | "zh" | "ja" | "ar"
 export function MyProperties({
   properties,
   canPost,
+  userRole = "user",
 }: {
   properties: Property[];
   canPost: boolean;
+  userRole?: string;
 }) {
   const router = useRouter();
   const t = useT();
   const tf = useTf();
   const locale = useLocale();
   const [loading, setLoading] = useState<string | null>(null);
+  const isOwnerUser = userRole === "user";
+  const totalInquiries = properties.reduce((sum, p) => sum + (p.inquiriesCount ?? 0), 0);
 
   async function deleteProperty(id: string) {
     if (!confirm(t("deleteConfirm"))) return;
@@ -37,6 +41,22 @@ export function MyProperties({
     setLoading(null);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
+      alert((data as { error?: string }).error ?? t("genericError"));
+      return;
+    }
+    router.refresh();
+  }
+
+  async function toggleAgentManaged(id: string, next: boolean) {
+    setLoading(`agent-${id}`);
+    const res = await fetch(`/api/user/properties/${id}/agent-managed`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ agentManaged: next }),
+    });
+    const data = await res.json();
+    setLoading(null);
+    if (!res.ok) {
       alert((data as { error?: string }).error ?? t("genericError"));
       return;
     }
@@ -90,6 +110,17 @@ export function MyProperties({
         )}
       </div>
 
+      {isOwnerUser && totalInquiries > 0 && (
+        <div className="mt-4 flex justify-end">
+          <Link
+            href="/dashboard/inquiries"
+            className="text-sm font-medium text-teal-700 hover:underline"
+          >
+            {t("viewInquiriesBtn")} ({totalInquiries})
+          </Link>
+        </div>
+      )}
+
       {properties.length > 0 && (
         <p className="mt-3 text-xs text-slate-500">{t("statsLegend")}</p>
       )}
@@ -137,6 +168,11 @@ export function MyProperties({
                               date: formatSponsorDate(p.sponsoredUntil, locale),
                             })}`
                           : ""}
+                      </span>
+                    )}
+                    {isOwnerUser && p.agentManaged && (
+                      <span className="rounded bg-teal-100 px-2 py-0.5 text-xs text-teal-800">
+                        {t("agentManagedBadge")}
                       </span>
                     )}
                   </div>
@@ -211,6 +247,24 @@ export function MyProperties({
                   )}
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
+                  {!p.agentManaged && isOwnerUser && (p.inquiriesCount ?? 0) > 0 && (
+                    <Link
+                      href="/dashboard/inquiries"
+                      className="rounded-lg border border-teal-200 bg-teal-50 px-3 py-1.5 text-sm text-teal-800 hover:bg-teal-100"
+                    >
+                      {t("viewInquiriesBtn")}
+                    </Link>
+                  )}
+                  {isOwnerUser && p.status === "published" && (
+                    <button
+                      type="button"
+                      onClick={() => toggleAgentManaged(p.id, !p.agentManaged)}
+                      disabled={loading === `agent-${p.id}`}
+                      className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      {p.agentManaged ? t("agentManagedOff") : t("agentManagedOn")}
+                    </button>
+                  )}
                   <Link
                     href={`/dashboard/edit/${p.id}`}
                     className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"

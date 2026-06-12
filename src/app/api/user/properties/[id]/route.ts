@@ -58,6 +58,7 @@ export async function PUT(request: Request, context: RouteContext) {
         longitude: data.longitude,
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
+        agentManaged: user.role === "user" ? (data.agentManaged ?? existing.agentManaged) : false,
         // Edited listings go back to the moderation queue.
         status: "pending",
       },

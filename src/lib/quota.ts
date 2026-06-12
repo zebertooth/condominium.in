@@ -1,6 +1,11 @@
 import { isContactVerified } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { AGENT_DEFAULT_LIMIT, FREE_PROPERTY_LIMIT, PAID_FEATURES_ENABLED } from "@/lib/packages";
+import {
+  countPostingVerifications,
+  isPostingVerified,
+  POSTING_VERIFICATION_REQUIRED,
+} from "@/lib/verification";
 
 export interface UserQuota {
   role: string;
@@ -22,6 +27,8 @@ export interface UserQuota {
   contactVerified: boolean;
   idVerified: boolean;
   fullyVerified: boolean;
+  verificationCount: number;
+  verificationRequired: number;
   activePackages: {
     id: string;
     packageId: string;
@@ -89,14 +96,13 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
   const unlimited = isAdmin;
   const isNormalUser = !isAdmin && !isAgent;
 
-  // Launch policy: ID no longer required. Thai users unlock posting with LINE + Email.
-  // Non-Thai users may verify email but cannot post listings yet (SMS verify in next phase).
-  const launchVerified = user.lineVerified && user.emailVerified;
+  // Thai users unlock posting when 2 of 3 channels are verified: phone, email, identity (ID or LINE).
+  const verificationCount = countPostingVerifications(user);
+  const postingVerified = isPostingVerified(user);
   const postingBlocked = isNormalUser && !isThai;
-  const requiresVerification = isNormalUser && isThai && !launchVerified;
+  const requiresVerification = isNormalUser && isThai && !postingVerified;
 
-  // Eligible-to-post flag (kept as `fullyVerified` for backward compatibility).
-  const fullyVerified = isAdmin || isAgent || (isThai && launchVerified);
+  const fullyVerified = isAdmin || isAgent || (isThai && postingVerified);
 
   const canBuyPackages = PAID_FEATURES_ENABLED && isNormalUser && isThai;
 
@@ -139,6 +145,8 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
     contactVerified,
     idVerified: user.idVerified,
     fullyVerified,
+    verificationCount,
+    verificationRequired: POSTING_VERIFICATION_REQUIRED,
     activePackages: activePackages.map((p) => ({
       id: p.id,
       packageId: p.packageId,

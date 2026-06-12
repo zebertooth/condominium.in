@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { blogPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
 import {
   blogCategory,
@@ -39,7 +40,7 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage() {
-  const locale = await getLocale();
+  const [locale, blogPosts] = await Promise.all([getLocale(), getAllBlogPosts()]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -55,35 +56,50 @@ export default async function BlogPage() {
           return (
             <article
               key={post.slug}
-              className="rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-md"
+              className="overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md"
             >
-              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
-                <span className="rounded-full bg-teal-100 px-3 py-1 font-medium text-teal-800">
-                  {category}
-                </span>
-                <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
-                <span>
-                  {post.readTime} {t("readTime", locale)}
-                </span>
+              <div className="flex flex-col sm:flex-row">
+                {post.imageUrl && (
+                  <Link href={`/blog/${post.slug}`} className="relative block aspect-[16/9] shrink-0 sm:w-72">
+                    <Image
+                      src={post.imageUrl}
+                      alt={title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, 288px"
+                    />
+                  </Link>
+                )}
+                <div className="p-6">
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
+                    <span className="rounded-full bg-teal-100 px-3 py-1 font-medium text-teal-800">
+                      {category}
+                    </span>
+                    <time dateTime={post.publishedAt}>
+                      {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <span>
+                      {post.readTime} {t("readTime", locale)}
+                    </span>
+                  </div>
+                  <h2 className="mt-3 text-xl font-bold text-slate-900">
+                    <Link href={`/blog/${post.slug}`} className="hover:text-teal-700">
+                      {title}
+                    </Link>
+                  </h2>
+                  <p className="mt-2 text-slate-600">{excerpt}</p>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="mt-4 inline-block text-sm font-medium text-teal-700 hover:underline"
+                  >
+                    {t("readMore", locale)} →
+                  </Link>
+                </div>
               </div>
-              <h2 className="mt-3 text-xl font-bold text-slate-900">
-                <Link href={`/blog/${post.slug}`} className="hover:text-teal-700">
-                  {title}
-                </Link>
-              </h2>
-              <p className="mt-2 text-slate-600">{excerpt}</p>
-              <Link
-                href={`/blog/${post.slug}`}
-                className="mt-4 inline-block text-sm font-medium text-teal-700 hover:underline"
-              >
-                {t("readMore", locale)} →
-              </Link>
             </article>
           );
         })}

@@ -25,7 +25,11 @@ export default async function EditPropertyPage({ params }: EditPageProps) {
     <div>
       <h2 className="mb-2 text-xl font-bold text-slate-900">{t("editListingTitle", locale)}</h2>
       <p className="mb-6 text-sm text-slate-600">{t("editListingDesc", locale)}</p>
-      <PostPropertyForm initial={dbPropertyToListing(property)} propertyId={property.id} />
+      <PostPropertyForm
+        initial={dbPropertyToListing(property)}
+        propertyId={property.id}
+        showAgentManaged={user.role === "user"}
+      />
     </div>
   );
 }

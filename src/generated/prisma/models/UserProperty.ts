@@ -70,6 +70,7 @@ export type UserPropertyMinAggregateOutputType = {
   status: string | null
   isSponsored: boolean | null
   sponsoredUntil: Date | null
+  agentManaged: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -98,6 +99,7 @@ export type UserPropertyMaxAggregateOutputType = {
   status: string | null
   isSponsored: boolean | null
   sponsoredUntil: Date | null
+  agentManaged: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -126,6 +128,7 @@ export type UserPropertyCountAggregateOutputType = {
   status: number
   isSponsored: number
   sponsoredUntil: number
+  agentManaged: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -176,6 +179,7 @@ export type UserPropertyMinAggregateInputType = {
   status?: true
   isSponsored?: true
   sponsoredUntil?: true
+  agentManaged?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -204,6 +208,7 @@ export type UserPropertyMaxAggregateInputType = {
   status?: true
   isSponsored?: true
   sponsoredUntil?: true
+  agentManaged?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -232,6 +237,7 @@ export type UserPropertyCountAggregateInputType = {
   status?: true
   isSponsored?: true
   sponsoredUntil?: true
+  agentManaged?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -347,6 +353,7 @@ export type UserPropertyGroupByOutputType = {
   status: string
   isSponsored: boolean
   sponsoredUntil: Date | null
+  agentManaged: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserPropertyCountAggregateOutputType | null
@@ -398,6 +405,7 @@ export type UserPropertyWhereInput = {
   status?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -427,6 +435,7 @@ export type UserPropertyOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  agentManaged?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -459,6 +468,7 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -488,6 +498,7 @@ export type UserPropertyOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  agentManaged?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserPropertyCountOrderByAggregateInput
@@ -524,6 +535,7 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProperty"> | Date | string | null
+  agentManaged?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
 }
@@ -551,6 +563,7 @@ export type UserPropertyCreateInput = {
   status?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPropertiesInput
@@ -580,6 +593,7 @@ export type UserPropertyUncheckedCreateInput = {
   status?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -607,6 +621,7 @@ export type UserPropertyUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPropertiesNestedInput
@@ -636,6 +651,7 @@ export type UserPropertyUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -664,6 +680,7 @@ export type UserPropertyCreateManyInput = {
   status?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -691,6 +708,7 @@ export type UserPropertyUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -719,6 +737,7 @@ export type UserPropertyUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -757,6 +776,7 @@ export type UserPropertyCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
+  agentManaged?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -795,6 +815,7 @@ export type UserPropertyMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
+  agentManaged?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -823,6 +844,7 @@ export type UserPropertyMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
+  agentManaged?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -879,14 +901,6 @@ export type UserPropertyUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.UserPropertyScalarWhereInput | Prisma.UserPropertyScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -926,6 +940,7 @@ export type UserPropertyCreateWithoutUserInput = {
   status?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -953,6 +968,7 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   status?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1010,6 +1026,7 @@ export type UserPropertyScalarWhereInput = {
   status?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
 }
@@ -1037,6 +1054,7 @@ export type UserPropertyCreateManyUserInput = {
   status?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1064,6 +1082,7 @@ export type UserPropertyUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1091,6 +1110,7 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1118,6 +1138,7 @@ export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1148,6 +1169,7 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   status?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  agentManaged?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1177,6 +1199,7 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   status?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  agentManaged?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1206,6 +1229,7 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   status?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  agentManaged?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1235,11 +1259,12 @@ export type UserPropertySelectScalar = {
   status?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  agentManaged?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "features" | "images" | "status" | "isSponsored" | "sponsoredUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "features" | "images" | "status" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1279,6 +1304,7 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     status: string
     isSponsored: boolean
     sponsoredUntil: Date | null
+    agentManaged: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["userProperty"]>
@@ -1728,6 +1754,7 @@ export interface UserPropertyFieldRefs {
   readonly status: Prisma.FieldRef<"UserProperty", 'String'>
   readonly isSponsored: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly sponsoredUntil: Prisma.FieldRef<"UserProperty", 'DateTime'>
+  readonly agentManaged: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
 }

@@ -57,6 +57,8 @@ export async function QuotaCard({ quota }: { quota: UserQuota }) {
       {!quota.fullyVerified ? (
         <p className="mt-3 text-amber-700">
           {tf("quotaVerifyFirst", locale, { limit: quota.freeLimit })}
+          {" "}
+          ({quota.verificationCount}/{quota.verificationRequired})
         </p>
       ) : (
         <div className="mt-4 grid gap-4 sm:grid-cols-3">

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { isOwnerDirectListing } from "@/lib/matching";
+import { resolveListingContactMode } from "@/lib/contact-routing";
 import { properties as staticProperties } from "@/lib/properties";
 import type { Property } from "@/types/property";
 
@@ -61,6 +61,7 @@ type DbProperty = {
   status: string;
   isSponsored: boolean;
   sponsoredUntil: Date | null;
+  agentManaged: boolean;
   createdAt: Date;
   user?: {
     id?: string;
@@ -91,7 +92,9 @@ export function dbPropertyToListing(p: DbProperty): Property {
         }
       : undefined;
 
-  const ownerDirect = poster ? isOwnerDirectListing(poster.role) : false;
+  const posterRole = poster?.role ?? "user";
+  const agentManaged = p.agentManaged ?? false;
+  const ownerDirect = resolveListingContactMode(posterRole, agentManaged) === "owner_direct";
   const activeSponsor = isActiveSponsor(p.isSponsored, p.sponsoredUntil);
 
   return {
@@ -122,6 +125,7 @@ export function dbPropertyToListing(p: DbProperty): Property {
     status: p.status as Property["status"],
     poster,
     contactMode: ownerDirect ? "owner_direct" : "agent_team",
+    agentManaged,
     isUserListing: true,
   };
 }

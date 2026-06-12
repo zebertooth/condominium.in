@@ -45,7 +45,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     <div className="space-y-8">
       {posted === "1" && <SponsorUpsellBanner />}
       <QuotaCard quota={quota} />
-      <MyProperties properties={properties} canPost={quota.canPost} />
+      <MyProperties properties={properties} canPost={quota.canPost} userRole={user.role} />
       {quota.canBuyPackages && <PackageShop />}
     </div>
   );

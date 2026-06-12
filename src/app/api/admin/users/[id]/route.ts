@@ -16,6 +16,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       idVerified?: boolean;
       phoneVerified?: boolean;
       emailVerified?: boolean;
+      lineVerified?: boolean;
       role?: string;
       listingLimitOverride?: number | null;
     };
@@ -24,6 +25,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       idVerified?: boolean;
       phoneVerified?: boolean;
       emailVerified?: boolean;
+      lineVerified?: boolean;
       role?: string;
       listingLimitOverride?: number | null;
     } = {};
@@ -31,6 +33,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (body.idVerified !== undefined) data.idVerified = body.idVerified;
     if (body.phoneVerified !== undefined) data.phoneVerified = body.phoneVerified;
     if (body.emailVerified !== undefined) data.emailVerified = body.emailVerified;
+
+    if (body.lineVerified !== undefined) data.lineVerified = body.lineVerified;
 
     if (body.role !== undefined) {
       if (!ALLOWED_ROLES.includes(body.role)) {
@@ -58,5 +62,35 @@ export async function PATCH(request: Request, context: RouteContext) {
     return NextResponse.json({ user });
   } catch (error) {
     return adminRouteError(error, "อัปเดตไม่สำเร็จ");
+  }
+}
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const admin = await requireAdmin();
+    const { id } = await context.params;
+
+    if (admin.id === id) {
+      return NextResponse.json({ error: "ไม่สามารถลบบัญชีของตัวเอง" }, { status: 400 });
+    }
+
+    const target = await prisma.user.findUnique({ where: { id } });
+    if (!target) {
+      return NextResponse.json({ error: "ไม่พบผู้ใช้" }, { status: 404 });
+    }
+
+    if (target.role === "admin") {
+      const adminCount = await prisma.user.count({ where: { role: "admin" } });
+      if (adminCount <= 1) {
+        return NextResponse.json({ error: "ไม่สามารถลบแอดมินคนสุดท้าย" }, { status: 400 });
+      }
+    }
+
+    await prisma.passwordResetToken.deleteMany({ where: { userId: id } });
+    await prisma.user.delete({ where: { id } });
+
+    return NextResponse.json({ message: "ลบผู้ใช้แล้ว" });
+  } catch (error) {
+    return adminRouteError(error, "ลบผู้ใช้ไม่สำเร็จ");
   }
 }

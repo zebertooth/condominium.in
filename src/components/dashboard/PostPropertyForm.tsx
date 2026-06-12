@@ -5,10 +5,23 @@ import { useState } from "react";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { ImageGalleryInput } from "@/components/property/ImageGalleryInput";
 import { LocationPicker } from "@/components/property/LocationPicker";
-import { BTS_LOCATIONS } from "@/lib/locations";
+import {
+  findStationId,
+  getStationById,
+  getStationCoords,
+  STATION_CATEGORY_ORDER,
+  stationsByCategory,
+} from "@/lib/locations";
 import type { Property } from "@/types/property";
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80";
+
+const CATEGORY_LABEL_KEYS = {
+  bts: "stationGroupBts",
+  mrt: "stationGroupMrt",
+  train: "stationGroupTrain",
+  airport: "stationGroupAirport",
+} as const;
 
 interface PostPropertyFormProps {
   initial?: Property;
@@ -17,6 +30,7 @@ interface PostPropertyFormProps {
   method?: "POST" | "PUT";
   redirectTo?: string;
   adminEdit?: boolean;
+  showAgentManaged?: boolean;
 }
 
 export function PostPropertyForm({
@@ -26,16 +40,35 @@ export function PostPropertyForm({
   method,
   redirectTo = "/dashboard",
   adminEdit = false,
+  showAgentManaged = false,
 }: PostPropertyFormProps = {}) {
   const router = useRouter();
   const t = useT();
   const isEdit = Boolean(propertyId);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [agentManaged, setAgentManaged] = useState(initial?.agentManaged ?? false);
   const [images, setImages] = useState<string[]>(initial?.images ?? []);
   const [latitude, setLatitude] = useState<number | null>(initial?.latitude ?? null);
   const [longitude, setLongitude] = useState<number | null>(initial?.longitude ?? null);
-  const [btsStation, setBtsStation] = useState(initial?.btsStation ?? "");
+  const [nearbyStationId, setNearbyStationId] = useState(
+    findStationId(initial?.btsStation) || "",
+  );
+
+  function applyCoords(lat: number, lng: number) {
+    setLatitude(lat);
+    setLongitude(lng);
+  }
+
+  function handleStationChange(stationId: string) {
+    setNearbyStationId(stationId);
+    const coords = getStationCoords(stationId);
+    if (coords) applyCoords(coords.lat, coords.lng);
+  }
+
+  function handlePinMoved() {
+    setNearbyStationId("");
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,6 +77,7 @@ export function PostPropertyForm({
 
     const form = new FormData(e.currentTarget);
     const finalImages = images.length > 0 ? images : [DEFAULT_IMAGE];
+    const station = getStationById(nearbyStationId);
 
     const url = endpoint ?? (isEdit ? `/api/user/properties/${propertyId}` : "/api/user/properties");
     const httpMethod = method ?? (isEdit ? "PUT" : "POST");
@@ -62,12 +96,13 @@ export function PostPropertyForm({
         areaSqm: Number(form.get("areaSqm")),
         floor: form.get("floor") ? Number(form.get("floor")) : undefined,
         district: form.get("district"),
-        btsStation: btsStation || undefined,
+        btsStation: station?.label || undefined,
         address: form.get("address"),
         latitude: latitude ?? undefined,
         longitude: longitude ?? undefined,
         features: String(form.get("features") || "").split(",").map((f) => f.trim()).filter(Boolean),
         images: finalImages,
+        ...(showAgentManaged ? { agentManaged } : {}),
       }),
     });
 
@@ -85,15 +120,6 @@ export function PostPropertyForm({
       router.push(redirectTo);
     }
     router.refresh();
-  }
-
-  function handleBtsChange(station: string) {
-    setBtsStation(station);
-    const loc = BTS_LOCATIONS[station];
-    if (loc) {
-      setLatitude(loc.lat);
-      setLongitude(loc.lng);
-    }
   }
 
   const inputClass = "mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-teal-500 focus:ring-2";
@@ -149,16 +175,26 @@ export function PostPropertyForm({
           <input name="district" required defaultValue={initial?.district} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700">{t("formBts")}</label>
+          <label className="block text-sm font-medium text-slate-700">{t("formNearbyStation")}</label>
           <select
-            value={btsStation}
-            onChange={(e) => handleBtsChange(e.target.value)}
+            value={nearbyStationId}
+            onChange={(e) => handleStationChange(e.target.value)}
             className={inputClass}
           >
             <option value="">{t("formSelect")}</option>
-            {Object.keys(BTS_LOCATIONS).map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
+            {STATION_CATEGORY_ORDER.map((category) => {
+              const group = stationsByCategory(category);
+              if (group.length === 0) return null;
+              return (
+                <optgroup key={category} label={t(CATEGORY_LABEL_KEYS[category])}>
+                  {group.map((station) => (
+                    <option key={station.id} value={station.id}>
+                      {station.label}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </div>
       </div>
@@ -171,11 +207,8 @@ export function PostPropertyForm({
       <LocationPicker
         latitude={latitude}
         longitude={longitude}
-        btsStation={btsStation}
-        onChange={(lat, lng) => {
-          setLatitude(lat);
-          setLongitude(lng);
-        }}
+        onChange={applyCoords}
+        onPinMoved={handlePinMoved}
       />
 
       <div>
@@ -187,6 +220,23 @@ export function PostPropertyForm({
         <label className="block text-sm font-medium text-slate-700">{t("formFeatures")}</label>
         <input name="features" placeholder={t("formFeaturesPlaceholder")} defaultValue={initial?.features?.join(", ")} className={inputClass} />
       </div>
+
+      {showAgentManaged && (
+        <div className="rounded-xl border border-teal-100 bg-teal-50/60 p-4">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={agentManaged}
+              onChange={(e) => setAgentManaged(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+            />
+            <span>
+              <span className="block text-sm font-medium text-slate-900">{t("agentManagedLabel")}</span>
+              <span className="mt-1 block text-xs text-slate-600">{t("agentManagedHint")}</span>
+            </span>
+          </label>
+        </div>
+      )}
 
       <button type="submit" disabled={loading} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
         {loading

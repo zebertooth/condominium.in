@@ -15,6 +15,7 @@ export default async function AdminUsersPage() {
       phoneVerified: true,
       emailVerified: true,
       idVerified: true,
+      lineVerified: true,
       role: true,
       listingLimitOverride: true,
       createdAt: true,

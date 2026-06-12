@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     if (quota.requiresVerification) {
       return NextResponse.json(
         {
-          error: "กรุณายืนยัน LINE และอีเมลก่อนลงประกาศ",
+          error: "กรุณายืนยันตัวตนอย่างน้อย 2 ใน 3 ช่องทาง (โทร อีเมล บัตร/LINE) ก่อนลงประกาศ",
           quota,
         },
         { status: 403 },
@@ -97,6 +97,7 @@ export async function POST(request: Request) {
         longitude: data.longitude,
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
+        agentManaged: user.role === "user" ? (data.agentManaged ?? false) : false,
         status: "pending",
       },
     });

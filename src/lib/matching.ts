@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db";
 
+import { resolveListingContactMode } from "@/lib/contact-routing";
+
 export type MatchingEventType =
   | "owner_contact_view"
   | "owner_phone_click"
@@ -36,6 +38,7 @@ export async function logMatchingEvent(input: LogMatchingInput) {
   });
 }
 
-export function isOwnerDirectListing(posterRole?: string): boolean {
-  return posterRole !== "agent";
+export function isOwnerDirectListing(posterRole?: string, agentManaged = false): boolean {
+  if (!posterRole) return false;
+  return resolveListingContactMode(posterRole, agentManaged) === "owner_direct";
 }

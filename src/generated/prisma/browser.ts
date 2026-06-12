@@ -28,6 +28,16 @@ export type User = Prisma.UserModel
  */
 export type SiteSettings = Prisma.SiteSettingsModel
 /**
+ * Model TeamAgent
+ * 
+ */
+export type TeamAgent = Prisma.TeamAgentModel
+/**
+ * Model BlogArticle
+ * 
+ */
+export type BlogArticle = Prisma.BlogArticleModel
+/**
  * Model PasswordResetToken
  * 
  */

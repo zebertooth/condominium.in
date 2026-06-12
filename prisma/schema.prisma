@@ -51,6 +51,48 @@ model SiteSettings {
   updatedAt         DateTime @updatedAt
 }
 
+model TeamAgent {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  roleEn    String   @default("")
+  areas     String   @default("[]")
+  languages String   @default("[]")
+  deals     Int      @default(0)
+  imageUrl  String   @default("")
+  sortOrder Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+model BlogArticle {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  title            String
+  titleEn          String   @default("")
+  excerpt          String
+  excerptEn        String   @default("")
+  content          String
+  contentEn        String   @default("")
+  category         String
+  categoryEn       String   @default("")
+  imageUrl         String   @default("")
+  publishedAt      DateTime
+  readTime         Int      @default(5)
+  seoTitle         String
+  seoTitleEn       String   @default("")
+  seoDescription   String
+  seoDescriptionEn String   @default("")
+  status           String   @default("published")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([status, publishedAt])
+}
+
 model PasswordResetToken {
   id        String   @id @default(cuid())
   userId    String
@@ -109,6 +151,7 @@ model UserProperty {
   status         String    @default("pending")
   isSponsored    Boolean   @default(false)
   sponsoredUntil DateTime?
+  agentManaged   Boolean   @default(false)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 

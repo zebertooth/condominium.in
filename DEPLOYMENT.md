@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 27):** Live at **https://www.condominium.in.th**. Phase 5 native ZH/JA/AR content ready to deploy.
+**Current status (session 29):** Live at **https://www.condominium.in.th**. Phase 6b complete (brand, SEO admin, AdSense scaffold). Phase 7 next: user listing DB i18n.
 
 ---
 
@@ -40,6 +40,9 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | Email OTP fails on production | Set `RESEND_API_KEY` + `EMAIL_FROM` (verified domain in Resend). API returns on-screen fallback code if send fails |
 | SMS OTP not received | ThaiBulkSMS optional — set `THAIBULKSMS_API_KEY` + `THAIBULKSMS_API_SECRET`; sender defaults to `CDMNINTH` |
 | LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles, or publish channel |
+| Password reset email not sent | Set `RESEND_API_KEY` + `EMAIL_FROM`; check spam; token expires in 1 hour |
+| AdSense not showing | Set `NEXT_PUBLIC_ADSENSE_CLIENT`; paste slot IDs at `/admin/seo`; user must click cookie “Accept all” |
+| GA4 not tracking | Set `NEXT_PUBLIC_GA_ID`; user must accept analytics cookies |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
 | `datasource.url property is required` on Vercel | `DATABASE_URL` missing at build time — preview skips migrate; add for runtime |
 | `pg_advisory_lock` timeout on migrate | Another deploy is migrating — wait and redeploy; set `DIRECT_DATABASE_URL` (Neon non-pooler); preview builds no longer run migrate |
@@ -142,6 +145,7 @@ ADMIN_PASSWORD=<strong-password>
 ```env
 OPENAI_API_KEY=
 NEXT_PUBLIC_GA_ID=
+NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-...
 RESEND_API_KEY=
 EMAIL_FROM=
 THAIBULKSMS_API_KEY=
@@ -160,6 +164,10 @@ SLIPOK_BRANCH_ID=
 
 After `PROMPTPAY_ID` is set, paid features turn on automatically (`PAID_FEATURES_ENABLED` env-gated in `src/lib/packages.ts`). Set `PAID_FEATURES_ENABLED=false` on Vercel to force-disable.
 
+**AdSense:** Set `NEXT_PUBLIC_ADSENSE_CLIENT` on Vercel, then paste each ad unit slot ID at **/admin/seo** (matches positions in Google AdSense dashboard). Ads load only after visitors accept cookies.
+
+**SEO:** Home title, description, and keywords are editable at **/admin/seo** (stored in `SiteSettings` — no redeploy needed).
+
 ---
 
 ## 5. DNS — point condominium.in.th ✅
@@ -176,16 +184,20 @@ To add/change domains: Vercel → Project → Domains.
 
 - [x] Home, /buy, /rent, /ai-search load
 - [x] Register (Thai) → verify LINE + Email → post (production verified session 23)
+- [x] Forgot password → email reset link → `/reset-password` (needs Resend on Vercel)
+- [x] `/privacy`, `/terms`, cookie consent banner
+- [x] Favicon shows teal building mark in browser tab
 - [x] Owner dashboard shows views, inquiries & contact clicks per listing (+ 30-day line)
 - [x] Sponsored listing: purchase → featured badge on cards/detail → sort boost on buy/rent/home
 - [x] Owner preview pending listing → admin approves → `/property/[slug]` public
 - [ ] Register (non-Thai) → email verify → posting blocked
-- [x] Admin login → approve/reject, bulk, edit listing (EN/TH UI)
+- [x] Admin login → approve/reject, bulk, edit listing, **SEO editor** (EN/TH UI)
 - [ ] /admin/leads — lead from /contact appears
 - [x] /sitemap.xml, /robots.txt
 - [ ] Image upload works (needs Cloudinary on Vercel)
 - [ ] Rate limit: /api/ai-search returns 429 when hammered
 - [ ] ThaiBulkSMS delivery (user to verify on production next)
+- [ ] AdSense units render after cookie accept + slot IDs in `/admin/seo`
 
 ---
 
@@ -197,6 +209,8 @@ To add/change domains: Vercel → Project → Domains.
 - **OTP fallback:** If Resend/ThaiBulkSMS fails, authenticated users see the OTP code on `/dashboard/verify` so verification can still complete.
 - **LINE Developing channel** only allows Testers until channel is Published (no troubleshooting UI shown to users).
 - **Pending listings** return 404 publicly until admin approves; owner can preview when logged in.
+- **Cookie consent:** GA4 and AdSense scripts load only after “Accept all”. Essential cookies always on.
+- **SiteSettings:** Default row seeded on `db:seed`; migrations `20260612190000_site_settings`, `20260612210000_adsense_slots`, `20260612180000_password_reset_token`.
 - **Rotate Neon password** if connection string was shared in chat.
 
 ---
