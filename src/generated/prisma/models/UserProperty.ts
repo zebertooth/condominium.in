@@ -31,6 +31,7 @@ export type UserPropertyAvgAggregateOutputType = {
   bedrooms: number | null
   bathrooms: number | null
   areaSqm: number | null
+  landSqWah: number | null
   floor: number | null
   latitude: number | null
   longitude: number | null
@@ -41,6 +42,7 @@ export type UserPropertySumAggregateOutputType = {
   bedrooms: number | null
   bathrooms: number | null
   areaSqm: number | null
+  landSqWah: number | null
   floor: number | null
   latitude: number | null
   longitude: number | null
@@ -60,15 +62,20 @@ export type UserPropertyMinAggregateOutputType = {
   bedrooms: number | null
   bathrooms: number | null
   areaSqm: number | null
+  landSqWah: number | null
   floor: number | null
   district: string | null
   btsStation: string | null
   address: string | null
   latitude: number | null
   longitude: number | null
+  npaBank: string | null
+  npaReferenceUrl: string | null
   features: string | null
   images: string | null
   status: string | null
+  needsReview: boolean | null
+  moderationFlags: string | null
   isSponsored: boolean | null
   sponsoredUntil: Date | null
   agentManaged: boolean | null
@@ -90,15 +97,20 @@ export type UserPropertyMaxAggregateOutputType = {
   bedrooms: number | null
   bathrooms: number | null
   areaSqm: number | null
+  landSqWah: number | null
   floor: number | null
   district: string | null
   btsStation: string | null
   address: string | null
   latitude: number | null
   longitude: number | null
+  npaBank: string | null
+  npaReferenceUrl: string | null
   features: string | null
   images: string | null
   status: string | null
+  needsReview: boolean | null
+  moderationFlags: string | null
   isSponsored: boolean | null
   sponsoredUntil: Date | null
   agentManaged: boolean | null
@@ -120,15 +132,20 @@ export type UserPropertyCountAggregateOutputType = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah: number
   floor: number
   district: number
   btsStation: number
   address: number
   latitude: number
   longitude: number
+  npaBank: number
+  npaReferenceUrl: number
   features: number
   images: number
   status: number
+  needsReview: number
+  moderationFlags: number
   isSponsored: number
   sponsoredUntil: number
   agentManaged: number
@@ -143,6 +160,7 @@ export type UserPropertyAvgAggregateInputType = {
   bedrooms?: true
   bathrooms?: true
   areaSqm?: true
+  landSqWah?: true
   floor?: true
   latitude?: true
   longitude?: true
@@ -153,6 +171,7 @@ export type UserPropertySumAggregateInputType = {
   bedrooms?: true
   bathrooms?: true
   areaSqm?: true
+  landSqWah?: true
   floor?: true
   latitude?: true
   longitude?: true
@@ -172,15 +191,20 @@ export type UserPropertyMinAggregateInputType = {
   bedrooms?: true
   bathrooms?: true
   areaSqm?: true
+  landSqWah?: true
   floor?: true
   district?: true
   btsStation?: true
   address?: true
   latitude?: true
   longitude?: true
+  npaBank?: true
+  npaReferenceUrl?: true
   features?: true
   images?: true
   status?: true
+  needsReview?: true
+  moderationFlags?: true
   isSponsored?: true
   sponsoredUntil?: true
   agentManaged?: true
@@ -202,15 +226,20 @@ export type UserPropertyMaxAggregateInputType = {
   bedrooms?: true
   bathrooms?: true
   areaSqm?: true
+  landSqWah?: true
   floor?: true
   district?: true
   btsStation?: true
   address?: true
   latitude?: true
   longitude?: true
+  npaBank?: true
+  npaReferenceUrl?: true
   features?: true
   images?: true
   status?: true
+  needsReview?: true
+  moderationFlags?: true
   isSponsored?: true
   sponsoredUntil?: true
   agentManaged?: true
@@ -232,15 +261,20 @@ export type UserPropertyCountAggregateInputType = {
   bedrooms?: true
   bathrooms?: true
   areaSqm?: true
+  landSqWah?: true
   floor?: true
   district?: true
   btsStation?: true
   address?: true
   latitude?: true
   longitude?: true
+  npaBank?: true
+  npaReferenceUrl?: true
   features?: true
   images?: true
   status?: true
+  needsReview?: true
+  moderationFlags?: true
   isSponsored?: true
   sponsoredUntil?: true
   agentManaged?: true
@@ -349,15 +383,20 @@ export type UserPropertyGroupByOutputType = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah: number | null
   floor: number | null
   district: string
   btsStation: string | null
   address: string
   latitude: number | null
   longitude: number | null
+  npaBank: string | null
+  npaReferenceUrl: string | null
   features: string
   images: string
   status: string
+  needsReview: boolean
+  moderationFlags: string
   isSponsored: boolean
   sponsoredUntil: Date | null
   agentManaged: boolean
@@ -402,15 +441,20 @@ export type UserPropertyWhereInput = {
   bedrooms?: Prisma.IntFilter<"UserProperty"> | number
   bathrooms?: Prisma.IntFilter<"UserProperty"> | number
   areaSqm?: Prisma.FloatFilter<"UserProperty"> | number
+  landSqWah?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
   floor?: Prisma.IntNullableFilter<"UserProperty"> | number | null
   district?: Prisma.StringFilter<"UserProperty"> | string
   btsStation?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   address?: Prisma.StringFilter<"UserProperty"> | string
   latitude?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
   longitude?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
+  npaBank?: Prisma.StringNullableFilter<"UserProperty"> | string | null
+  npaReferenceUrl?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   features?: Prisma.StringFilter<"UserProperty"> | string
   images?: Prisma.StringFilter<"UserProperty"> | string
   status?: Prisma.StringFilter<"UserProperty"> | string
+  needsReview?: Prisma.BoolFilter<"UserProperty"> | boolean
+  moderationFlags?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
@@ -433,15 +477,20 @@ export type UserPropertyOrderByWithRelationInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrderInput | Prisma.SortOrder
   floor?: Prisma.SortOrderInput | Prisma.SortOrder
   district?: Prisma.SortOrder
   btsStation?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  npaBank?: Prisma.SortOrderInput | Prisma.SortOrder
+  npaReferenceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
+  moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
@@ -467,15 +516,20 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   bedrooms?: Prisma.IntFilter<"UserProperty"> | number
   bathrooms?: Prisma.IntFilter<"UserProperty"> | number
   areaSqm?: Prisma.FloatFilter<"UserProperty"> | number
+  landSqWah?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
   floor?: Prisma.IntNullableFilter<"UserProperty"> | number | null
   district?: Prisma.StringFilter<"UserProperty"> | string
   btsStation?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   address?: Prisma.StringFilter<"UserProperty"> | string
   latitude?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
   longitude?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
+  npaBank?: Prisma.StringNullableFilter<"UserProperty"> | string | null
+  npaReferenceUrl?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   features?: Prisma.StringFilter<"UserProperty"> | string
   images?: Prisma.StringFilter<"UserProperty"> | string
   status?: Prisma.StringFilter<"UserProperty"> | string
+  needsReview?: Prisma.BoolFilter<"UserProperty"> | boolean
+  moderationFlags?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
@@ -498,15 +552,20 @@ export type UserPropertyOrderByWithAggregationInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrderInput | Prisma.SortOrder
   floor?: Prisma.SortOrderInput | Prisma.SortOrder
   district?: Prisma.SortOrder
   btsStation?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  npaBank?: Prisma.SortOrderInput | Prisma.SortOrder
+  npaReferenceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
+  moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
@@ -536,15 +595,20 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   bedrooms?: Prisma.IntWithAggregatesFilter<"UserProperty"> | number
   bathrooms?: Prisma.IntWithAggregatesFilter<"UserProperty"> | number
   areaSqm?: Prisma.FloatWithAggregatesFilter<"UserProperty"> | number
+  landSqWah?: Prisma.FloatNullableWithAggregatesFilter<"UserProperty"> | number | null
   floor?: Prisma.IntNullableWithAggregatesFilter<"UserProperty"> | number | null
   district?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   btsStation?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
   address?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   latitude?: Prisma.FloatNullableWithAggregatesFilter<"UserProperty"> | number | null
   longitude?: Prisma.FloatNullableWithAggregatesFilter<"UserProperty"> | number | null
+  npaBank?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
+  npaReferenceUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
   features?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   images?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   status?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  needsReview?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
+  moderationFlags?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
@@ -565,15 +629,20 @@ export type UserPropertyCreateInput = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah?: number | null
   floor?: number | null
   district: string
   btsStation?: string | null
   address: string
   latitude?: number | null
   longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
   features?: string
   images?: string
   status?: string
+  needsReview?: boolean
+  moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
@@ -596,15 +665,20 @@ export type UserPropertyUncheckedCreateInput = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah?: number | null
   floor?: number | null
   district: string
   btsStation?: string | null
   address: string
   latitude?: number | null
   longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
   features?: string
   images?: string
   status?: string
+  needsReview?: boolean
+  moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
@@ -625,15 +699,20 @@ export type UserPropertyUpdateInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -656,15 +735,20 @@ export type UserPropertyUncheckedUpdateInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -686,15 +770,20 @@ export type UserPropertyCreateManyInput = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah?: number | null
   floor?: number | null
   district: string
   btsStation?: string | null
   address: string
   latitude?: number | null
   longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
   features?: string
   images?: string
   status?: string
+  needsReview?: boolean
+  moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
@@ -715,15 +804,20 @@ export type UserPropertyUpdateManyMutationInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -745,15 +839,20 @@ export type UserPropertyUncheckedUpdateManyInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -785,15 +884,20 @@ export type UserPropertyCountOrderByAggregateInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrder
   floor?: Prisma.SortOrder
   district?: Prisma.SortOrder
   btsStation?: Prisma.SortOrder
   address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  npaBank?: Prisma.SortOrder
+  npaReferenceUrl?: Prisma.SortOrder
   features?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
+  moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
@@ -806,6 +910,7 @@ export type UserPropertyAvgOrderByAggregateInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrder
   floor?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
@@ -825,15 +930,20 @@ export type UserPropertyMaxOrderByAggregateInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrder
   floor?: Prisma.SortOrder
   district?: Prisma.SortOrder
   btsStation?: Prisma.SortOrder
   address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  npaBank?: Prisma.SortOrder
+  npaReferenceUrl?: Prisma.SortOrder
   features?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
+  moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
@@ -855,15 +965,20 @@ export type UserPropertyMinOrderByAggregateInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrder
   floor?: Prisma.SortOrder
   district?: Prisma.SortOrder
   btsStation?: Prisma.SortOrder
   address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  npaBank?: Prisma.SortOrder
+  npaReferenceUrl?: Prisma.SortOrder
   features?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
+  moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
@@ -876,6 +991,7 @@ export type UserPropertySumOrderByAggregateInput = {
   bedrooms?: Prisma.SortOrder
   bathrooms?: Prisma.SortOrder
   areaSqm?: Prisma.SortOrder
+  landSqWah?: Prisma.SortOrder
   floor?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
@@ -952,15 +1068,20 @@ export type UserPropertyCreateWithoutUserInput = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah?: number | null
   floor?: number | null
   district: string
   btsStation?: string | null
   address: string
   latitude?: number | null
   longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
   features?: string
   images?: string
   status?: string
+  needsReview?: boolean
+  moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
@@ -981,15 +1102,20 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah?: number | null
   floor?: number | null
   district: string
   btsStation?: string | null
   address: string
   latitude?: number | null
   longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
   features?: string
   images?: string
   status?: string
+  needsReview?: boolean
+  moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
@@ -1040,15 +1166,20 @@ export type UserPropertyScalarWhereInput = {
   bedrooms?: Prisma.IntFilter<"UserProperty"> | number
   bathrooms?: Prisma.IntFilter<"UserProperty"> | number
   areaSqm?: Prisma.FloatFilter<"UserProperty"> | number
+  landSqWah?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
   floor?: Prisma.IntNullableFilter<"UserProperty"> | number | null
   district?: Prisma.StringFilter<"UserProperty"> | string
   btsStation?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   address?: Prisma.StringFilter<"UserProperty"> | string
   latitude?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
   longitude?: Prisma.FloatNullableFilter<"UserProperty"> | number | null
+  npaBank?: Prisma.StringNullableFilter<"UserProperty"> | string | null
+  npaReferenceUrl?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   features?: Prisma.StringFilter<"UserProperty"> | string
   images?: Prisma.StringFilter<"UserProperty"> | string
   status?: Prisma.StringFilter<"UserProperty"> | string
+  needsReview?: Prisma.BoolFilter<"UserProperty"> | boolean
+  moderationFlags?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
@@ -1069,15 +1200,20 @@ export type UserPropertyCreateManyUserInput = {
   bedrooms: number
   bathrooms: number
   areaSqm: number
+  landSqWah?: number | null
   floor?: number | null
   district: string
   btsStation?: string | null
   address: string
   latitude?: number | null
   longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
   features?: string
   images?: string
   status?: string
+  needsReview?: boolean
+  moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
@@ -1098,15 +1234,20 @@ export type UserPropertyUpdateWithoutUserInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1127,15 +1268,20 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1156,15 +1302,20 @@ export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
   bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
   areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   district?: Prisma.StringFieldUpdateOperationsInput | string
   btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1188,15 +1339,20 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   bedrooms?: boolean
   bathrooms?: boolean
   areaSqm?: boolean
+  landSqWah?: boolean
   floor?: boolean
   district?: boolean
   btsStation?: boolean
   address?: boolean
   latitude?: boolean
   longitude?: boolean
+  npaBank?: boolean
+  npaReferenceUrl?: boolean
   features?: boolean
   images?: boolean
   status?: boolean
+  needsReview?: boolean
+  moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
@@ -1219,15 +1375,20 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   bedrooms?: boolean
   bathrooms?: boolean
   areaSqm?: boolean
+  landSqWah?: boolean
   floor?: boolean
   district?: boolean
   btsStation?: boolean
   address?: boolean
   latitude?: boolean
   longitude?: boolean
+  npaBank?: boolean
+  npaReferenceUrl?: boolean
   features?: boolean
   images?: boolean
   status?: boolean
+  needsReview?: boolean
+  moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
@@ -1250,15 +1411,20 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   bedrooms?: boolean
   bathrooms?: boolean
   areaSqm?: boolean
+  landSqWah?: boolean
   floor?: boolean
   district?: boolean
   btsStation?: boolean
   address?: boolean
   latitude?: boolean
   longitude?: boolean
+  npaBank?: boolean
+  npaReferenceUrl?: boolean
   features?: boolean
   images?: boolean
   status?: boolean
+  needsReview?: boolean
+  moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
@@ -1281,15 +1447,20 @@ export type UserPropertySelectScalar = {
   bedrooms?: boolean
   bathrooms?: boolean
   areaSqm?: boolean
+  landSqWah?: boolean
   floor?: boolean
   district?: boolean
   btsStation?: boolean
   address?: boolean
   latitude?: boolean
   longitude?: boolean
+  npaBank?: boolean
+  npaReferenceUrl?: boolean
   features?: boolean
   images?: boolean
   status?: boolean
+  needsReview?: boolean
+  moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
@@ -1297,7 +1468,7 @@ export type UserPropertySelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "features" | "images" | "status" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1327,15 +1498,20 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     bedrooms: number
     bathrooms: number
     areaSqm: number
+    landSqWah: number | null
     floor: number | null
     district: string
     btsStation: string | null
     address: string
     latitude: number | null
     longitude: number | null
+    npaBank: string | null
+    npaReferenceUrl: string | null
     features: string
     images: string
     status: string
+    needsReview: boolean
+    moderationFlags: string
     isSponsored: boolean
     sponsoredUntil: Date | null
     agentManaged: boolean
@@ -1778,15 +1954,20 @@ export interface UserPropertyFieldRefs {
   readonly bedrooms: Prisma.FieldRef<"UserProperty", 'Int'>
   readonly bathrooms: Prisma.FieldRef<"UserProperty", 'Int'>
   readonly areaSqm: Prisma.FieldRef<"UserProperty", 'Float'>
+  readonly landSqWah: Prisma.FieldRef<"UserProperty", 'Float'>
   readonly floor: Prisma.FieldRef<"UserProperty", 'Int'>
   readonly district: Prisma.FieldRef<"UserProperty", 'String'>
   readonly btsStation: Prisma.FieldRef<"UserProperty", 'String'>
   readonly address: Prisma.FieldRef<"UserProperty", 'String'>
   readonly latitude: Prisma.FieldRef<"UserProperty", 'Float'>
   readonly longitude: Prisma.FieldRef<"UserProperty", 'Float'>
+  readonly npaBank: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly npaReferenceUrl: Prisma.FieldRef<"UserProperty", 'String'>
   readonly features: Prisma.FieldRef<"UserProperty", 'String'>
   readonly images: Prisma.FieldRef<"UserProperty", 'String'>
   readonly status: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly needsReview: Prisma.FieldRef<"UserProperty", 'Boolean'>
+  readonly moderationFlags: Prisma.FieldRef<"UserProperty", 'String'>
   readonly isSponsored: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly sponsoredUntil: Prisma.FieldRef<"UserProperty", 'DateTime'>
   readonly agentManaged: Prisma.FieldRef<"UserProperty", 'Boolean'>

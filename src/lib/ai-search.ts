@@ -1,10 +1,16 @@
 import { getAllListings, filterListings } from "@/lib/listings";
 import { hasOpenAI, openaiChat } from "@/lib/openai";
 import { textMatchScore } from "@/lib/property-search-text";
+import {
+  CATEGORY_PROPERTY_TYPES,
+  parsePropertyCategoryFromQuery,
+  type PropertyCategory,
+} from "@/lib/property-types";
 import type { AISearchRequest, AISearchResult, Property } from "@/types/property";
 
 interface SearchFilters {
   listingType?: "sale" | "rent";
+  propertyCategory?: PropertyCategory;
   btsStation?: string;
   bedrooms?: number;
   maxPrice?: number;
@@ -113,7 +119,7 @@ function parseFiltersFromQuery(
     /(\d[\d,]*)\s*(บาท|baht|thb)/,
   ]);
 
-  return { listingType, btsStation, bedrooms, maxPrice };
+  return { listingType, propertyCategory: parsePropertyCategoryFromQuery(query), btsStation, bedrooms, maxPrice };
 }
 
 /** Ask the LLM to extract structured filters. Returns null on any failure. */
@@ -154,7 +160,7 @@ async function selectResults(
   query: string,
   filters: SearchFilters,
 ): Promise<Property[]> {
-  const { listingType, btsStation, bedrooms, maxPrice } = filters;
+  const { listingType, propertyCategory, btsStation, bedrooms, maxPrice } = filters;
 
   const scored = properties
     .map((p) => ({
@@ -164,6 +170,10 @@ async function selectResults(
     }))
     .filter(({ score, property, textScore }) => {
       if (listingType && property.listingType !== listingType) return false;
+      if (propertyCategory && propertyCategory !== "all") {
+        const allowed = CATEGORY_PROPERTY_TYPES[propertyCategory];
+        if (!allowed.includes(property.propertyType)) return false;
+      }
       if (btsStation && property.btsStation !== btsStation && textScore < 12) return false;
       if (bedrooms && property.bedrooms < bedrooms) return false;
       if (maxPrice && property.price > maxPrice) return false;
@@ -176,7 +186,7 @@ async function selectResults(
   if (scored.length > 0) return scored;
 
   return (
-    await filterListings({ listingType, btsStation, bedrooms, maxPrice, query })
+    await filterListings({ listingType, propertyCategory, btsStation, bedrooms, maxPrice, query })
   ).slice(0, 6);
 }
 
@@ -227,8 +237,15 @@ export async function runAISearch(request: AISearchRequest): Promise<AISearchRes
   const query = request.query.trim();
 
   const ruleFilters = parseFiltersFromQuery(query, request.listingType);
+  const requestCategory =
+    request.propertyCategory && request.propertyCategory !== "all"
+      ? request.propertyCategory
+      : undefined;
 
-  let filters = ruleFilters;
+  let filters = {
+    ...ruleFilters,
+    propertyCategory: requestCategory ?? ruleFilters.propertyCategory,
+  };
   let engine: "ai" | "rules" = "rules";
 
   if (hasOpenAI()) {
@@ -237,6 +254,7 @@ export async function runAISearch(request: AISearchRequest): Promise<AISearchRes
       // LLM result wins, but keep rule-based values where LLM returned nothing.
       filters = {
         listingType: request.listingType ?? llmFilters.listingType ?? ruleFilters.listingType,
+        propertyCategory: requestCategory ?? ruleFilters.propertyCategory,
         btsStation: llmFilters.btsStation ?? ruleFilters.btsStation,
         bedrooms: llmFilters.bedrooms ?? ruleFilters.bedrooms,
         maxPrice: llmFilters.maxPrice ?? ruleFilters.maxPrice,

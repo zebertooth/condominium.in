@@ -25,6 +25,7 @@ export async function createLead(input: CreateLeadInput) {
       assignedToId: input.assignedToId ?? null,
       viewingDate: input.viewingDate || null,
       viewingTime: input.viewingTime || null,
+      agentType: input.agentType || null,
     },
   });
 }

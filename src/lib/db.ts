@@ -1,9 +1,29 @@
+import { createHash } from "crypto";
+import { readFileSync, statSync } from "fs";
+import { join } from "path";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/generated/prisma/client";
 import { normalizeDatabaseUrl } from "@/lib/database-url";
 import pg from "pg";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+type PrismaGlobal = {
+  prisma?: PrismaClient;
+  prismaFingerprint?: string;
+};
+
+const globalForPrisma = globalThis as unknown as PrismaGlobal;
+
+function prismaClientFingerprint(): string {
+  try {
+    const schemaPath = join(process.cwd(), "prisma/schema.prisma");
+    const clientPath = join(process.cwd(), "src/generated/prisma/internal/class.ts");
+    const schema = readFileSync(schemaPath, "utf8");
+    const clientMtime = statSync(clientPath).mtimeMs;
+    return createHash("md5").update(schema).update(String(clientMtime)).digest("hex");
+  } catch {
+    return "default";
+  }
+}
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -15,8 +35,21 @@ function createPrismaClient() {
   return new PrismaClient({ adapter });
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+function getPrismaClient(): PrismaClient {
+  const fingerprint = prismaClientFingerprint();
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  if (globalForPrisma.prisma && globalForPrisma.prismaFingerprint === fingerprint) {
+    return globalForPrisma.prisma;
+  }
+
+  if (globalForPrisma.prisma) {
+    void globalForPrisma.prisma.$disconnect();
+  }
+
+  const client = createPrismaClient();
+  globalForPrisma.prisma = client;
+  globalForPrisma.prismaFingerprint = fingerprint;
+  return client;
 }
+
+export const prisma = getPrismaClient();

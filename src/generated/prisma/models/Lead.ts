@@ -31,6 +31,7 @@ export type LeadMinAggregateOutputType = {
   email: string | null
   message: string | null
   source: string | null
+  agentType: string | null
   contactMode: string | null
   propertySlug: string | null
   propertyTitle: string | null
@@ -53,6 +54,7 @@ export type LeadMaxAggregateOutputType = {
   email: string | null
   message: string | null
   source: string | null
+  agentType: string | null
   contactMode: string | null
   propertySlug: string | null
   propertyTitle: string | null
@@ -75,6 +77,7 @@ export type LeadCountAggregateOutputType = {
   email: number
   message: number
   source: number
+  agentType: number
   contactMode: number
   propertySlug: number
   propertyTitle: number
@@ -99,6 +102,7 @@ export type LeadMinAggregateInputType = {
   email?: true
   message?: true
   source?: true
+  agentType?: true
   contactMode?: true
   propertySlug?: true
   propertyTitle?: true
@@ -121,6 +125,7 @@ export type LeadMaxAggregateInputType = {
   email?: true
   message?: true
   source?: true
+  agentType?: true
   contactMode?: true
   propertySlug?: true
   propertyTitle?: true
@@ -143,6 +148,7 @@ export type LeadCountAggregateInputType = {
   email?: true
   message?: true
   source?: true
+  agentType?: true
   contactMode?: true
   propertySlug?: true
   propertyTitle?: true
@@ -238,6 +244,7 @@ export type LeadGroupByOutputType = {
   email: string | null
   message: string
   source: string
+  agentType: string | null
   contactMode: string
   propertySlug: string | null
   propertyTitle: string | null
@@ -281,6 +288,7 @@ export type LeadWhereInput = {
   email?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringFilter<"Lead"> | string
   source?: Prisma.StringFilter<"Lead"> | string
+  agentType?: Prisma.StringNullableFilter<"Lead"> | string | null
   contactMode?: Prisma.StringFilter<"Lead"> | string
   propertySlug?: Prisma.StringNullableFilter<"Lead"> | string | null
   propertyTitle?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -304,6 +312,7 @@ export type LeadOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  agentType?: Prisma.SortOrderInput | Prisma.SortOrder
   contactMode?: Prisma.SortOrder
   propertySlug?: Prisma.SortOrderInput | Prisma.SortOrder
   propertyTitle?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -330,6 +339,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringFilter<"Lead"> | string
   source?: Prisma.StringFilter<"Lead"> | string
+  agentType?: Prisma.StringNullableFilter<"Lead"> | string | null
   contactMode?: Prisma.StringFilter<"Lead"> | string
   propertySlug?: Prisma.StringNullableFilter<"Lead"> | string | null
   propertyTitle?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -353,6 +363,7 @@ export type LeadOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  agentType?: Prisma.SortOrderInput | Prisma.SortOrder
   contactMode?: Prisma.SortOrder
   propertySlug?: Prisma.SortOrderInput | Prisma.SortOrder
   propertyTitle?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -381,6 +392,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   message?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   source?: Prisma.StringWithAggregatesFilter<"Lead"> | string
+  agentType?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   contactMode?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   propertySlug?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   propertyTitle?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
@@ -403,6 +415,7 @@ export type LeadCreateInput = {
   email?: string | null
   message: string
   source?: string
+  agentType?: string | null
   contactMode?: string
   propertySlug?: string | null
   propertyTitle?: string | null
@@ -425,6 +438,7 @@ export type LeadUncheckedCreateInput = {
   email?: string | null
   message: string
   source?: string
+  agentType?: string | null
   contactMode?: string
   propertySlug?: string | null
   propertyTitle?: string | null
@@ -447,6 +461,7 @@ export type LeadUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -469,6 +484,7 @@ export type LeadUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -491,6 +507,7 @@ export type LeadCreateManyInput = {
   email?: string | null
   message: string
   source?: string
+  agentType?: string | null
   contactMode?: string
   propertySlug?: string | null
   propertyTitle?: string | null
@@ -513,6 +530,7 @@ export type LeadUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,6 +552,7 @@ export type LeadUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -566,6 +585,7 @@ export type LeadCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   message?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  agentType?: Prisma.SortOrder
   contactMode?: Prisma.SortOrder
   propertySlug?: Prisma.SortOrder
   propertyTitle?: Prisma.SortOrder
@@ -588,6 +608,7 @@ export type LeadMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   message?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  agentType?: Prisma.SortOrder
   contactMode?: Prisma.SortOrder
   propertySlug?: Prisma.SortOrder
   propertyTitle?: Prisma.SortOrder
@@ -610,6 +631,7 @@ export type LeadMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   message?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  agentType?: Prisma.SortOrder
   contactMode?: Prisma.SortOrder
   propertySlug?: Prisma.SortOrder
   propertyTitle?: Prisma.SortOrder
@@ -674,6 +696,7 @@ export type LeadCreateWithoutAssignedToInput = {
   email?: string | null
   message: string
   source?: string
+  agentType?: string | null
   contactMode?: string
   propertySlug?: string | null
   propertyTitle?: string | null
@@ -695,6 +718,7 @@ export type LeadUncheckedCreateWithoutAssignedToInput = {
   email?: string | null
   message: string
   source?: string
+  agentType?: string | null
   contactMode?: string
   propertySlug?: string | null
   propertyTitle?: string | null
@@ -745,6 +769,7 @@ export type LeadScalarWhereInput = {
   email?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringFilter<"Lead"> | string
   source?: Prisma.StringFilter<"Lead"> | string
+  agentType?: Prisma.StringNullableFilter<"Lead"> | string | null
   contactMode?: Prisma.StringFilter<"Lead"> | string
   propertySlug?: Prisma.StringNullableFilter<"Lead"> | string | null
   propertyTitle?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -767,6 +792,7 @@ export type LeadCreateManyAssignedToInput = {
   email?: string | null
   message: string
   source?: string
+  agentType?: string | null
   contactMode?: string
   propertySlug?: string | null
   propertyTitle?: string | null
@@ -788,6 +814,7 @@ export type LeadUpdateWithoutAssignedToInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,6 +836,7 @@ export type LeadUncheckedUpdateWithoutAssignedToInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -830,6 +858,7 @@ export type LeadUncheckedUpdateManyWithoutAssignedToInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  agentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactMode?: Prisma.StringFieldUpdateOperationsInput | string
   propertySlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -853,6 +882,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   message?: boolean
   source?: boolean
+  agentType?: boolean
   contactMode?: boolean
   propertySlug?: boolean
   propertyTitle?: boolean
@@ -876,6 +906,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   message?: boolean
   source?: boolean
+  agentType?: boolean
   contactMode?: boolean
   propertySlug?: boolean
   propertyTitle?: boolean
@@ -899,6 +930,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   message?: boolean
   source?: boolean
+  agentType?: boolean
   contactMode?: boolean
   propertySlug?: boolean
   propertyTitle?: boolean
@@ -922,6 +954,7 @@ export type LeadSelectScalar = {
   email?: boolean
   message?: boolean
   source?: boolean
+  agentType?: boolean
   contactMode?: boolean
   propertySlug?: boolean
   propertyTitle?: boolean
@@ -937,7 +970,7 @@ export type LeadSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "message" | "source" | "contactMode" | "propertySlug" | "propertyTitle" | "btsStation" | "ownerUserId" | "posterRole" | "status" | "assignedToId" | "agentNote" | "viewingDate" | "viewingTime" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "message" | "source" | "agentType" | "contactMode" | "propertySlug" | "propertyTitle" | "btsStation" | "ownerUserId" | "posterRole" | "status" | "assignedToId" | "agentNote" | "viewingDate" | "viewingTime" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
 }
@@ -960,6 +993,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string | null
     message: string
     source: string
+    agentType: string | null
     contactMode: string
     propertySlug: string | null
     propertyTitle: string | null
@@ -1403,6 +1437,7 @@ export interface LeadFieldRefs {
   readonly email: Prisma.FieldRef<"Lead", 'String'>
   readonly message: Prisma.FieldRef<"Lead", 'String'>
   readonly source: Prisma.FieldRef<"Lead", 'String'>
+  readonly agentType: Prisma.FieldRef<"Lead", 'String'>
   readonly contactMode: Prisma.FieldRef<"Lead", 'String'>
   readonly propertySlug: Prisma.FieldRef<"Lead", 'String'>
   readonly propertyTitle: Prisma.FieldRef<"Lead", 'String'>

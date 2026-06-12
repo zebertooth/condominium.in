@@ -19,16 +19,16 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 29)
+## Model transfer snapshot (session 30)
 
 | Item | Detail |
 |------|--------|
 | **Locales** | TH, EN, ZH, JA, AR — UI + native content for areas/blog/static listings |
-| **Brand** | `SiteLogo` (DD-style), `public/logo.svg`, favicon `src/app/icon.svg` |
-| **SEO** | `SiteSettings` in DB; admin `/admin/seo`; dynamic `createRootMetadata()` |
-| **AdSense** | 9 placements; `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs; cookie-gated |
-| **Auth/legal** | Password reset email flow; `/privacy`, `/terms`; cookie consent |
-| **Next** | Phase 7: user listing title/description per locale in DB |
+| **Listings** | 7 property types; category filter; `highlights` field for AI text match |
+| **Demos** | Static listings hidden when ≥3 published user listings |
+| **Agents** | `/admin/agents` — applications + profiles (team / freelance / company) |
+| **Feedback** | `FloatingFeedbackWidget`; `Lead` sources `feedback`, `agent_interest` |
+| **Next** | Phase C: CSV import, `/npa` hub → Phase 7: user listing DB i18n |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -350,6 +350,14 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 - Blog: 5 SEO articles in `src/lib/blog.ts`
 - Admin SEO editor: `/admin/seo`
 
+## Agents (public + admin)
+
+- **Categories:** `team` | `freelance` | `company` — on `TeamAgent.agentCategory` and `Lead.agentType` (signup)
+- **Public `/agents`:** published profiles grouped by category; signup at `#join-agent` (`AgentInterestForm`)
+- **Admin `/admin/agents`:** two sections — recent `agent_interest` applications + tabbed profile editor (`AdminTeamAgentsPanel`)
+- **Helpers:** `src/lib/agent-application.ts`, `src/lib/team-agents.ts`, `src/components/admin/AdminAgentApplications.tsx`
+- **API:** `GET/POST /api/admin/team-agents`, `PATCH/DELETE /api/admin/team-agents/[id]`
+
 ## AdSense
 
 - Env: `NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-…`
@@ -392,8 +400,10 @@ Done / env-gated:
 - [x] Native ZH/JA/AR area/blog/static listing content
 - [x] Brand logo + favicon; AdSense placement scaffold
 
-**Next code tasks (Phase 7):**
-- [ ] User-submitted listing title/description per locale in DB + post/edit UI
+**Next code tasks (Phase C → Phase 7):**
+- [ ] Admin CSV listing import + agent bulk post
+- [ ] `/npa` hub page for bank-owned inventory
+- [ ] User-submitted listing title/description per locale in DB + post/edit UI (Phase 7)
 - [ ] Optional URL locale routing (`/zh/...`)
 - [ ] `middleware.ts` for auth (optional)
 

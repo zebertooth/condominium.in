@@ -155,6 +155,11 @@ export function MyProperties({
                         {t("statusPending")}
                       </span>
                     )}
+                    {p.status === "published" && p.needsReview && (
+                      <span className="rounded bg-sky-100 px-2 py-0.5 text-xs text-sky-800">
+                        {t("statusLiveReview")}
+                      </span>
+                    )}
                     {p.status === "rejected" && (
                       <span className="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">
                         {t("statusRejected")}
@@ -175,7 +180,19 @@ export function MyProperties({
                         {t("agentManagedBadge")}
                       </span>
                     )}
+                    {p.status === "published" && !p.highlights?.trim() && (
+                      <Link
+                        href={`/dashboard/edit/${p.id}`}
+                        className="rounded bg-violet-100 px-2 py-0.5 text-xs text-violet-800 hover:bg-violet-200"
+                      >
+                        {t("highlightsNudgeEdit")}
+                      </Link>
+                    )}
                   </div>
+
+                  {p.status === "published" && !p.highlights?.trim() && (
+                    <p className="mt-2 text-xs text-violet-700">{t("highlightsNudge")}</p>
+                  )}
 
                   {statsPending ? (
                     <p className="mt-2 text-xs text-slate-400">{t("statsPendingNote")}</p>

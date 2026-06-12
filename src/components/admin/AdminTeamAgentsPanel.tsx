@@ -1,15 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useT } from "@/components/i18n/LocaleProvider";
+import { useEffect, useMemo, useState } from "react";
+import { useLocale, useT } from "@/components/i18n/LocaleProvider";
 import { SingleImageInput } from "@/components/admin/SingleImageInput";
+import {
+  AGENT_CATEGORIES,
+  agentCategoryLabel,
+  type AgentCategory,
+} from "@/lib/agent-application";
 
 interface TeamAgentRow {
   id: string;
   name: string;
   role: string;
   roleEn: string;
+  agentCategory: AgentCategory;
   areas: string[];
   languages: string[];
   deals: number;
@@ -28,10 +34,13 @@ const emptyForm = {
   imageUrl: "",
   sortOrder: 0,
   published: true,
+  agentCategory: "team" as AgentCategory,
 };
 
 export function AdminTeamAgentsPanel() {
   const t = useT();
+  const locale = useLocale();
+  const [activeCategory, setActiveCategory] = useState<AgentCategory>("team");
   const [agents, setAgents] = useState<TeamAgentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -72,6 +81,7 @@ export function AdminTeamAgentsPanel() {
       imageUrl: agent.imageUrl,
       sortOrder: agent.sortOrder,
       published: agent.published,
+      agentCategory: agent.agentCategory,
     });
     setMessage("");
     setError("");
@@ -79,7 +89,11 @@ export function AdminTeamAgentsPanel() {
 
   function startNew() {
     setEditId("new");
-    setForm({ ...emptyForm, sortOrder: agents.length });
+    setForm({
+      ...emptyForm,
+      sortOrder: filteredAgents.length,
+      agentCategory: activeCategory,
+    });
     setMessage("");
     setError("");
   }
@@ -105,6 +119,7 @@ export function AdminTeamAgentsPanel() {
       imageUrl: form.imageUrl,
       sortOrder: form.sortOrder,
       published: form.published,
+      agentCategory: form.agentCategory,
     };
 
     const isNew = editId === "new";
@@ -140,12 +155,41 @@ export function AdminTeamAgentsPanel() {
     loadAgents();
   }
 
+  const filteredAgents = useMemo(
+    () => agents.filter((a) => a.agentCategory === activeCategory),
+    [agents, activeCategory],
+  );
+
   if (loading) {
     return <p className="text-sm text-slate-500">{t("loading")}</p>;
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      <div className="flex flex-wrap gap-2">
+        {AGENT_CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            type="button"
+            onClick={() => {
+              setActiveCategory(cat);
+              cancelForm();
+            }}
+            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              activeCategory === cat
+                ? "bg-teal-600 text-white"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            {agentCategoryLabel(cat, locale)}
+            <span className="ms-2 opacity-80">
+              ({agents.filter((a) => a.agentCategory === cat).length})
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-8">
       {message && <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">{message}</p>}
       {error && <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
@@ -224,6 +268,22 @@ export function AdminTeamAgentsPanel() {
               />
             </label>
             <label className="block">
+              <span className="text-sm font-medium text-slate-700">{t("agentCategoryLabel")}</span>
+              <select
+                value={form.agentCategory}
+                onChange={(e) =>
+                  setForm({ ...form, agentCategory: e.target.value as AgentCategory })
+                }
+                className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2"
+              >
+                {AGENT_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {agentCategoryLabel(cat, locale)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block">
               <span className="text-sm font-medium text-slate-700">{t("adminTeamSort")}</span>
               <input
                 type="number"
@@ -268,8 +328,8 @@ export function AdminTeamAgentsPanel() {
         </form>
       )}
 
-      {agents.length === 0 ? (
-        <p className="text-sm text-slate-500">{t("adminTeamEmpty")}</p>
+      {filteredAgents.length === 0 ? (
+        <p className="text-sm text-slate-500">{t("adminAgentsEmptyCategory")}</p>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <table className="w-full text-sm">
@@ -284,7 +344,7 @@ export function AdminTeamAgentsPanel() {
               </tr>
             </thead>
             <tbody>
-              {agents.map((agent) => (
+              {filteredAgents.map((agent) => (
                 <tr key={agent.id} className="border-b border-slate-100">
                   <td className="px-4 py-3">
                     {agent.imageUrl ? (
@@ -333,6 +393,7 @@ export function AdminTeamAgentsPanel() {
           </table>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -12,7 +12,11 @@ import {
   STATION_CATEGORY_ORDER,
   stationsByCategory,
 } from "@/lib/locations";
-import type { Property } from "@/types/property";
+import {
+  PROPERTY_TYPES,
+  showsRoomCounts,
+} from "@/lib/property-types";
+import type { Property, PropertyType } from "@/types/property";
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80";
 
@@ -48,6 +52,7 @@ export function PostPropertyForm({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [agentManaged, setAgentManaged] = useState(initial?.agentManaged ?? false);
+  const [propertyType, setPropertyType] = useState<PropertyType>(initial?.propertyType ?? "condo");
   const [images, setImages] = useState<string[]>(initial?.images ?? []);
   const [latitude, setLatitude] = useState<number | null>(initial?.latitude ?? null);
   const [longitude, setLongitude] = useState<number | null>(initial?.longitude ?? null);
@@ -90,17 +95,20 @@ export function PostPropertyForm({
         description: form.get("description"),
         highlights: String(form.get("highlights") || ""),
         listingType: form.get("listingType"),
-        propertyType: "condo",
+        propertyType,
         price: Number(form.get("price")),
         bedrooms: Number(form.get("bedrooms")),
         bathrooms: Number(form.get("bathrooms")),
         areaSqm: Number(form.get("areaSqm")),
+        landSqWah: form.get("landSqWah") ? Number(form.get("landSqWah")) : undefined,
         floor: form.get("floor") ? Number(form.get("floor")) : undefined,
         district: form.get("district"),
         btsStation: station?.label || undefined,
         address: form.get("address"),
         latitude: latitude ?? undefined,
         longitude: longitude ?? undefined,
+        npaBank: String(form.get("npaBank") || "") || undefined,
+        npaReferenceUrl: String(form.get("npaReferenceUrl") || "") || undefined,
         features: String(form.get("features") || "").split(",").map((f) => f.trim()).filter(Boolean),
         images: finalImages,
         ...(showAgentManaged ? { agentManaged } : {}),
@@ -163,20 +171,79 @@ export function PostPropertyForm({
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700">{t("formPrice")}</label>
-          <input name="price" type="number" required min={1} defaultValue={initial?.price} className={inputClass} />
+          <label className="block text-sm font-medium text-slate-700">{t("formPropertyType")}</label>
+          <select
+            value={propertyType}
+            onChange={(e) => setPropertyType(e.target.value as PropertyType)}
+            className={inputClass}
+          >
+            {PROPERTY_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {t(`propertyType_${type}` as Parameters<typeof t>[0])}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">{t("bedrooms")}</label>
-          <input name="bedrooms" type="number" required min={0} defaultValue={initial?.bedrooms} className={inputClass} />
+          <label className="block text-sm font-medium text-slate-700">{t("formPrice")}</label>
+          <input name="price" type="number" required min={1} defaultValue={initial?.price} className={inputClass} />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700">{t("bathrooms")}</label>
-          <input name="bathrooms" type="number" required min={1} defaultValue={initial?.bathrooms} className={inputClass} />
+        {propertyType === "land" && (
+          <div>
+            <label className="block text-sm font-medium text-slate-700">{t("formLandSqWah")}</label>
+            <input
+              name="landSqWah"
+              type="number"
+              min={0.01}
+              step="0.01"
+              defaultValue={initial?.landSqWah}
+              className={inputClass}
+            />
+          </div>
+        )}
+      </div>
+
+      {propertyType === "npa" && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="block text-sm font-medium text-slate-700">{t("formNpaBank")}</label>
+            <input name="npaBank" placeholder="เช่น กสิกรไทย, กรุงเทพ" defaultValue={initial?.npaBank} className={inputClass} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700">{t("formNpaReferenceUrl")}</label>
+            <input
+              name="npaReferenceUrl"
+              type="url"
+              placeholder="https://..."
+              defaultValue={initial?.npaReferenceUrl}
+              className={inputClass}
+            />
+          </div>
         </div>
+      )}
+
+      <div className={`grid gap-4 ${showsRoomCounts(propertyType) ? "sm:grid-cols-3" : "sm:grid-cols-1"}`}>
+        {showsRoomCounts(propertyType) && (
+          <>
+            <div>
+              <label className="block text-sm font-medium text-slate-700">{t("bedrooms")}</label>
+              <input name="bedrooms" type="number" required min={0} defaultValue={initial?.bedrooms ?? 1} className={inputClass} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700">{t("bathrooms")}</label>
+              <input name="bathrooms" type="number" required min={0} defaultValue={initial?.bathrooms ?? 1} className={inputClass} />
+            </div>
+          </>
+        )}
+        {!showsRoomCounts(propertyType) && (
+          <>
+            <input type="hidden" name="bedrooms" value={0} />
+            <input type="hidden" name="bathrooms" value={0} />
+          </>
+        )}
         <div>
           <label className="block text-sm font-medium text-slate-700">{t("sqm")}</label>
           <input name="areaSqm" type="number" required min={1} defaultValue={initial?.areaSqm} className={inputClass} />

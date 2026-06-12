@@ -30,6 +30,7 @@ async function seedContent() {
           imageUrl: agent.imageUrl,
           sortOrder: agent.sortOrder,
           published: true,
+          agentCategory: "team",
         },
       });
     }

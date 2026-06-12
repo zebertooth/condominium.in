@@ -1,6 +1,6 @@
 import type { Property, SearchFilters } from "@/types/property";
 
-export const properties: Property[] = [
+const seedProperties: Omit<Property, "isDemo">[] = [
   {
     id: "1",
     slug: "the-loft-asoke-2br-rent",
@@ -259,6 +259,8 @@ export const properties: Property[] = [
     publishedAt: "2026-05-28",
   },
 ];
+
+export const properties: Property[] = seedProperties.map((p) => ({ ...p, isDemo: true }));
 
 export function getPropertyBySlug(slug: string): Property | undefined {
   return properties.find((p) => p.slug === slug);

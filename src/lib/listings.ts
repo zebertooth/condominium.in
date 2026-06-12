@@ -1,6 +1,7 @@
 import { properties as staticProperties } from "@/lib/properties";
 import { getPropertySearchText } from "@/lib/property-search-text";
-import {
+import { shouldShowDemoListings } from "@/lib/demo-listings";
+import { CATEGORY_PROPERTY_TYPES } from "@/lib/property-types";import {
   getAllPublishedUserProperties,
   getUserPropertyBySlugVisible,
   type PropertyViewer,
@@ -15,8 +16,12 @@ function sortListingsFeaturedFirst(list: Property[]): Property[] {
 }
 
 export async function getAllListings(): Promise<Property[]> {
-  const userListings = await getAllPublishedUserProperties();
-  return sortListingsFeaturedFirst([...userListings, ...staticProperties]);
+  const [userListings, showDemos] = await Promise.all([
+    getAllPublishedUserProperties(),
+    shouldShowDemoListings(),
+  ]);
+  const demos = showDemos ? staticProperties : [];
+  return sortListingsFeaturedFirst([...userListings, ...demos]);
 }
 
 export async function getListingBySlug(
@@ -26,12 +31,21 @@ export async function getListingBySlug(
   const normalized = decodeURIComponent(slug).trim();
   const userListing = await getUserPropertyBySlugVisible(normalized, viewer);
   if (userListing) return userListing;
-  return staticProperties.find((p) => p.slug === normalized);
+
+  const demo = staticProperties.find((p) => p.slug === normalized);
+  if (!demo) return undefined;
+  if (!(await shouldShowDemoListings())) return undefined;
+  return demo;
 }
 
 function applyFilters(list: Property[], filters: SearchFilters): Property[] {
   return list.filter((p) => {
     if (filters.listingType && p.listingType !== filters.listingType) return false;
+    if (filters.propertyType && p.propertyType !== filters.propertyType) return false;
+    if (filters.propertyCategory && filters.propertyCategory !== "all") {
+      const allowed = CATEGORY_PROPERTY_TYPES[filters.propertyCategory];
+      if (!allowed.includes(p.propertyType)) return false;
+    }
     if (filters.district && p.district !== filters.district) return false;
     if (filters.btsStation && p.btsStation !== filters.btsStation) return false;
     if (filters.bedrooms && p.bedrooms < filters.bedrooms) return false;

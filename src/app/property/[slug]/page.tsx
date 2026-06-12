@@ -1,6 +1,7 @@
 import { AdSlot } from "@/components/ads/AdSlot";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DemoListingBanner } from "@/components/property/ListingsEmptyState";
 import { PropertyContactSection } from "@/components/property/PropertyContactSection";
 import { PropertyImageGallery } from "@/components/property/PropertyImageGallery";
 import { PropertyMap } from "@/components/property/PropertyMap";
@@ -16,6 +17,7 @@ import {
 import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
 import { formatNearbyStation } from "@/lib/locations";
+import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
 import { createMetadata, siteConfig } from "@/lib/seo";
 
 interface PageProps {
@@ -99,6 +101,7 @@ export default async function PropertyPage({ params }: PageProps) {
               : "ประกาศนี้ถูกปฏิเสธ ยังไม่แสดงต่อสาธารณะ"}
         </div>
       )}
+      {property.isDemo && <DemoListingBanner locale={locale} />}
       {isPublished && <JsonLd data={jsonLd} />}
 
       <nav className="mb-6 text-sm text-slate-500">
@@ -128,6 +131,9 @@ export default async function PropertyPage({ params }: PageProps) {
             <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
               {listingLabel}
             </span>
+            <span className="rounded-full bg-slate-800 px-3 py-1 text-sm font-medium text-white">
+              {propertyTypeLabel(property.propertyType, locale)}
+            </span>
             {property.btsStation && (
               <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800">
                 {formatNearbyStation(property.btsStation)}
@@ -147,20 +153,50 @@ export default async function PropertyPage({ params }: PageProps) {
           </p>
           <p className="mt-2 text-sm text-slate-600">{property.address}</p>
 
-          <div className="mt-6 grid grid-cols-3 gap-4 rounded-xl bg-slate-50 p-4">
-            <div>
-              <p className="text-sm text-slate-500">{t("bedrooms", locale)}</p>
-              <p className="text-lg font-semibold">{property.bedrooms}</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-500">{t("bathrooms", locale)}</p>
-              <p className="text-lg font-semibold">{property.bathrooms}</p>
-            </div>
+          <div className={`mt-6 grid gap-4 rounded-xl bg-slate-50 p-4 ${showsRoomCounts(property.propertyType) ? "grid-cols-3" : "grid-cols-2"}`}>
+            {showsRoomCounts(property.propertyType) && (
+              <>
+                <div>
+                  <p className="text-sm text-slate-500">{t("bedrooms", locale)}</p>
+                  <p className="text-lg font-semibold">{property.bedrooms}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">{t("bathrooms", locale)}</p>
+                  <p className="text-lg font-semibold">{property.bathrooms}</p>
+                </div>
+              </>
+            )}
             <div>
               <p className="text-sm text-slate-500">{t("sqm", locale)}</p>
               <p className="text-lg font-semibold">{property.areaSqm}</p>
             </div>
+            {property.landSqWah != null && (
+              <div>
+                <p className="text-sm text-slate-500">{t("sqWah", locale)}</p>
+                <p className="text-lg font-semibold">{property.landSqWah}</p>
+              </div>
+            )}
           </div>
+
+          {(property.npaBank || property.npaReferenceUrl) && (
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+              {property.npaBank && (
+                <p>
+                  <span className="font-medium">{t("npaBankLabel", locale)}:</span> {property.npaBank}
+                </p>
+              )}
+              {property.npaReferenceUrl && (
+                <a
+                  href={property.npaReferenceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-block font-medium text-teal-700 hover:underline"
+                >
+                  {t("npaReferenceLink", locale)} →
+                </a>
+              )}
+            </div>
+          )}
 
           <p className="mt-6 leading-relaxed text-slate-700">{displayDescription}</p>
 

@@ -1,7 +1,8 @@
 import type { Property } from "@/types/property";
 import { AdPlacement } from "@/components/ads/AdPlacement";
+import { ListingsEmptyState } from "./ListingsEmptyState";
 import { PropertyCard } from "./PropertyCard";
-import { t, type Locale, defaultLocale } from "@/lib/i18n";
+import { type Locale, defaultLocale } from "@/lib/i18n";
 
 const INFEED_EVERY = 6;
 
@@ -9,17 +10,15 @@ export function PropertyGrid({
   properties,
   locale = defaultLocale,
   infeedSlotId,
+  listingType,
 }: {
   properties: Property[];
   locale?: Locale;
   infeedSlotId?: string;
+  listingType?: "sale" | "rent";
 }) {
   if (properties.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center text-slate-600">
-        {t("noPropertiesFound", locale)}
-      </div>
-    );
+    return <ListingsEmptyState locale={locale} listingType={listingType} />;
   }
 
   const nodes: React.ReactNode[] = [];

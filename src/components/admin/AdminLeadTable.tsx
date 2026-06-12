@@ -10,6 +10,7 @@ import {
   leadSourceLabelFor,
   leadStatusLabelFor,
 } from "@/lib/lead-constants";
+import { agentApplicationTypeLabel } from "@/lib/agent-application";
 
 export interface LeadView {
   id: string;
@@ -18,6 +19,7 @@ export interface LeadView {
   email: string | null;
   message: string;
   source: string;
+  agentType: string | null;
   contactMode: string;
   propertySlug: string | null;
   propertyTitle: string | null;
@@ -88,6 +90,14 @@ export function AdminLeadTable({
               </div>
               <p className="mt-1 text-sm text-slate-500">
                 {leadSourceLabelFor(lead.source, locale)}
+                {lead.agentType && (
+                  <>
+                    {" · "}
+                    <span className="font-medium text-teal-700">
+                      {agentApplicationTypeLabel(lead.agentType, locale)}
+                    </span>
+                  </>
+                )}
                 {" · "}
                 {leadContactModeLabelFor(lead.contactMode, locale)}
                 {" · "}

@@ -19,7 +19,12 @@ export async function POST(request: Request) {
 
     const result = await prisma.userProperty.updateMany({
       where: { id: { in: ids } },
-      data: { status },
+      data: {
+        status,
+        ...(status === "rejected" || status === "deleted"
+          ? { needsReview: false, moderationFlags: "[]" }
+          : {}),
+      },
     });
 
     return NextResponse.json({ updated: result.count });

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getDemoListingStatus } from "@/lib/demo-listings";
 import { prisma } from "@/lib/db";
 import { getIntegrationStatus } from "@/lib/integrations";
 import { PAID_FEATURES_ENABLED } from "@/lib/packages";
@@ -17,6 +18,7 @@ export async function GET() {
     const thaibulksms = thaiBulkSmsConfigured()
       ? await checkThaiBulkSmsCredit()
       : { ok: false, sender: getThaiBulkSmsSender(), error: "not configured" };
+    const demoListings = await getDemoListingStatus();
 
     return NextResponse.json({
       status: "ok",
@@ -24,6 +26,7 @@ export async function GET() {
       paidFeatures: PAID_FEATURES_ENABLED,
       integrations,
       thaibulksms,
+      demoListings,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

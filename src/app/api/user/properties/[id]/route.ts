@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { buildModerationUpdate } from "@/lib/listing-moderation";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -37,6 +38,14 @@ export async function PUT(request: Request, context: RouteContext) {
 
     const data = parsed.data;
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
+    const moderation = buildModerationUpdate(
+      {
+        title: data.title,
+        description: data.description,
+        highlights: data.highlights,
+      },
+      "edited",
+    );
 
     const property = await prisma.userProperty.update({
       where: { id },
@@ -51,23 +60,26 @@ export async function PUT(request: Request, context: RouteContext) {
         bedrooms: data.bedrooms,
         bathrooms: data.bathrooms,
         areaSqm: data.areaSqm,
+        landSqWah: data.landSqWah,
         floor: data.floor,
         district: data.district,
         btsStation: data.btsStation,
         address: data.address,
         latitude: data.latitude,
         longitude: data.longitude,
+        npaBank: data.npaBank,
+        npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
         agentManaged: user.role === "user" ? (data.agentManaged ?? existing.agentManaged) : false,
-        // Edited listings go back to the moderation queue.
-        status: "pending",
+        status: "published",
+        ...moderation,
       },
     });
 
     return NextResponse.json({
       property: dbPropertyToListing(property),
-      message: "บันทึกการแก้ไขแล้ว รอแอดมินอนุมัติอีกครั้งก่อนเผยแพร่",
+      message: "บันทึกและเผยแพร่แล้ว ทีมงานจะตรวจสอบภายหลัง",
     });
   } catch {
     return NextResponse.json({ error: "แก้ไขประกาศไม่สำเร็จ" }, { status: 500 });

@@ -1,11 +1,18 @@
+import { Suspense } from "react";
 import { AdSlot } from "@/components/ads/AdSlot";
+import { PropertyCategoryFilter } from "@/components/property/PropertyCategoryFilter";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { PropertySearch } from "@/components/property/PropertySearch";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { parsePropertyCategory } from "@/lib/property-types";
 import { createMetadata } from "@/lib/seo";
 import { filterListings } from "@/lib/listings";
 import { getSiteSettings } from "@/lib/site-settings";
+
+interface RentPageProps {
+  searchParams: Promise<{ category?: string }>;
+}
 
 export async function generateMetadata() {
   return createMetadata({
@@ -17,9 +24,12 @@ export async function generateMetadata() {
   });
 }
 
-export default async function RentPage() {
+export default async function RentPage({ searchParams }: RentPageProps) {
+  const { category: categoryParam } = await searchParams;
+  const category = parsePropertyCategory(categoryParam);
+
   const [listings, locale, settings] = await Promise.all([
-    filterListings({ listingType: "rent" }),
+    filterListings({ listingType: "rent", propertyCategory: category }),
     getLocale(),
     getSiteSettings(),
   ]);
@@ -37,6 +47,12 @@ export default async function RentPage() {
         <PropertySearch defaultType="rent" />
       </div>
 
+      <div className="mt-6">
+        <Suspense fallback={<div className="h-10 animate-pulse rounded-full bg-slate-100" />}>
+          <PropertyCategoryFilter />
+        </Suspense>
+      </div>
+
       <div className="mt-12">
         <h2 className="mb-6 text-xl font-semibold text-slate-900">
           {t("allRentListings", locale)} ({listings.length})
@@ -44,6 +60,7 @@ export default async function RentPage() {
         <PropertyGrid
           properties={listings}
           locale={locale}
+          listingType="rent"
           infeedSlotId={settings.adSlots.listingInfeed}
         />
       </div>

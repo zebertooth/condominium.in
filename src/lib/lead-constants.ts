@@ -14,6 +14,8 @@ const LEAD_SOURCE_KEYS: Record<string, TranslationKey> = {
   contact: "leadSourceContact",
   property: "leadSourceProperty",
   "ai-search": "leadSourceAiSearch",
+  feedback: "leadSourceFeedback",
+  agent_interest: "leadSourceAgentInterest",
 };
 
 const LEAD_MODE_KEYS: Record<string, TranslationKey> = {
@@ -62,6 +64,8 @@ export const LEAD_SOURCE_LABEL: Record<string, string> = {
   contact: "ฟอร์มติดต่อ",
   property: "หน้าประกาศ",
   "ai-search": "AI ค้นหา",
+  feedback: "ข้อเสนอแนะ",
+  agent_interest: "สมัครเอเจนต์",
 };
 
 /** @deprecated use leadContactModeLabelFor */
@@ -75,7 +79,7 @@ export interface CreateLeadInput {
   phone?: string;
   email?: string;
   message: string;
-  source: "contact" | "property" | "ai-search";
+  source: "contact" | "property" | "ai-search" | "feedback" | "agent_interest";
   contactMode?: "agent_team" | "owner_direct";
   propertySlug?: string;
   propertyTitle?: string;
@@ -85,4 +89,5 @@ export interface CreateLeadInput {
   assignedToId?: string | null;
   viewingDate?: string;
   viewingTime?: string;
+  agentType?: "team" | "freelance" | "company";
 }

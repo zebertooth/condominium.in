@@ -10,7 +10,7 @@ export default async function AdminDashboardPage() {
   const cards = [
     { id: "users", label: t("adminStatUsers", locale), value: stats.users, href: "/admin/users" },
     { id: "published", label: t("adminStatPublished", locale), value: stats.properties, href: "/admin/properties?status=published" },
-    { id: "pending", label: t("adminStatPending", locale), value: stats.pendingProperties, href: "/admin/properties?status=pending", highlight: true },
+    { id: "review", label: t("adminStatReview", locale), value: stats.reviewProperties, href: "/admin/properties?review=1", highlight: stats.reviewProperties > 0 },
     { id: "leads", label: t("adminStatNewLeads", locale), value: stats.newLeads, href: "/admin/leads", highlight: stats.newLeads > 0 },
     { id: "analytics", label: t("adminAnalytics", locale), value: "→", href: "/admin/analytics" },
     { id: "seo", label: t("adminSeo", locale), value: "→", href: "/admin/seo" },

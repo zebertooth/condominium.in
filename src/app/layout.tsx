@@ -3,6 +3,7 @@ import { Noto_Sans_Thai } from "next/font/google";
 import { AdSenseScript } from "@/components/ads/AdSenseScript";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AnalyticsLoader, CookieConsent } from "@/components/layout/CookieConsent";
+import { FloatingFeedbackWidget } from "@/components/layout/FloatingFeedbackWidget";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -59,6 +60,7 @@ export default async function RootLayout({
             <AdSlot position="footer" format="auto" className="mb-4" />
           </div>
           <Footer locale={locale} />
+          <FloatingFeedbackWidget />
           <CookieConsent />
         </LocaleProvider>
       </body>

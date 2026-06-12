@@ -12,25 +12,24 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 29 — **Phase 7 next**)
+> ## 🤝 HANDOFF (session 30 — **Phase C next**)
 >
 > **Production:** https://www.condominium.in.th — 5 locales live  
-> **GitHub `main`:** @ `59711b7` (+ favicon files may need push)
+> **GitHub `main`:** highlights shipped; session 30 work may need push
 >
-> **Done through session 29:**
-> - Phase 6: forgot/reset password, `/privacy`, `/terms`, cookie consent, GA4 opt-in
-> - Brand: DD-style `SiteLogo`, `public/logo.svg`, favicon `src/app/icon.svg`
-> - SEO admin: `SiteSettings` + `/admin/seo` — home meta + keywords editable in DB
-> - AdSense: 9 placements, admin slot IDs, script gated on cookie consent
-> - Language switcher: dropdown with flag + locale code
-> - ThaiBulkSMS sender default `CDMNINTH`
+> **Done through session 30:**
+> - Phase 6b: brand, SEO admin, AdSense, favicon
+> - **7 property types** + category filter + `highlights` for AI search
+> - **Demo hide** when ≥3 published user listings
+> - **Floating feedback widget** + agent signup on `/agents#join-agent`
+> - **`/admin/agents`** — applications + profiles by **team / freelance / company**
 >
-> **Next priorities (Phase 7):**
-> 1. **User listing DB i18n** — `UserProperty` title/description per locale + post/edit UI
-> 2. Push any unpushed session 29 commits (favicon)
-> 3. ThaiBulkSMS production verify (user)
-> 4. AdSense: set `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo` (user)
-> 5. Optional: URL locale routing (`/zh/...`) after DB i18n
+> **Next priorities (Phase C):**
+> 1. **Admin CSV listing import** + agent bulk post
+> 2. **`/npa` hub** for bank-owned inventory
+> 3. Deploy session 30 migrations to production
+> 4. **Phase 7:** user listing DB i18n (after Phase C)
+> 5. ThaiBulkSMS / AdSense / GA4 (user ops)
 
 ---
 
@@ -40,7 +39,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 7** — user listing DB i18n |
+| Phase | **Phase C** — CSV import, `/npa` hub → then Phase 7 listing i18n |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
 
@@ -63,7 +62,12 @@ src/lib/content/legal.ts                Privacy + terms (TH/EN)
 src/components/layout/CookieConsent.tsx Banner; gates GA4 + AdSense
 src/components/layout/LanguageSwitcher.tsx  Flag dropdown (5 locales)
 src/lib/locale-content.ts               resolveLocalized + area/blog/property helpers
-src/lib/content/*-locale.ts             Native ZH/JA/AR for areas, blog, static listings
+src/lib/property-types.ts              7 listing categories + labels
+src/lib/demo-listings.ts               Hide static demos when real inventory ≥3
+src/lib/agent-application.ts           team / freelance / company agent categories
+src/app/admin/agents/                  Applications + tabbed profile editor
+src/components/layout/FloatingFeedbackWidget.tsx  Feedback + agent signup tabs
+src/components/agents/AgentInterestForm.tsx       Public agent application form
 ```
 
 ---

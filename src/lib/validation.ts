@@ -103,17 +103,20 @@ export const propertySchema = z.object({
   description: z.string().min(20),
   highlights: z.string().max(2000).optional().default(""),
   listingType: z.enum(["sale", "rent"]),
-  propertyType: z.enum(["condo", "house", "townhouse", "apartment"]).default("condo"),
+  propertyType: z.enum(["condo", "apartment", "house", "townhouse", "land", "commercial", "npa"]).default("condo"),
   price: z.number().int().positive(),
   bedrooms: z.number().int().min(0).max(10),
-  bathrooms: z.number().int().min(1).max(10),
+  bathrooms: z.number().int().min(0).max(10),
   areaSqm: z.number().positive(),
+  landSqWah: z.number().positive().optional(),
   floor: z.number().int().optional(),
   district: z.string().min(2),
   btsStation: z.string().optional(),
   address: z.string().min(5),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  npaBank: z.string().max(100).optional(),
+  npaReferenceUrl: z.string().max(500).optional(),
   features: z.array(z.string()).default([]),
   images: z
     .array(
@@ -135,7 +138,7 @@ export const leadSchema = z
     phone: z.string().optional(),
     email: z.string().optional(),
     message: z.string().min(5, "กรุณากรอกข้อความอย่างน้อย 5 ตัวอักษร"),
-    source: z.enum(["contact", "property", "ai-search"]).default("contact"),
+    source: z.enum(["contact", "property", "ai-search", "feedback", "agent_interest"]).default("contact"),
     contactMode: z.enum(["agent_team", "owner_direct"]).optional(),
     propertySlug: z.string().optional(),
     propertyTitle: z.string().optional(),
@@ -144,6 +147,7 @@ export const leadSchema = z
     posterRole: z.string().optional(),
     viewingDate: z.string().optional(),
     viewingTime: z.string().optional(),
+    agentType: z.enum(["team", "freelance", "company"]).optional(),
   })
   .superRefine((data, ctx) => {
     const phone = data.phone?.trim() ?? "";
@@ -153,6 +157,13 @@ export const leadSchema = z
         code: "custom",
         message: "กรุณากรอกเบอร์โทรหรืออีเมลเพื่อให้เราติดต่อกลับ",
         path: ["phone"],
+      });
+    }
+    if (data.source === "agent_interest" && !data.agentType) {
+      ctx.addIssue({
+        code: "custom",
+        message: "กรุณาเลือกประเภทเอเจนต์",
+        path: ["agentType"],
       });
     }
   });

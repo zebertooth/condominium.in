@@ -1,5 +1,14 @@
+import type { PropertyCategory } from "@/lib/property-types";
+
 export type ListingType = "sale" | "rent";
-export type PropertyType = "condo" | "house" | "townhouse" | "apartment";
+export type PropertyType =
+  | "condo"
+  | "apartment"
+  | "house"
+  | "townhouse"
+  | "land"
+  | "commercial"
+  | "npa";
 
 export interface ListingPoster {
   userId: string;
@@ -24,6 +33,8 @@ export interface Property {
   bedrooms: number;
   bathrooms: number;
   areaSqm: number;
+  /** Land plot size in square wah (ตร.ว.) */
+  landSqWah?: number;
   floor?: number;
   district: string;
   districtEn: string;
@@ -33,9 +44,15 @@ export interface Property {
   address: string;
   latitude?: number;
   longitude?: number;
+  /** NPA / bank foreclosure listing */
+  npaBank?: string;
+  npaReferenceUrl?: string;
   features: string[];
   images: string[];
   status?: "pending" | "published" | "rejected" | "deleted";
+  /** Admin recheck queue — listing may still be published */
+  needsReview?: boolean;
+  moderationFlags?: string[];
   featured: boolean;
   publishedAt: string;
   /** Set for user-submitted listings */
@@ -53,6 +70,8 @@ export interface Property {
   contactClicksCount30d?: number;
   /** ISO date — active sponsored placement expiry */
   sponsoredUntil?: string;
+  /** Sample listing from src/lib/properties.ts — hidden when real inventory is enough */
+  isDemo?: boolean;
 }
 
 export interface AreaGuide {
@@ -95,6 +114,8 @@ export interface BlogPost {
 
 export interface SearchFilters {
   listingType?: ListingType;
+  propertyCategory?: PropertyCategory;
+  propertyType?: PropertyType;
   district?: string;
   btsStation?: string;
   minPrice?: number;
@@ -106,6 +127,7 @@ export interface SearchFilters {
 export interface AISearchRequest {
   query: string;
   listingType?: ListingType;
+  propertyCategory?: PropertyCategory;
 }
 
 export interface AISearchResult {

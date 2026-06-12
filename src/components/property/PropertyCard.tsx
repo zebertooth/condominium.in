@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatPrice, t, type Locale, defaultLocale } from "@/lib/i18n";
 import { formatNearbyStation } from "@/lib/locations";
 import { localizedPropertyDistrict, localizedPropertyTitle } from "@/lib/property-i18n";
+import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
 import type { Property } from "@/types/property";
 
 export function PropertyCard({ property, locale = defaultLocale }: { property: Property; locale?: Locale }) {
@@ -20,6 +21,11 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
             sizes="(max-width: 768px) 100vw, 33vw"
           />
           <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+            {property.isDemo && (
+              <span className="rounded-full bg-amber-500 px-2.5 py-1 text-xs font-medium text-white">
+                {t("demoListingBadge", locale)}
+              </span>
+            )}
             {property.featured && (
               <span className="rounded-full bg-violet-600 px-2.5 py-1 text-xs font-medium text-white">
                 {t("statusFeatured", locale)}
@@ -27,6 +33,9 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
             )}
             <span className="rounded-full bg-teal-600 px-2.5 py-1 text-xs font-medium text-white">
               {property.listingType === "rent" ? t("rent", locale) : t("sale", locale)}
+            </span>
+            <span className="rounded-full bg-slate-800 px-2.5 py-1 text-xs font-medium text-white">
+              {propertyTypeLabel(property.propertyType, locale)}
             </span>
             {property.btsStation && (
               <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-slate-800">
@@ -46,10 +55,18 @@ export function PropertyCard({ property, locale = defaultLocale }: { property: P
           <p className="mt-1 text-sm text-slate-500">
             {district} · {property.btsStation ? formatNearbyStation(property.btsStation) : property.address}
           </p>
-          <div className="mt-3 flex gap-4 text-sm text-slate-600">
-            <span>{property.bedrooms} {t("bedrooms", locale)}</span>
-            <span>{property.bathrooms} {t("bathrooms", locale)}</span>
-            <span>{property.areaSqm} {t("sqm", locale)}</span>
+          <div className="mt-3 flex flex-wrap gap-4 text-sm text-slate-600">
+            {showsRoomCounts(property.propertyType) && (
+              <>
+                <span>{property.bedrooms} {t("bedrooms", locale)}</span>
+                <span>{property.bathrooms} {t("bathrooms", locale)}</span>
+              </>
+            )}
+            {property.landSqWah ? (
+              <span>{property.landSqWah} {t("sqWah", locale)}</span>
+            ) : (
+              <span>{property.areaSqm} {t("sqm", locale)}</span>
+            )}
           </div>
         </div>
       </Link>

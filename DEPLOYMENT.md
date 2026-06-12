@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 29):** Live at **https://www.condominium.in.th**. Phase 6b complete (brand, SEO admin, AdSense scaffold). Phase 7 next: user listing DB i18n.
+**Current status (session 30):** Live at **https://www.condominium.in.th**. Phase 6c/6d complete (categories, demo policy, agent sections). **Phase C next:** CSV import + `/npa` hub. Phase 7: user listing DB i18n.
 
 ---
 
@@ -210,7 +210,7 @@ To add/change domains: Vercel → Project → Domains.
 - **LINE Developing channel** only allows Testers until channel is Published (no troubleshooting UI shown to users).
 - **Pending listings** return 404 publicly until admin approves; owner can preview when logged in.
 - **Cookie consent:** GA4 and AdSense scripts load only after “Accept all”. Essential cookies always on.
-- **SiteSettings:** Default row seeded on `db:seed`; migrations `20260612190000_site_settings`, `20260612210000_adsense_slots`, `20260612180000_password_reset_token`.
+- **SiteSettings:** Default row seeded on `db:seed`; migrations include `20260612190000_site_settings`, `20260612210000_adsense_slots`, `20260612180000_password_reset_token`, `20260614000000_property_categories`, `20260614120000_lead_agent_type`, `20260614140000_team_agent_category`.
 - **Rotate Neon password** if connection string was shared in chat.
 
 ---

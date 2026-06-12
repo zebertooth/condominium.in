@@ -31,12 +31,22 @@ export function AdminPropertyTable({ properties }: { properties: AdminProperty[]
     [t],
   );
 
-  async function updateStatus(id: string, status: string) {
+  const flagLabel = useMemo(
+    () => ({
+      new_listing: t("moderationFlagNew"),
+      edited: t("moderationFlagEdited"),
+      profanity: t("moderationFlagProfanity"),
+      legacy_pending: t("moderationFlagLegacy"),
+    }),
+    [t],
+  );
+
+  async function patchProperty(id: string, body: Record<string, unknown>) {
     setLoading(id);
     await fetch(`/api/admin/properties/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(body),
     });
     setLoading(null);
     router.refresh();
@@ -84,14 +94,6 @@ export function AdminPropertyTable({ properties }: { properties: AdminProperty[]
           <button
             type="button"
             disabled={bulkLoading}
-            onClick={() => bulkUpdate("published")}
-            className="rounded bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
-          >
-            {t("adminApproveSelected")}
-          </button>
-          <button
-            type="button"
-            disabled={bulkLoading}
             onClick={() => bulkUpdate("rejected")}
             className="rounded bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
@@ -125,81 +127,123 @@ export function AdminPropertyTable({ properties }: { properties: AdminProperty[]
             </tr>
           </thead>
           <tbody>
-            {properties.map((p) => (
-              <tr key={p.id} className="border-b last:border-0">
-                <td className="px-4 py-3">
-                  <input
-                    type="checkbox"
-                    checked={selected.has(p.id)}
-                    onChange={() => toggle(p.id)}
-                    aria-label={p.title}
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  <Link href={`/property/${p.slug}`} className="font-medium text-teal-700 hover:underline">
-                    {p.title}
-                  </Link>
-                  <p className="text-xs text-slate-500">{formatPrice(p.price, p.priceUnit)}</p>
-                </td>
-                <td className="px-4 py-3">
-                  <p>{p.ownerName}</p>
-                  <p className="text-xs text-slate-500">{p.ownerPhone ?? p.ownerEmail}</p>
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-2 py-1 text-xs font-medium ${
-                      p.status === "pending"
-                        ? "bg-amber-100 text-amber-800"
-                        : p.status === "published"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-slate-100 text-slate-700"
-                    }`}
-                  >
-                    {statusLabel[p.status ?? "pending"] ?? p.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-1">
+            {properties.map((p) => {
+              const hasProfanity = p.moderationFlags?.includes("profanity");
+              return (
+                <tr
+                  key={p.id}
+                  className={`border-b last:border-0 ${hasProfanity ? "bg-red-50/60" : ""}`}
+                >
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(p.id)}
+                      onChange={() => toggle(p.id)}
+                      aria-label={p.title}
+                    />
+                  </td>
+                  <td className="px-4 py-3">
                     <Link
-                      href={`/admin/properties/${p.id}/edit`}
-                      className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                      href={`/property/${p.slug}`}
+                      className="font-medium text-teal-700 hover:underline"
                     >
-                      {t("editBtn")}
+                      {p.title}
                     </Link>
-                    {p.status === "pending" && (
-                      <>
+                    <p className="text-xs text-slate-500">{formatPrice(p.price, p.priceUnit)}</p>
+                    {p.moderationFlags && p.moderationFlags.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {p.moderationFlags.map((flag) => (
+                          <span
+                            key={flag}
+                            className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                              flag === "profanity"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-amber-100 text-amber-800"
+                            }`}
+                          >
+                            {flagLabel[flag as keyof typeof flagLabel] ?? flag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <p>{p.ownerName}</p>
+                    <p className="text-xs text-slate-500">{p.ownerPhone ?? p.ownerEmail}</p>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={`inline-flex w-fit rounded-full px-2 py-1 text-xs font-medium ${
+                          p.status === "pending"
+                            ? "bg-amber-100 text-amber-800"
+                            : p.status === "published"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-slate-100 text-slate-700"
+                        }`}
+                      >
+                        {statusLabel[p.status ?? "published"] ?? p.status}
+                      </span>
+                      {p.needsReview && p.status === "published" && (
+                        <span className="inline-flex w-fit rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-900">
+                          {t("adminNeedsReviewBadge")}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      <Link
+                        href={`/admin/properties/${p.id}/edit`}
+                        className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                      >
+                        {t("editBtn")}
+                      </Link>
+                      {p.needsReview && (
                         <button
                           type="button"
                           disabled={loading === p.id}
-                          onClick={() => updateStatus(p.id, "published")}
+                          onClick={() => patchProperty(p.id, { needsReview: false })}
+                          className="rounded bg-slate-700 px-2 py-1 text-xs text-white hover:bg-slate-800"
+                        >
+                          {t("adminMarkReviewed")}
+                        </button>
+                      )}
+                      {p.status === "pending" && (
+                        <button
+                          type="button"
+                          disabled={loading === p.id}
+                          onClick={() => patchProperty(p.id, { status: "published", needsReview: false })}
                           className="rounded bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700"
                         >
                           {t("adminApprove")}
                         </button>
+                      )}
+                      {(p.status === "published" || p.status === "pending") && (
                         <button
                           type="button"
                           disabled={loading === p.id}
-                          onClick={() => updateStatus(p.id, "rejected")}
+                          onClick={() => patchProperty(p.id, { status: "rejected" })}
                           className="rounded bg-red-600 px-2 py-1 text-xs text-white hover:bg-red-700"
                         >
                           {t("adminReject")}
                         </button>
-                      </>
-                    )}
-                    {p.status === "published" && (
-                      <button
-                        type="button"
-                        disabled={loading === p.id}
-                        onClick={() => updateStatus(p.id, "deleted")}
-                        className="rounded border border-red-300 px-2 py-1 text-xs text-red-700"
-                      >
-                        {t("adminUnpublish")}
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      )}
+                      {p.status === "published" && (
+                        <button
+                          type="button"
+                          disabled={loading === p.id}
+                          onClick={() => patchProperty(p.id, { status: "deleted" })}
+                          className="rounded border border-red-300 px-2 py-1 text-xs text-red-700"
+                        >
+                          {t("adminUnpublish")}
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

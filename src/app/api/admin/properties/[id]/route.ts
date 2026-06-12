@@ -44,12 +44,15 @@ export async function PUT(request: Request, context: RouteContext) {
         bedrooms: data.bedrooms,
         bathrooms: data.bathrooms,
         areaSqm: data.areaSqm,
+        landSqWah: data.landSqWah,
         floor: data.floor,
         district: data.district,
         btsStation: data.btsStation,
         address: data.address,
         latitude: data.latitude,
         longitude: data.longitude,
+        npaBank: data.npaBank,
+        npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
       },
@@ -68,18 +71,35 @@ export async function PATCH(request: Request, context: RouteContext) {
   try {
     await requireAdmin();
     const { id } = await context.params;
-    const { status } = (await request.json()) as { status?: string };
+    const body = (await request.json()) as { status?: string; needsReview?: boolean };
 
-    if (!status || !["pending", "published", "rejected", "deleted"].includes(status)) {
-      return NextResponse.json({ error: "สถานะไม่ถูกต้อง" }, { status: 400 });
+    const data: { status?: string; needsReview?: boolean; moderationFlags?: string } = {};
+
+    if (body.status !== undefined) {
+      if (!["pending", "published", "rejected", "deleted"].includes(body.status)) {
+        return NextResponse.json({ error: "สถานะไม่ถูกต้อง" }, { status: 400 });
+      }
+      data.status = body.status;
+      if (body.status === "rejected" || body.status === "deleted") {
+        data.needsReview = false;
+        data.moderationFlags = "[]";
+      }
+    }
+
+    if (body.needsReview === false) {
+      data.needsReview = false;
+    }
+
+    if (Object.keys(data).length === 0) {
+      return NextResponse.json({ error: "ไม่มีข้อมูลที่จะอัปเดต" }, { status: 400 });
     }
 
     const property = await prisma.userProperty.update({
       where: { id },
-      data: { status },
+      data,
     });
 
-    return NextResponse.json({ property });
+    return NextResponse.json({ property: dbPropertyToListing(property) });
   } catch (error) {
     return adminRouteError(error, "อัปเดตไม่สำเร็จ");
   }

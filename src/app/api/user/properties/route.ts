@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { buildModerationUpdate } from "@/lib/listing-moderation";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing, uniqueSlug } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -76,6 +77,15 @@ export async function POST(request: Request) {
     const slug = await uniqueSlug(data.title);
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
 
+    const moderation = buildModerationUpdate(
+      {
+        title: data.title,
+        description: data.description,
+        highlights: data.highlights,
+      },
+      "new_listing",
+    );
+
     const property = await prisma.userProperty.create({
       data: {
         userId: user.id,
@@ -90,16 +100,20 @@ export async function POST(request: Request) {
         bedrooms: data.bedrooms,
         bathrooms: data.bathrooms,
         areaSqm: data.areaSqm,
+        landSqWah: data.landSqWah,
         floor: data.floor,
         district: data.district,
         btsStation: data.btsStation,
         address: data.address,
         latitude: data.latitude,
         longitude: data.longitude,
+        npaBank: data.npaBank,
+        npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
         agentManaged: user.role === "user" ? (data.agentManaged ?? false) : false,
-        status: "pending",
+        status: "published",
+        ...moderation,
       },
     });
 
@@ -108,7 +122,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       property: dbPropertyToListing(property),
       quota: updatedQuota,
-      message: "ส่งประกาศแล้ว รอแอดมินอนุมัติก่อนเผยแพร่",
+      message: "ประกาศเผยแพร่แล้ว ทีมงานจะตรวจสอบภายหลัง",
     });
   } catch {
     return NextResponse.json({ error: "ลงประกาศไม่สำเร็จ" }, { status: 500 });

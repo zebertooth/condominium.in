@@ -29,6 +29,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         name: data.name,
         role: data.role,
         roleEn: data.roleEn ?? "",
+        agentCategory: data.agentCategory,
         areas: JSON.stringify(data.areas),
         languages: JSON.stringify(data.languages),
         deals: data.deals,

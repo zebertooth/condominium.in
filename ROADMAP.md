@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 29 — brand, SEO admin, AdSense, favicon)  
-**Current phase:** **Phase 7** — user listing DB i18n → optional URL locale routing
+**Last updated:** 2026-06-10 (session 30 — categories, demo policy, agent sections)  
+**Current phase:** **Phase C** — inventory tools (`/npa`, CSV import) → then **Phase 7** user listing DB i18n
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -17,18 +17,17 @@
 
 ---
 
-## Model transfer snapshot (session 29)
+## Model transfer snapshot (session 30)
 
 | Area | State |
 |------|--------|
-| **GitHub** | `main` @ `59711b7` (+ session 29 favicon if not yet pushed) |
-| **Production** | https://www.condominium.in.th — OTP/LINE verified OK |
-| **Brand** | DD-style `SiteLogo` + teal building mark; favicon `src/app/icon.svg` |
-| **SEO admin** | `/admin/seo` — home title/description/keywords + AdSense slot IDs in DB |
-| **AdSense** | 9 placements; script + slots gated on cookie “Accept all” |
-| **Auth/legal** | Forgot/reset password, `/privacy`, `/terms`, cookie consent |
-| **SMS** | ThaiBulkSMS sender `CDMNINTH` — user to verify production delivery |
-| **Next** | Phase 7: user listing title/description per locale in DB |
+| **GitHub** | `main` — session 30 work local (categories, agents, feedback) |
+| **Production** | https://www.condominium.in.th — highlights shipped (`a7222a6`) |
+| **Listings** | 7 property types (condo, apartment, house, townhouse, land, commercial, npa) + category filter on buy/rent |
+| **Demo policy** | Static demos hidden when ≥3 published user listings (`src/lib/demo-listings.ts`) |
+| **Agents** | `/admin/agents` — applications + profiles by **team / freelance / company** |
+| **Feedback** | Floating widget (feedback + agent signup tabs); `/agents#join-agent` |
+| **Next** | **Phase C:** CSV import, agent bulk post, `/npa` hub — then Phase 7 listing i18n |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -66,7 +65,10 @@ Bangkok condo/house marketplace with:
 | **5** | Native ZH/JA/AR content (areas, blog, static listings) | **Done** | 2027 Q1 |
 | **6** | Auth recovery, legal, cookie consent | **Done** | 2027 Q1 |
 | **6b** | Brand logo, SEO admin, AdSense, favicon | **Done** (session 29) | 2027 Q1 |
-| **7** | User listing DB i18n + optional URL routing | **Next** | 2027 Q1 |
+| **6c** | Property categories, demo hide, highlights, feedback widget | **Done** (session 30) | 2027 Q1 |
+| **6d** | Agent signup + admin sections (team/freelance/company) | **Done** (session 30) | 2027 Q1 |
+| **C** | CSV import, `/npa` hub, real inventory scale | **Next** | 2027 Q1 |
+| **7** | User listing DB i18n + optional URL routing | Planned | 2027 Q1 |
 
 ---
 
@@ -386,7 +388,66 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 7 — User listing i18n (NEXT)
+## Phase 6c — Categories, demos & feedback (DONE — session 30)
+
+**Goal:** DDproperty-style listing types, smarter AI search text, hide demos when real inventory exists, capture feedback and agent interest.
+
+### Property categories (Phase A)
+- [x] Expand `propertyType`: condo, apartment, house, townhouse, land, commercial, npa
+- [x] Fields: `landSqWah`, `npaBank`, `npaReferenceUrl`, `highlights` (nearby POI text for AI)
+- [x] Migration `20260614000000_property_categories`
+- [x] `src/lib/property-types.ts` + category filter on `/buy` and `/rent`
+- [x] Post form type selector + conditional fields
+- [x] AI search + listings filter by category
+
+### Demo listing policy (Phase B)
+- [x] `isDemo: true` on static listings in `src/lib/properties.ts`
+- [x] `src/lib/demo-listings.ts` — hide demos when published user count ≥ 3
+- [x] Demo badge/banner, empty-state CTA, health check `demoListings` status
+
+### Feedback & outreach
+- [x] `FloatingFeedbackWidget` — bottom-corner feedback + agent signup tabs
+- [x] Lead sources: `feedback`, `agent_interest`
+- [x] `/agents#join-agent` with `AgentInterestForm`
+- [x] Migration `20260614120000_lead_agent_type` — `Lead.agentType`
+
+---
+
+## Phase 6d — Agent categories (DONE — session 30)
+
+**Goal:** Separate team, freelance, and company agents on public `/agents` and admin `/admin/agents`.
+
+- [x] `TeamAgent.agentCategory` — `team` | `freelance` | `company` (migration `20260614140000_team_agent_category`)
+- [x] `src/lib/agent-application.ts` — labels, hints, `groupByAgentCategory()`
+- [x] Signup form — applicant picks category; stored on `Lead.agentType`
+- [x] `/admin/agents` — **ใบสมัครเอเจนต์** (recent `agent_interest` leads) + **โปรไฟล์บนเว็บ** (tabbed by category)
+- [x] Public `/agents` — profiles grouped by category sections
+- [ ] Link published profiles to real `User` accounts with `role: agent` (Phase 3)
+
+---
+
+## Phase C — Inventory scale (NEXT)
+
+**Goal:** Grow real listing inventory without scraping third-party sites (legal risk). Owner/agent posts + admin tools only.
+
+### Admin & agent tooling
+- [ ] Admin CSV listing import (`/admin/properties/import`) — validate rows, bulk create as `pending`
+- [ ] Agent bulk post UI — paste or upload multiple listings for agents with quota
+- [ ] Optional: licensed feed adapter (future — not DDproperty scrape)
+
+### NPA hub
+- [ ] Dedicated `/npa` page — filter `propertyType=npa`, bank badges, reference links
+- [ ] SEO landing copy for bank-owned / auction inventory
+
+### Ops
+- [ ] Confirm demo hide threshold on production once 3+ real listings published
+- [ ] Seed sample freelance/company agent profiles for empty category sections (optional)
+
+**Do NOT:** scrape or copy listings from DDproperty or competitors — use owner posts, agent CRM, or licensed feeds only.
+
+---
+
+## Phase 7 — User listing i18n (after Phase C)
 
 **Goal:** Owner-submitted listings readable in all 5 locales; optional SEO-friendly URL routing.
 
@@ -453,16 +514,29 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 29+)
+### Next step plan (session 30+)
 
 | Step | Action | Owner | Priority |
 |------|--------|-------|----------|
-| **1** | **Phase 7:** `UserProperty` i18n fields + post/edit UI + display fallback | Agent | **High** |
-| **2** | Push session 29 favicon commit if not on `main` | Agent | Medium |
-| **3** | ThaiBulkSMS production SMS verify | User | Medium |
-| **4** | Set `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo`; AdSense approval | User | Medium |
-| **5** | Optional: OPENAI / SLIPOK / GA4 on Vercel | User | Low |
-| **6** | URL locale routing (`/zh/…`) — after DB i18n | Agent | Low |
+| **1** | **Phase C:** Admin CSV import + agent bulk post + `/npa` hub | Agent | **High** |
+| **2** | Deploy session 30 migrations + push to `main` | Agent | **High** |
+| **3** | **Phase 7:** `UserProperty` i18n fields + post/edit UI | Agent | Medium |
+| **4** | ThaiBulkSMS production SMS verify | User | Medium |
+| **5** | AdSense: `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo` | User | Medium |
+| **6** | Optional: OPENAI / SLIPOK / GA4 on Vercel | User | Low |
+| **7** | URL locale routing (`/zh/…`) — after DB i18n | Agent | Low |
+
+### Done (2026-06-10, session 30 — categories, demos, agent sections)
+```
+Property categories: 7 types + land/NPA fields + highlights for AI search
+Demo hide when ≥3 published user listings; demo badge + health check
+FloatingFeedbackWidget (feedback + agent tabs); Lead.agentType on signup
+/admin/agents: applications section + profile tabs (team / freelance / company)
+Public /agents grouped by agentCategory; i18n agentCategory_* keys
+Migrations: 20260614000000_property_categories, 20260614120000_lead_agent_type,
+  20260614140000_team_agent_category
+All MD files updated for session 30 handoff
+```
 
 ### Done (2026-06-10, session 29 — brand, SEO admin, AdSense, favicon)
 ```
@@ -800,6 +874,10 @@ When starting a new chat/session:
 | SEO | `src/lib/seo.ts`, `src/lib/site-settings.ts`, `src/app/admin/seo`, `src/app/sitemap.ts` |
 | Brand | `src/components/brand/SiteLogo.tsx`, `public/logo.svg`, `src/app/icon.svg` |
 | AdSense | `src/lib/adsense.ts`, `src/components/ads/*`, `SiteSettings` ad slot fields |
+| Property types | `src/lib/property-types.ts`, `PropertyCategoryFilter`, post form |
+| Demo listings | `src/lib/demo-listings.ts`, `src/lib/properties.ts` (`isDemo`) |
+| Agent categories | `src/lib/agent-application.ts`, `/admin/agents`, `/agents` |
+| Feedback widget | `src/components/layout/FloatingFeedbackWidget.tsx` |
 | Password reset | `src/lib/password-reset.ts`, `/api/auth/forgot-password`, `/api/auth/reset-password` |
 | Legal / cookies | `src/lib/content/legal.ts`, `src/components/layout/CookieConsent.tsx` |
 | Areas/Blog content | `src/lib/areas.ts`, `src/lib/blog.ts` |

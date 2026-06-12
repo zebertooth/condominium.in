@@ -8,6 +8,7 @@ export const teamAgentSchema = z.object({
   languages: z.array(z.string()).default([]),
   deals: z.number().int().min(0).max(100000).default(0),
   imageUrl: z.string().optional(),
+  agentCategory: z.enum(["team", "freelance", "company"]).default("team"),
   sortOrder: z.number().int().min(0).max(999).default(0),
   published: z.boolean().default(true),
 });

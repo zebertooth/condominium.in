@@ -22,22 +22,38 @@ export function adminRouteError(error: unknown, fallbackMessage: string) {
 }
 
 export async function getAdminStats() {
-  const [users, properties, pendingProperties, pendingVerifications, newLeads, pendingPayments] =
-    await Promise.all([
-      prisma.user.count(),
-      prisma.userProperty.count({ where: { status: "published" } }),
-      prisma.userProperty.count({ where: { status: "pending" } }),
-      prisma.user.count({
-        where: {
-          idVerified: false,
-          OR: [{ phoneVerified: true }, { emailVerified: true }],
-        },
-      }),
-      prisma.lead.count({ where: { status: "new" } }),
-      prisma.userSubscription.count({
-        where: { paymentStatus: { in: ["pending", "pending_review"] } },
-      }),
-    ]);
+  const [
+    users,
+    properties,
+    reviewProperties,
+    pendingVerifications,
+    newLeads,
+    pendingPayments,
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.userProperty.count({ where: { status: "published" } }),
+    prisma.userProperty.count({
+      where: { needsReview: true, status: { in: ["published", "pending"] } },
+    }),
+    prisma.user.count({
+      where: {
+        idVerified: false,
+        OR: [{ phoneVerified: true }, { emailVerified: true }],
+      },
+    }),
+    prisma.lead.count({ where: { status: "new" } }),
+    prisma.userSubscription.count({
+      where: { paymentStatus: { in: ["pending", "pending_review"] } },
+    }),
+  ]);
 
-  return { users, properties, pendingProperties, pendingVerifications, newLeads, pendingPayments };
+  return {
+    users,
+    properties,
+    reviewProperties,
+    pendingProperties: reviewProperties,
+    pendingVerifications,
+    newLeads,
+    pendingPayments,
+  };
 }

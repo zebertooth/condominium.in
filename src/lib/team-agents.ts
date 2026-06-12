@@ -1,11 +1,13 @@
 import { prisma } from "@/lib/db";
 import { DEFAULT_TEAM_AGENTS } from "@/lib/default-content";
+import type { AgentCategory } from "@/lib/agent-application";
 
 export interface TeamAgentView {
   id: string;
   name: string;
   role: string;
   roleEn: string;
+  agentCategory: AgentCategory;
   areas: string[];
   languages: string[];
   deals: number;
@@ -28,6 +30,7 @@ type DbTeamAgent = {
   name: string;
   role: string;
   roleEn: string;
+  agentCategory: string;
   areas: string;
   languages: string;
   deals: number;
@@ -42,6 +45,7 @@ export function dbTeamAgentToView(row: DbTeamAgent): TeamAgentView {
     name: row.name,
     role: row.role,
     roleEn: row.roleEn,
+    agentCategory: (row.agentCategory as AgentCategory) || "team",
     areas: parseJsonArray(row.areas),
     languages: parseJsonArray(row.languages),
     deals: row.deals,
@@ -66,6 +70,7 @@ export async function getPublishedTeamAgents(): Promise<TeamAgentView[]> {
     name: a.name,
     role: a.role,
     roleEn: a.roleEn,
+    agentCategory: "team" as const,
     areas: a.areas,
     languages: a.languages,
     deals: a.deals,

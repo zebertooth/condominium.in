@@ -52,11 +52,12 @@ model SiteSettings {
 }
 
 model TeamAgent {
-  id        String   @id @default(cuid())
-  name      String
-  role      String
-  roleEn    String   @default("")
-  areas     String   @default("[]")
+  id            String   @id @default(cuid())
+  name          String
+  role          String
+  roleEn        String   @default("")
+  agentCategory String   @default("team")
+  areas         String   @default("[]")
   languages String   @default("[]")
   deals     Int      @default(0)
   imageUrl  String   @default("")
@@ -66,6 +67,7 @@ model TeamAgent {
   updatedAt DateTime @updatedAt
 
   @@index([published, sortOrder])
+  @@index([agentCategory, published, sortOrder])
 }
 
 model BlogArticle {
@@ -141,15 +143,20 @@ model UserProperty {
   bedrooms       Int
   bathrooms      Int
   areaSqm        Float
+  landSqWah      Float?
   floor          Int?
   district       String
   btsStation     String?
   address        String
   latitude       Float?
   longitude      Float?
+  npaBank        String?
+  npaReferenceUrl String?
   features       String    @default("[]")
   images         String    @default("[]")
-  status         String    @default("pending")
+  status         String    @default("published")
+  needsReview    Boolean   @default(false)
+  moderationFlags String   @default("[]")
   isSponsored    Boolean   @default(false)
   sponsoredUntil DateTime?
   agentManaged   Boolean   @default(false)
@@ -158,6 +165,7 @@ model UserProperty {
 
   @@index([userId])
   @@index([status])
+  @@index([needsReview, status])
 }
 
 model Lead {
@@ -167,6 +175,7 @@ model Lead {
   email         String?
   message       String
   source        String   @default("contact")
+  agentType     String?
   contactMode   String   @default("agent_team") // agent_team | owner_direct
   propertySlug  String?
   propertyTitle String?

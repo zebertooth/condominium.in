@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { resolveListingContactMode } from "@/lib/contact-routing";
+import { parseModerationFlags } from "@/lib/listing-moderation";
 import { properties as staticProperties } from "@/lib/properties";
 import type { Property } from "@/types/property";
 
@@ -51,15 +52,20 @@ type DbProperty = {
   bedrooms: number;
   bathrooms: number;
   areaSqm: number;
+  landSqWah: number | null;
   floor: number | null;
   district: string;
   btsStation: string | null;
   address: string;
   latitude: number | null;
   longitude: number | null;
+  npaBank: string | null;
+  npaReferenceUrl: string | null;
   features: string;
   images: string;
   status: string;
+  needsReview?: boolean;
+  moderationFlags?: string;
   isSponsored: boolean;
   sponsoredUntil: Date | null;
   agentManaged: boolean;
@@ -112,6 +118,7 @@ export function dbPropertyToListing(p: DbProperty): Property {
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     areaSqm: p.areaSqm,
+    landSqWah: p.landSqWah ?? undefined,
     floor: p.floor ?? undefined,
     district: p.district,
     districtEn: p.district,
@@ -119,12 +126,16 @@ export function dbPropertyToListing(p: DbProperty): Property {
     address: p.address,
     latitude: p.latitude ?? undefined,
     longitude: p.longitude ?? undefined,
+    npaBank: p.npaBank ?? undefined,
+    npaReferenceUrl: p.npaReferenceUrl ?? undefined,
     features: parseJsonArray(p.features),
     images: parseJsonArray(p.images),
     featured: activeSponsor,
     sponsoredUntil: p.sponsoredUntil?.toISOString() ?? undefined,
     publishedAt: p.createdAt.toISOString().slice(0, 10),
     status: p.status as Property["status"],
+    needsReview: p.needsReview ?? false,
+    moderationFlags: parseModerationFlags(p.moderationFlags),
     poster,
     contactMode: ownerDirect ? "owner_direct" : "agent_team",
     agentManaged,

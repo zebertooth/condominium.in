@@ -41,6 +41,7 @@ export type TeamAgentMinAggregateOutputType = {
   name: string | null
   role: string | null
   roleEn: string | null
+  agentCategory: string | null
   areas: string | null
   languages: string | null
   deals: number | null
@@ -56,6 +57,7 @@ export type TeamAgentMaxAggregateOutputType = {
   name: string | null
   role: string | null
   roleEn: string | null
+  agentCategory: string | null
   areas: string | null
   languages: string | null
   deals: number | null
@@ -71,6 +73,7 @@ export type TeamAgentCountAggregateOutputType = {
   name: number
   role: number
   roleEn: number
+  agentCategory: number
   areas: number
   languages: number
   deals: number
@@ -98,6 +101,7 @@ export type TeamAgentMinAggregateInputType = {
   name?: true
   role?: true
   roleEn?: true
+  agentCategory?: true
   areas?: true
   languages?: true
   deals?: true
@@ -113,6 +117,7 @@ export type TeamAgentMaxAggregateInputType = {
   name?: true
   role?: true
   roleEn?: true
+  agentCategory?: true
   areas?: true
   languages?: true
   deals?: true
@@ -128,6 +133,7 @@ export type TeamAgentCountAggregateInputType = {
   name?: true
   role?: true
   roleEn?: true
+  agentCategory?: true
   areas?: true
   languages?: true
   deals?: true
@@ -230,6 +236,7 @@ export type TeamAgentGroupByOutputType = {
   name: string
   role: string
   roleEn: string
+  agentCategory: string
   areas: string
   languages: string
   deals: number
@@ -268,6 +275,7 @@ export type TeamAgentWhereInput = {
   name?: Prisma.StringFilter<"TeamAgent"> | string
   role?: Prisma.StringFilter<"TeamAgent"> | string
   roleEn?: Prisma.StringFilter<"TeamAgent"> | string
+  agentCategory?: Prisma.StringFilter<"TeamAgent"> | string
   areas?: Prisma.StringFilter<"TeamAgent"> | string
   languages?: Prisma.StringFilter<"TeamAgent"> | string
   deals?: Prisma.IntFilter<"TeamAgent"> | number
@@ -283,6 +291,7 @@ export type TeamAgentOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   roleEn?: Prisma.SortOrder
+  agentCategory?: Prisma.SortOrder
   areas?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   deals?: Prisma.SortOrder
@@ -301,6 +310,7 @@ export type TeamAgentWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"TeamAgent"> | string
   role?: Prisma.StringFilter<"TeamAgent"> | string
   roleEn?: Prisma.StringFilter<"TeamAgent"> | string
+  agentCategory?: Prisma.StringFilter<"TeamAgent"> | string
   areas?: Prisma.StringFilter<"TeamAgent"> | string
   languages?: Prisma.StringFilter<"TeamAgent"> | string
   deals?: Prisma.IntFilter<"TeamAgent"> | number
@@ -316,6 +326,7 @@ export type TeamAgentOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   roleEn?: Prisma.SortOrder
+  agentCategory?: Prisma.SortOrder
   areas?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   deals?: Prisma.SortOrder
@@ -339,6 +350,7 @@ export type TeamAgentScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
   role?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
   roleEn?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
+  agentCategory?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
   areas?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
   languages?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
   deals?: Prisma.IntWithAggregatesFilter<"TeamAgent"> | number
@@ -354,6 +366,7 @@ export type TeamAgentCreateInput = {
   name: string
   role: string
   roleEn?: string
+  agentCategory?: string
   areas?: string
   languages?: string
   deals?: number
@@ -369,6 +382,7 @@ export type TeamAgentUncheckedCreateInput = {
   name: string
   role: string
   roleEn?: string
+  agentCategory?: string
   areas?: string
   languages?: string
   deals?: number
@@ -384,6 +398,7 @@ export type TeamAgentUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   roleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  agentCategory?: Prisma.StringFieldUpdateOperationsInput | string
   areas?: Prisma.StringFieldUpdateOperationsInput | string
   languages?: Prisma.StringFieldUpdateOperationsInput | string
   deals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -399,6 +414,7 @@ export type TeamAgentUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   roleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  agentCategory?: Prisma.StringFieldUpdateOperationsInput | string
   areas?: Prisma.StringFieldUpdateOperationsInput | string
   languages?: Prisma.StringFieldUpdateOperationsInput | string
   deals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -414,6 +430,7 @@ export type TeamAgentCreateManyInput = {
   name: string
   role: string
   roleEn?: string
+  agentCategory?: string
   areas?: string
   languages?: string
   deals?: number
@@ -429,6 +446,7 @@ export type TeamAgentUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   roleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  agentCategory?: Prisma.StringFieldUpdateOperationsInput | string
   areas?: Prisma.StringFieldUpdateOperationsInput | string
   languages?: Prisma.StringFieldUpdateOperationsInput | string
   deals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -444,6 +462,7 @@ export type TeamAgentUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   roleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  agentCategory?: Prisma.StringFieldUpdateOperationsInput | string
   areas?: Prisma.StringFieldUpdateOperationsInput | string
   languages?: Prisma.StringFieldUpdateOperationsInput | string
   deals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -459,6 +478,7 @@ export type TeamAgentCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   roleEn?: Prisma.SortOrder
+  agentCategory?: Prisma.SortOrder
   areas?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   deals?: Prisma.SortOrder
@@ -479,6 +499,7 @@ export type TeamAgentMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   roleEn?: Prisma.SortOrder
+  agentCategory?: Prisma.SortOrder
   areas?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   deals?: Prisma.SortOrder
@@ -494,6 +515,7 @@ export type TeamAgentMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   roleEn?: Prisma.SortOrder
+  agentCategory?: Prisma.SortOrder
   areas?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   deals?: Prisma.SortOrder
@@ -524,6 +546,7 @@ export type TeamAgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   name?: boolean
   role?: boolean
   roleEn?: boolean
+  agentCategory?: boolean
   areas?: boolean
   languages?: boolean
   deals?: boolean
@@ -539,6 +562,7 @@ export type TeamAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   name?: boolean
   role?: boolean
   roleEn?: boolean
+  agentCategory?: boolean
   areas?: boolean
   languages?: boolean
   deals?: boolean
@@ -554,6 +578,7 @@ export type TeamAgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   name?: boolean
   role?: boolean
   roleEn?: boolean
+  agentCategory?: boolean
   areas?: boolean
   languages?: boolean
   deals?: boolean
@@ -569,6 +594,7 @@ export type TeamAgentSelectScalar = {
   name?: boolean
   role?: boolean
   roleEn?: boolean
+  agentCategory?: boolean
   areas?: boolean
   languages?: boolean
   deals?: boolean
@@ -579,7 +605,7 @@ export type TeamAgentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TeamAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "role" | "roleEn" | "areas" | "languages" | "deals" | "imageUrl" | "sortOrder" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["teamAgent"]>
+export type TeamAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "role" | "roleEn" | "agentCategory" | "areas" | "languages" | "deals" | "imageUrl" | "sortOrder" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["teamAgent"]>
 
 export type $TeamAgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TeamAgent"
@@ -589,6 +615,7 @@ export type $TeamAgentPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     name: string
     role: string
     roleEn: string
+    agentCategory: string
     areas: string
     languages: string
     deals: number
@@ -1024,6 +1051,7 @@ export interface TeamAgentFieldRefs {
   readonly name: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly role: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly roleEn: Prisma.FieldRef<"TeamAgent", 'String'>
+  readonly agentCategory: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly areas: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly languages: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly deals: Prisma.FieldRef<"TeamAgent", 'Int'>
