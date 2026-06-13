@@ -19,17 +19,18 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 31)
+## Model transfer snapshot (session 32)
 
 | Item | Detail |
 |------|--------|
 | **Locales** | TH, EN, ZH, JA, AR — UI + native content for areas/blog/static listings |
 | **Search** | Advanced filters (price, beds, BTS, district) + Leaflet map at `/map` |
 | **Favorites** | `SavedProperty` model; heart icon on cards; `/dashboard/saved` |
-| **Alerts** | `SearchAlert` model; create from filters; `/dashboard/alerts` |
+| **Alerts** | `SearchAlert` model; create from filters; `/dashboard/alerts` (email cron pending) |
 | **Tools** | Mortgage calculator on sale listings + `/tools/mortgage-calculator` |
-| **Admin** | CSV import at `/admin/import` for bulk listing upload |
-| **Next** | Phase L3: project pages, price history, agent reviews, social login |
+| **Projects** | `Project` model; `/projects`, `/projects/[slug]`, admin CRUD |
+| **Header/hero** | Text-only nav links; mobile row-2 scroll strip; hero AI showcase |
+| **Next** | Phase L3: price history, alert digests, agent reviews, social login |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -433,11 +434,17 @@ Done / env-gated:
 - [x] Mortgage calculator on sale listings + `/tools/mortgage-calculator`
 - [x] Search alerts (`SearchAlert` + `/dashboard/alerts`)
 
+**Done (session 32 — Phase L3 partial + header/hero UX):**
+- [x] Project pages — `Project` model, `/projects`, `/projects/[slug]`, admin CRUD
+- [x] Header overhaul — text-only nav, mobile row-2 strip, contact beside login, no hamburger
+- [x] Interactive hero AI showcase on homepage
+
 **Next code tasks (Phase L3 → Phase 7):**
-- [ ] Project/development pages (condo project grouping)
 - [ ] Price history logging + area trends
+- [ ] Search alert email digest cron (requires Resend DNS)
 - [ ] Agent reviews / ratings system
 - [ ] Social login (Google, Facebook)
+- [ ] Project badge on property cards
 - [ ] `/npa` hub page for bank-owned inventory
 - [ ] User-submitted listing title/description per locale in DB + post/edit UI (Phase 7)
 - [ ] Optional URL locale routing (`/zh/...`)

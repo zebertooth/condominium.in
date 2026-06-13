@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 31):** Live at **https://www.condominium.in.th**. Phase L1+L2 complete (advanced filters, CSV import, favorites, map search, mortgage calculator, search alerts). **Phase L3 next:** project pages, price history, agent reviews, social login.
+**Current status (session 32):** Live at **https://www.condominium.in.th**. Phase L1+L2 deployed. Phase L3 in progress — project pages done; next: price history, alert email cron, agent reviews, social login.
 
 ---
 

@@ -1,7 +1,7 @@
 # Phase L3 — Growth Features Plan
 
-**Created:** 2026-06-14 (session 31)  
-**Prerequisites:** Phase L1+L2 complete, session 31 migrations deployed
+**Updated:** 2026-06-14 (session 32)  
+**Status:** In progress — project pages complete; price history next
 
 ---
 
@@ -9,189 +9,150 @@
 
 Phase L3 focuses on differentiation and growth features that position Condominium.in.th ahead of competitors like DDproperty and PropertyHub.
 
+**Completed prerequisites:** Phase L1+L2 deployed; session 31 migrations live; header/hero UX (session 32).
+
 ---
 
-## Must-Have Features
+## Progress summary
 
-### 1. Project/Development Pages
-**Goal:** Group listings by condo project (e.g., "The Line Sukhumvit 101", "Noble Ploenchit")
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Project pages | **Done** | Model, admin CRUD, `/projects`, `/projects/[slug]` |
+| Header / hero UX | **Done** | Text nav, mobile row-2 strip, AI showcase, contact beside login |
+| Price history | **Next** | Model + logging + property detail chart |
+| Alert email digests | Planned | Requires Resend DNS + Vercel cron |
+| Agent reviews | Planned | After price history |
+| Social login | Planned | Google first, then Facebook |
+| NPA hub | Optional | `/npa` when inventory exists |
+
+---
+
+## 1. Project/Development Pages — DONE
+
+- [x] `Project` model + `UserProperty.projectId`
+- [x] `/admin/projects` — CRUD
+- [x] `/projects` listing + `/projects/[slug]` detail
+- [ ] Project badge on `PropertyCard` when linked (polish)
+- [ ] Project picker in owner post/edit form (if not wired)
+
+---
+
+## 2. Price History Logging — NEXT (High priority)
+
+**Goal:** Track listing price changes for transparency and SEO trust signals.
 
 **Database:**
-- `Project` model: name, developer, location, amenities, totalUnits, completionDate
-- Add `projectId` to `UserProperty`
-- Migration for new model + foreign key
+- `PriceHistory` model: `propertyId`, `price`, `listingType`, `changeType`, `createdAt`
+- Log on create + whenever admin/owner updates price
 
 **Frontend:**
-- `/projects` — listing of all projects (filter by area/developer)
-- `/projects/[slug]` — project detail with units for sale/rent
-- Project badge on `PropertyCard` when part of a project
-
-**Admin:**
-- `/admin/projects` — CRUD for projects
-- Project picker in post/edit listing form
-
-**Priority:** HIGH (major competitor feature)
-
-### 2. Price History Logging
-**Goal:** Track listing price changes over time for transparency
-
-**Database:**
-- `PriceHistory` model: propertyId, price, date, changeType
-- Trigger on `UserProperty` update to log changes
-
-**Frontend:**
-- Price history chart on property detail page
+- Mini chart or timeline on `/property/[slug]`
 - "Price reduced" badge when recent drop
-- Optional: `/trends` or `/market` page with area aggregates
+- Optional later: `/market` area aggregates
 
-**Priority:** HIGH (builds trust)
+**Est. effort:** 4–6 hours
 
 ---
 
-## Should-Have Features
+## 3. Search Alert Email Digests — High priority
 
-### 3. Agent Reviews / Ratings
-**Goal:** Allow buyers to rate agents after transactions
-
-**Database:**
-- `AgentReview` model: agentId, userId, rating (1-5), comment, status
-- Link `TeamAgent` to real `User` accounts
-
-**Frontend:**
-- Review form after lead status = "closed"
-- Agent profile page with star rating display
-- Review moderation in admin
-
-**Priority:** MEDIUM (requires completed transactions)
-
-### 4. Social Login
-**Goal:** Reduce friction for user registration
+**Goal:** Make `/dashboard/alerts` useful — notify users of new matching listings.
 
 **Implementation:**
-- Google OAuth (NextAuth or custom)
+1. User configures Resend DNS + `RESEND_API_KEY` / `EMAIL_FROM` on Vercel
+2. Vercel cron (daily + weekly) → query active `SearchAlert` rows
+3. Run filter logic against new listings since `lastSentAt`
+4. Send digest via `sendEmail()` from `src/lib/notifications.ts`
+5. Update `lastSentAt`
+
+**Est. effort:** 3–4 hours (code) + user DNS setup
+
+---
+
+## 4. Agent Reviews / Ratings — Medium priority
+
+**Goal:** Buyer ratings after closed leads; display on agent profiles.
+
+**Database:** `AgentReview` — agentId, userId, rating 1–5, comment, status  
+**Frontend:** Review prompt when lead → closed; stars on `/agents` profiles  
+**Admin:** Moderation queue
+
+**Dependency:** Link `TeamAgent` to real `User` accounts (Phase 3 carryover)
+
+**Est. effort:** 6–8 hours
+
+---
+
+## 5. Social Login — Medium priority
+
+**Goal:** Lower registration friction for expat buyers.
+
+- Google OAuth (custom or NextAuth)
 - Facebook OAuth
-- Keep LINE Login as primary for Thai users
-- Link social accounts to existing email accounts
+- Keep LINE Login primary for Thai users
+- Merge accounts by email when possible
 
-**Priority:** MEDIUM (UX improvement)
-
----
-
-## Nice-to-Have Features
-
-### 5. NPA Hub Page
-**Goal:** Dedicated page for bank-owned / auction properties
-
-**Frontend:**
-- `/npa` — filter `propertyType=npa`
-- Bank badges, reference links
-- SEO landing copy
-
-**Priority:** LOW (requires NPA inventory first)
-
-### 6. Virtual Tours / Video
-**Goal:** Embed video tours for premium listings
-
-**Implementation:**
-- `UserProperty.videoUrl` field
-- YouTube/Vimeo embed on detail page
-- Optional: 360° viewer integration
-
-**Priority:** LOW (nice-to-have)
-
-### 7. In-App Messaging
-**Goal:** Real-time chat between buyers and owners/agents
-
-**Implementation:**
-- Message model (sender, receiver, listing, content)
-- WebSocket or polling for real-time
-- Push notifications
-
-**Priority:** LOW (complex, requires infrastructure)
+**Est. effort:** 6–8 hours
 
 ---
 
-## Implementation Order
+## 6. Optional polish
 
-| Step | Feature | Est. Effort | Priority |
-|------|---------|-------------|----------|
-| 1 | Deploy session 31 + smoke test | 1h | CRITICAL |
-| 2 | Configure Resend email (DNS + env) | 2h | HIGH |
-| 3 | Project/Development model + admin CRUD | 4h | HIGH |
-| 4 | Project pages (`/projects`, `/projects/[slug]`) | 4h | HIGH |
-| 5 | Link listings to projects (UI) | 2h | HIGH |
-| 6 | PriceHistory model + logging | 2h | HIGH |
-| 7 | Price chart on property detail | 3h | HIGH |
-| 8 | Agent reviews model + admin | 3h | MEDIUM |
-| 9 | Agent profile pages | 2h | MEDIUM |
-| 10 | Social login (Google) | 4h | MEDIUM |
-| 11 | Social login (Facebook) | 2h | MEDIUM |
-| 12 | NPA hub page | 2h | LOW |
+| Item | Effort | When |
+|------|--------|------|
+| `/npa` hub page | 2h | When NPA inventory ≥5 listings |
+| Virtual tour / video URL on listings | 2h | Low priority |
+| In-app messaging | Large | Phase 8+ |
 
 ---
 
-## Database Schema Preview
+## Recommended build order (session 32+)
 
-```prisma
-model Project {
-  id            String   @id @default(cuid())
-  name          String
-  nameEn        String?
-  slug          String   @unique
-  developer     String
-  location      String
-  district      String?
-  btsStation    String?
-  amenities     String?  // JSON array
-  totalUnits    Int?
-  completionDate DateTime?
-  imageUrl      String?
-  description   String?
-  descriptionEn String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  properties    UserProperty[]
-}
+```
+Week 1 — Trust & retention
+├── PriceHistory model + migration
+├── Log price on create/update (user + admin edit APIs)
+├── Price history UI on property detail
+└── "Price reduced" badge
 
-model PriceHistory {
-  id          String   @id @default(cuid())
-  propertyId  String
-  price       Float
-  changeType  String   // "initial", "reduced", "increased"
-  createdAt   DateTime @default(now())
-  property    UserProperty @relation(fields: [propertyId], references: [id])
-  @@index([propertyId])
-}
+Week 2 — Alerts & engagement
+├── Resend DNS verification (user)
+├── /api/cron/search-alerts (Vercel cron)
+├── Digest email template (TH/EN)
+└── Smoke test alert flow
 
-model AgentReview {
-  id        String   @id @default(cuid())
-  agentId   String   // TeamAgent.id or User.id
-  userId    String
-  rating    Int      // 1-5
-  comment   String?
-  status    String   @default("pending") // pending, approved, rejected
-  createdAt DateTime @default(now())
-  @@index([agentId])
-}
+Week 3 — Social proof
+├── AgentReview model + admin moderation
+├── Review form after lead closed
+└── Star rating on agent profiles
+
+Week 4 — Acquisition
+├── Google OAuth
+├── Facebook OAuth
+└── Account linking by email
 ```
 
 ---
 
-## Success Metrics
+## Success metrics
 
 - Projects: ≥10 active projects with ≥3 listings each
-- Price History: 50% of listings have price changes logged
-- Reviews: ≥20 agent reviews
-- Social Login: 30% of new registrations via Google/Facebook
+- Price history: 50% of user listings have ≥1 price event
+- Alerts: ≥20 active alerts; ≥50% open rate on digests
+- Reviews: ≥20 approved agent reviews
+- Social login: 30% of new registrations via Google/Facebook
 
 ---
 
 ## Dependencies
 
-- **Resend email:** Required for search alerts (must configure first)
-- **Agent accounts:** Agent reviews require linking TeamAgent → User
-- **Real inventory:** Projects need real developer listings to be meaningful
+| Dependency | Blocks | Owner |
+|------------|--------|-------|
+| Resend DNS verified | Alert digests, reliable OTP | User |
+| Real listing inventory | Meaningful price trends | User/agents |
+| Closed leads | Agent reviews | Ops |
+| Google/Facebook app credentials | Social login | User |
 
 ---
 
-*This plan supersedes Phase C. Phase 7 (user listing i18n) moves to after L3.*
+*Phase 7 (user listing i18n) follows L3. See `ROADMAP.md` for full timeline.*

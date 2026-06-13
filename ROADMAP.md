@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 31 — Launch Feature Roadmap L1+L2)  
-**Current phase:** **Phase L3** — growth features (project pages, price history, social login)
+**Last updated:** 2026-06-14 (session 32 — Header/hero UX + L3 project pages)  
+**Current phase:** **Phase L3** — price history, alert emails, agent reviews, social login
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -17,19 +17,16 @@
 
 ---
 
-## Model transfer snapshot (session 31)
+## Model transfer snapshot (session 32)
 
 | Area | State |
 |------|--------|
-| **GitHub** | `main` — session 31 Launch L1+L2 features local |
-| **Production** | https://www.condominium.in.th — deploy pending |
-| **Search** | **Advanced filters** (price, beds, BTS, district) on `/buy` and `/rent` |
-| **Map** | **Leaflet map search** at `/map` with property pins |
-| **Favorites** | **SavedProperty** model + heart icon on cards + `/dashboard/saved` |
-| **Alerts** | **SearchAlert** model + `/dashboard/alerts` + create alert buttons |
-| **Tools** | **Mortgage calculator** on sale listings + `/tools/mortgage-calculator` |
-| **Admin** | **CSV import** at `/admin/import` for bulk listing upload |
-| **Next** | **Phase L3:** project pages, price history, agent reviews, social login |
+| **GitHub** | `main` — L1+L2 + header UX deployed; nav text-only style local |
+| **Production** | https://www.condominium.in.th — auto-deploy on push |
+| **Header** | Two-row mobile (logo/auth row 1, text nav row 2); no hamburger; contact beside login |
+| **Hero** | Interactive AI showcase on homepage (desktop right / mobile below search) |
+| **Projects** | `/projects`, `/projects/[slug]`, admin CRUD — **done** |
+| **Next** | Price history, search alert email cron, agent reviews, social login |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -71,7 +68,7 @@ Bangkok condo/house marketplace with:
 | **6d** | Agent signup + admin sections (team/freelance/company) | **Done** (session 30) | 2027 Q1 |
 | **L1** | Advanced filters, CSV import, real listings inventory | **Done** (session 31) | 2027 Q1 |
 | **L2** | Favorites, map search, mortgage calculator, search alerts | **Done** (session 31) | 2027 Q1 |
-| **L3** | Project pages, price history, agent reviews, social login | **Next** | 2027 Q2 |
+| **L3** | Project pages, price history, agent reviews, social login | **In progress** | 2027 Q2 |
 | **7** | User listing DB i18n + optional URL routing | Planned | 2027 Q2 |
 
 ---
@@ -487,15 +484,15 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase L3 — Growth Features (NEXT)
+## Phase L3 — Growth Features (IN PROGRESS)
 
 **Goal:** Differentiation and advanced features.
 
 ### Project/Development Pages
-- [ ] `Project` model — name, developer, location, amenities
-- [ ] Link `UserProperty` to projects
-- [ ] `/projects` listing page + `/projects/[slug]` detail
-- [ ] Group listings by project on property cards
+- [x] `Project` model — name, developer, location, amenities
+- [x] Link `UserProperty` to projects (`projectId`)
+- [x] `/projects` listing page + `/projects/[slug]` detail
+- [~] Group listings by project on property cards (badge when linked)
 
 ### Price History / Trends
 - [ ] `PriceHistory` model — track listing price changes
@@ -591,18 +588,33 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 31+)
+### Next step plan (session 32+)
 
 | Step | Action | Owner | Priority |
 |------|--------|-------|----------|
-| **1** | **Deploy:** Run migrations + push to `main` + `vercel --prod` | Agent | **High** |
-| **2** | **Test:** Full user flow with new features (filters, favorites, map, alerts) | Agent | **High** |
-| **3** | **Resend:** Configure email (DNS + Vercel env) for OTP/alerts | User | **High** |
-| **4** | **Phase L3:** Project pages for condo developments | Agent | Medium |
-| **5** | **Phase L3:** Price history logging + trends | Agent | Medium |
-| **6** | **Phase 7:** `UserProperty` i18n fields + post/edit UI | Agent | Medium |
-| **7** | ThaiBulkSMS / AdSense / GA4 production setup | User | Medium |
-| **8** | Social login (Google, Facebook) | Agent | Low |
+| **1** | **Price history:** `PriceHistory` model + log on edit + chart on detail | Agent | **High** |
+| **2** | **Alert digests:** Vercel cron + Resend email (DNS + env) | Agent + User | **High** |
+| **3** | **Agent reviews:** `AgentReview` model + admin moderation | Agent | Medium |
+| **4** | **Social login:** Google OAuth, then Facebook | Agent | Medium |
+| **5** | Project badge on `PropertyCard` when `projectId` set | Agent | Low |
+| **6** | `/npa` hub page + area trends `/market` | Agent | Low |
+| **7** | Phase 7: `UserProperty` i18n fields + post/edit UI | Agent | Medium |
+| **8** | ThaiBulkSMS / AdSense / GA4 production setup | User | Medium |
+
+### Done (2026-06-14, session 32 — header/hero UX + nav polish)
+```
+Header navigation overhaul:
+- Interactive hero AI showcase (HeroShowcase + hero-showcase.ts)
+- Removed mobile hamburger drawer; row-2 horizontal scroll nav
+- Contact button beside login (icon mobile, label sm+)
+- Nav links text-only (no pill borders); highlight CTA keeps teal gradient
+- Desktop inline centered nav on row 1
+
+Deployed: commit 1d57fa0 (hamburger removal + contact row)
+Local: nav text-only styling (HeaderNav + HeaderMobileNav shared navLinkClass)
+
+All MD files updated for session 32 handoff
+```
 
 ### Done (2026-06-14, session 31 — Launch Feature Roadmap L1+L2)
 ```
@@ -992,6 +1004,8 @@ When starting a new chat/session:
 | **Map search** | `src/components/property/PropertyListingsMap.tsx`, `/map` |
 | **Mortgage calc** | `src/components/property/MortgageCalculator.tsx`, `/tools/mortgage-calculator` |
 | **Search alerts** | `src/app/api/user/alerts`, `CreateAlertButton.tsx`, `/dashboard/alerts` |
+| **Projects** | `src/lib/projects.ts`, `/projects`, `/admin/projects`, `/api/admin/projects` |
+| **Header / hero** | `Header.tsx`, `HeaderNav.tsx`, `HeaderMobileMenu.tsx`, `HeroShowcase.tsx` |
 | DB schema | `prisma/schema.prisma` |
 
 ---

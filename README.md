@@ -12,18 +12,21 @@
 - **Listing highlights** — nearby POI text for smarter AI matching (e.g. schools, malls)
 - **Demo listings** auto-hide when ≥3 real published listings exist
 
-### Search & Discovery (Session 31)
+### Search & Discovery (Session 31+)
 - **Advanced filters** — price range, bedrooms, BTS station, district on buy/rent pages
 - **Map search** — Leaflet map at `/map` with property pins + popups
 - **Save favorites** — heart icon on property cards + `/dashboard/saved`
 - **Search alerts** — subscribe to matching listings + `/dashboard/alerts`
+- **Project pages** — `/projects` + detail pages; admin CRUD at `/admin/projects`
 
-### Tools (Session 31)
+### Tools (Session 31+)
 - **Mortgage calculator** — down payment, interest rate, loan term on sale listings
 - **Standalone calculator** — `/tools/mortgage-calculator`
 - **Admin CSV import** — bulk upload listings at `/admin/import`
 
 ### User Experience
+- **Header nav** — text-only links; mobile two-row layout (scroll nav + login/contact row)
+- **Hero AI showcase** — interactive demo on homepage
 - **Floating feedback widget** — site feedback + agent signup (bottom corner)
 - **Agents page** — profiles grouped by team / freelance / company; signup form at `#join-agent`
 - **Brand logo** — DDproperty-style header + teal building favicon
@@ -64,14 +67,13 @@ Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate when `DA
 
 Health check: `GET https://www.condominium.in.th/api/health`
 
-## Next steps (see ROADMAP.md — Phase L3)
+## Next steps (see ROADMAP.md + PHASE-L3-PLAN.md)
 
-1. **Deploy session 31** — run migrations + push to `main` + `vercel --prod`
-2. **Resend email** — configure DNS + Vercel env for OTP/alerts
-3. **Project pages** — group listings by condo development
-4. **Price history** — track price changes + area trends
-5. **Agent reviews** — ratings system for agents
-6. **Social login** — Google, Facebook OAuth
+1. **Price history** — log listing price changes + chart on property detail
+2. **Search alert emails** — Vercel cron + Resend (DNS + Vercel env)
+3. **Agent reviews** — buyer ratings after closed leads
+4. **Social login** — Google, Facebook OAuth
+5. **Phase 7** — user listing fields per locale in DB
 
 ## Documentation
 
@@ -79,5 +81,6 @@ Health check: `GET https://www.condominium.in.th/api/health`
 |------|---------|
 | [AGENTS.md](./AGENTS.md) | AI agent handoff (start here) |
 | [ROADMAP.md](./ROADMAP.md) | Phase status + session log |
+| [PHASE-L3-PLAN.md](./PHASE-L3-PLAN.md) | Phase L3 build order + priorities |
 | [CLAUDE.md](./CLAUDE.md) | Architecture & API reference |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Vercel + env vars + troubleshooting |
