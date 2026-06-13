@@ -160,12 +160,39 @@ model UserProperty {
   isSponsored    Boolean   @default(false)
   sponsoredUntil DateTime?
   agentManaged   Boolean   @default(false)
+  projectId      String?
+  project        Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
   @@index([userId])
   @@index([status])
   @@index([needsReview, status])
+  @@index([projectId])
+}
+
+model Project {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  nameEn         String    @default("")
+  developer      String
+  location       String
+  district       String    @default("")
+  btsStation     String?
+  amenities      String    @default("[]")
+  totalUnits     Int?
+  completionDate DateTime?
+  imageUrl       String    @default("")
+  description    String    @default("")
+  descriptionEn  String    @default("")
+  published      Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  properties     UserProperty[]
+
+  @@index([published])
+  @@index([district])
 }
 
 model Lead {

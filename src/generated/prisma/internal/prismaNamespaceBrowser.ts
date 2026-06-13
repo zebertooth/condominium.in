@@ -59,6 +59,7 @@ export const ModelName = {
   PhoneOtp: 'PhoneOtp',
   EmailOtp: 'EmailOtp',
   UserProperty: 'UserProperty',
+  Project: 'Project',
   Lead: 'Lead',
   SearchEvent: 'SearchEvent',
   PropertyViewEvent: 'PropertyViewEvent',
@@ -242,11 +243,35 @@ export const UserPropertyScalarFieldEnum = {
   isSponsored: 'isSponsored',
   sponsoredUntil: 'sponsoredUntil',
   agentManaged: 'agentManaged',
+  projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserPropertyScalarFieldEnum = (typeof UserPropertyScalarFieldEnum)[keyof typeof UserPropertyScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  nameEn: 'nameEn',
+  developer: 'developer',
+  location: 'location',
+  district: 'district',
+  btsStation: 'btsStation',
+  amenities: 'amenities',
+  totalUnits: 'totalUnits',
+  completionDate: 'completionDate',
+  imageUrl: 'imageUrl',
+  description: 'description',
+  descriptionEn: 'descriptionEn',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
 export const LeadScalarFieldEnum = {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { ImageGalleryInput } from "@/components/property/ImageGalleryInput";
 import { LocationPicker } from "@/components/property/LocationPicker";
@@ -59,6 +59,17 @@ export function PostPropertyForm({
   const [nearbyStationId, setNearbyStationId] = useState(
     findStationId(initial?.btsStation) || "",
   );
+  const [projectId, setProjectId] = useState(initial?.projectId ?? "");
+  const [projectOptions, setProjectOptions] = useState<
+    { id: string; name: string; nameEn: string }[]
+  >([]);
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => setProjectOptions(data.projects ?? []))
+      .catch(() => setProjectOptions([]));
+  }, []);
 
   function applyCoords(lat: number, lng: number) {
     setLatitude(lat);
@@ -111,6 +122,7 @@ export function PostPropertyForm({
         npaReferenceUrl: String(form.get("npaReferenceUrl") || "") || undefined,
         features: String(form.get("features") || "").split(",").map((f) => f.trim()).filter(Boolean),
         images: finalImages,
+        projectId: projectId || null,
         ...(showAgentManaged ? { agentManaged } : {}),
       }),
     });
@@ -185,6 +197,24 @@ export function PostPropertyForm({
           </select>
         </div>
       </div>
+
+      {projectOptions.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-slate-700">{t("formProject")}</label>
+          <select
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">{t("formProjectNone")}</option>
+            {projectOptions.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.nameEn || project.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>

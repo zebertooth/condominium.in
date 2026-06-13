@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { areaGuides } from "@/lib/areas";
 import { getAllBlogPosts } from "@/lib/blog";
 import { getAllListings } from "@/lib/listings";
+import { getPublishedProjectSlugs } from "@/lib/projects";
 import { siteConfig } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -12,6 +13,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "",
     "/buy",
     "/rent",
+    "/projects",
+    "/map",
     "/areas",
     "/ai-search",
     "/blog",
@@ -52,6 +55,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogPosts = await getAllBlogPosts();
 
+  let projectPages: MetadataRoute.Sitemap = [];
+  if (process.env.DATABASE_URL) {
+    try {
+      const projects = await getPublishedProjectSlugs();
+      projectPages = projects.map((p) => ({
+        url: `${base}/projects/${p.slug}`,
+        lastModified: p.updatedAt,
+        changeFrequency: "weekly" as const,
+        priority: 0.75,
+      }));
+    } catch (error) {
+      console.warn("[sitemap] Could not fetch projects:", error);
+    }
+  }
+
   const blogPages = blogPosts.map((b) => ({
     url: `${base}/blog/${b.slug}`,
     lastModified: new Date(b.publishedAt),
@@ -59,5 +77,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  return [...staticPages, ...areaPages, ...propertyPages, ...blogPages];
+  return [...staticPages, ...areaPages, ...propertyPages, ...projectPages, ...blogPages];
 }

@@ -58,6 +58,11 @@ export type EmailOtp = Prisma.EmailOtpModel
  */
 export type UserProperty = Prisma.UserPropertyModel
 /**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
  * Model Lead
  * 
  */

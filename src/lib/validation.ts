@@ -130,6 +130,7 @@ export const propertySchema = z.object({
     .min(1)
     .max(10),
   agentManaged: z.boolean().optional(),
+  projectId: z.string().optional().nullable(),
 });
 
 export const leadSchema = z

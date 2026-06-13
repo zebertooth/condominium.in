@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
+import { validateProjectId } from "@/lib/projects";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
 
@@ -29,6 +30,7 @@ export async function PUT(request: Request, context: RouteContext) {
 
     const data = parsed.data;
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
+    const projectId = await validateProjectId(data.projectId);
 
     // Admin is the moderator — keep the current status (no reset to pending).
     const property = await prisma.userProperty.update({
@@ -55,6 +57,7 @@ export async function PUT(request: Request, context: RouteContext) {
         npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
+        projectId,
       },
     });
 

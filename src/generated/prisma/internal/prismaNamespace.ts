@@ -392,6 +392,7 @@ export const ModelName = {
   PhoneOtp: 'PhoneOtp',
   EmailOtp: 'EmailOtp',
   UserProperty: 'UserProperty',
+  Project: 'Project',
   Lead: 'Lead',
   SearchEvent: 'SearchEvent',
   PropertyViewEvent: 'PropertyViewEvent',
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription" | "savedProperty" | "searchAlert"
+    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "project" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription" | "savedProperty" | "searchAlert"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1007,6 +1008,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserPropertyCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserPropertyCountAggregateOutputType> | number
+        }
+      }
+    }
+    Project: {
+      payload: Prisma.$ProjectPayload<ExtArgs>
+      fields: Prisma.ProjectFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>
+        }
+        update: {
+          args: Prisma.ProjectUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProject>
+        }
+        groupBy: {
+          args: Prisma.ProjectGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectCountAggregateOutputType> | number
         }
       }
     }
@@ -1725,11 +1800,35 @@ export const UserPropertyScalarFieldEnum = {
   isSponsored: 'isSponsored',
   sponsoredUntil: 'sponsoredUntil',
   agentManaged: 'agentManaged',
+  projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserPropertyScalarFieldEnum = (typeof UserPropertyScalarFieldEnum)[keyof typeof UserPropertyScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  nameEn: 'nameEn',
+  developer: 'developer',
+  location: 'location',
+  district: 'district',
+  btsStation: 'btsStation',
+  amenities: 'amenities',
+  totalUnits: 'totalUnits',
+  completionDate: 'completionDate',
+  imageUrl: 'imageUrl',
+  description: 'description',
+  descriptionEn: 'descriptionEn',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
 export const LeadScalarFieldEnum = {
@@ -2061,6 +2160,7 @@ export type GlobalOmitConfig = {
   phoneOtp?: Prisma.PhoneOtpOmit
   emailOtp?: Prisma.EmailOtpOmit
   userProperty?: Prisma.UserPropertyOmit
+  project?: Prisma.ProjectOmit
   lead?: Prisma.LeadOmit
   searchEvent?: Prisma.SearchEventOmit
   propertyViewEvent?: Prisma.PropertyViewEventOmit

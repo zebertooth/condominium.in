@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { buildModerationUpdate } from "@/lib/listing-moderation";
+import { validateProjectId } from "@/lib/projects";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -38,6 +39,7 @@ export async function PUT(request: Request, context: RouteContext) {
 
     const data = parsed.data;
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
+    const projectId = await validateProjectId(data.projectId);
     const moderation = buildModerationUpdate(
       {
         title: data.title,
@@ -72,6 +74,7 @@ export async function PUT(request: Request, context: RouteContext) {
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
         agentManaged: user.role === "user" ? (data.agentManaged ?? existing.agentManaged) : false,
+        projectId,
         status: "published",
         ...moderation,
       },

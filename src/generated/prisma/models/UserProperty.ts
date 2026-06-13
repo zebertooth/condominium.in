@@ -79,6 +79,7 @@ export type UserPropertyMinAggregateOutputType = {
   isSponsored: boolean | null
   sponsoredUntil: Date | null
   agentManaged: boolean | null
+  projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -114,6 +115,7 @@ export type UserPropertyMaxAggregateOutputType = {
   isSponsored: boolean | null
   sponsoredUntil: Date | null
   agentManaged: boolean | null
+  projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -149,6 +151,7 @@ export type UserPropertyCountAggregateOutputType = {
   isSponsored: number
   sponsoredUntil: number
   agentManaged: number
+  projectId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -208,6 +211,7 @@ export type UserPropertyMinAggregateInputType = {
   isSponsored?: true
   sponsoredUntil?: true
   agentManaged?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -243,6 +247,7 @@ export type UserPropertyMaxAggregateInputType = {
   isSponsored?: true
   sponsoredUntil?: true
   agentManaged?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -278,6 +283,7 @@ export type UserPropertyCountAggregateInputType = {
   isSponsored?: true
   sponsoredUntil?: true
   agentManaged?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -400,6 +406,7 @@ export type UserPropertyGroupByOutputType = {
   isSponsored: boolean
   sponsoredUntil: Date | null
   agentManaged: boolean
+  projectId: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserPropertyCountAggregateOutputType | null
@@ -458,9 +465,11 @@ export type UserPropertyWhereInput = {
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
+  projectId?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }
 
 export type UserPropertyOrderByWithRelationInput = {
@@ -494,9 +503,11 @@ export type UserPropertyOrderByWithRelationInput = {
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
 }
 
 export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -533,9 +544,11 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
+  projectId?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }, "id" | "slug">
 
 export type UserPropertyOrderByWithAggregationInput = {
@@ -569,6 +582,7 @@ export type UserPropertyOrderByWithAggregationInput = {
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserPropertyCountOrderByAggregateInput
@@ -612,6 +626,7 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   isSponsored?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
 }
@@ -649,6 +664,7 @@ export type UserPropertyCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPropertiesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPropertiesInput
 }
 
 export type UserPropertyUncheckedCreateInput = {
@@ -682,6 +698,7 @@ export type UserPropertyUncheckedCreateInput = {
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -719,6 +736,7 @@ export type UserPropertyUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPropertiesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPropertiesNestedInput
 }
 
 export type UserPropertyUncheckedUpdateInput = {
@@ -752,6 +770,7 @@ export type UserPropertyUncheckedUpdateInput = {
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -787,6 +806,7 @@ export type UserPropertyCreateManyInput = {
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -856,6 +876,7 @@ export type UserPropertyUncheckedUpdateManyInput = {
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -901,6 +922,7 @@ export type UserPropertyCountOrderByAggregateInput = {
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -947,6 +969,7 @@ export type UserPropertyMaxOrderByAggregateInput = {
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -982,6 +1005,7 @@ export type UserPropertyMinOrderByAggregateInput = {
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1055,6 +1079,48 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type UserPropertyCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutProjectInput, Prisma.UserPropertyUncheckedCreateWithoutProjectInput> | Prisma.UserPropertyCreateWithoutProjectInput[] | Prisma.UserPropertyUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutProjectInput | Prisma.UserPropertyCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.UserPropertyCreateManyProjectInputEnvelope
+  connect?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+}
+
+export type UserPropertyUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutProjectInput, Prisma.UserPropertyUncheckedCreateWithoutProjectInput> | Prisma.UserPropertyCreateWithoutProjectInput[] | Prisma.UserPropertyUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutProjectInput | Prisma.UserPropertyCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.UserPropertyCreateManyProjectInputEnvelope
+  connect?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+}
+
+export type UserPropertyUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutProjectInput, Prisma.UserPropertyUncheckedCreateWithoutProjectInput> | Prisma.UserPropertyCreateWithoutProjectInput[] | Prisma.UserPropertyUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutProjectInput | Prisma.UserPropertyCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.UserPropertyUpsertWithWhereUniqueWithoutProjectInput | Prisma.UserPropertyUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.UserPropertyCreateManyProjectInputEnvelope
+  set?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  disconnect?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  delete?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  connect?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  update?: Prisma.UserPropertyUpdateWithWhereUniqueWithoutProjectInput | Prisma.UserPropertyUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.UserPropertyUpdateManyWithWhereWithoutProjectInput | Prisma.UserPropertyUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.UserPropertyScalarWhereInput | Prisma.UserPropertyScalarWhereInput[]
+}
+
+export type UserPropertyUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutProjectInput, Prisma.UserPropertyUncheckedCreateWithoutProjectInput> | Prisma.UserPropertyCreateWithoutProjectInput[] | Prisma.UserPropertyUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutProjectInput | Prisma.UserPropertyCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.UserPropertyUpsertWithWhereUniqueWithoutProjectInput | Prisma.UserPropertyUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.UserPropertyCreateManyProjectInputEnvelope
+  set?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  disconnect?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  delete?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  connect?: Prisma.UserPropertyWhereUniqueInput | Prisma.UserPropertyWhereUniqueInput[]
+  update?: Prisma.UserPropertyUpdateWithWhereUniqueWithoutProjectInput | Prisma.UserPropertyUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.UserPropertyUpdateManyWithWhereWithoutProjectInput | Prisma.UserPropertyUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.UserPropertyScalarWhereInput | Prisma.UserPropertyScalarWhereInput[]
+}
+
 export type UserPropertyCreateWithoutUserInput = {
   id?: string
   slug: string
@@ -1087,6 +1153,7 @@ export type UserPropertyCreateWithoutUserInput = {
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutPropertiesInput
 }
 
 export type UserPropertyUncheckedCreateWithoutUserInput = {
@@ -1119,6 +1186,7 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1183,8 +1251,105 @@ export type UserPropertyScalarWhereInput = {
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
+  projectId?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
+}
+
+export type UserPropertyCreateWithoutProjectInput = {
+  id?: string
+  slug: string
+  title: string
+  description: string
+  highlights?: string
+  listingType: string
+  propertyType?: string
+  price: number
+  priceUnit: string
+  bedrooms: number
+  bathrooms: number
+  areaSqm: number
+  landSqWah?: number | null
+  floor?: number | null
+  district: string
+  btsStation?: string | null
+  address: string
+  latitude?: number | null
+  longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
+  features?: string
+  images?: string
+  status?: string
+  needsReview?: boolean
+  moderationFlags?: string
+  isSponsored?: boolean
+  sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPropertiesInput
+}
+
+export type UserPropertyUncheckedCreateWithoutProjectInput = {
+  id?: string
+  userId: string
+  slug: string
+  title: string
+  description: string
+  highlights?: string
+  listingType: string
+  propertyType?: string
+  price: number
+  priceUnit: string
+  bedrooms: number
+  bathrooms: number
+  areaSqm: number
+  landSqWah?: number | null
+  floor?: number | null
+  district: string
+  btsStation?: string | null
+  address: string
+  latitude?: number | null
+  longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
+  features?: string
+  images?: string
+  status?: string
+  needsReview?: boolean
+  moderationFlags?: string
+  isSponsored?: boolean
+  sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserPropertyCreateOrConnectWithoutProjectInput = {
+  where: Prisma.UserPropertyWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserPropertyCreateWithoutProjectInput, Prisma.UserPropertyUncheckedCreateWithoutProjectInput>
+}
+
+export type UserPropertyCreateManyProjectInputEnvelope = {
+  data: Prisma.UserPropertyCreateManyProjectInput | Prisma.UserPropertyCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserPropertyUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.UserPropertyWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserPropertyUpdateWithoutProjectInput, Prisma.UserPropertyUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.UserPropertyCreateWithoutProjectInput, Prisma.UserPropertyUncheckedCreateWithoutProjectInput>
+}
+
+export type UserPropertyUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.UserPropertyWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserPropertyUpdateWithoutProjectInput, Prisma.UserPropertyUncheckedUpdateWithoutProjectInput>
+}
+
+export type UserPropertyUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.UserPropertyScalarWhereInput
+  data: Prisma.XOR<Prisma.UserPropertyUpdateManyMutationInput, Prisma.UserPropertyUncheckedUpdateManyWithoutProjectInput>
 }
 
 export type UserPropertyCreateManyUserInput = {
@@ -1217,6 +1382,7 @@ export type UserPropertyCreateManyUserInput = {
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
   agentManaged?: boolean
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1253,6 +1419,7 @@ export type UserPropertyUpdateWithoutUserInput = {
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutPropertiesNestedInput
 }
 
 export type UserPropertyUncheckedUpdateWithoutUserInput = {
@@ -1285,12 +1452,154 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
+  listingType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.StringFieldUpdateOperationsInput | string
+  images?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
+  isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserPropertyCreateManyProjectInput = {
+  id?: string
+  userId: string
+  slug: string
+  title: string
+  description: string
+  highlights?: string
+  listingType: string
+  propertyType?: string
+  price: number
+  priceUnit: string
+  bedrooms: number
+  bathrooms: number
+  areaSqm: number
+  landSqWah?: number | null
+  floor?: number | null
+  district: string
+  btsStation?: string | null
+  address: string
+  latitude?: number | null
+  longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
+  features?: string
+  images?: string
+  status?: string
+  needsReview?: boolean
+  moderationFlags?: string
+  isSponsored?: boolean
+  sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserPropertyUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
+  listingType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.StringFieldUpdateOperationsInput | string
+  images?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
+  isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPropertiesNestedInput
+}
+
+export type UserPropertyUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
+  listingType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.StringFieldUpdateOperationsInput | string
+  images?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
+  isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserPropertyUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1356,9 +1665,11 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
 
 export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1392,9 +1703,11 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
 
 export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1428,9 +1741,11 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
 
 export type UserPropertySelectScalar = {
@@ -1464,25 +1779,30 @@ export type UserPropertySelectScalar = {
   isSponsored?: boolean
   sponsoredUntil?: boolean
   agentManaged?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
 }
 export type UserPropertyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
 }
 export type UserPropertyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
 }
 
 export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserProperty"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    project: Prisma.$ProjectPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1515,6 +1835,7 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     isSponsored: boolean
     sponsoredUntil: Date | null
     agentManaged: boolean
+    projectId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["userProperty"]>
@@ -1912,6 +2233,7 @@ readonly fields: UserPropertyFieldRefs;
 export interface Prisma__UserPropertyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.UserProperty$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserProperty$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1971,6 +2293,7 @@ export interface UserPropertyFieldRefs {
   readonly isSponsored: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly sponsoredUntil: Prisma.FieldRef<"UserProperty", 'DateTime'>
   readonly agentManaged: Prisma.FieldRef<"UserProperty", 'Boolean'>
+  readonly projectId: Prisma.FieldRef<"UserProperty", 'String'>
   readonly createdAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
 }
@@ -2371,6 +2694,25 @@ export type UserPropertyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many UserProperties to delete.
    */
   limit?: number
+}
+
+/**
+ * UserProperty.project
+ */
+export type UserProperty$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

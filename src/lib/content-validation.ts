@@ -13,6 +13,22 @@ export const teamAgentSchema = z.object({
   published: z.boolean().default(true),
 });
 
+export const projectSchema = z.object({
+  name: z.string().min(2, "กรุณากรอกชื่อโครงการ"),
+  nameEn: z.string().optional(),
+  developer: z.string().min(2, "กรุณากรอกชื่อผู้พัฒนา"),
+  location: z.string().min(2, "กรุณากรอกที่ตั้ง"),
+  district: z.string().optional(),
+  btsStation: z.string().optional(),
+  amenities: z.array(z.string()).default([]),
+  totalUnits: z.number().int().min(1).max(100000).optional(),
+  completionDate: z.string().optional(),
+  imageUrl: z.string().optional(),
+  description: z.string().optional(),
+  descriptionEn: z.string().optional(),
+  published: z.boolean().default(true),
+});
+
 export const blogArticleSchema = z.object({
   title: z.string().min(5),
   titleEn: z.string().optional(),

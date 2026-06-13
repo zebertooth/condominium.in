@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { buildModerationUpdate } from "@/lib/listing-moderation";
+import { validateProjectId } from "@/lib/projects";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing, uniqueSlug } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -15,6 +16,7 @@ export async function GET() {
   const properties = await prisma.userProperty.findMany({
     where: { userId: user.id, status: { not: "deleted" } },
     orderBy: { createdAt: "desc" },
+    include: { project: { select: { slug: true, name: true, nameEn: true } } },
   });
 
   return NextResponse.json({
@@ -76,6 +78,7 @@ export async function POST(request: Request) {
     const data = parsed.data;
     const slug = await uniqueSlug(data.title);
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
+    const projectId = await validateProjectId(data.projectId);
 
     const moderation = buildModerationUpdate(
       {
@@ -112,6 +115,7 @@ export async function POST(request: Request) {
         features: JSON.stringify(data.features),
         images: JSON.stringify(data.images),
         agentManaged: user.role === "user" ? (data.agentManaged ?? false) : false,
+        projectId,
         status: "published",
         ...moderation,
       },

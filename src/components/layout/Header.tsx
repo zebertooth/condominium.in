@@ -8,6 +8,7 @@ function navLinks(locale: Locale) {
   return [
     { href: "/buy", label: t("buy", locale) },
     { href: "/rent", label: t("rent", locale) },
+    { href: "/projects", label: t("navProjects", locale) },
     { href: "/areas", label: t("areas", locale) },
     { href: "/ai-search", label: t("aiSearch", locale) },
     { href: "/blog", label: t("blog", locale) },

@@ -17,7 +17,10 @@ export default async function AdminEditPropertyPage({ params }: PageProps) {
   if (!admin) redirect("/login");
 
   const { id } = await params;
-  const property = await prisma.userProperty.findUnique({ where: { id } });
+  const property = await prisma.userProperty.findUnique({
+    where: { id },
+    include: { project: { select: { slug: true, name: true, nameEn: true } } },
+  });
   if (!property) redirect("/admin/properties");
 
   return (

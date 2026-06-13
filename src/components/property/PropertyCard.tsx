@@ -60,6 +60,11 @@ export function PropertyCard({
                 {formatNearbyStation(property.btsStation)}
               </span>
             )}
+            {property.projectSlug && (
+              <span className="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white">
+                {t("projectBadge", locale)}
+              </span>
+            )}
           </div>
         </div>
 

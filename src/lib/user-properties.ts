@@ -69,6 +69,7 @@ type DbProperty = {
   isSponsored: boolean;
   sponsoredUntil: Date | null;
   agentManaged: boolean;
+  projectId?: string | null;
   createdAt: Date;
   user?: {
     id?: string;
@@ -77,6 +78,11 @@ type DbProperty = {
     email: string | null;
     role?: string;
   };
+  project?: {
+    slug: string;
+    name: string;
+    nameEn: string;
+  } | null;
 };
 
 export function isActiveSponsor(
@@ -140,6 +146,10 @@ export function dbPropertyToListing(p: DbProperty): Property {
     contactMode: ownerDirect ? "owner_direct" : "agent_team",
     agentManaged,
     isUserListing: true,
+    projectId: p.projectId ?? undefined,
+    projectSlug: p.project?.slug,
+    projectName: p.project?.name,
+    projectNameEn: p.project?.nameEn,
   };
 }
 
@@ -151,11 +161,17 @@ const userSelect = {
   role: true,
 } as const;
 
+const projectSelect = {
+  slug: true,
+  name: true,
+  nameEn: true,
+} as const;
+
 export async function getAllPublishedUserProperties(): Promise<Property[]> {
   const rows = await prisma.userProperty.findMany({
     where: { status: "published" },
     orderBy: [{ isSponsored: "desc" }, { createdAt: "desc" }],
-    include: { user: { select: userSelect } },
+    include: { user: { select: userSelect }, project: { select: projectSelect } },
   });
 
   return rows.map((p) => dbPropertyToListing(p));
@@ -178,7 +194,7 @@ export async function getUserPropertyBySlugVisible(
   const normalized = decodeURIComponent(slug).trim();
   const p = await prisma.userProperty.findFirst({
     where: { slug: normalized },
-    include: { user: { select: userSelect } },
+    include: { user: { select: userSelect }, project: { select: projectSelect } },
   });
   if (!p || p.status === "deleted") return null;
 

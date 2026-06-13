@@ -72,6 +72,11 @@ export interface Property {
   sponsoredUntil?: string;
   /** Sample listing from src/lib/properties.ts — hidden when real inventory is enough */
   isDemo?: boolean;
+  /** Linked condo/development project */
+  projectSlug?: string;
+  projectName?: string;
+  projectNameEn?: string;
+  projectId?: string;
 }
 
 export interface AreaGuide {

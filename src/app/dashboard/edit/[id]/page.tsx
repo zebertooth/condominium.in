@@ -17,6 +17,7 @@ export default async function EditPropertyPage({ params }: EditPageProps) {
   const { id } = await params;
   const property = await prisma.userProperty.findFirst({
     where: { id, userId: user.id, status: { not: "deleted" } },
+    include: { project: { select: { slug: true, name: true, nameEn: true } } },
   });
 
   if (!property) redirect("/dashboard");
