@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 34 — Phase L3 complete)  
-**Current phase:** **Phase 7** — user listing i18n, optional URL locale routing
+**Last updated:** 2026-06-14 (session 35 — Phase 7 user listing i18n)  
+**Current phase:** **Phase 7** — user listing i18n (core done); optional URL routing next
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 22).  
@@ -532,16 +532,17 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 7 — User listing i18n (after Phase C)
+## Phase 7 — User listing i18n (IN PROGRESS)
 
-**Goal:** Owner-submitted listings readable in all 5 locales; optional SEO-friendly URL routing.
+**Goal:** Owner-submitted listings readable in all 5 locales.
 
-### Database i18n (priority)
-- [ ] Add per-locale fields on `UserProperty` (e.g. `titleEn`, `titleZh`, `descriptionEn`, …) or JSON `translations` column
-- [ ] Post/edit form — optional EN (and later ZH/JA/AR) title + description fields
-- [ ] Property detail + cards use localized owner fields with fallback chain (locale → en → th)
-- [ ] Admin edit form supports same fields
-- [ ] Migration + backfill existing listings from Thai title/description
+### Database i18n
+- [x] Per-locale fields on `UserProperty` — `titleEn/Zh/Ja/Ar`, `descriptionEn/Zh/Ja/Ar`
+- [x] Migration + backfill existing listings (EN ← Thai title/description)
+- [x] Post/edit form — optional EN/ZH/JA/AR title + description (collapsible section)
+- [x] Property detail + cards — localized owner fields with fallback chain (locale → en → th)
+- [x] Admin edit form supports same fields
+- [x] AI/search haystack includes all locale fields
 
 ### Optional SEO polish
 - [ ] URL locale routing (`/en/buy`, `/zh/property/…`) — requires middleware + hreflang update

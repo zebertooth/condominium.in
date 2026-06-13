@@ -12,6 +12,7 @@ import {
   STATION_CATEGORY_ORDER,
   stationsByCategory,
 } from "@/lib/locations";
+import { LOCALE_FORM_GROUPS } from "@/lib/property-locale-fields";
 import {
   PROPERTY_TYPES,
   showsRoomCounts,
@@ -104,6 +105,14 @@ export function PostPropertyForm({
       body: JSON.stringify({
         title: form.get("title"),
         description: form.get("description"),
+        titleEn: form.get("titleEn"),
+        descriptionEn: form.get("descriptionEn"),
+        titleZh: form.get("titleZh"),
+        descriptionZh: form.get("descriptionZh"),
+        titleJa: form.get("titleJa"),
+        descriptionJa: form.get("descriptionJa"),
+        titleAr: form.get("titleAr"),
+        descriptionAr: form.get("descriptionAr"),
         highlights: String(form.get("highlights") || ""),
         listingType: form.get("listingType"),
         propertyType,
@@ -158,6 +167,37 @@ export function PostPropertyForm({
         <label className="block text-sm font-medium text-slate-700">{t("formDescription")}</label>
         <textarea name="description" required rows={4} minLength={20} defaultValue={initial?.description} className={inputClass} />
       </div>
+
+      <details className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-800">
+          {t("formTranslationsSection")}
+        </summary>
+        <p className="mt-2 text-xs text-slate-600">{t("formTranslationsHint")}</p>
+        <div className="mt-4 space-y-6">
+          {LOCALE_FORM_GROUPS.map((group) => (
+            <div key={group.locale} className="space-y-3 border-t border-slate-200 pt-4 first:border-t-0 first:pt-0">
+              <p className="text-sm font-medium text-teal-800">{t(group.labelKey)}</p>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">{t("formLocaleTitle")}</label>
+                <input
+                  name={group.titleKey}
+                  defaultValue={initial?.[group.titleKey as keyof Property] as string | undefined}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">{t("formLocaleDescription")}</label>
+                <textarea
+                  name={group.descriptionKey}
+                  rows={3}
+                  defaultValue={initial?.[group.descriptionKey as keyof Property] as string | undefined}
+                  className={inputClass}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </details>
 
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("formHighlights")}</label>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { logPriceChange } from "@/lib/price-history";
+import { normalizePropertyLocaleFields } from "@/lib/property-locale-fields";
 import { validateProjectId } from "@/lib/projects";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -32,6 +33,7 @@ export async function PUT(request: Request, context: RouteContext) {
     const data = parsed.data;
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
     const projectId = await validateProjectId(data.projectId);
+    const localeFields = normalizePropertyLocaleFields(data);
 
     // Admin is the moderator — keep the current status (no reset to pending).
     const property = await prisma.userProperty.update({
@@ -39,6 +41,7 @@ export async function PUT(request: Request, context: RouteContext) {
       data: {
         title: data.title,
         description: data.description,
+        ...localeFields,
         highlights: data.highlights ?? "",
         listingType: data.listingType,
         propertyType: data.propertyType,

@@ -220,6 +220,16 @@ export function blogSeoDescription(post: BlogPost, locale: Locale): string {
 }
 
 export function localizedPropertyTitle(property: Property, locale: Locale): string {
+  if (property.isUserListing) {
+    return resolveLocalized(
+      locale,
+      property.title,
+      property.titleEn?.trim() || undefined,
+      property.titleZh?.trim() || undefined,
+      property.titleJa?.trim() || undefined,
+      property.titleAr?.trim() || undefined,
+    );
+  }
   const pack = propertyLocalePacks[property.slug];
   return resolveLocalized(
     locale,
@@ -232,6 +242,16 @@ export function localizedPropertyTitle(property: Property, locale: Locale): stri
 }
 
 export function localizedPropertyDescription(property: Property, locale: Locale): string {
+  if (property.isUserListing) {
+    return resolveLocalized(
+      locale,
+      property.description,
+      property.descriptionEn?.trim() || undefined,
+      property.descriptionZh?.trim() || undefined,
+      property.descriptionJa?.trim() || undefined,
+      property.descriptionAr?.trim() || undefined,
+    );
+  }
   const pack = propertyLocalePacks[property.slug];
   return resolveLocalized(
     locale,

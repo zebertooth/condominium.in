@@ -464,9 +464,14 @@ Done / env-gated:
 - [x] Social login — Google + Facebook OAuth
 - [x] NPA hub — `/npa`
 
-**Next code tasks (Phase 7):**
-- [ ] User-submitted listing title/description per locale in DB + post/edit UI
-- [ ] Optional URL locale routing (`/zh/...`)
+**Done (Phase 7 core — user listing i18n):**
+- [x] `UserProperty` locale columns — title/description EN, ZH, JA, AR
+- [x] Post/edit + admin forms — optional translations section
+- [x] `localizedPropertyTitle/Description` fallback for owner listings
+- [x] Migration `20260615000000_user_property_i18n` + EN backfill
+
+**Next code tasks (Phase 7 optional):**
+- [ ] URL locale routing (`/en/buy`, `/zh/property/…`)
 - [ ] `/market` area price trends (optional)
 
 ---

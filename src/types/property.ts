@@ -24,6 +24,14 @@ export interface Property {
   title: string;
   titleEn: string;
   description: string;
+  /** Owner listing locale fields (Phase 7) — empty for static demos */
+  descriptionEn?: string;
+  titleZh?: string;
+  descriptionZh?: string;
+  titleJa?: string;
+  descriptionJa?: string;
+  titleAr?: string;
+  descriptionAr?: string;
   /** Nearby places, schools, malls — free text for search matching */
   highlights?: string;
   listingType: ListingType;

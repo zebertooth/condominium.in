@@ -44,6 +44,14 @@ type DbProperty = {
   slug: string;
   title: string;
   description: string;
+  titleEn: string;
+  descriptionEn: string;
+  titleZh: string;
+  descriptionZh: string;
+  titleJa: string;
+  descriptionJa: string;
+  titleAr: string;
+  descriptionAr: string;
   highlights: string;
   listingType: string;
   propertyType: string;
@@ -114,8 +122,15 @@ export function dbPropertyToListing(p: DbProperty): Property {
     id: p.id,
     slug: p.slug,
     title: p.title,
-    titleEn: p.title,
+    titleEn: p.titleEn,
     description: p.description,
+    descriptionEn: p.descriptionEn || undefined,
+    titleZh: p.titleZh || undefined,
+    descriptionZh: p.descriptionZh || undefined,
+    titleJa: p.titleJa || undefined,
+    descriptionJa: p.descriptionJa || undefined,
+    titleAr: p.titleAr || undefined,
+    descriptionAr: p.descriptionAr || undefined,
     highlights: p.highlights || undefined,
     listingType: p.listingType as Property["listingType"],
     propertyType: p.propertyType as Property["propertyType"],

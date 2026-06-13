@@ -54,6 +54,14 @@ export type UserPropertyMinAggregateOutputType = {
   slug: string | null
   title: string | null
   description: string | null
+  titleEn: string | null
+  descriptionEn: string | null
+  titleZh: string | null
+  descriptionZh: string | null
+  titleJa: string | null
+  descriptionJa: string | null
+  titleAr: string | null
+  descriptionAr: string | null
   highlights: string | null
   listingType: string | null
   propertyType: string | null
@@ -90,6 +98,14 @@ export type UserPropertyMaxAggregateOutputType = {
   slug: string | null
   title: string | null
   description: string | null
+  titleEn: string | null
+  descriptionEn: string | null
+  titleZh: string | null
+  descriptionZh: string | null
+  titleJa: string | null
+  descriptionJa: string | null
+  titleAr: string | null
+  descriptionAr: string | null
   highlights: string | null
   listingType: string | null
   propertyType: string | null
@@ -126,6 +142,14 @@ export type UserPropertyCountAggregateOutputType = {
   slug: number
   title: number
   description: number
+  titleEn: number
+  descriptionEn: number
+  titleZh: number
+  descriptionZh: number
+  titleJa: number
+  descriptionJa: number
+  titleAr: number
+  descriptionAr: number
   highlights: number
   listingType: number
   propertyType: number
@@ -186,6 +210,14 @@ export type UserPropertyMinAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  titleEn?: true
+  descriptionEn?: true
+  titleZh?: true
+  descriptionZh?: true
+  titleJa?: true
+  descriptionJa?: true
+  titleAr?: true
+  descriptionAr?: true
   highlights?: true
   listingType?: true
   propertyType?: true
@@ -222,6 +254,14 @@ export type UserPropertyMaxAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  titleEn?: true
+  descriptionEn?: true
+  titleZh?: true
+  descriptionZh?: true
+  titleJa?: true
+  descriptionJa?: true
+  titleAr?: true
+  descriptionAr?: true
   highlights?: true
   listingType?: true
   propertyType?: true
@@ -258,6 +298,14 @@ export type UserPropertyCountAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  titleEn?: true
+  descriptionEn?: true
+  titleZh?: true
+  descriptionZh?: true
+  titleJa?: true
+  descriptionJa?: true
+  titleAr?: true
+  descriptionAr?: true
   highlights?: true
   listingType?: true
   propertyType?: true
@@ -381,6 +429,14 @@ export type UserPropertyGroupByOutputType = {
   slug: string
   title: string
   description: string
+  titleEn: string
+  descriptionEn: string
+  titleZh: string
+  descriptionZh: string
+  titleJa: string
+  descriptionJa: string
+  titleAr: string
+  descriptionAr: string
   highlights: string
   listingType: string
   propertyType: string
@@ -440,6 +496,14 @@ export type UserPropertyWhereInput = {
   slug?: Prisma.StringFilter<"UserProperty"> | string
   title?: Prisma.StringFilter<"UserProperty"> | string
   description?: Prisma.StringFilter<"UserProperty"> | string
+  titleEn?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionEn?: Prisma.StringFilter<"UserProperty"> | string
+  titleZh?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionZh?: Prisma.StringFilter<"UserProperty"> | string
+  titleJa?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionJa?: Prisma.StringFilter<"UserProperty"> | string
+  titleAr?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionAr?: Prisma.StringFilter<"UserProperty"> | string
   highlights?: Prisma.StringFilter<"UserProperty"> | string
   listingType?: Prisma.StringFilter<"UserProperty"> | string
   propertyType?: Prisma.StringFilter<"UserProperty"> | string
@@ -479,6 +543,14 @@ export type UserPropertyOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  titleEn?: Prisma.SortOrder
+  descriptionEn?: Prisma.SortOrder
+  titleZh?: Prisma.SortOrder
+  descriptionZh?: Prisma.SortOrder
+  titleJa?: Prisma.SortOrder
+  descriptionJa?: Prisma.SortOrder
+  titleAr?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
@@ -521,6 +593,14 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"UserProperty"> | string
   title?: Prisma.StringFilter<"UserProperty"> | string
   description?: Prisma.StringFilter<"UserProperty"> | string
+  titleEn?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionEn?: Prisma.StringFilter<"UserProperty"> | string
+  titleZh?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionZh?: Prisma.StringFilter<"UserProperty"> | string
+  titleJa?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionJa?: Prisma.StringFilter<"UserProperty"> | string
+  titleAr?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionAr?: Prisma.StringFilter<"UserProperty"> | string
   highlights?: Prisma.StringFilter<"UserProperty"> | string
   listingType?: Prisma.StringFilter<"UserProperty"> | string
   propertyType?: Prisma.StringFilter<"UserProperty"> | string
@@ -560,6 +640,14 @@ export type UserPropertyOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  titleEn?: Prisma.SortOrder
+  descriptionEn?: Prisma.SortOrder
+  titleZh?: Prisma.SortOrder
+  descriptionZh?: Prisma.SortOrder
+  titleJa?: Prisma.SortOrder
+  descriptionJa?: Prisma.SortOrder
+  titleAr?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
@@ -604,6 +692,14 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   title?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   description?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  titleEn?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  descriptionEn?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  titleZh?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  descriptionZh?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  titleJa?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  descriptionJa?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  titleAr?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  descriptionAr?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   highlights?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   listingType?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   propertyType?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
@@ -639,6 +735,14 @@ export type UserPropertyCreateInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -677,6 +781,14 @@ export type UserPropertyUncheckedCreateInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -713,6 +825,14 @@ export type UserPropertyUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -751,6 +871,14 @@ export type UserPropertyUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -788,6 +916,14 @@ export type UserPropertyCreateManyInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -823,6 +959,14 @@ export type UserPropertyUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -858,6 +1002,14 @@ export type UserPropertyUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -904,6 +1056,14 @@ export type UserPropertyCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  titleEn?: Prisma.SortOrder
+  descriptionEn?: Prisma.SortOrder
+  titleZh?: Prisma.SortOrder
+  descriptionZh?: Prisma.SortOrder
+  titleJa?: Prisma.SortOrder
+  descriptionJa?: Prisma.SortOrder
+  titleAr?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
@@ -951,6 +1111,14 @@ export type UserPropertyMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  titleEn?: Prisma.SortOrder
+  descriptionEn?: Prisma.SortOrder
+  titleZh?: Prisma.SortOrder
+  descriptionZh?: Prisma.SortOrder
+  titleJa?: Prisma.SortOrder
+  descriptionJa?: Prisma.SortOrder
+  titleAr?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
@@ -987,6 +1155,14 @@ export type UserPropertyMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  titleEn?: Prisma.SortOrder
+  descriptionEn?: Prisma.SortOrder
+  titleZh?: Prisma.SortOrder
+  descriptionZh?: Prisma.SortOrder
+  titleJa?: Prisma.SortOrder
+  descriptionJa?: Prisma.SortOrder
+  titleAr?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   highlights?: Prisma.SortOrder
   listingType?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
@@ -1152,6 +1328,14 @@ export type UserPropertyCreateWithoutUserInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1188,6 +1372,14 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1254,6 +1446,14 @@ export type UserPropertyScalarWhereInput = {
   slug?: Prisma.StringFilter<"UserProperty"> | string
   title?: Prisma.StringFilter<"UserProperty"> | string
   description?: Prisma.StringFilter<"UserProperty"> | string
+  titleEn?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionEn?: Prisma.StringFilter<"UserProperty"> | string
+  titleZh?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionZh?: Prisma.StringFilter<"UserProperty"> | string
+  titleJa?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionJa?: Prisma.StringFilter<"UserProperty"> | string
+  titleAr?: Prisma.StringFilter<"UserProperty"> | string
+  descriptionAr?: Prisma.StringFilter<"UserProperty"> | string
   highlights?: Prisma.StringFilter<"UserProperty"> | string
   listingType?: Prisma.StringFilter<"UserProperty"> | string
   propertyType?: Prisma.StringFilter<"UserProperty"> | string
@@ -1289,6 +1489,14 @@ export type UserPropertyCreateWithoutProjectInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1326,6 +1534,14 @@ export type UserPropertyUncheckedCreateWithoutProjectInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1387,6 +1603,14 @@ export type UserPropertyCreateWithoutPriceHistoryInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1424,6 +1648,14 @@ export type UserPropertyUncheckedCreateWithoutPriceHistoryInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1475,6 +1707,14 @@ export type UserPropertyUpdateWithoutPriceHistoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1512,6 +1752,14 @@ export type UserPropertyUncheckedUpdateWithoutPriceHistoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1547,6 +1795,14 @@ export type UserPropertyCreateManyUserInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1582,6 +1838,14 @@ export type UserPropertyUpdateWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1618,6 +1882,14 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1654,6 +1926,14 @@ export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1690,6 +1970,14 @@ export type UserPropertyCreateManyProjectInput = {
   slug: string
   title: string
   description: string
+  titleEn?: string
+  descriptionEn?: string
+  titleZh?: string
+  descriptionZh?: string
+  titleJa?: string
+  descriptionJa?: string
+  titleAr?: string
+  descriptionAr?: string
   highlights?: string
   listingType: string
   propertyType?: string
@@ -1724,6 +2012,14 @@ export type UserPropertyUpdateWithoutProjectInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1761,6 +2057,14 @@ export type UserPropertyUncheckedUpdateWithoutProjectInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1797,6 +2101,14 @@ export type UserPropertyUncheckedUpdateManyWithoutProjectInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleZh?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionZh?: Prisma.StringFieldUpdateOperationsInput | string
+  titleJa?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionJa?: Prisma.StringFieldUpdateOperationsInput | string
+  titleAr?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionAr?: Prisma.StringFieldUpdateOperationsInput | string
   highlights?: Prisma.StringFieldUpdateOperationsInput | string
   listingType?: Prisma.StringFieldUpdateOperationsInput | string
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1863,6 +2175,14 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   slug?: boolean
   title?: boolean
   description?: boolean
+  titleEn?: boolean
+  descriptionEn?: boolean
+  titleZh?: boolean
+  descriptionZh?: boolean
+  titleJa?: boolean
+  descriptionJa?: boolean
+  titleAr?: boolean
+  descriptionAr?: boolean
   highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
@@ -1903,6 +2223,14 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   slug?: boolean
   title?: boolean
   description?: boolean
+  titleEn?: boolean
+  descriptionEn?: boolean
+  titleZh?: boolean
+  descriptionZh?: boolean
+  titleJa?: boolean
+  descriptionJa?: boolean
+  titleAr?: boolean
+  descriptionAr?: boolean
   highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
@@ -1941,6 +2269,14 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   slug?: boolean
   title?: boolean
   description?: boolean
+  titleEn?: boolean
+  descriptionEn?: boolean
+  titleZh?: boolean
+  descriptionZh?: boolean
+  titleJa?: boolean
+  descriptionJa?: boolean
+  titleAr?: boolean
+  descriptionAr?: boolean
   highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
@@ -1979,6 +2315,14 @@ export type UserPropertySelectScalar = {
   slug?: boolean
   title?: boolean
   description?: boolean
+  titleEn?: boolean
+  descriptionEn?: boolean
+  titleZh?: boolean
+  descriptionZh?: boolean
+  titleJa?: boolean
+  descriptionJa?: boolean
+  titleAr?: boolean
+  descriptionAr?: boolean
   highlights?: boolean
   listingType?: boolean
   propertyType?: boolean
@@ -2009,7 +2353,7 @@ export type UserPropertySelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "titleEn" | "descriptionEn" | "titleZh" | "descriptionZh" | "titleJa" | "descriptionJa" | "titleAr" | "descriptionAr" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
@@ -2038,6 +2382,14 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     slug: string
     title: string
     description: string
+    titleEn: string
+    descriptionEn: string
+    titleZh: string
+    descriptionZh: string
+    titleJa: string
+    descriptionJa: string
+    titleAr: string
+    descriptionAr: string
     highlights: string
     listingType: string
     propertyType: string
@@ -2497,6 +2849,14 @@ export interface UserPropertyFieldRefs {
   readonly slug: Prisma.FieldRef<"UserProperty", 'String'>
   readonly title: Prisma.FieldRef<"UserProperty", 'String'>
   readonly description: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly titleEn: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly descriptionEn: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly titleZh: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly descriptionZh: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly titleJa: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly descriptionJa: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly titleAr: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly descriptionAr: Prisma.FieldRef<"UserProperty", 'String'>
   readonly highlights: Prisma.FieldRef<"UserProperty", 'String'>
   readonly listingType: Prisma.FieldRef<"UserProperty", 'String'>
   readonly propertyType: Prisma.FieldRef<"UserProperty", 'String'>

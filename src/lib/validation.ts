@@ -98,9 +98,20 @@ export const verifyIdSchema = z.object({
     .refine(validateThaiIdCard, "เลขบัตรประชาชนไม่ถูกต้อง"),
 });
 
+const optionalLocaleTitle = z.string().max(200).optional().default("");
+const optionalLocaleDescription = z.string().max(8000).optional().default("");
+
 export const propertySchema = z.object({
   title: z.string().min(5),
   description: z.string().min(20),
+  titleEn: optionalLocaleTitle,
+  descriptionEn: optionalLocaleDescription,
+  titleZh: optionalLocaleTitle,
+  descriptionZh: optionalLocaleDescription,
+  titleJa: optionalLocaleTitle,
+  descriptionJa: optionalLocaleDescription,
+  titleAr: optionalLocaleTitle,
+  descriptionAr: optionalLocaleDescription,
   highlights: z.string().max(2000).optional().default(""),
   listingType: z.enum(["sale", "rent"]),
   propertyType: z.enum(["condo", "apartment", "house", "townhouse", "land", "commercial", "npa"]).default("condo"),

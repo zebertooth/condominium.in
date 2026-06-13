@@ -12,22 +12,19 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 34 — **Phase L3 complete** → Phase 7 next)
+> ## 🤝 HANDOFF (session 35 — **Phase 7 in progress**)
 >
-> **Production:** https://www.condominium.in.th — deploy migration `20260614300000_phase_l3_features`
-> **GitHub `main`:** Phase L3 features local (price history, alert cron, reviews, OAuth, /npa)
+> **Production:** deploy migration `20260615000000_user_property_i18n` after `20260614300000_phase_l3_features`
 >
-> **Done through session 34 (Phase L3):**
-> - **Price history** — `PriceHistory` model, log on create/edit, chart on property detail, “ลดราคา” badge
-> - **Search alert digests** — `/api/cron/search-alerts` + `vercel.json` cron (daily/weekly)
-> - **Agent reviews** — `AgentReview` model, `/agents` rating form, `/admin/reviews` moderation
-> - **Social login** — Google + Facebook OAuth (`/api/auth/google/*`, `/api/auth/facebook/*`)
-> - **NPA hub** — `/npa` page + nav link
+> **Done (Phase 7 core):**
+> - `UserProperty` locale fields — title/description for EN, ZH, JA, AR
+> - Post/edit + admin forms — optional translations section
+> - Property cards/detail — fallback chain locale → en → th for owner listings
+> - CSV import saves `titleEn`; backfill EN from Thai on migrate
 >
-> **Next priorities (Phase 7):**
-> 1. **User listing i18n** — per-locale title/description on `UserProperty` + post/edit UI
-> 2. **Optional URL locale routing** — `/en/buy`, `/zh/property/…`
-> 3. **User ops:** Resend DNS for alert digests, Google/Facebook app credentials on Vercel
+> **Next (Phase 7 optional):**
+> - URL locale routing (`/en/buy`, `/zh/property/…`)
+> - `descriptionEn` column in CSV sample
 
 ---
 
@@ -37,7 +34,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 7** — user listing i18n, optional URL locale routing |
+| Phase | **Phase 7** — user listing i18n (core done); optional URL locale routing next |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
 | Search | Advanced filters + Leaflet map at `/map` |
@@ -55,6 +52,12 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
+# Phase 7 — User listing i18n
+src/lib/property-locale-fields.ts       Locale field helpers
+src/lib/locale-content.ts               Owner listing fallback in localizedProperty*
+src/components/dashboard/PostPropertyForm.tsx  Translations section
+prisma/migrations/20260615000000_user_property_i18n/
+
 # Session 34 — Phase L3 growth features
 src/lib/price-history.ts                  PriceHistory log + reduced badge helpers
 src/lib/search-alert-digest.ts            Cron digest email logic

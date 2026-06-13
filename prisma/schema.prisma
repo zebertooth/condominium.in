@@ -140,6 +140,14 @@ model UserProperty {
   slug           String    @unique
   title          String
   description    String
+  titleEn        String    @default("")
+  descriptionEn  String    @default("")
+  titleZh        String    @default("")
+  descriptionZh  String    @default("")
+  titleJa        String    @default("")
+  descriptionJa  String    @default("")
+  titleAr        String    @default("")
+  descriptionAr  String    @default("")
   highlights     String    @default("")
   listingType    String
   propertyType   String    @default("condo")

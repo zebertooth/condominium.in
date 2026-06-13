@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { buildModerationUpdate } from "@/lib/listing-moderation";
 import { logPriceChange } from "@/lib/price-history";
+import { normalizePropertyLocaleFields } from "@/lib/property-locale-fields";
 import { validateProjectId } from "@/lib/projects";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing, uniqueSlug } from "@/lib/user-properties";
@@ -80,6 +81,7 @@ export async function POST(request: Request) {
     const slug = await uniqueSlug(data.title);
     const priceUnit = data.listingType === "rent" ? "THB/month" : "THB";
     const projectId = await validateProjectId(data.projectId);
+    const localeFields = normalizePropertyLocaleFields(data);
 
     const moderation = buildModerationUpdate(
       {
@@ -96,6 +98,7 @@ export async function POST(request: Request) {
         slug,
         title: data.title,
         description: data.description,
+        ...localeFields,
         highlights: data.highlights ?? "",
         listingType: data.listingType,
         propertyType: data.propertyType,
