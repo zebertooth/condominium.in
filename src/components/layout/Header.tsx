@@ -1,107 +1,90 @@
 import Link from "next/link";
 import { HeaderAuth } from "@/components/layout/HeaderAuth";
+import { HeaderNav, type HeaderNavItem } from "@/components/layout/HeaderNav";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { SiteLogo, siteLogoAltText } from "@/components/brand/SiteLogo";
 import { getCurrentUser } from "@/lib/auth";
 import { t, type Locale } from "@/lib/i18n";
 
-interface NavLink {
-  href: string;
-  label: string;
-  highlight?: boolean;
+function guestNav(locale: Locale): {
+  mainLinks: HeaderNavItem[];
+  highlightLink: HeaderNavItem;
+} {
+  return {
+    mainLinks: [
+      { href: "/buy", label: t("buy", locale) },
+      { href: "/rent", label: t("rent", locale) },
+      { href: "/projects", label: t("navProjects", locale) },
+      { href: "/map", label: t("navMap", locale) },
+      { href: "/ai-search", label: t("aiSearch", locale) },
+      { href: "/blog", label: t("blog", locale) },
+    ],
+    highlightLink: { href: "/list-property", label: t("listProperty", locale), highlight: true },
+  };
 }
 
-function guestNavLinks(locale: Locale): NavLink[] {
-  return [
+function loggedInNav(
+  locale: Locale,
+  role: string,
+): {
+  mainLinks: HeaderNavItem[];
+  highlightLink: HeaderNavItem;
+} {
+  const mainLinks: HeaderNavItem[] = [
     { href: "/buy", label: t("buy", locale) },
     { href: "/rent", label: t("rent", locale) },
+    { href: "/map", label: t("navMap", locale) },
     { href: "/projects", label: t("navProjects", locale) },
-    { href: "/areas", label: t("areas", locale) },
     { href: "/ai-search", label: t("aiSearch", locale) },
-    { href: "/map", label: t("navMap", locale) },
-    { href: "/blog", label: t("blog", locale) },
-    { href: "/agents", label: t("agents", locale) },
-    { href: "/list-property", label: t("listProperty", locale), highlight: true },
-  ];
-}
-
-function loggedInNavLinks(locale: Locale, role: string): NavLink[] {
-  const links: NavLink[] = [
-    { href: "/buy", label: t("buy", locale) },
-    { href: "/rent", label: t("rent", locale) },
-    { href: "/map", label: t("navMap", locale) },
-    { href: "/projects", label: t("navProjects", locale) },
     { href: "/dashboard/saved", label: t("dashSaved", locale) },
     { href: "/dashboard/alerts", label: t("dashAlerts", locale) },
-    { href: "/dashboard/post", label: t("dashPost", locale), highlight: true },
     { href: "/dashboard", label: t("dashboard", locale) },
   ];
 
   if (role === "agent" || role === "admin") {
-    links.splice(links.length - 1, 0, {
+    mainLinks.splice(mainLinks.length - 1, 0, {
       href: "/dashboard/agent",
       label: t("dashAgent", locale),
     });
   }
 
-  return links;
-}
+  mainLinks.push({ href: "/blog", label: t("blog", locale) });
 
-function linkClassName(highlight?: boolean) {
-  return highlight
-    ? "rounded-lg bg-teal-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
-    : "rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-teal-50 hover:text-teal-700";
-}
-
-function mobileLinkClassName(highlight?: boolean) {
-  return highlight
-    ? "shrink-0 rounded-full bg-teal-600 px-3 py-1.5 text-xs font-medium text-white"
-    : "shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700";
+  return {
+    mainLinks,
+    highlightLink: { href: "/dashboard/post", label: t("dashPost", locale), highlight: true },
+  };
 }
 
 export async function Header({ locale }: { locale: Locale }) {
   const user = await getCurrentUser();
-  const links = user ? loggedInNavLinks(locale, user.role) : guestNavLinks(locale);
+  const nav = user ? loggedInNav(locale, user.role) : guestNav(locale);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link href="/" className="shrink-0" aria-label={siteLogoAltText()}>
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-md">
+      <div className="mx-auto flex max-w-[100rem] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 lg:gap-4">
+        <Link href="/" className="min-w-0 shrink-0" aria-label={siteLogoAltText()}>
           <SiteLogo locale={locale} />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label={user ? "User menu" : "Main menu"}>
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClassName(link.highlight)}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="min-w-0 flex-1">
+          <HeaderNav mainLinks={nav.mainLinks} highlightLink={nav.highlightLink} />
+        </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
           <HeaderAuth user={user} locale={locale} />
+          <div className="hidden h-6 w-px bg-slate-200 sm:block" aria-hidden />
           <LanguageSwitcher />
           {!user && (
             <Link
               href="/contact"
-              className="hidden rounded-lg bg-teal-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-teal-700 sm:inline-flex"
+              className="hidden rounded-full bg-gradient-to-r from-teal-600 to-teal-500 px-3.5 py-2 text-sm font-semibold text-white shadow-sm shadow-teal-600/20 transition hover:from-teal-700 hover:to-teal-600 lg:inline-flex"
             >
               {t("contact", locale)}
             </Link>
           )}
         </div>
       </div>
-
-      <nav
-        className="flex gap-1 overflow-x-auto border-t border-slate-100 px-4 py-2 lg:hidden"
-        aria-label={user ? "User menu" : "Main menu"}
-      >
-        {links.map((link) => (
-          <Link key={link.href} href={link.href} className={mobileLinkClassName(link.highlight)}>
-            {link.label}
-          </Link>
-        ))}
-      </nav>
     </header>
   );
 }

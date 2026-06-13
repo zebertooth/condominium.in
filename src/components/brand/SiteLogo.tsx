@@ -43,7 +43,7 @@ export function SiteLogo({ locale, showTagline = true, className }: SiteLogoProp
           <span className="font-semibold text-slate-400">.in.th</span>
         </p>
         {showTagline && (
-          <p className="mt-1 hidden truncate text-[11px] leading-tight text-slate-500 sm:block">
+          <p className="mt-1 truncate text-[11px] leading-tight text-slate-500">
             {t("tagline", locale)}
           </p>
         )}
