@@ -142,6 +142,8 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
       </div>
       <p className="text-xs text-slate-500">{t("feedbackContactHint")}</p>
       <TurnstileField
+        siteKey={captcha.siteKey}
+        loading={captcha.loading}
         resetKey={captcha.resetKey}
         onVerify={captcha.setToken}
         onExpire={() => captcha.setToken("")}
@@ -149,7 +151,7 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
       />
       <button
         type="submit"
-        disabled={status === "submitting" || !captcha.ready}
+        disabled={status === "submitting" || (captcha.enabled && !captcha.ready)}
         className={
           compact
             ? "w-full rounded-xl bg-teal-600 py-2.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"

@@ -29,10 +29,52 @@ declare global {
 
 export { getTurnstileSiteKeyClient } from "@/components/security/turnstile-shared";
 
+function applyConfig(
+  siteKey: string | null | undefined,
+  enabled: boolean | undefined,
+): { siteKey: string; enabled: boolean } {
+  const builtIn = getTurnstileSiteKeyClient();
+  const key = builtIn || siteKey?.trim() || "";
+  return {
+    siteKey: key,
+    enabled: Boolean(key) && (enabled ?? true),
+  };
+}
+
 export function useCaptchaGate() {
-  const enabled = Boolean(getTurnstileSiteKeyClient());
+  const builtInKey = getTurnstileSiteKeyClient();
+  const [siteKey, setSiteKey] = useState(builtInKey);
+  const [enabled, setEnabled] = useState(Boolean(builtInKey));
+  const [loading, setLoading] = useState(!builtInKey);
   const [token, setToken] = useState("");
   const [resetKey, setResetKey] = useState(0);
+
+  useEffect(() => {
+    if (builtInKey) return;
+
+    let cancelled = false;
+    fetch("/api/captcha/config")
+      .then((res) => res.json())
+      .then((data: { siteKey?: string | null; enabled?: boolean }) => {
+        if (cancelled) return;
+        const next = applyConfig(data.siteKey, data.enabled);
+        setSiteKey(next.siteKey);
+        setEnabled(next.enabled);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setEnabled(false);
+          setSiteKey("");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [builtInKey]);
 
   const reset = useCallback(() => {
     setToken("");
@@ -41,6 +83,8 @@ export function useCaptchaGate() {
 
   return {
     enabled,
+    loading,
+    siteKey,
     token,
     setToken,
     reset,
@@ -50,24 +94,27 @@ export function useCaptchaGate() {
 }
 
 interface TurnstileFieldProps {
+  siteKey: string;
   onVerify: (token: string) => void;
   onExpire?: () => void;
   onError?: () => void;
   resetKey?: number;
+  loading?: boolean;
 }
 
 export function TurnstileField({
+  siteKey,
   onVerify,
   onExpire,
   onError,
   resetKey = 0,
+  loading = false,
 }: TurnstileFieldProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const onVerifyRef = useRef(onVerify);
   const onExpireRef = useRef(onExpire);
   const onErrorRef = useRef(onError);
-  const siteKey = getTurnstileSiteKeyClient();
 
   onVerifyRef.current = onVerify;
   onExpireRef.current = onExpire;
@@ -80,7 +127,7 @@ export function TurnstileField({
   );
 
   useEffect(() => {
-    if (!scriptReady || !containerRef.current || !window.turnstile || !siteKey) return;
+    if (loading || !scriptReady || !containerRef.current || !window.turnstile || !siteKey) return;
 
     if (widgetIdRef.current) {
       window.turnstile.remove(widgetIdRef.current);
@@ -89,12 +136,12 @@ export function TurnstileField({
 
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
       sitekey: siteKey,
-      callback: (token) => onVerifyRef.current(token),
+      callback: (value) => onVerifyRef.current(value),
       "expired-callback": () => onExpireRef.current?.(),
       "error-callback": () => onErrorRef.current?.(),
       theme: "light",
-      size: "flexible",
-      appearance: "interaction-only",
+      size: "normal",
+      appearance: "always",
     });
 
     return () => {
@@ -103,7 +150,18 @@ export function TurnstileField({
         widgetIdRef.current = null;
       }
     };
-  }, [scriptReady, siteKey, resetKey]);
+  }, [loading, scriptReady, siteKey, resetKey]);
+
+  if (loading) {
+    return (
+      <div
+        className="flex min-h-[65px] w-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500"
+        aria-busy="true"
+      >
+        กำลังโหลด CAPTCHA…
+      </div>
+    );
+  }
 
   if (!siteKey) return null;
 

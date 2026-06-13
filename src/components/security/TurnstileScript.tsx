@@ -1,13 +1,9 @@
 "use client";
 
 import Script from "next/script";
-import { getTurnstileSiteKeyClient } from "@/components/security/turnstile-shared";
 
-/** Load Turnstile once site-wide (afterInteractive — not lazyOnload). */
+/** Load Turnstile script site-wide; widgets render per-form with site key from API. */
 export function TurnstileScript() {
-  const siteKey = getTurnstileSiteKeyClient();
-  if (!siteKey) return null;
-
   return (
     <Script
       id="cloudflare-turnstile"

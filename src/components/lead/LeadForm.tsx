@@ -215,6 +215,8 @@ export function LeadForm({
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       <TurnstileField
+        siteKey={captcha.siteKey}
+        loading={captcha.loading}
         resetKey={captcha.resetKey}
         onVerify={captcha.setToken}
         onExpire={() => captcha.setToken("")}
@@ -223,7 +225,7 @@ export function LeadForm({
 
       <button
         type="submit"
-        disabled={status === "submitting" || !captcha.ready}
+        disabled={status === "submitting" || (captcha.enabled && !captcha.ready)}
         className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-60"
       >
         {status === "submitting" ? "กำลังส่ง..." : submitLabel}

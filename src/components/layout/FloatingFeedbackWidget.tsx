@@ -199,6 +199,8 @@ export function FloatingFeedbackWidget() {
                     </div>
                     <p className="text-xs text-slate-500">{t("feedbackContactHint")}</p>
                     <TurnstileField
+                      siteKey={captcha.siteKey}
+                      loading={captcha.loading}
                       resetKey={captcha.resetKey}
                       onVerify={captcha.setToken}
                       onExpire={() => captcha.setToken("")}
@@ -206,7 +208,7 @@ export function FloatingFeedbackWidget() {
                     />
                     <button
                       type="submit"
-                      disabled={status === "submitting" || !captcha.ready}
+                      disabled={status === "submitting" || (captcha.enabled && !captcha.ready)}
                       className="w-full rounded-xl bg-teal-600 py-2.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
                     >
                       {status === "submitting" ? t("feedbackSubmitting") : t("feedbackSubmit")}

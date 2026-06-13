@@ -126,13 +126,15 @@ export function RegisterForm() {
       </p>
 
       <TurnstileField
+        siteKey={captcha.siteKey}
+        loading={captcha.loading}
         resetKey={captcha.resetKey}
         onVerify={captcha.setToken}
         onExpire={() => captcha.setToken("")}
         onError={() => captcha.setToken("")}
       />
 
-      <button type="submit" disabled={loading || !captcha.ready} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
+      <button type="submit" disabled={loading || (captcha.enabled && !captcha.ready)} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
         {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
       </button>
 
