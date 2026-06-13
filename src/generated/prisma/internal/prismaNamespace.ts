@@ -396,7 +396,9 @@ export const ModelName = {
   SearchEvent: 'SearchEvent',
   PropertyViewEvent: 'PropertyViewEvent',
   MatchingEvent: 'MatchingEvent',
-  UserSubscription: 'UserSubscription'
+  UserSubscription: 'UserSubscription',
+  SavedProperty: 'SavedProperty',
+  SearchAlert: 'SearchAlert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -412,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription"
+    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription" | "savedProperty" | "searchAlert"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1378,6 +1380,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SavedProperty: {
+      payload: Prisma.$SavedPropertyPayload<ExtArgs>
+      fields: Prisma.SavedPropertyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedPropertyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedPropertyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedPropertyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedPropertyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>
+        }
+        findMany: {
+          args: Prisma.SavedPropertyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>[]
+        }
+        create: {
+          args: Prisma.SavedPropertyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>
+        }
+        createMany: {
+          args: Prisma.SavedPropertyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedPropertyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedPropertyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>
+        }
+        update: {
+          args: Prisma.SavedPropertyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedPropertyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedPropertyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedPropertyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedPropertyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedPropertyPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedPropertyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedProperty>
+        }
+        groupBy: {
+          args: Prisma.SavedPropertyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedPropertyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedPropertyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedPropertyCountAggregateOutputType> | number
+        }
+      }
+    }
+    SearchAlert: {
+      payload: Prisma.$SearchAlertPayload<ExtArgs>
+      fields: Prisma.SearchAlertFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SearchAlertFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SearchAlertFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>
+        }
+        findFirst: {
+          args: Prisma.SearchAlertFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SearchAlertFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>
+        }
+        findMany: {
+          args: Prisma.SearchAlertFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>[]
+        }
+        create: {
+          args: Prisma.SearchAlertCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>
+        }
+        createMany: {
+          args: Prisma.SearchAlertCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SearchAlertCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>[]
+        }
+        delete: {
+          args: Prisma.SearchAlertDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>
+        }
+        update: {
+          args: Prisma.SearchAlertUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>
+        }
+        deleteMany: {
+          args: Prisma.SearchAlertDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SearchAlertUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SearchAlertUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>[]
+        }
+        upsert: {
+          args: Prisma.SearchAlertUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchAlertPayload>
+        }
+        aggregate: {
+          args: Prisma.SearchAlertAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSearchAlert>
+        }
+        groupBy: {
+          args: Prisma.SearchAlertGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SearchAlertGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SearchAlertCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SearchAlertCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1675,6 +1825,32 @@ export const UserSubscriptionScalarFieldEnum = {
 export type UserSubscriptionScalarFieldEnum = (typeof UserSubscriptionScalarFieldEnum)[keyof typeof UserSubscriptionScalarFieldEnum]
 
 
+export const SavedPropertyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  propertySlug: 'propertySlug',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedPropertyScalarFieldEnum = (typeof SavedPropertyScalarFieldEnum)[keyof typeof SavedPropertyScalarFieldEnum]
+
+
+export const SearchAlertScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  listingType: 'listingType',
+  filters: 'filters',
+  frequency: 'frequency',
+  active: 'active',
+  lastSentAt: 'lastSentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SearchAlertScalarFieldEnum = (typeof SearchAlertScalarFieldEnum)[keyof typeof SearchAlertScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1890,6 +2066,8 @@ export type GlobalOmitConfig = {
   propertyViewEvent?: Prisma.PropertyViewEventOmit
   matchingEvent?: Prisma.MatchingEventOmit
   userSubscription?: Prisma.UserSubscriptionOmit
+  savedProperty?: Prisma.SavedPropertyOmit
+  searchAlert?: Prisma.SearchAlertOmit
 }
 
 /* Types for Logging */

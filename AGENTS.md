@@ -12,24 +12,26 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 30 — **Phase C next**)
+> ## 🤝 HANDOFF (session 31 — **Phase L3 next**)
 >
-> **Production:** https://www.condominium.in.th — 5 locales live  
-> **GitHub `main`:** highlights shipped; session 30 work may need push
+> **Production:** https://www.condominium.in.th — deploy session 31 pending  
+> **GitHub `main`:** session 31 work local (L1+L2 features)
 >
-> **Done through session 30:**
-> - Phase 6b: brand, SEO admin, AdSense, favicon
-> - **7 property types** + category filter + `highlights` for AI search
-> - **Demo hide** when ≥3 published user listings
-> - **Floating feedback widget** + agent signup on `/agents#join-agent`
-> - **`/admin/agents`** — applications + profiles by **team / freelance / company**
+> **Done through session 31:**
+> - **Phase L1:** Advanced search filters (price, beds, BTS, district)
+> - **Phase L1:** Admin CSV import at `/admin/import`
+> - **Phase L2:** Save favorites with heart icon + `/dashboard/saved`
+> - **Phase L2:** Leaflet map search at `/map`
+> - **Phase L2:** Mortgage calculator on sale listings + `/tools/mortgage-calculator`
+> - **Phase L2:** Search alerts with `/dashboard/alerts`
 >
-> **Next priorities (Phase C):**
-> 1. **Admin CSV listing import** + agent bulk post
-> 2. **`/npa` hub** for bank-owned inventory
-> 3. Deploy session 30 migrations to production
-> 4. **Phase 7:** user listing DB i18n (after Phase C)
-> 5. ThaiBulkSMS / AdSense / GA4 (user ops)
+> **Next priorities (Phase L3):**
+> 1. **Deploy** session 31 migrations + push + `vercel --prod`
+> 2. **Resend** email setup (DNS + Vercel env)
+> 3. **Project pages** for condo developments
+> 4. **Price history** logging + trends
+> 5. **Agent reviews** / ratings system
+> 6. **Social login** (Google, Facebook)
 
 ---
 
@@ -39,9 +41,11 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase C** — CSV import, `/npa` hub → then Phase 7 listing i18n |
+| Phase | **Phase L3** — project pages, price history, agent reviews |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
+| Search | Advanced filters + Leaflet map at `/map` |
+| Tools | Mortgage calculator, favorites, search alerts |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
 
@@ -50,24 +54,27 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
+# Session 31 — Launch Features
+src/components/property/AdvancedFilters.tsx      Price, beds, BTS, district filters
+src/components/property/SaveButton.tsx           Heart icon for favorites
+src/components/property/PropertyListingsMap.tsx  Leaflet map with pins
+src/components/property/MortgageCalculator.tsx   Loan calculator widget
+src/components/property/CreateAlertButton.tsx    Modal for search alerts
+src/lib/csv-import.ts                            CSV parser + validator
+src/lib/favorites.ts                             getUserSavedSlugs, getUserSavedProperties
+src/app/map/                                     Map search page
+src/app/dashboard/saved/                         Saved properties page
+src/app/dashboard/alerts/                        Search alerts management
+src/app/admin/import/                            CSV import page
+src/app/tools/mortgage-calculator/               Standalone calculator page
+
+# Core
 src/components/brand/SiteLogo.tsx       DD-style logo + SiteLogoMark
-src/app/icon.svg                        Favicon (Next.js file metadata)
 src/lib/site-settings.ts                SiteSettings fetch + home meta resolve
-src/lib/seo.ts                          createRootMetadata(), createMetadata()
-src/app/admin/seo/                      Admin SEO + AdSense slot editor
-src/lib/adsense.ts                      9-slot catalog + EMPTY_AD_SLOTS
-src/components/ads/                     AdPlacement, AdSlot, AdSenseScript
-src/lib/password-reset.ts               Email reset token + Resend link
-src/lib/content/legal.ts                Privacy + terms (TH/EN)
-src/components/layout/CookieConsent.tsx Banner; gates GA4 + AdSense
-src/components/layout/LanguageSwitcher.tsx  Flag dropdown (5 locales)
-src/lib/locale-content.ts               resolveLocalized + area/blog/property helpers
 src/lib/property-types.ts              7 listing categories + labels
 src/lib/demo-listings.ts               Hide static demos when real inventory ≥3
 src/lib/agent-application.ts           team / freelance / company agent categories
-src/app/admin/agents/                  Applications + tabbed profile editor
 src/components/layout/FloatingFeedbackWidget.tsx  Feedback + agent signup tabs
-src/components/agents/AgentInterestForm.tsx       Public agent application form
 ```
 
 ---

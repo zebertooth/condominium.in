@@ -2,6 +2,7 @@ import { AdSlot } from "@/components/ads/AdSlot";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DemoListingBanner } from "@/components/property/ListingsEmptyState";
+import { MortgageCalculator } from "@/components/property/MortgageCalculator";
 import { PropertyContactSection } from "@/components/property/PropertyContactSection";
 import { PropertyImageGallery } from "@/components/property/PropertyImageGallery";
 import { PropertyMap } from "@/components/property/PropertyMap";
@@ -236,6 +237,12 @@ export default async function PropertyPage({ params }: PageProps) {
           </div>
         </aside>
       </div>
+
+      {property.listingType === "sale" && (
+        <div className="mt-8">
+          <MortgageCalculator propertyPrice={property.price} locale={locale} />
+        </div>
+      )}
 
       {property.latitude != null && property.longitude != null && (
         <PropertyMap latitude={property.latitude} longitude={property.longitude} address={property.address} />

@@ -35,6 +35,12 @@ export default async function DashboardLayout({
           <Link href="/dashboard/verify" className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200">
             {t("dashVerify", locale)}
           </Link>
+          <Link href="/dashboard/saved" className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200">
+            {t("dashSaved", locale)}
+          </Link>
+          <Link href="/dashboard/alerts" className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200">
+            {t("dashAlerts", locale)}
+          </Link>
           {user.role === "user" && (
             <Link
               href="/dashboard/inquiries"

@@ -5,12 +5,30 @@ import { formatNearbyStation } from "@/lib/locations";
 import { localizedPropertyDistrict, localizedPropertyTitle } from "@/lib/property-i18n";
 import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
 import type { Property } from "@/types/property";
+import { SaveButton } from "./SaveButton";
 
-export function PropertyCard({ property, locale = defaultLocale }: { property: Property; locale?: Locale }) {
+interface PropertyCardProps {
+  property: Property;
+  locale?: Locale;
+  showSaveButton?: boolean;
+  isSaved?: boolean;
+}
+
+export function PropertyCard({
+  property,
+  locale = defaultLocale,
+  showSaveButton = false,
+  isSaved = false,
+}: PropertyCardProps) {
   const title = localizedPropertyTitle(property, locale);
   const district = localizedPropertyDistrict(property, locale);
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+    <article className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+      {showSaveButton && (
+        <div className="absolute right-3 top-3 z-10">
+          <SaveButton propertySlug={property.slug} initialSaved={isSaved} />
+        </div>
+      )}
       <Link href={`/property/${property.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
           <Image

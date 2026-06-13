@@ -48,6 +48,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/blog" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
               {t("adminBlog", locale)}
             </Link>
+            <Link href="/admin/import" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
+              {t("adminImport", locale)}
+            </Link>
             <Link href="/" className="rounded-lg border border-slate-600 px-3 py-1.5 hover:bg-slate-800">
               {t("backToWebsite", locale)}
             </Link>

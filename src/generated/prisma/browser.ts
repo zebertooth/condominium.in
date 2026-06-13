@@ -82,3 +82,13 @@ export type MatchingEvent = Prisma.MatchingEventModel
  * 
  */
 export type UserSubscription = Prisma.UserSubscriptionModel
+/**
+ * Model SavedProperty
+ * 
+ */
+export type SavedProperty = Prisma.SavedPropertyModel
+/**
+ * Model SearchAlert
+ * 
+ */
+export type SearchAlert = Prisma.SearchAlertModel

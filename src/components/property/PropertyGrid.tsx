@@ -6,17 +6,23 @@ import { type Locale, defaultLocale } from "@/lib/i18n";
 
 const INFEED_EVERY = 6;
 
+interface PropertyGridProps {
+  properties: Property[];
+  locale?: Locale;
+  infeedSlotId?: string;
+  listingType?: "sale" | "rent";
+  showSaveButtons?: boolean;
+  savedSlugs?: Set<string>;
+}
+
 export function PropertyGrid({
   properties,
   locale = defaultLocale,
   infeedSlotId,
   listingType,
-}: {
-  properties: Property[];
-  locale?: Locale;
-  infeedSlotId?: string;
-  listingType?: "sale" | "rent";
-}) {
+  showSaveButtons = false,
+  savedSlugs,
+}: PropertyGridProps) {
   if (properties.length === 0) {
     return <ListingsEmptyState locale={locale} listingType={listingType} />;
   }
@@ -37,7 +43,15 @@ export function PropertyGrid({
         </div>,
       );
     }
-    nodes.push(<PropertyCard key={property.id} property={property} locale={locale} />);
+    nodes.push(
+      <PropertyCard
+        key={property.id}
+        property={property}
+        locale={locale}
+        showSaveButton={showSaveButtons}
+        isSaved={savedSlugs?.has(property.slug) ?? false}
+      />,
+    );
   });
 
   return <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{nodes}</div>;

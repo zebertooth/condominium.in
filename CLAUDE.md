@@ -19,16 +19,17 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 30)
+## Model transfer snapshot (session 31)
 
 | Item | Detail |
 |------|--------|
 | **Locales** | TH, EN, ZH, JA, AR — UI + native content for areas/blog/static listings |
-| **Listings** | 7 property types; category filter; `highlights` field for AI text match |
-| **Demos** | Static listings hidden when ≥3 published user listings |
-| **Agents** | `/admin/agents` — applications + profiles (team / freelance / company) |
-| **Feedback** | `FloatingFeedbackWidget`; `Lead` sources `feedback`, `agent_interest` |
-| **Next** | Phase C: CSV import, `/npa` hub → Phase 7: user listing DB i18n |
+| **Search** | Advanced filters (price, beds, BTS, district) + Leaflet map at `/map` |
+| **Favorites** | `SavedProperty` model; heart icon on cards; `/dashboard/saved` |
+| **Alerts** | `SearchAlert` model; create from filters; `/dashboard/alerts` |
+| **Tools** | Mortgage calculator on sale listings + `/tools/mortgage-calculator` |
+| **Admin** | CSV import at `/admin/import` for bulk listing upload |
+| **Next** | Phase L3: project pages, price history, agent reviews, social login |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -128,38 +129,45 @@ src/
 ├── app/                    # Next.js App Router pages & API routes
 │   ├── admin/              # Admin panel (role=admin only)
 │   │   ├── properties/     # list + [id]/edit (admin listing edit)
+│   │   ├── import/         # CSV import page (session 31)
 │   │   ├── seo/            # home SEO + AdSense slot IDs (SiteSettings)
 │   │   ├── users/, leads/  # manage users + lead pipeline
 │   ├── dashboard/          # User dashboard (auth required)
 │   │   ├── post/, verify/  # create listing, LINE+Email(+phone) verify
+│   │   ├── saved/          # saved properties / favorites (session 31)
+│   │   ├── alerts/         # search alert management (session 31)
 │   │   ├── agent/          # agent CRM dashboard
 │   │   └── edit/[id]/      # owner edit own listing
+│   ├── map/                # Leaflet map search (session 31)
+│   ├── tools/mortgage-calculator/  # standalone calculator (session 31)
 │   ├── forgot-password/, reset-password/, privacy/, terms/
 │   ├── icon.svg, apple-icon.svg  # favicon (Next.js file metadata)
 │   ├── api/
 │   │   ├── auth/           # register, login, logout, forgot/reset password, OTP, line/*
-│   │   ├── admin/          # stats, users, properties, leads, payments, site-settings
-│   │   ├── user/           # properties (GET/POST), properties/[id] (PUT/DELETE), quota
+│   │   ├── admin/          # stats, users, properties, leads, payments, site-settings, import
+│   │   ├── user/           # properties, quota, favorites, alerts (session 31)
 │   │   ├── packages/       # purchase, sponsor, confirm, status (PromptPay flow)
 │   │   ├── leads/          # public lead capture
 │   │   ├── upload/         # image upload (Cloudinary/local)
 │   │   ├── og/             # dynamic OG image
 │   │   └── ai-search/      # OpenAI w/ rule fallback (rate-limited)
-│   ├── property/[slug]/    # Public listing detail
+│   ├── property/[slug]/    # Public listing detail (+ mortgage calculator for sale)
 │   ├── areas/, blog/, buy/, rent/, ai-search/, list-property/, contact/, ...
 │   ├── sitemap.ts, robots.ts
 │   └── layout.tsx
 ├── components/
-│   ├── admin/              # AdminPropertyTable, AdminSeoForm, AdminAnalyticsDashboard, ...
+│   ├── admin/              # AdminPropertyTable, AdminSeoForm, AdminCsvImport, ...
 │   ├── ads/                # AdPlacement, AdSlot, AdSenseScript
 │   ├── auth/               # RegisterForm, LoginForm, LogoutButton
 │   ├── brand/              # SiteLogo, SiteLogoMark
-│   ├── dashboard/          # VerifyForm, PostPropertyForm, QuotaCard, PackageShop, MyProperties
-│   ├── property/           # Cards, Gallery, Map, LocationPicker, ImageGalleryInput
+│   ├── dashboard/          # VerifyForm, PostPropertyForm, QuotaCard, PackageShop, AlertsList
+│   ├── property/           # Cards, Gallery, Map, AdvancedFilters, SaveButton, MortgageCalculator
 │   ├── lead/               # LeadForm
 │   ├── layout/             # Header, Footer, LanguageSwitcher, CookieConsent
 │   ├── home/, seo/, ai/
 ├── lib/
+│   ├── csv-import.ts       # CSV parser + validator (session 31)
+│   ├── favorites.ts        # getUserSavedSlugs, getUserSavedProperties (session 31)
 │   ├── site-settings.ts    # getSiteSettings(), resolveHomeMeta(), ad slot mapping
 │   ├── adsense.ts          # AD_SLOT_CATALOG (9 positions)
 │   ├── password-reset.ts   # token hash, Resend reset email
@@ -190,7 +198,7 @@ src/
 └── generated/prisma/       # Prisma client (auto-generated)
 
 prisma/
-├── schema.prisma           # User, UserProperty, SiteSettings, PasswordResetToken, Lead, ...
+├── schema.prisma           # User, UserProperty, SavedProperty, SearchAlert, ...
 ├── migrations/
 └── seed.ts                 # Admin user + default SiteSettings seed
 ```
@@ -237,6 +245,20 @@ prisma/
 
 ### UserSubscription
 - Paid packages for extra listing slots (PromptPay QR + slip upload; gated by `PAID_FEATURES_ENABLED`)
+
+### SavedProperty (session 31)
+- User favorites/wishlist
+- `userId` + `propertySlug` unique constraint
+- API: `/api/user/favorites` (toggle save/unsave)
+- UI: heart icon on cards, `/dashboard/saved` page
+
+### SearchAlert (session 31)
+- Email alerts for matching new listings
+- `name`, `listingType`, `filters` (JSON), `frequency` (daily/weekly)
+- `active`, `lastSentAt` for digest scheduling
+- API: `/api/user/alerts` (CRUD)
+- UI: `/dashboard/alerts`, `CreateAlertButton` on buy/rent pages
+- Max 10 alerts per user
 
 ### Static listings
 - `src/lib/properties.ts` — 6 demo listings, always merged in `src/lib/listings.ts`
@@ -326,6 +348,9 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 | POST | `/api/admin/properties/bulk` | admin | Bulk status update (approve/reject many) |
 | PATCH | `/api/admin/leads/[id]` | admin | Lead status / assign / note |
 | GET/PATCH | `/api/admin/payments` | admin | List / approve / reject PromptPay payments |
+| POST | `/api/admin/import` | admin | CSV import listings (session 31) |
+| GET/POST | `/api/user/favorites` | user | List / toggle saved properties (session 31) |
+| GET/POST/DELETE | `/api/user/alerts` | user | CRUD search alerts (session 31) |
 | POST | `/api/ai-search` | — | AI search (OpenAI w/ rule-based fallback) |
 
 ---
@@ -400,12 +425,22 @@ Done / env-gated:
 - [x] Native ZH/JA/AR area/blog/static listing content
 - [x] Brand logo + favicon; AdSense placement scaffold
 
-**Next code tasks (Phase C → Phase 7):**
-- [ ] Admin CSV listing import + agent bulk post
+**Done (session 31 — Phase L1+L2):**
+- [x] Advanced search filters (price, beds, BTS, district)
+- [x] Admin CSV listing import (`/admin/import`)
+- [x] Save favorites / wishlist (`SavedProperty` + `/dashboard/saved`)
+- [x] Leaflet map search (`/map`)
+- [x] Mortgage calculator on sale listings + `/tools/mortgage-calculator`
+- [x] Search alerts (`SearchAlert` + `/dashboard/alerts`)
+
+**Next code tasks (Phase L3 → Phase 7):**
+- [ ] Project/development pages (condo project grouping)
+- [ ] Price history logging + area trends
+- [ ] Agent reviews / ratings system
+- [ ] Social login (Google, Facebook)
 - [ ] `/npa` hub page for bank-owned inventory
 - [ ] User-submitted listing title/description per locale in DB + post/edit UI (Phase 7)
 - [ ] Optional URL locale routing (`/zh/...`)
-- [ ] `middleware.ts` for auth (optional)
 
 ---
 
@@ -423,6 +458,18 @@ Edit `src/lib/packages.ts` — `FREE_PROPERTY_LIMIT`, `LISTING_PACKAGES`, `SPONS
 1. Add `OPENAI_API_KEY` to env
 2. Replace or augment `src/lib/ai-search.ts`
 3. Keep `runAISearch()` async interface used by `/api/ai-search`
+
+### Add a new filter option to AdvancedFilters
+1. Add option to dropdown arrays in `src/components/property/AdvancedFilters.tsx`
+2. Update `SearchFilters` type in `src/types/property.ts` if needed
+3. Update `applyFilters()` in `src/lib/listings.ts`
+
+### Run search alert digests
+1. Create cron job or Vercel scheduled function
+2. Query `SearchAlert` where `active=true` and `lastSentAt` is stale
+3. Run `filterListings()` with alert filters, find new listings
+4. Send email via `sendEmail()` from `src/lib/notifications.ts`
+5. Update `lastSentAt` after sending
 
 ### Deploy to production (current phase)
 See **`DEPLOYMENT.md`** for the full runbook. Summary:

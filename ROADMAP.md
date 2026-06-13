@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-10 (session 30 — categories, demo policy, agent sections)  
-**Current phase:** **Phase C** — inventory tools (`/npa`, CSV import) → then **Phase 7** user listing DB i18n
+**Last updated:** 2026-06-14 (session 31 — Launch Feature Roadmap L1+L2)  
+**Current phase:** **Phase L3** — growth features (project pages, price history, social login)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
@@ -17,17 +17,19 @@
 
 ---
 
-## Model transfer snapshot (session 30)
+## Model transfer snapshot (session 31)
 
 | Area | State |
 |------|--------|
-| **GitHub** | `main` — session 30 work local (categories, agents, feedback) |
-| **Production** | https://www.condominium.in.th — highlights shipped (`a7222a6`) |
-| **Listings** | 7 property types (condo, apartment, house, townhouse, land, commercial, npa) + category filter on buy/rent |
-| **Demo policy** | Static demos hidden when ≥3 published user listings (`src/lib/demo-listings.ts`) |
-| **Agents** | `/admin/agents` — applications + profiles by **team / freelance / company** |
-| **Feedback** | Floating widget (feedback + agent signup tabs); `/agents#join-agent` |
-| **Next** | **Phase C:** CSV import, agent bulk post, `/npa` hub — then Phase 7 listing i18n |
+| **GitHub** | `main` — session 31 Launch L1+L2 features local |
+| **Production** | https://www.condominium.in.th — deploy pending |
+| **Search** | **Advanced filters** (price, beds, BTS, district) on `/buy` and `/rent` |
+| **Map** | **Leaflet map search** at `/map` with property pins |
+| **Favorites** | **SavedProperty** model + heart icon on cards + `/dashboard/saved` |
+| **Alerts** | **SearchAlert** model + `/dashboard/alerts` + create alert buttons |
+| **Tools** | **Mortgage calculator** on sale listings + `/tools/mortgage-calculator` |
+| **Admin** | **CSV import** at `/admin/import` for bulk listing upload |
+| **Next** | **Phase L3:** project pages, price history, agent reviews, social login |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -67,8 +69,10 @@ Bangkok condo/house marketplace with:
 | **6b** | Brand logo, SEO admin, AdSense, favicon | **Done** (session 29) | 2027 Q1 |
 | **6c** | Property categories, demo hide, highlights, feedback widget | **Done** (session 30) | 2027 Q1 |
 | **6d** | Agent signup + admin sections (team/freelance/company) | **Done** (session 30) | 2027 Q1 |
-| **C** | CSV import, `/npa` hub, real inventory scale | **Next** | 2027 Q1 |
-| **7** | User listing DB i18n + optional URL routing | Planned | 2027 Q1 |
+| **L1** | Advanced filters, CSV import, real listings inventory | **Done** (session 31) | 2027 Q1 |
+| **L2** | Favorites, map search, mortgage calculator, search alerts | **Done** (session 31) | 2027 Q1 |
+| **L3** | Project pages, price history, agent reviews, social login | **Next** | 2027 Q2 |
+| **7** | User listing DB i18n + optional URL routing | Planned | 2027 Q2 |
 
 ---
 
@@ -426,22 +430,95 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase C — Inventory scale (NEXT)
+## Phase L1 — Production Ready (DONE — session 31)
 
-**Goal:** Grow real listing inventory without scraping third-party sites (legal risk). Owner/agent posts + admin tools only.
+**Goal:** Essential features for credibility and usability.
 
-### Admin & agent tooling
-- [ ] Admin CSV listing import (`/admin/properties/import`) — validate rows, bulk create as `pending`
-- [ ] Agent bulk post UI — paste or upload multiple listings for agents with quota
-- [ ] Optional: licensed feed adapter (future — not DDproperty scrape)
+### Advanced Search Filters
+- [x] `AdvancedFilters` component with BTS, district, price range, bedrooms
+- [x] URL-based filtering on `/buy` and `/rent` pages
+- [x] Filter analytics logging (`/api/analytics/search-filter`)
 
-### NPA hub
-- [ ] Dedicated `/npa` page — filter `propertyType=npa`, bank badges, reference links
-- [ ] SEO landing copy for bank-owned / auction inventory
+### CSV Import
+- [x] `src/lib/csv-import.ts` — parser + validator
+- [x] Admin CSV import at `/admin/import`
+- [x] Sample CSV download + format guide
+- [x] Bulk create listings as `published` (admin-owned)
 
-### Ops
-- [ ] Confirm demo hide threshold on production once 3+ real listings published
-- [ ] Seed sample freelance/company agent profiles for empty category sections (optional)
+### Real Listings Inventory
+- [x] CSV import enables bulk upload of real listings
+- [x] Demo hide when ≥3 published user listings (from Phase 6c)
+
+---
+
+## Phase L2 — Competitive Features (DONE — session 31)
+
+**Goal:** Feature parity with DDproperty and competitors.
+
+### Save Favorites / Wishlist
+- [x] `SavedProperty` model + migration
+- [x] `/api/user/favorites` — toggle save/unsave
+- [x] `SaveButton` heart icon component on `PropertyCard`
+- [x] `/dashboard/saved` page with saved listings
+- [x] Buy/rent pages show save buttons for logged-in users
+
+### Map-Based Search
+- [x] `PropertyListingsMap` component with Leaflet
+- [x] `/map` page with property pins + popups
+- [x] Rent/sale toggle + category + advanced filters
+- [x] "View on map" links on buy/rent pages
+
+### Mortgage Calculator
+- [x] `MortgageCalculator` component with:
+  - Property price input
+  - Down payment slider (5-50%)
+  - Interest rate input
+  - Loan term selector (10-30 years)
+  - Monthly payment + breakdown display
+- [x] Added to property detail pages (sale listings)
+- [x] Standalone page at `/tools/mortgage-calculator`
+
+### Search Alerts
+- [x] `SearchAlert` model + migration
+- [x] `/api/user/alerts` — CRUD for alerts
+- [x] `CreateAlertButton` modal on buy/rent pages
+- [x] `/dashboard/alerts` page with alerts management
+- [x] Max 10 alerts per user
+
+---
+
+## Phase L3 — Growth Features (NEXT)
+
+**Goal:** Differentiation and advanced features.
+
+### Project/Development Pages
+- [ ] `Project` model — name, developer, location, amenities
+- [ ] Link `UserProperty` to projects
+- [ ] `/projects` listing page + `/projects/[slug]` detail
+- [ ] Group listings by project on property cards
+
+### Price History / Trends
+- [ ] `PriceHistory` model — track listing price changes
+- [ ] Area price trend aggregation
+- [ ] Price history chart on property detail page
+- [ ] `/trends` or `/market` analytics page (public)
+
+### Agent Reviews / Ratings
+- [ ] `AgentReview` model — buyer ratings after transaction
+- [ ] Review moderation in admin
+- [ ] Agent profile pages with ratings display
+- [ ] Link published `TeamAgent` to real `User` accounts
+
+### Social Login
+- [ ] Google OAuth (via NextAuth or custom)
+- [ ] Facebook OAuth
+- [ ] Keep LINE as primary for Thai users
+
+### Optional Enhancements
+- [ ] Virtual tours / video embeds
+- [ ] In-app chat/messaging
+- [ ] Mobile app (React Native / Flutter)
+- [ ] NPA hub page (`/npa`)
 
 **Do NOT:** scrape or copy listings from DDproperty or competitors — use owner posts, agent CRM, or licensed feeds only.
 
@@ -514,17 +591,43 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 30+)
+### Next step plan (session 31+)
 
 | Step | Action | Owner | Priority |
 |------|--------|-------|----------|
-| **1** | **Phase C:** Admin CSV import + agent bulk post + `/npa` hub | Agent | **High** |
-| **2** | Deploy session 30 migrations + push to `main` | Agent | **High** |
-| **3** | **Phase 7:** `UserProperty` i18n fields + post/edit UI | Agent | Medium |
-| **4** | ThaiBulkSMS production SMS verify | User | Medium |
-| **5** | AdSense: `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo` | User | Medium |
-| **6** | Optional: OPENAI / SLIPOK / GA4 on Vercel | User | Low |
-| **7** | URL locale routing (`/zh/…`) — after DB i18n | Agent | Low |
+| **1** | **Deploy:** Run migrations + push to `main` + `vercel --prod` | Agent | **High** |
+| **2** | **Test:** Full user flow with new features (filters, favorites, map, alerts) | Agent | **High** |
+| **3** | **Resend:** Configure email (DNS + Vercel env) for OTP/alerts | User | **High** |
+| **4** | **Phase L3:** Project pages for condo developments | Agent | Medium |
+| **5** | **Phase L3:** Price history logging + trends | Agent | Medium |
+| **6** | **Phase 7:** `UserProperty` i18n fields + post/edit UI | Agent | Medium |
+| **7** | ThaiBulkSMS / AdSense / GA4 production setup | User | Medium |
+| **8** | Social login (Google, Facebook) | Agent | Low |
+
+### Done (2026-06-14, session 31 — Launch Feature Roadmap L1+L2)
+```
+PHASE L1 — Production Ready:
+- AdvancedFilters component (BTS, district, price range, bedrooms)
+- URL-based filtering on /buy and /rent pages
+- Admin CSV import at /admin/import with validation + sample download
+- Filter analytics logging
+
+PHASE L2 — Competitive Features:
+- SavedProperty model + /api/user/favorites API
+- SaveButton heart icon on PropertyCard
+- /dashboard/saved page for favorites
+- PropertyListingsMap with Leaflet at /map
+- Property pins with popups + auto-fit bounds
+- "View on map" links on buy/rent pages
+- MortgageCalculator widget (down payment, interest, term)
+- Calculator on sale property pages + /tools/mortgage-calculator
+- SearchAlert model + /api/user/alerts API
+- CreateAlertButton modal + /dashboard/alerts page
+- Dashboard nav: Saved, Alerts links
+
+Migrations: 20260614200000_saved_properties, 20260614210000_search_alerts
+All MD files updated for session 31 handoff
+```
 
 ### Done (2026-06-10, session 30 — categories, demos, agent sections)
 ```
@@ -881,8 +984,14 @@ When starting a new chat/session:
 | Password reset | `src/lib/password-reset.ts`, `/api/auth/forgot-password`, `/api/auth/reset-password` |
 | Legal / cookies | `src/lib/content/legal.ts`, `src/components/layout/CookieConsent.tsx` |
 | Areas/Blog content | `src/lib/areas.ts`, `src/lib/blog.ts` |
-| Map | `src/lib/locations.ts`, `src/components/property/PropertyMap.tsx` |
+| Single-property map | `src/lib/locations.ts`, `src/components/property/PropertyMap.tsx` |
 | Gallery | `src/components/property/PropertyImageGallery.tsx`, `ImageGalleryInput.tsx` |
+| **Advanced filters** | `src/components/property/AdvancedFilters.tsx`, buy/rent pages |
+| **CSV import** | `src/lib/csv-import.ts`, `/admin/import`, `/api/admin/import` |
+| **Favorites** | `src/lib/favorites.ts`, `SaveButton.tsx`, `/api/user/favorites`, `/dashboard/saved` |
+| **Map search** | `src/components/property/PropertyListingsMap.tsx`, `/map` |
+| **Mortgage calc** | `src/components/property/MortgageCalculator.tsx`, `/tools/mortgage-calculator` |
+| **Search alerts** | `src/app/api/user/alerts`, `CreateAlertButton.tsx`, `/dashboard/alerts` |
 | DB schema | `prisma/schema.prisma` |
 
 ---

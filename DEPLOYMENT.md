@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 30):** Live at **https://www.condominium.in.th**. Phase 6c/6d complete (categories, demo policy, agent sections). **Phase C next:** CSV import + `/npa` hub. Phase 7: user listing DB i18n.
+**Current status (session 31):** Live at **https://www.condominium.in.th**. Phase L1+L2 complete (advanced filters, CSV import, favorites, map search, mortgage calculator, search alerts). **Phase L3 next:** project pages, price history, agent reviews, social login.
 
 ---
 
@@ -198,6 +198,12 @@ To add/change domains: Vercel → Project → Domains.
 - [ ] Rate limit: /api/ai-search returns 429 when hammered
 - [ ] ThaiBulkSMS delivery (user to verify on production next)
 - [ ] AdSense units render after cookie accept + slot IDs in `/admin/seo`
+- [ ] Advanced filters on /buy and /rent (price, beds, BTS, district)
+- [ ] Map search at /map with property pins
+- [ ] Save favorite (heart icon) → appears in /dashboard/saved
+- [ ] Create search alert → appears in /dashboard/alerts
+- [ ] Mortgage calculator on sale property detail pages
+- [ ] Admin CSV import at /admin/import
 
 ---
 
@@ -210,7 +216,7 @@ To add/change domains: Vercel → Project → Domains.
 - **LINE Developing channel** only allows Testers until channel is Published (no troubleshooting UI shown to users).
 - **Pending listings** return 404 publicly until admin approves; owner can preview when logged in.
 - **Cookie consent:** GA4 and AdSense scripts load only after “Accept all”. Essential cookies always on.
-- **SiteSettings:** Default row seeded on `db:seed`; migrations include `20260612190000_site_settings`, `20260612210000_adsense_slots`, `20260612180000_password_reset_token`, `20260614000000_property_categories`, `20260614120000_lead_agent_type`, `20260614140000_team_agent_category`.
+- **SiteSettings:** Default row seeded on `db:seed`; migrations include `20260612190000_site_settings`, `20260612210000_adsense_slots`, `20260612180000_password_reset_token`, `20260614000000_property_categories`, `20260614120000_lead_agent_type`, `20260614140000_team_agent_category`, `20260614200000_saved_properties`, `20260614210000_search_alerts`.
 - **Rotate Neon password** if connection string was shared in chat.
 
 ---

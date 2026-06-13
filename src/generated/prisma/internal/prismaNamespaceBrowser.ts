@@ -63,7 +63,9 @@ export const ModelName = {
   SearchEvent: 'SearchEvent',
   PropertyViewEvent: 'PropertyViewEvent',
   MatchingEvent: 'MatchingEvent',
-  UserSubscription: 'UserSubscription'
+  UserSubscription: 'UserSubscription',
+  SavedProperty: 'SavedProperty',
+  SearchAlert: 'SearchAlert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -338,6 +340,32 @@ export const UserSubscriptionScalarFieldEnum = {
 } as const
 
 export type UserSubscriptionScalarFieldEnum = (typeof UserSubscriptionScalarFieldEnum)[keyof typeof UserSubscriptionScalarFieldEnum]
+
+
+export const SavedPropertyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  propertySlug: 'propertySlug',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedPropertyScalarFieldEnum = (typeof SavedPropertyScalarFieldEnum)[keyof typeof SavedPropertyScalarFieldEnum]
+
+
+export const SearchAlertScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  listingType: 'listingType',
+  filters: 'filters',
+  frequency: 'frequency',
+  active: 'active',
+  lastSentAt: 'lastSentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SearchAlertScalarFieldEnum = (typeof SearchAlertScalarFieldEnum)[keyof typeof SearchAlertScalarFieldEnum]
 
 
 export const SortOrder = {

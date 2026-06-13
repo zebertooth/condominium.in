@@ -1,4 +1,6 @@
-import { getGoogleMapsUrl, getOsmEmbedUrl } from "@/lib/locations";
+"use client";
+
+import { getOsmEmbedUrl } from "@/lib/locations";
 
 interface PropertyMapProps {
   latitude: number;
@@ -7,31 +9,24 @@ interface PropertyMapProps {
 }
 
 export function PropertyMap({ latitude, longitude, address }: PropertyMapProps) {
-  return (
-    <section className="mt-10">
-      <h2 className="text-xl font-bold text-slate-900">แผนที่ตำแหน่ง</h2>
-      <p className="mt-1 text-sm text-slate-600">{address}</p>
-      <p className="text-xs text-slate-500">
-        พิกัด {latitude.toFixed(5)}, {longitude.toFixed(5)}
-      </p>
+  const embedUrl = getOsmEmbedUrl(latitude, longitude);
 
-      <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
+  return (
+    <div className="mt-12">
+      <h2 className="mb-4 text-lg font-semibold text-slate-900">ตำแหน่งที่ตั้ง</h2>
+      <div className="aspect-video overflow-hidden rounded-xl border border-slate-200">
         <iframe
-          title="แผนที่ตำแหน่งทรัพย์"
-          src={getOsmEmbedUrl(latitude, longitude)}
-          className="h-80 w-full"
+          src={embedUrl}
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
           loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title={`แผนที่ ${address}`}
         />
       </div>
-
-      <a
-        href={getGoogleMapsUrl(latitude, longitude)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-3 inline-block text-sm font-medium text-teal-700 hover:underline"
-      >
-        เปิดใน Google Maps →
-      </a>
-    </section>
+      <p className="mt-2 text-sm text-slate-500">{address}</p>
+    </div>
   );
 }
