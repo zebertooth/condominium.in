@@ -4,6 +4,7 @@ import { AdSenseScript } from "@/components/ads/AdSenseScript";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AnalyticsLoader, CookieConsent } from "@/components/layout/CookieConsent";
 import { FloatingFeedbackWidget } from "@/components/layout/FloatingFeedbackWidget";
+import { TurnstileScript } from "@/components/security/TurnstileScript";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -53,6 +54,7 @@ export default async function RootLayout({
         <LocaleProvider locale={locale}>
           <JsonLd data={organizationJsonLd} />
           <AnalyticsLoader />
+          <TurnstileScript />
           <AdSenseScript />
           <Header locale={locale} />
           <main className="flex-1">{children}</main>

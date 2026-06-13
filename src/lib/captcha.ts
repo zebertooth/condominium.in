@@ -52,6 +52,7 @@ export async function verifyCaptchaToken(
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return false;
     const data = (await res.json()) as TurnstileVerifyResponse;

@@ -1,7 +1,10 @@
 "use client";
 
-import Script from "next/script";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  getTurnstileSiteKeyClient,
+  subscribeTurnstileReady,
+} from "@/components/security/turnstile-shared";
 
 declare global {
   interface Window {
@@ -14,6 +17,8 @@ declare global {
           "expired-callback"?: () => void;
           "error-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
+          size?: "normal" | "compact" | "flexible";
+          appearance?: "always" | "execute" | "interaction-only";
         },
       ) => string;
       reset: (widgetId?: string) => void;
@@ -22,12 +27,7 @@ declare global {
   }
 }
 
-export function getTurnstileSiteKeyClient(): string {
-  const configured = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
-  if (configured) return configured;
-  if (process.env.NODE_ENV === "development") return "1x00000000000000000000AA";
-  return "";
-}
+export { getTurnstileSiteKeyClient } from "@/components/security/turnstile-shared";
 
 export function useCaptchaGate() {
   const enabled = Boolean(getTurnstileSiteKeyClient());
@@ -64,10 +64,22 @@ export function TurnstileField({
 }: TurnstileFieldProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
-  const [scriptReady, setScriptReady] = useState(false);
+  const onVerifyRef = useRef(onVerify);
+  const onExpireRef = useRef(onExpire);
+  const onErrorRef = useRef(onError);
   const siteKey = getTurnstileSiteKeyClient();
 
-  const renderWidget = useCallback(() => {
+  onVerifyRef.current = onVerify;
+  onExpireRef.current = onExpire;
+  onErrorRef.current = onError;
+
+  const scriptReady = useSyncExternalStore(
+    subscribeTurnstileReady,
+    () => Boolean(window.turnstile),
+    () => false,
+  );
+
+  useEffect(() => {
     if (!scriptReady || !containerRef.current || !window.turnstile || !siteKey) return;
 
     if (widgetIdRef.current) {
@@ -77,33 +89,30 @@ export function TurnstileField({
 
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
       sitekey: siteKey,
-      callback: onVerify,
-      "expired-callback": () => onExpire?.(),
-      "error-callback": () => onError?.(),
+      callback: (token) => onVerifyRef.current(token),
+      "expired-callback": () => onExpireRef.current?.(),
+      "error-callback": () => onErrorRef.current?.(),
       theme: "light",
+      size: "flexible",
+      appearance: "interaction-only",
     });
-  }, [scriptReady, siteKey, onVerify, onExpire, onError]);
 
-  useEffect(() => {
-    renderWidget();
     return () => {
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
       }
     };
-  }, [renderWidget, resetKey]);
+  }, [scriptReady, siteKey, resetKey]);
 
   if (!siteKey) return null;
 
   return (
-    <>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="lazyOnload"
-        onLoad={() => setScriptReady(true)}
-      />
-      <div ref={containerRef} className="flex min-h-[65px] justify-center" aria-label="CAPTCHA" />
-    </>
+    <div
+      ref={containerRef}
+      className="flex min-h-[65px] w-full justify-center"
+      aria-label="CAPTCHA"
+      aria-busy={!scriptReady}
+    />
   );
 }
