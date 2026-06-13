@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
 interface LeadFormProps {
   source: "contact" | "property";
@@ -36,9 +37,15 @@ export function LeadForm({
   const [viewingTime, setViewingTime] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
   const [error, setError] = useState("");
+  const captcha = useCaptchaGate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!captcha.ready) {
+      setError("กรุณายืนยัน CAPTCHA");
+      return;
+    }
+
     setError("");
     setStatus("submitting");
 
@@ -60,6 +67,7 @@ export function LeadForm({
           btsStation,
           viewingDate: isViewing ? viewingDate : undefined,
           viewingTime: isViewing ? viewingTime : undefined,
+          captchaToken: captcha.token || undefined,
         }),
       });
       const data = await res.json();
@@ -67,6 +75,7 @@ export function LeadForm({
       if (!res.ok) {
         setError(data.error ?? "ส่งข้อความไม่สำเร็จ");
         setStatus("idle");
+        captcha.reset();
         return;
       }
 
@@ -205,9 +214,16 @@ export function LeadForm({
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
+      <TurnstileField
+        resetKey={captcha.resetKey}
+        onVerify={captcha.setToken}
+        onExpire={() => captcha.setToken("")}
+        onError={() => captcha.setToken("")}
+      />
+
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={status === "submitting" || !captcha.ready}
         className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-60"
       >
         {status === "submitting" ? "กำลังส่ง..." : submitLabel}

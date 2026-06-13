@@ -8,6 +8,7 @@ import {
   type AgentCategory,
 } from "@/lib/agent-application";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
+import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
 export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
   const t = useT();
@@ -19,6 +20,7 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
   const [error, setError] = useState("");
+  const captcha = useCaptchaGate();
 
   const inputClass = compact
     ? "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-teal-500 focus:ring-2"
@@ -26,6 +28,11 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!captcha.ready) {
+      setError(t("captchaRequired"));
+      return;
+    }
+
     setError("");
     setStatus("submitting");
 
@@ -39,6 +46,7 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
         message,
         source: "agent_interest",
         agentType,
+        captchaToken: captcha.token || undefined,
       }),
     });
 
@@ -46,6 +54,7 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
     if (!res.ok) {
       setError(data.error ?? t("genericError"));
       setStatus("idle");
+      captcha.reset();
       return;
     }
 
@@ -132,9 +141,15 @@ export function AgentInterestForm({ compact = false }: { compact?: boolean }) {
         />
       </div>
       <p className="text-xs text-slate-500">{t("feedbackContactHint")}</p>
+      <TurnstileField
+        resetKey={captcha.resetKey}
+        onVerify={captcha.setToken}
+        onExpire={() => captcha.setToken("")}
+        onError={() => captcha.setToken("")}
+      />
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={status === "submitting" || !captcha.ready}
         className={
           compact
             ? "w-full rounded-xl bg-teal-600 py-2.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"

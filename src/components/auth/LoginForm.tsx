@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
 export function LoginForm() {
   const router = useRouter();
@@ -10,9 +11,15 @@ export function LoginForm() {
   const resetSuccess = searchParams.get("reset") === "1";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const captcha = useCaptchaGate();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!captcha.ready) {
+      setError("กรุณายืนยัน CAPTCHA");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -23,6 +30,7 @@ export function LoginForm() {
       body: JSON.stringify({
         login: form.get("login"),
         password: form.get("password"),
+        captchaToken: captcha.token || undefined,
       }),
     });
 
@@ -31,6 +39,7 @@ export function LoginForm() {
 
     if (!res.ok) {
       setError(data.error ?? "เข้าสู่ระบบไม่สำเร็จ");
+      captcha.reset();
       return;
     }
 
@@ -70,7 +79,14 @@ export function LoginForm() {
         <input id="password" name="password" type="password" required className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-teal-500 focus:ring-2" />
       </div>
 
-      <button type="submit" disabled={loading} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
+      <TurnstileField
+        resetKey={captcha.resetKey}
+        onVerify={captcha.setToken}
+        onExpire={() => captcha.setToken("")}
+        onError={() => captcha.setToken("")}
+      />
+
+      <button type="submit" disabled={loading || !captcha.ready} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
         {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
       </button>
 

@@ -24,59 +24,39 @@ function ContactIcon({ className }: { className?: string }) {
   );
 }
 
+function publicNavLinks(locale: Locale): HeaderNavItem[] {
+  return [
+    { href: "/buy", label: t("buy", locale) },
+    { href: "/rent", label: t("rent", locale) },
+    { href: "/projects", label: t("navProjects", locale) },
+    { href: "/map", label: t("navMap", locale) },
+    { href: "/ai-search", label: t("aiSearch", locale) },
+    { href: "/blog", label: t("blog", locale) },
+  ];
+}
+
 function guestNav(locale: Locale): {
   mainLinks: HeaderNavItem[];
   highlightLink: HeaderNavItem;
 } {
   return {
-    mainLinks: [
-      { href: "/buy", label: t("buy", locale) },
-      { href: "/rent", label: t("rent", locale) },
-      { href: "/projects", label: t("navProjects", locale) },
-      { href: "/map", label: t("navMap", locale) },
-      { href: "/ai-search", label: t("aiSearch", locale) },
-      { href: "/blog", label: t("blog", locale) },
-    ],
+    mainLinks: publicNavLinks(locale),
     highlightLink: { href: "/list-property", label: t("listProperty", locale), highlight: true },
   };
 }
 
-function loggedInNav(
-  locale: Locale,
-  role: string,
-): {
+function loggedInNav(locale: Locale): {
   mainLinks: HeaderNavItem[];
-  highlightLink: HeaderNavItem;
+  highlightLink?: HeaderNavItem;
 } {
-  const mainLinks: HeaderNavItem[] = [
-    { href: "/buy", label: t("buy", locale) },
-    { href: "/rent", label: t("rent", locale) },
-    { href: "/map", label: t("navMap", locale) },
-    { href: "/projects", label: t("navProjects", locale) },
-    { href: "/ai-search", label: t("aiSearch", locale) },
-    { href: "/dashboard/saved", label: t("dashSaved", locale) },
-    { href: "/dashboard/alerts", label: t("dashAlerts", locale) },
-    { href: "/dashboard", label: t("dashboard", locale) },
-  ];
-
-  if (role === "agent" || role === "admin") {
-    mainLinks.splice(mainLinks.length - 1, 0, {
-      href: "/dashboard/agent",
-      label: t("dashAgent", locale),
-    });
-  }
-
-  mainLinks.push({ href: "/blog", label: t("blog", locale) });
-
   return {
-    mainLinks,
-    highlightLink: { href: "/dashboard/post", label: t("dashPost", locale), highlight: true },
+    mainLinks: publicNavLinks(locale),
   };
 }
 
 export async function Header({ locale }: { locale: Locale }) {
   const user = await getCurrentUser();
-  const nav = user ? loggedInNav(locale, user.role) : guestNav(locale);
+  const nav = user ? loggedInNav(locale) : guestNav(locale);
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-md">

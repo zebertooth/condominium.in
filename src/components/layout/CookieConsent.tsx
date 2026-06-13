@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { useState, useSyncExternalStore } from "react";
 import { useT } from "@/components/i18n/LocaleProvider";
+import { getGaMeasurementId } from "@/lib/ga";
 
 export const COOKIE_CONSENT_NAME = "condo_cookie_consent";
 export type CookieConsentValue = "essential" | "all";
@@ -82,7 +83,7 @@ export function CookieConsent() {
 }
 
 export function AnalyticsLoader() {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const gaId = getGaMeasurementId();
   const enabled = useSyncExternalStore(
     subscribeConsent,
     () => hasAnalyticsConsent(),

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireCaptcha } from "@/lib/captcha";
 import { prisma } from "@/lib/db";
 import {
   resolveLeadAssigneeId,
@@ -26,6 +27,11 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const captcha = await requireCaptcha(body.captchaToken, ip);
+    if (!captcha.ok) {
+      return NextResponse.json({ error: captcha.error }, { status: captcha.status });
+    }
+
     const parsed = leadSchema.safeParse(body);
 
     if (!parsed.success) {

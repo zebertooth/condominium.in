@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AgentInterestForm } from "@/components/agents/AgentInterestForm";
 import { useT } from "@/components/i18n/LocaleProvider";
+import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
 type FeedbackTab = "feedback" | "agent";
 
@@ -19,11 +20,17 @@ export function FloatingFeedbackWidget() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
   const [error, setError] = useState("");
+  const captcha = useCaptchaGate();
 
   if (pathname.startsWith("/admin")) return null;
 
   async function handleFeedbackSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!captcha.ready) {
+      setError(t("captchaRequired"));
+      return;
+    }
+
     setError("");
     setStatus("submitting");
 
@@ -36,6 +43,7 @@ export function FloatingFeedbackWidget() {
         email: email || undefined,
         message,
         source: "feedback",
+        captchaToken: captcha.token || undefined,
       }),
     });
 
@@ -43,6 +51,7 @@ export function FloatingFeedbackWidget() {
     if (!res.ok) {
       setError(data.error ?? t("genericError"));
       setStatus("idle");
+      captcha.reset();
       return;
     }
 
@@ -54,11 +63,13 @@ export function FloatingFeedbackWidget() {
     setTab(next);
     setError("");
     setStatus("idle");
+    captcha.reset();
   }
 
   function closePanel() {
     setOpen(false);
     setError("");
+    captcha.reset();
     if (status === "done") {
       setStatus("idle");
       setName("");
@@ -187,9 +198,15 @@ export function FloatingFeedbackWidget() {
                       />
                     </div>
                     <p className="text-xs text-slate-500">{t("feedbackContactHint")}</p>
+                    <TurnstileField
+                      resetKey={captcha.resetKey}
+                      onVerify={captcha.setToken}
+                      onExpire={() => captcha.setToken("")}
+                      onError={() => captcha.setToken("")}
+                    />
                     <button
                       type="submit"
-                      disabled={status === "submitting"}
+                      disabled={status === "submitting" || !captcha.ready}
                       className="w-full rounded-xl bg-teal-600 py-2.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
                     >
                       {status === "submitting" ? t("feedbackSubmitting") : t("feedbackSubmit")}

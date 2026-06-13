@@ -13,6 +13,7 @@ const LABELS: Record<keyof ReturnType<typeof getIntegrationStatus>, string> = {
   promptpay: "PromptPay",
   slipok: "SlipOK",
   ga4: "GA4",
+  turnstile: "Turnstile (CAPTCHA)",
 };
 
 export async function IntegrationStatus() {

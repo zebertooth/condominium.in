@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
+import { requireCaptcha } from "@/lib/captcha";
 import { createSession, hashPassword, setSessionCookie } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getClientIp } from "@/lib/rate-limit";
 import { normalizePhone, registerSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const captcha = await requireCaptcha(body.captchaToken, getClientIp(request));
+    if (!captcha.ok) {
+      return NextResponse.json({ error: captcha.error }, { status: captcha.status });
+    }
+
     const parsed = registerSchema.safeParse(body);
 
     if (!parsed.success) {

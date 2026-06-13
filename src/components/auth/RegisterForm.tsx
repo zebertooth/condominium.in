@@ -3,14 +3,21 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
 export function RegisterForm() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const captcha = useCaptchaGate();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!captcha.ready) {
+      setError("กรุณายืนยัน CAPTCHA");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -34,6 +41,7 @@ export function RegisterForm() {
         password: form.get("password"),
         fullName: form.get("fullName"),
         isThai,
+        captchaToken: captcha.token || undefined,
       }),
     });
 
@@ -42,6 +50,7 @@ export function RegisterForm() {
 
     if (!res.ok) {
       setError(data.error ?? "สมัครไม่สำเร็จ");
+      captcha.reset();
       return;
     }
 
@@ -116,7 +125,14 @@ export function RegisterForm() {
         </Link>
       </p>
 
-      <button type="submit" disabled={loading} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
+      <TurnstileField
+        resetKey={captcha.resetKey}
+        onVerify={captcha.setToken}
+        onExpire={() => captcha.setToken("")}
+        onError={() => captcha.setToken("")}
+      />
+
+      <button type="submit" disabled={loading || !captcha.ready} className="w-full rounded-xl bg-teal-600 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-50">
         {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
       </button>
 
