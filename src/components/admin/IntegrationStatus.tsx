@@ -10,6 +10,8 @@ const LABELS: Record<keyof ReturnType<typeof getIntegrationStatus>, string> = {
   twilio: "Twilio (SMS fallback)",
   cloudinary: "Cloudinary",
   line: "LINE Login",
+  google: "Google OAuth",
+  facebook: "Facebook OAuth",
   promptpay: "PromptPay",
   slipok: "SlipOK",
   ga4: "GA4",

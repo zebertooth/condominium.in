@@ -47,6 +47,8 @@ export type UserMinAggregateOutputType = {
   isThai: boolean | null
   lineVerified: boolean | null
   lineUserId: string | null
+  googleId: string | null
+  facebookId: string | null
   idCardHash: string | null
   idVerified: boolean | null
   idSubmittedAt: Date | null
@@ -67,6 +69,8 @@ export type UserMaxAggregateOutputType = {
   isThai: boolean | null
   lineVerified: boolean | null
   lineUserId: string | null
+  googleId: string | null
+  facebookId: string | null
   idCardHash: string | null
   idVerified: boolean | null
   idSubmittedAt: Date | null
@@ -87,6 +91,8 @@ export type UserCountAggregateOutputType = {
   isThai: number
   lineVerified: number
   lineUserId: number
+  googleId: number
+  facebookId: number
   idCardHash: number
   idVerified: number
   idSubmittedAt: number
@@ -117,6 +123,8 @@ export type UserMinAggregateInputType = {
   isThai?: true
   lineVerified?: true
   lineUserId?: true
+  googleId?: true
+  facebookId?: true
   idCardHash?: true
   idVerified?: true
   idSubmittedAt?: true
@@ -137,6 +145,8 @@ export type UserMaxAggregateInputType = {
   isThai?: true
   lineVerified?: true
   lineUserId?: true
+  googleId?: true
+  facebookId?: true
   idCardHash?: true
   idVerified?: true
   idSubmittedAt?: true
@@ -157,6 +167,8 @@ export type UserCountAggregateInputType = {
   isThai?: true
   lineVerified?: true
   lineUserId?: true
+  googleId?: true
+  facebookId?: true
   idCardHash?: true
   idVerified?: true
   idSubmittedAt?: true
@@ -264,6 +276,8 @@ export type UserGroupByOutputType = {
   isThai: boolean
   lineVerified: boolean
   lineUserId: string | null
+  googleId: string | null
+  facebookId: string | null
   idCardHash: string | null
   idVerified: boolean
   idSubmittedAt: Date | null
@@ -307,6 +321,8 @@ export type UserWhereInput = {
   isThai?: Prisma.BoolFilter<"User"> | boolean
   lineVerified?: Prisma.BoolFilter<"User"> | boolean
   lineUserId?: Prisma.StringNullableFilter<"User"> | string | null
+  googleId?: Prisma.StringNullableFilter<"User"> | string | null
+  facebookId?: Prisma.StringNullableFilter<"User"> | string | null
   idCardHash?: Prisma.StringNullableFilter<"User"> | string | null
   idVerified?: Prisma.BoolFilter<"User"> | boolean
   idSubmittedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -315,6 +331,7 @@ export type UserWhereInput = {
   properties?: Prisma.UserPropertyListRelationFilter
   subscriptions?: Prisma.UserSubscriptionListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
+  agentReviews?: Prisma.AgentReviewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -330,6 +347,8 @@ export type UserOrderByWithRelationInput = {
   isThai?: Prisma.SortOrder
   lineVerified?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebookId?: Prisma.SortOrderInput | Prisma.SortOrder
   idCardHash?: Prisma.SortOrderInput | Prisma.SortOrder
   idVerified?: Prisma.SortOrder
   idSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -338,6 +357,7 @@ export type UserOrderByWithRelationInput = {
   properties?: Prisma.UserPropertyOrderByRelationAggregateInput
   subscriptions?: Prisma.UserSubscriptionOrderByRelationAggregateInput
   assignedLeads?: Prisma.LeadOrderByRelationAggregateInput
+  agentReviews?: Prisma.AgentReviewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -345,6 +365,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   phone?: string
   email?: string
   lineUserId?: string
+  googleId?: string
+  facebookId?: string
   idCardHash?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
@@ -364,7 +386,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   properties?: Prisma.UserPropertyListRelationFilter
   subscriptions?: Prisma.UserSubscriptionListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
-}, "id" | "phone" | "email" | "lineUserId" | "idCardHash">
+  agentReviews?: Prisma.AgentReviewListRelationFilter
+}, "id" | "phone" | "email" | "lineUserId" | "googleId" | "facebookId" | "idCardHash">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -379,6 +402,8 @@ export type UserOrderByWithAggregationInput = {
   isThai?: Prisma.SortOrder
   lineVerified?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebookId?: Prisma.SortOrderInput | Prisma.SortOrder
   idCardHash?: Prisma.SortOrderInput | Prisma.SortOrder
   idVerified?: Prisma.SortOrder
   idSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -407,6 +432,8 @@ export type UserScalarWhereWithAggregatesInput = {
   isThai?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   lineVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   lineUserId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  facebookId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   idCardHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   idVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   idSubmittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -427,6 +454,8 @@ export type UserCreateInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -435,6 +464,7 @@ export type UserCreateInput = {
   properties?: Prisma.UserPropertyCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.UserSubscriptionCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
+  agentReviews?: Prisma.AgentReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -450,6 +480,8 @@ export type UserUncheckedCreateInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -458,6 +490,7 @@ export type UserUncheckedCreateInput = {
   properties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.UserSubscriptionUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
+  agentReviews?: Prisma.AgentReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -473,6 +506,8 @@ export type UserUpdateInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -481,6 +516,7 @@ export type UserUpdateInput = {
   properties?: Prisma.UserPropertyUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.UserSubscriptionUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
+  agentReviews?: Prisma.AgentReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -496,6 +532,8 @@ export type UserUncheckedUpdateInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -504,6 +542,7 @@ export type UserUncheckedUpdateInput = {
   properties?: Prisma.UserPropertyUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.UserSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
+  agentReviews?: Prisma.AgentReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -519,6 +558,8 @@ export type UserCreateManyInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -539,6 +580,8 @@ export type UserUpdateManyMutationInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -559,6 +602,8 @@ export type UserUncheckedUpdateManyInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -579,6 +624,8 @@ export type UserCountOrderByAggregateInput = {
   isThai?: Prisma.SortOrder
   lineVerified?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  facebookId?: Prisma.SortOrder
   idCardHash?: Prisma.SortOrder
   idVerified?: Prisma.SortOrder
   idSubmittedAt?: Prisma.SortOrder
@@ -603,6 +650,8 @@ export type UserMaxOrderByAggregateInput = {
   isThai?: Prisma.SortOrder
   lineVerified?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  facebookId?: Prisma.SortOrder
   idCardHash?: Prisma.SortOrder
   idVerified?: Prisma.SortOrder
   idSubmittedAt?: Prisma.SortOrder
@@ -623,6 +672,8 @@ export type UserMinOrderByAggregateInput = {
   isThai?: Prisma.SortOrder
   lineVerified?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  facebookId?: Prisma.SortOrder
   idCardHash?: Prisma.SortOrder
   idVerified?: Prisma.SortOrder
   idSubmittedAt?: Prisma.SortOrder
@@ -716,6 +767,20 @@ export type UserUpdateOneRequiredWithoutSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.UserUpdateWithoutSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
 }
 
+export type UserCreateNestedOneWithoutAgentReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAgentReviewsInput, Prisma.UserUncheckedCreateWithoutAgentReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAgentReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAgentReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAgentReviewsInput, Prisma.UserUncheckedCreateWithoutAgentReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAgentReviewsInput
+  upsert?: Prisma.UserUpsertWithoutAgentReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAgentReviewsInput, Prisma.UserUpdateWithoutAgentReviewsInput>, Prisma.UserUncheckedUpdateWithoutAgentReviewsInput>
+}
+
 export type UserCreateWithoutPropertiesInput = {
   id?: string
   phone?: string | null
@@ -729,6 +794,8 @@ export type UserCreateWithoutPropertiesInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -736,6 +803,7 @@ export type UserCreateWithoutPropertiesInput = {
   updatedAt?: Date | string
   subscriptions?: Prisma.UserSubscriptionCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
+  agentReviews?: Prisma.AgentReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPropertiesInput = {
@@ -751,6 +819,8 @@ export type UserUncheckedCreateWithoutPropertiesInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -758,6 +828,7 @@ export type UserUncheckedCreateWithoutPropertiesInput = {
   updatedAt?: Date | string
   subscriptions?: Prisma.UserSubscriptionUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
+  agentReviews?: Prisma.AgentReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPropertiesInput = {
@@ -789,6 +860,8 @@ export type UserUpdateWithoutPropertiesInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -796,6 +869,7 @@ export type UserUpdateWithoutPropertiesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.UserSubscriptionUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
+  agentReviews?: Prisma.AgentReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPropertiesInput = {
@@ -811,6 +885,8 @@ export type UserUncheckedUpdateWithoutPropertiesInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -818,6 +894,7 @@ export type UserUncheckedUpdateWithoutPropertiesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.UserSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
+  agentReviews?: Prisma.AgentReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedLeadsInput = {
@@ -833,6 +910,8 @@ export type UserCreateWithoutAssignedLeadsInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -840,6 +919,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   updatedAt?: Date | string
   properties?: Prisma.UserPropertyCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.UserSubscriptionCreateNestedManyWithoutUserInput
+  agentReviews?: Prisma.AgentReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedLeadsInput = {
@@ -855,6 +935,8 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -862,6 +944,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   updatedAt?: Date | string
   properties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.UserSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  agentReviews?: Prisma.AgentReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedLeadsInput = {
@@ -893,6 +976,8 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -900,6 +985,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.UserPropertyUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.UserSubscriptionUpdateManyWithoutUserNestedInput
+  agentReviews?: Prisma.AgentReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
@@ -915,6 +1001,8 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -922,6 +1010,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.UserPropertyUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.UserSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  agentReviews?: Prisma.AgentReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -937,6 +1026,8 @@ export type UserCreateWithoutSubscriptionsInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -944,6 +1035,7 @@ export type UserCreateWithoutSubscriptionsInput = {
   updatedAt?: Date | string
   properties?: Prisma.UserPropertyCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
+  agentReviews?: Prisma.AgentReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -959,6 +1051,8 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
   idCardHash?: string | null
   idVerified?: boolean
   idSubmittedAt?: Date | string | null
@@ -966,6 +1060,7 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   updatedAt?: Date | string
   properties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
+  agentReviews?: Prisma.AgentReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -997,6 +1092,8 @@ export type UserUpdateWithoutSubscriptionsInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1004,6 +1101,7 @@ export type UserUpdateWithoutSubscriptionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.UserPropertyUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
+  agentReviews?: Prisma.AgentReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1019,12 +1117,131 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.UserPropertyUncheckedUpdateManyWithoutUserNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
+  agentReviews?: Prisma.AgentReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAgentReviewsInput = {
+  id?: string
+  phone?: string | null
+  phoneVerified?: boolean
+  email?: string | null
+  emailVerified?: boolean
+  fullName: string
+  passwordHash: string
+  role?: string
+  listingLimitOverride?: number | null
+  isThai?: boolean
+  lineVerified?: boolean
+  lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
+  idCardHash?: string | null
+  idVerified?: boolean
+  idSubmittedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.UserPropertyCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.UserSubscriptionCreateNestedManyWithoutUserInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
+}
+
+export type UserUncheckedCreateWithoutAgentReviewsInput = {
+  id?: string
+  phone?: string | null
+  phoneVerified?: boolean
+  email?: string | null
+  emailVerified?: boolean
+  fullName: string
+  passwordHash: string
+  role?: string
+  listingLimitOverride?: number | null
+  isThai?: boolean
+  lineVerified?: boolean
+  lineUserId?: string | null
+  googleId?: string | null
+  facebookId?: string | null
+  idCardHash?: string | null
+  idVerified?: boolean
+  idSubmittedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.UserSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
+}
+
+export type UserCreateOrConnectWithoutAgentReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAgentReviewsInput, Prisma.UserUncheckedCreateWithoutAgentReviewsInput>
+}
+
+export type UserUpsertWithoutAgentReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAgentReviewsInput, Prisma.UserUncheckedUpdateWithoutAgentReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAgentReviewsInput, Prisma.UserUncheckedCreateWithoutAgentReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAgentReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAgentReviewsInput, Prisma.UserUncheckedUpdateWithoutAgentReviewsInput>
+}
+
+export type UserUpdateWithoutAgentReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  listingLimitOverride?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.UserPropertyUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.UserSubscriptionUpdateManyWithoutUserNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAgentReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  listingLimitOverride?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isThai?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lineVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idCardHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.UserPropertyUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.UserSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
@@ -1037,12 +1254,14 @@ export type UserCountOutputType = {
   properties: number
   subscriptions: number
   assignedLeads: number
+  agentReviews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | UserCountOutputTypeCountPropertiesArgs
   subscriptions?: boolean | UserCountOutputTypeCountSubscriptionsArgs
   assignedLeads?: boolean | UserCountOutputTypeCountAssignedLeadsArgs
+  agentReviews?: boolean | UserCountOutputTypeCountAgentReviewsArgs
 }
 
 /**
@@ -1076,6 +1295,13 @@ export type UserCountOutputTypeCountAssignedLeadsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.LeadWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAgentReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AgentReviewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1090,6 +1316,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: boolean
+  googleId?: boolean
+  facebookId?: boolean
   idCardHash?: boolean
   idVerified?: boolean
   idSubmittedAt?: boolean
@@ -1098,6 +1326,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   properties?: boolean | Prisma.User$propertiesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
+  agentReviews?: boolean | Prisma.User$agentReviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1114,6 +1343,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: boolean
+  googleId?: boolean
+  facebookId?: boolean
   idCardHash?: boolean
   idVerified?: boolean
   idSubmittedAt?: boolean
@@ -1134,6 +1365,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: boolean
+  googleId?: boolean
+  facebookId?: boolean
   idCardHash?: boolean
   idVerified?: boolean
   idSubmittedAt?: boolean
@@ -1154,6 +1387,8 @@ export type UserSelectScalar = {
   isThai?: boolean
   lineVerified?: boolean
   lineUserId?: boolean
+  googleId?: boolean
+  facebookId?: boolean
   idCardHash?: boolean
   idVerified?: boolean
   idSubmittedAt?: boolean
@@ -1161,11 +1396,12 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "phone" | "phoneVerified" | "email" | "emailVerified" | "fullName" | "passwordHash" | "role" | "listingLimitOverride" | "isThai" | "lineVerified" | "lineUserId" | "idCardHash" | "idVerified" | "idSubmittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "phone" | "phoneVerified" | "email" | "emailVerified" | "fullName" | "passwordHash" | "role" | "listingLimitOverride" | "isThai" | "lineVerified" | "lineUserId" | "googleId" | "facebookId" | "idCardHash" | "idVerified" | "idSubmittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | Prisma.User$propertiesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
+  agentReviews?: boolean | Prisma.User$agentReviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1177,6 +1413,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     properties: Prisma.$UserPropertyPayload<ExtArgs>[]
     subscriptions: Prisma.$UserSubscriptionPayload<ExtArgs>[]
     assignedLeads: Prisma.$LeadPayload<ExtArgs>[]
+    agentReviews: Prisma.$AgentReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1191,6 +1428,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isThai: boolean
     lineVerified: boolean
     lineUserId: string | null
+    googleId: string | null
+    facebookId: string | null
     idCardHash: string | null
     idVerified: boolean
     idSubmittedAt: Date | null
@@ -1593,6 +1832,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   properties<T extends Prisma.User$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.User$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedLeads<T extends Prisma.User$assignedLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  agentReviews<T extends Prisma.User$agentReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$agentReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgentReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1634,6 +1874,8 @@ export interface UserFieldRefs {
   readonly isThai: Prisma.FieldRef<"User", 'Boolean'>
   readonly lineVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly lineUserId: Prisma.FieldRef<"User", 'String'>
+  readonly googleId: Prisma.FieldRef<"User", 'String'>
+  readonly facebookId: Prisma.FieldRef<"User", 'String'>
   readonly idCardHash: Prisma.FieldRef<"User", 'String'>
   readonly idVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly idSubmittedAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -2101,6 +2343,30 @@ export type User$assignedLeadsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * User.agentReviews
+ */
+export type User$agentReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AgentReview
+   */
+  select?: Prisma.AgentReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AgentReview
+   */
+  omit?: Prisma.AgentReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgentReviewInclude<ExtArgs> | null
+  where?: Prisma.AgentReviewWhereInput
+  orderBy?: Prisma.AgentReviewOrderByWithRelationInput | Prisma.AgentReviewOrderByWithRelationInput[]
+  cursor?: Prisma.AgentReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AgentReviewScalarFieldEnum | Prisma.AgentReviewScalarFieldEnum[]
 }
 
 /**

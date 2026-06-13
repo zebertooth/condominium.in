@@ -20,6 +20,8 @@ model User {
   isThai        Boolean   @default(true)
   lineVerified  Boolean   @default(false)
   lineUserId    String?   @unique
+  googleId      String?   @unique
+  facebookId    String?   @unique
   idCardHash    String?   @unique
   idVerified    Boolean   @default(false)
   idSubmittedAt DateTime?
@@ -29,6 +31,7 @@ model User {
   properties    UserProperty[]
   subscriptions UserSubscription[]
   assignedLeads Lead[]             @relation("AgentLeads")
+  agentReviews  AgentReview[]
 }
 
 model SiteSettings {
@@ -63,8 +66,10 @@ model TeamAgent {
   imageUrl  String   @default("")
   sortOrder Int      @default(0)
   published Boolean  @default(true)
+  userId        String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  reviews       AgentReview[]
 
   @@index([published, sortOrder])
   @@index([agentCategory, published, sortOrder])
@@ -162,6 +167,7 @@ model UserProperty {
   agentManaged   Boolean   @default(false)
   projectId      String?
   project        Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  priceHistory   PriceHistory[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -323,4 +329,35 @@ model SearchAlert {
 
   @@index([userId])
   @@index([active, frequency])
+}
+
+model PriceHistory {
+  id          String       @id @default(cuid())
+  propertyId  String
+  property    UserProperty @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  price       Int
+  listingType String
+  changeType  String
+  createdAt   DateTime     @default(now())
+
+  @@index([propertyId])
+  @@index([createdAt])
+}
+
+model AgentReview {
+  id          String    @id @default(cuid())
+  teamAgentId String
+  teamAgent   TeamAgent @relation(fields: [teamAgentId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leadId      String?
+  rating      Int
+  comment     String    @default("")
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, teamAgentId])
+  @@index([teamAgentId, status])
+  @@index([status])
 }

@@ -19,7 +19,7 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 32)
+## Model transfer snapshot (session 33)
 
 | Item | Detail |
 |------|--------|
@@ -29,7 +29,9 @@ Handoff guide for AI agents and developers continuing this project.
 | **Alerts** | `SearchAlert` model; create from filters; `/dashboard/alerts` (email cron pending) |
 | **Tools** | Mortgage calculator on sale listings + `/tools/mortgage-calculator` |
 | **Projects** | `Project` model; `/projects`, `/projects/[slug]`, admin CRUD |
-| **Header/hero** | Text-only nav links; mobile row-2 scroll strip; hero AI showcase |
+| **Header/hero** | Text-only nav; logged-in top nav = public links; hero AI showcase |
+| **Security** | Cloudflare Turnstile on login, register, contact/lead forms |
+| **Analytics** | GA4 `G-9MRZ57SWS1` after cookie consent |
 | **Next** | Phase L3: price history, alert digests, agent reviews, social login |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
@@ -94,8 +96,10 @@ Optional integrations (env-gated — blank = dev fallback):
 ```env
 OPENAI_API_KEY=            # enables LLM AI search (else rule-based)
 OPENAI_MODEL=gpt-4o-mini
-NEXT_PUBLIC_GA_ID=         # GA4 analytics (loads after cookie consent)
+NEXT_PUBLIC_GA_ID=         # optional override; default G-9MRZ57SWS1 in src/lib/ga.ts
 NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-...  # AdSense publisher ID (loads after cookie consent)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=  # Cloudflare Turnstile site key (else dev test keys)
+TURNSTILE_SECRET_KEY=        # Turnstile secret for server verify
 RESEND_API_KEY=            # real email OTP + password reset (else console in dev)
 EMAIL_FROM=
 THAIBULKSMS_API_KEY=       # real SMS for TH numbers (preferred); else Twilio, else console
@@ -112,7 +116,7 @@ LINE_LOGIN_CHANNEL_SECRET=
 LINE_LOGIN_CALLBACK_URL=
 ```
 
-Still pending: Set optional keys on Vercel (OPENAI, SLIPOK, GA4, ADSENSE). User to verify ThaiBulkSMS on production. Paste AdSense slot IDs at `/admin/seo`.
+Still pending: Set optional keys on Vercel (OPENAI, SLIPOK, ADSENSE). Turnstile + GA4 wired on production. User to verify ThaiBulkSMS on production. Paste AdSense slot IDs at `/admin/seo`.
 
 PromptPay payment (env-gated):
 ```env
@@ -150,6 +154,7 @@ src/
 │   │   ├── packages/       # purchase, sponsor, confirm, status (PromptPay flow)
 │   │   ├── leads/          # public lead capture
 │   │   ├── upload/         # image upload (Cloudinary/local)
+│   │   ├── captcha/        # runtime Turnstile site key (session 33)
 │   │   ├── og/             # dynamic OG image
 │   │   └── ai-search/      # OpenAI w/ rule fallback (rate-limited)
 │   ├── property/[slug]/    # Public listing detail (+ mortgage calculator for sale)
@@ -164,6 +169,7 @@ src/
 │   ├── dashboard/          # VerifyForm, PostPropertyForm, QuotaCard, PackageShop, AlertsList
 │   ├── property/           # Cards, Gallery, Map, AdvancedFilters, SaveButton, MortgageCalculator
 │   ├── lead/               # LeadForm
+│   ├── security/           # TurnstileField, TurnstileScript (session 33)
 │   ├── layout/             # Header, Footer, LanguageSwitcher, CookieConsent
 │   ├── home/, seo/, ai/
 ├── lib/
@@ -187,6 +193,8 @@ src/
 │   ├── ai-search.ts        # LLM filter-extract + rule-based fallback
 │   ├── storage.ts          # image upload (Cloudinary / local disk)
 │   ├── integrations.ts     # getIntegrationStatus() for /api/health + admin panel
+│   ├── captcha.ts            # Turnstile verify + requireCaptcha() (session 33)
+│   ├── ga.ts                 # GA4 measurement ID + loader (session 33)
 │   ├── request.ts          # Safe empty POST body parsing (OTP routes)
 │   ├── rate-limit.ts       # in-memory fixed-window limiter + getClientIp
 │   ├── leads.ts, lead-constants.ts   # CRM helpers (+ locale-aware labels)
@@ -352,6 +360,7 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 | POST | `/api/admin/import` | admin | CSV import listings (session 31) |
 | GET/POST | `/api/user/favorites` | user | List / toggle saved properties (session 31) |
 | GET/POST/DELETE | `/api/user/alerts` | user | CRUD search alerts (session 31) |
+| GET | `/api/captcha/config` | — | Runtime Turnstile site key (session 33) |
 | POST | `/api/ai-search` | — | AI search (OpenAI w/ rule-based fallback) |
 
 ---
@@ -412,7 +421,9 @@ Production (check `/api/health`):
 - [x] LINE Login
 - [x] Cloudinary uploads
 - [x] PromptPay paid packages
-- [x] Cookie consent + GA4 opt-in scaffold
+- [x] Cloudflare Turnstile CAPTCHA (`NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`)
+- [x] GA4 analytics (`G-9MRZ57SWS1`; cookie consent opt-in)
+- [x] Cookie consent + AdSense opt-in scaffold
 - [~] ThaiBulkSMS SMS — wired; sender `CDMNINTH`; user to verify production delivery
 - [ ] OpenAI, SlipOK — optional keys not set
 - [ ] AdSense — set `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs in `/admin/seo` (user)
@@ -439,15 +450,24 @@ Done / env-gated:
 - [x] Header overhaul — text-only nav, mobile row-2 strip, contact beside login, no hamburger
 - [x] Interactive hero AI showcase on homepage
 
-**Next code tasks (Phase L3 → Phase 7):**
-- [ ] Price history logging + area trends
-- [ ] Search alert email digest cron (requires Resend DNS)
-- [ ] Agent reviews / ratings system
-- [ ] Social login (Google, Facebook)
-- [ ] Project badge on property cards
-- [ ] `/npa` hub page for bank-owned inventory
-- [ ] User-submitted listing title/description per locale in DB + post/edit UI (Phase 7)
+**Done (session 33 — security, analytics, deploy):**
+- [x] Cloudflare Turnstile CAPTCHA — login, register, contact/lead forms
+- [x] Runtime site key API (`/api/captcha/config`) for production
+- [x] GA4 `G-9MRZ57SWS1` after cookie consent
+- [x] Logged-in header: public nav only (dashboard in sub-nav)
+- [x] Vercel migrate hardening — direct URL auto-derive, retries, Node 22.x
+
+**Done (session 34 — Phase L3 complete):**
+- [x] Price history — `PriceHistory` model, logging, property detail UI, reduced badge
+- [x] Search alert cron — `/api/cron/search-alerts` + `vercel.json`
+- [x] Agent reviews — `AgentReview`, `/admin/reviews`, stars on `/agents`
+- [x] Social login — Google + Facebook OAuth
+- [x] NPA hub — `/npa`
+
+**Next code tasks (Phase 7):**
+- [ ] User-submitted listing title/description per locale in DB + post/edit UI
 - [ ] Optional URL locale routing (`/zh/...`)
+- [ ] `/market` area price trends (optional)
 
 ---
 

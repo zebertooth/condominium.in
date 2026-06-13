@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
 import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
 export function LoginForm() {
@@ -96,6 +97,8 @@ export function LoginForm() {
         ยังไม่มีบัญชี?{" "}
         <Link href="/register" className="font-medium text-teal-700 hover:underline">สมัครสมาชิก</Link>
       </p>
+
+      <SocialLoginButtons />
     </form>
   );
 }

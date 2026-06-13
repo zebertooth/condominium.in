@@ -399,7 +399,9 @@ export const ModelName = {
   MatchingEvent: 'MatchingEvent',
   UserSubscription: 'UserSubscription',
   SavedProperty: 'SavedProperty',
-  SearchAlert: 'SearchAlert'
+  SearchAlert: 'SearchAlert',
+  PriceHistory: 'PriceHistory',
+  AgentReview: 'AgentReview'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "project" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription" | "savedProperty" | "searchAlert"
+    modelProps: "user" | "siteSettings" | "teamAgent" | "blogArticle" | "passwordResetToken" | "phoneOtp" | "emailOtp" | "userProperty" | "project" | "lead" | "searchEvent" | "propertyViewEvent" | "matchingEvent" | "userSubscription" | "savedProperty" | "searchAlert" | "priceHistory" | "agentReview"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1603,6 +1605,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PriceHistory: {
+      payload: Prisma.$PriceHistoryPayload<ExtArgs>
+      fields: Prisma.PriceHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PriceHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PriceHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.PriceHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PriceHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.PriceHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.PriceHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.PriceHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PriceHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.PriceHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        update: {
+          args: Prisma.PriceHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.PriceHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PriceHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PriceHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.PriceHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.PriceHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePriceHistory>
+        }
+        groupBy: {
+          args: Prisma.PriceHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PriceHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PriceHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PriceHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    AgentReview: {
+      payload: Prisma.$AgentReviewPayload<ExtArgs>
+      fields: Prisma.AgentReviewFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AgentReviewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AgentReviewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>
+        }
+        findFirst: {
+          args: Prisma.AgentReviewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AgentReviewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>
+        }
+        findMany: {
+          args: Prisma.AgentReviewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>[]
+        }
+        create: {
+          args: Prisma.AgentReviewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>
+        }
+        createMany: {
+          args: Prisma.AgentReviewCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AgentReviewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>[]
+        }
+        delete: {
+          args: Prisma.AgentReviewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>
+        }
+        update: {
+          args: Prisma.AgentReviewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>
+        }
+        deleteMany: {
+          args: Prisma.AgentReviewDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AgentReviewUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AgentReviewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>[]
+        }
+        upsert: {
+          args: Prisma.AgentReviewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentReviewPayload>
+        }
+        aggregate: {
+          args: Prisma.AgentReviewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAgentReview>
+        }
+        groupBy: {
+          args: Prisma.AgentReviewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentReviewGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AgentReviewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentReviewCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1655,6 +1805,8 @@ export const UserScalarFieldEnum = {
   isThai: 'isThai',
   lineVerified: 'lineVerified',
   lineUserId: 'lineUserId',
+  googleId: 'googleId',
+  facebookId: 'facebookId',
   idCardHash: 'idCardHash',
   idVerified: 'idVerified',
   idSubmittedAt: 'idSubmittedAt',
@@ -1700,6 +1852,7 @@ export const TeamAgentScalarFieldEnum = {
   imageUrl: 'imageUrl',
   sortOrder: 'sortOrder',
   published: 'published',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1950,6 +2103,33 @@ export const SearchAlertScalarFieldEnum = {
 export type SearchAlertScalarFieldEnum = (typeof SearchAlertScalarFieldEnum)[keyof typeof SearchAlertScalarFieldEnum]
 
 
+export const PriceHistoryScalarFieldEnum = {
+  id: 'id',
+  propertyId: 'propertyId',
+  price: 'price',
+  listingType: 'listingType',
+  changeType: 'changeType',
+  createdAt: 'createdAt'
+} as const
+
+export type PriceHistoryScalarFieldEnum = (typeof PriceHistoryScalarFieldEnum)[keyof typeof PriceHistoryScalarFieldEnum]
+
+
+export const AgentReviewScalarFieldEnum = {
+  id: 'id',
+  teamAgentId: 'teamAgentId',
+  userId: 'userId',
+  leadId: 'leadId',
+  rating: 'rating',
+  comment: 'comment',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentReviewScalarFieldEnum = (typeof AgentReviewScalarFieldEnum)[keyof typeof AgentReviewScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2168,6 +2348,8 @@ export type GlobalOmitConfig = {
   userSubscription?: Prisma.UserSubscriptionOmit
   savedProperty?: Prisma.SavedPropertyOmit
   searchAlert?: Prisma.SearchAlertOmit
+  priceHistory?: Prisma.PriceHistoryOmit
+  agentReview?: Prisma.AgentReviewOmit
 }
 
 /* Types for Logging */

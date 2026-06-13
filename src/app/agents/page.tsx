@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AgentInterestForm } from "@/components/agents/AgentInterestForm";
+import { AgentReviewForm } from "@/components/agents/AgentReviewForm";
+import { StarRating } from "@/components/agents/StarRating";
 import {
   AGENT_CATEGORIES,
   agentCategoryLabel,
   groupByAgentCategory,
 } from "@/lib/agent-application";
+import { getCurrentUser } from "@/lib/auth";
 import { createMetadata } from "@/lib/seo";
 import { getPublishedTeamAgents } from "@/lib/team-agents";
 import { getLocale } from "@/lib/locale";
@@ -24,11 +27,15 @@ export async function generateMetadata() {
 function AgentCard({
   agent,
   nonTh,
+  loggedIn,
 }: {
   agent: Awaited<ReturnType<typeof getPublishedTeamAgents>>[number];
   nonTh: boolean;
+  loggedIn: boolean;
 }) {
   const role = nonTh && agent.roleEn ? agent.roleEn : agent.role;
+  const isDbAgent = !agent.id.startsWith("default-");
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       {agent.imageUrl ? (
@@ -42,6 +49,14 @@ function AgentCard({
       )}
       <h3 className="mt-4 text-lg font-bold text-slate-900">{agent.name}</h3>
       <p className="text-sm text-teal-700">{role}</p>
+      {agent.reviewCount && agent.averageRating ? (
+        <div className="mt-2 flex items-center gap-2">
+          <StarRating rating={agent.averageRating} size="sm" />
+          <span className="text-xs text-slate-500">
+            {agent.averageRating} ({agent.reviewCount})
+          </span>
+        </div>
+      ) : null}
       <p className="mt-3 text-sm text-slate-600">
         {nonTh ? "Areas" : "ย่าน"}: {agent.areas.join(", ")}
       </p>
@@ -51,12 +66,19 @@ function AgentCard({
       <p className="mt-3 text-sm font-medium text-slate-800">
         {nonTh ? `${agent.deals}+ deals closed` : `ปิดดีลสำเร็จ ${agent.deals}+ รายการ`}
       </p>
+      {isDbAgent && (
+        <AgentReviewForm teamAgentId={agent.id} agentName={agent.name} loggedIn={loggedIn} />
+      )}
     </div>
   );
 }
 
 export default async function AgentsPage() {
-  const [agents, locale] = await Promise.all([getPublishedTeamAgents(), getLocale()]);
+  const [agents, locale, user] = await Promise.all([
+    getPublishedTeamAgents(),
+    getLocale(),
+    getCurrentUser(),
+  ]);
   const nonTh = locale !== "th";
   const grouped = groupByAgentCategory(agents);
 
@@ -75,7 +97,7 @@ export default async function AgentsPage() {
             <h2 className="text-xl font-bold text-slate-900">{agentCategoryLabel(category, locale)}</h2>
             <div className="mt-6 grid gap-6 md:grid-cols-3">
               {list.map((agent) => (
-                <AgentCard key={agent.id} agent={agent} nonTh={nonTh} />
+                <AgentCard key={agent.id} agent={agent} nonTh={nonTh} loggedIn={Boolean(user)} />
               ))}
             </div>
           </section>

@@ -12,22 +12,22 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 32 — **Phase L3 in progress**)
+> ## 🤝 HANDOFF (session 34 — **Phase L3 complete** → Phase 7 next)
 >
-> **Production:** https://www.condominium.in.th — auto-deploy on `main` (commit `1d57fa0`+)
-> **GitHub `main`:** L1+L2 deployed; header/hero UX session 32 local (nav text-only pending push)
+> **Production:** https://www.condominium.in.th — deploy migration `20260614300000_phase_l3_features`
+> **GitHub `main`:** Phase L3 features local (price history, alert cron, reviews, OAuth, /npa)
 >
-> **Done through session 32:**
-> - **Phase L1+L2:** Filters, CSV import, favorites, map, mortgage calc, search alerts
-> - **Phase L3 (partial):** Project pages — `/projects`, `/projects/[slug]`, admin CRUD
-> - **Header/hero UX:** Interactive AI showcase; mobile row-2 nav (no hamburger); contact beside login; text-only nav links
+> **Done through session 34 (Phase L3):**
+> - **Price history** — `PriceHistory` model, log on create/edit, chart on property detail, “ลดราคา” badge
+> - **Search alert digests** — `/api/cron/search-alerts` + `vercel.json` cron (daily/weekly)
+> - **Agent reviews** — `AgentReview` model, `/agents` rating form, `/admin/reviews` moderation
+> - **Social login** — Google + Facebook OAuth (`/api/auth/google/*`, `/api/auth/facebook/*`)
+> - **NPA hub** — `/npa` page + nav link
 >
-> **Next priorities (Phase L3):**
-> 1. **Price history** — log changes + chart on property detail
-> 2. **Search alert digests** — cron + Resend email (DNS + Vercel env)
-> 3. **Agent reviews** — ratings after closed leads
-> 4. **Social login** — Google, Facebook OAuth
-> 5. **NPA hub** — `/npa` landing (optional)
+> **Next priorities (Phase 7):**
+> 1. **User listing i18n** — per-locale title/description on `UserProperty` + post/edit UI
+> 2. **Optional URL locale routing** — `/en/buy`, `/zh/property/…`
+> 3. **User ops:** Resend DNS for alert digests, Google/Facebook app credentials on Vercel
 
 ---
 
@@ -37,13 +37,16 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase L3** — price history, alert emails, agent reviews, social login |
+| Phase | **Phase 7** — user listing i18n, optional URL locale routing |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
 | Search | Advanced filters + Leaflet map at `/map` |
 | Projects | `/projects` + admin CRUD (L3 partial) |
 | Header | Two-row mobile nav (text links); desktop inline nav; hero AI showcase |
-| Tools | Mortgage calculator, favorites, search alerts |
+| Security | Cloudflare Turnstile on login, register, contact forms |
+| Analytics | GA4 after cookie consent (`G-9MRZ57SWS1`) |
+| Tools | Mortgage calculator, favorites, search alerts, price history |
+| Social | Google + Facebook OAuth (env-gated) |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
 
@@ -52,6 +55,26 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
+# Session 34 — Phase L3 growth features
+src/lib/price-history.ts                  PriceHistory log + reduced badge helpers
+src/lib/search-alert-digest.ts            Cron digest email logic
+src/lib/google-oauth.ts / facebook-oauth.ts  Social login
+src/lib/oauth-users.ts                    Login/register via OAuth
+src/components/property/PriceHistoryPanel.tsx  Property detail chart
+src/app/api/cron/search-alerts/route.ts   Vercel cron endpoint
+src/app/api/agent-reviews/route.ts        User review submission
+src/app/admin/reviews/                    Review moderation
+src/app/npa/                              NPA hub page
+vercel.json                               Cron schedules
+
+# Session 33 — Security & analytics
+src/lib/captcha.ts                         Server verify + requireCaptcha() helper
+src/components/security/TurnstileField.tsx Widget + useCaptchaGate() hook
+src/components/security/TurnstileScript.tsx Site-wide script preload
+src/app/api/captcha/config/route.ts       Runtime site key (production-safe)
+src/lib/ga.ts                              GA4 measurement ID + loader helpers
+scripts/vercel-build.mjs                   Migrate retries + Neon direct URL derive
+
 # Session 32 — Header & hero UX
 src/components/layout/Header.tsx           Two-row mobile layout; contact beside login
 src/components/layout/HeaderNav.tsx          Desktop nav; shared navLinkClass (text-only links)

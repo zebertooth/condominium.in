@@ -1,4 +1,6 @@
 import { lineConfigured } from "@/lib/line";
+import { googleConfigured } from "@/lib/google-oauth";
+import { facebookConfigured } from "@/lib/facebook-oauth";
 import { turnstileConfigured } from "@/lib/captcha";
 import { isGaConfigured } from "@/lib/ga";
 import { promptPayConfigured } from "@/lib/promptpay";
@@ -12,6 +14,8 @@ export interface IntegrationStatus {
   twilio: boolean;
   cloudinary: boolean;
   line: boolean;
+  google: boolean;
+  facebook: boolean;
   promptpay: boolean;
   slipok: boolean;
   ga4: boolean;
@@ -26,6 +30,8 @@ export function getIntegrationStatus(): IntegrationStatus {
     twilio: Boolean(process.env.TWILIO_ACCOUNT_SID),
     cloudinary: cloudinaryConfigured(),
     line: lineConfigured(),
+    google: googleConfigured(),
+    facebook: facebookConfigured(),
     promptpay: promptPayConfigured(),
     slipok: Boolean(process.env.SLIPOK_API_KEY),
     ga4: isGaConfigured(),

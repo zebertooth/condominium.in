@@ -48,6 +48,7 @@ export type TeamAgentMinAggregateOutputType = {
   imageUrl: string | null
   sortOrder: number | null
   published: boolean | null
+  userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +65,7 @@ export type TeamAgentMaxAggregateOutputType = {
   imageUrl: string | null
   sortOrder: number | null
   published: boolean | null
+  userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -80,6 +82,7 @@ export type TeamAgentCountAggregateOutputType = {
   imageUrl: number
   sortOrder: number
   published: number
+  userId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -108,6 +111,7 @@ export type TeamAgentMinAggregateInputType = {
   imageUrl?: true
   sortOrder?: true
   published?: true
+  userId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +128,7 @@ export type TeamAgentMaxAggregateInputType = {
   imageUrl?: true
   sortOrder?: true
   published?: true
+  userId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -140,6 +145,7 @@ export type TeamAgentCountAggregateInputType = {
   imageUrl?: true
   sortOrder?: true
   published?: true
+  userId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -243,6 +249,7 @@ export type TeamAgentGroupByOutputType = {
   imageUrl: string
   sortOrder: number
   published: boolean
+  userId: string | null
   createdAt: Date
   updatedAt: Date
   _count: TeamAgentCountAggregateOutputType | null
@@ -282,8 +289,10 @@ export type TeamAgentWhereInput = {
   imageUrl?: Prisma.StringFilter<"TeamAgent"> | string
   sortOrder?: Prisma.IntFilter<"TeamAgent"> | number
   published?: Prisma.BoolFilter<"TeamAgent"> | boolean
+  userId?: Prisma.StringNullableFilter<"TeamAgent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TeamAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeamAgent"> | Date | string
+  reviews?: Prisma.AgentReviewListRelationFilter
 }
 
 export type TeamAgentOrderByWithRelationInput = {
@@ -298,12 +307,15 @@ export type TeamAgentOrderByWithRelationInput = {
   imageUrl?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  reviews?: Prisma.AgentReviewOrderByRelationAggregateInput
 }
 
 export type TeamAgentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId?: string
   AND?: Prisma.TeamAgentWhereInput | Prisma.TeamAgentWhereInput[]
   OR?: Prisma.TeamAgentWhereInput[]
   NOT?: Prisma.TeamAgentWhereInput | Prisma.TeamAgentWhereInput[]
@@ -319,7 +331,8 @@ export type TeamAgentWhereUniqueInput = Prisma.AtLeast<{
   published?: Prisma.BoolFilter<"TeamAgent"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TeamAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeamAgent"> | Date | string
-}, "id">
+  reviews?: Prisma.AgentReviewListRelationFilter
+}, "id" | "userId">
 
 export type TeamAgentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -333,6 +346,7 @@ export type TeamAgentOrderByWithAggregationInput = {
   imageUrl?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TeamAgentCountOrderByAggregateInput
@@ -357,6 +371,7 @@ export type TeamAgentScalarWhereWithAggregatesInput = {
   imageUrl?: Prisma.StringWithAggregatesFilter<"TeamAgent"> | string
   sortOrder?: Prisma.IntWithAggregatesFilter<"TeamAgent"> | number
   published?: Prisma.BoolWithAggregatesFilter<"TeamAgent"> | boolean
+  userId?: Prisma.StringNullableWithAggregatesFilter<"TeamAgent"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TeamAgent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TeamAgent"> | Date | string
 }
@@ -373,8 +388,10 @@ export type TeamAgentCreateInput = {
   imageUrl?: string
   sortOrder?: number
   published?: boolean
+  userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviews?: Prisma.AgentReviewCreateNestedManyWithoutTeamAgentInput
 }
 
 export type TeamAgentUncheckedCreateInput = {
@@ -389,8 +406,10 @@ export type TeamAgentUncheckedCreateInput = {
   imageUrl?: string
   sortOrder?: number
   published?: boolean
+  userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviews?: Prisma.AgentReviewUncheckedCreateNestedManyWithoutTeamAgentInput
 }
 
 export type TeamAgentUpdateInput = {
@@ -405,8 +424,10 @@ export type TeamAgentUpdateInput = {
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviews?: Prisma.AgentReviewUpdateManyWithoutTeamAgentNestedInput
 }
 
 export type TeamAgentUncheckedUpdateInput = {
@@ -421,8 +442,10 @@ export type TeamAgentUncheckedUpdateInput = {
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviews?: Prisma.AgentReviewUncheckedUpdateManyWithoutTeamAgentNestedInput
 }
 
 export type TeamAgentCreateManyInput = {
@@ -437,6 +460,7 @@ export type TeamAgentCreateManyInput = {
   imageUrl?: string
   sortOrder?: number
   published?: boolean
+  userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -453,6 +477,7 @@ export type TeamAgentUpdateManyMutationInput = {
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -469,6 +494,7 @@ export type TeamAgentUncheckedUpdateManyInput = {
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -485,6 +511,7 @@ export type TeamAgentCountOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -506,6 +533,7 @@ export type TeamAgentMaxOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -522,6 +550,7 @@ export type TeamAgentMinOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -529,6 +558,11 @@ export type TeamAgentMinOrderByAggregateInput = {
 export type TeamAgentSumOrderByAggregateInput = {
   deals?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+}
+
+export type TeamAgentScalarRelationFilter = {
+  is?: Prisma.TeamAgentWhereInput
+  isNot?: Prisma.TeamAgentWhereInput
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -539,6 +573,133 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type TeamAgentCreateNestedOneWithoutReviewsInput = {
+  create?: Prisma.XOR<Prisma.TeamAgentCreateWithoutReviewsInput, Prisma.TeamAgentUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.TeamAgentCreateOrConnectWithoutReviewsInput
+  connect?: Prisma.TeamAgentWhereUniqueInput
+}
+
+export type TeamAgentUpdateOneRequiredWithoutReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.TeamAgentCreateWithoutReviewsInput, Prisma.TeamAgentUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.TeamAgentCreateOrConnectWithoutReviewsInput
+  upsert?: Prisma.TeamAgentUpsertWithoutReviewsInput
+  connect?: Prisma.TeamAgentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeamAgentUpdateToOneWithWhereWithoutReviewsInput, Prisma.TeamAgentUpdateWithoutReviewsInput>, Prisma.TeamAgentUncheckedUpdateWithoutReviewsInput>
+}
+
+export type TeamAgentCreateWithoutReviewsInput = {
+  id?: string
+  name: string
+  role: string
+  roleEn?: string
+  agentCategory?: string
+  areas?: string
+  languages?: string
+  deals?: number
+  imageUrl?: string
+  sortOrder?: number
+  published?: boolean
+  userId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TeamAgentUncheckedCreateWithoutReviewsInput = {
+  id?: string
+  name: string
+  role: string
+  roleEn?: string
+  agentCategory?: string
+  areas?: string
+  languages?: string
+  deals?: number
+  imageUrl?: string
+  sortOrder?: number
+  published?: boolean
+  userId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TeamAgentCreateOrConnectWithoutReviewsInput = {
+  where: Prisma.TeamAgentWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeamAgentCreateWithoutReviewsInput, Prisma.TeamAgentUncheckedCreateWithoutReviewsInput>
+}
+
+export type TeamAgentUpsertWithoutReviewsInput = {
+  update: Prisma.XOR<Prisma.TeamAgentUpdateWithoutReviewsInput, Prisma.TeamAgentUncheckedUpdateWithoutReviewsInput>
+  create: Prisma.XOR<Prisma.TeamAgentCreateWithoutReviewsInput, Prisma.TeamAgentUncheckedCreateWithoutReviewsInput>
+  where?: Prisma.TeamAgentWhereInput
+}
+
+export type TeamAgentUpdateToOneWithWhereWithoutReviewsInput = {
+  where?: Prisma.TeamAgentWhereInput
+  data: Prisma.XOR<Prisma.TeamAgentUpdateWithoutReviewsInput, Prisma.TeamAgentUncheckedUpdateWithoutReviewsInput>
+}
+
+export type TeamAgentUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  roleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  agentCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  areas?: Prisma.StringFieldUpdateOperationsInput | string
+  languages?: Prisma.StringFieldUpdateOperationsInput | string
+  deals?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TeamAgentUncheckedUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  roleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  agentCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  areas?: Prisma.StringFieldUpdateOperationsInput | string
+  languages?: Prisma.StringFieldUpdateOperationsInput | string
+  deals?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type TeamAgentCountOutputType
+ */
+
+export type TeamAgentCountOutputType = {
+  reviews: number
+}
+
+export type TeamAgentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reviews?: boolean | TeamAgentCountOutputTypeCountReviewsArgs
+}
+
+/**
+ * TeamAgentCountOutputType without action
+ */
+export type TeamAgentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TeamAgentCountOutputType
+   */
+  select?: Prisma.TeamAgentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TeamAgentCountOutputType without action
+ */
+export type TeamAgentCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AgentReviewWhereInput
+}
 
 
 export type TeamAgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -553,8 +714,11 @@ export type TeamAgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   imageUrl?: boolean
   sortOrder?: boolean
   published?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  reviews?: boolean | Prisma.TeamAgent$reviewsArgs<ExtArgs>
+  _count?: boolean | Prisma.TeamAgentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teamAgent"]>
 
 export type TeamAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -569,6 +733,7 @@ export type TeamAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   imageUrl?: boolean
   sortOrder?: boolean
   published?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["teamAgent"]>
@@ -585,6 +750,7 @@ export type TeamAgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   imageUrl?: boolean
   sortOrder?: boolean
   published?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["teamAgent"]>
@@ -601,15 +767,24 @@ export type TeamAgentSelectScalar = {
   imageUrl?: boolean
   sortOrder?: boolean
   published?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TeamAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "role" | "roleEn" | "agentCategory" | "areas" | "languages" | "deals" | "imageUrl" | "sortOrder" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["teamAgent"]>
+export type TeamAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "role" | "roleEn" | "agentCategory" | "areas" | "languages" | "deals" | "imageUrl" | "sortOrder" | "published" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["teamAgent"]>
+export type TeamAgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reviews?: boolean | Prisma.TeamAgent$reviewsArgs<ExtArgs>
+  _count?: boolean | Prisma.TeamAgentCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type TeamAgentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type TeamAgentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $TeamAgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TeamAgent"
-  objects: {}
+  objects: {
+    reviews: Prisma.$AgentReviewPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -622,6 +797,7 @@ export type $TeamAgentPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     imageUrl: string
     sortOrder: number
     published: boolean
+    userId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["teamAgent"]>
@@ -1018,6 +1194,7 @@ readonly fields: TeamAgentFieldRefs;
  */
 export interface Prisma__TeamAgentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  reviews<T extends Prisma.TeamAgent$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TeamAgent$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgentReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1058,6 +1235,7 @@ export interface TeamAgentFieldRefs {
   readonly imageUrl: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly sortOrder: Prisma.FieldRef<"TeamAgent", 'Int'>
   readonly published: Prisma.FieldRef<"TeamAgent", 'Boolean'>
+  readonly userId: Prisma.FieldRef<"TeamAgent", 'String'>
   readonly createdAt: Prisma.FieldRef<"TeamAgent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TeamAgent", 'DateTime'>
 }
@@ -1077,6 +1255,10 @@ export type TeamAgentFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
+  /**
    * Filter, which TeamAgent to fetch.
    */
   where: Prisma.TeamAgentWhereUniqueInput
@@ -1095,6 +1277,10 @@ export type TeamAgentFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
+  /**
    * Filter, which TeamAgent to fetch.
    */
   where: Prisma.TeamAgentWhereUniqueInput
@@ -1112,6 +1298,10 @@ export type TeamAgentFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the TeamAgent
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
   /**
    * Filter, which TeamAgent to fetch.
    */
@@ -1161,6 +1351,10 @@ export type TeamAgentFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
+  /**
    * Filter, which TeamAgent to fetch.
    */
   where?: Prisma.TeamAgentWhereInput
@@ -1208,6 +1402,10 @@ export type TeamAgentFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the TeamAgent
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
   /**
    * Filter, which TeamAgents to fetch.
    */
@@ -1257,6 +1455,10 @@ export type TeamAgentCreateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
+  /**
    * The data needed to create a TeamAgent.
    */
   data: Prisma.XOR<Prisma.TeamAgentCreateInput, Prisma.TeamAgentUncheckedCreateInput>
@@ -1304,6 +1506,10 @@ export type TeamAgentUpdateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the TeamAgent
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
   /**
    * The data needed to update a TeamAgent.
    */
@@ -1371,6 +1577,10 @@ export type TeamAgentUpsertArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
+  /**
    * The filter to search for the TeamAgent to update in case it exists.
    */
   where: Prisma.TeamAgentWhereUniqueInput
@@ -1397,6 +1607,10 @@ export type TeamAgentDeleteArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
+  /**
    * Filter which TeamAgent to delete.
    */
   where: Prisma.TeamAgentWhereUniqueInput
@@ -1417,6 +1631,30 @@ export type TeamAgentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * TeamAgent.reviews
+ */
+export type TeamAgent$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AgentReview
+   */
+  select?: Prisma.AgentReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AgentReview
+   */
+  omit?: Prisma.AgentReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgentReviewInclude<ExtArgs> | null
+  where?: Prisma.AgentReviewWhereInput
+  orderBy?: Prisma.AgentReviewOrderByWithRelationInput | Prisma.AgentReviewOrderByWithRelationInput[]
+  cursor?: Prisma.AgentReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AgentReviewScalarFieldEnum | Prisma.AgentReviewScalarFieldEnum[]
+}
+
+/**
  * TeamAgent without action
  */
 export type TeamAgentDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1428,4 +1666,8 @@ export type TeamAgentDefaultArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the TeamAgent
    */
   omit?: Prisma.TeamAgentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamAgentInclude<ExtArgs> | null
 }

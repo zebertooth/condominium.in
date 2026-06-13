@@ -12,10 +12,10 @@ function withTimeoutParams(raw) {
   try {
     const url = new URL(raw);
     if (!url.searchParams.has("connect_timeout")) {
-      url.searchParams.set("connect_timeout", "30");
+      url.searchParams.set("connect_timeout", "60");
     }
     if (!url.searchParams.has("pool_timeout")) {
-      url.searchParams.set("pool_timeout", "30");
+      url.searchParams.set("pool_timeout", "60");
     }
     return url.toString();
   } catch {
@@ -23,16 +23,26 @@ function withTimeoutParams(raw) {
   }
 }
 
+function logMigrateHost(raw) {
+  try {
+    const url = new URL(raw);
+    const pooler = url.hostname.includes("-pooler") ? " (pooler — avoid for migrate)" : "";
+    console.log(`[vercel-build] migrate target host: ${url.hostname}${pooler}`);
+  } catch {
+    console.log("[vercel-build] migrate target: (could not parse URL)");
+  }
+}
+
 /** Neon pooler URLs break migrate locks — prefer direct URL or strip `-pooler` from host. */
 function resolveMigrateUrl() {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  if (!databaseUrl) return null;
+
   const explicitDirect = process.env.DIRECT_DATABASE_URL?.trim();
   if (explicitDirect) {
     console.log("[vercel-build] using DIRECT_DATABASE_URL for migrate");
     return withTimeoutParams(explicitDirect);
   }
-
-  const databaseUrl = process.env.DATABASE_URL?.trim();
-  if (!databaseUrl) return null;
 
   try {
     const url = new URL(databaseUrl);
@@ -44,18 +54,39 @@ function resolveMigrateUrl() {
       return withTimeoutParams(url.toString());
     }
   } catch {
-    // fall through to pooled URL below
+    // fall through
   }
 
+  console.warn(
+    "[vercel-build] DATABASE_URL may be pooled — set DIRECT_DATABASE_URL on Vercel if migrate fails",
+  );
   return withTimeoutParams(databaseUrl);
 }
 
-async function migrateWithRetry(databaseUrl) {
+function isRetryableMigrateError(error) {
+  const text = String(error?.message ?? error ?? "");
+  return (
+    text.includes("P1002") ||
+    text.includes("advisory lock") ||
+    text.includes("Timed out trying to acquire") ||
+    text.includes("ECONNRESET") ||
+    text.includes("ETIMEDOUT")
+  );
+}
+
+async function migrateWithRetry(migrateUrl) {
+  // Prisma 7 ignores PRISMA_MIGRATE_ADVISORY_LOCK_TIMEOUT; Neon + pooler often hits 10s lock timeout.
+  // Production Vercel builds run migrate sequentially — safe to disable advisory lock here.
   const migrateEnv = {
-    DATABASE_URL: databaseUrl,
-    PRISMA_MIGRATE_ADVISORY_LOCK_TIMEOUT: "120000",
+    DATABASE_URL: migrateUrl,
+    DIRECT_DATABASE_URL: migrateUrl,
+    PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK: "1",
   };
-  const maxAttempts = 5;
+  const maxAttempts = 8;
+
+  logMigrateHost(migrateUrl);
+  console.log("[vercel-build] waiting 8s for Neon cold start before migrate...");
+  await setTimeout(8000);
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -63,10 +94,10 @@ async function migrateWithRetry(databaseUrl) {
       console.log("[vercel-build] migrations applied");
       return;
     } catch (error) {
-      if (attempt >= maxAttempts) throw error;
-      const waitSec = 15 * attempt;
+      if (attempt >= maxAttempts || !isRetryableMigrateError(error)) throw error;
+      const waitSec = 20 * attempt;
       console.warn(
-        `[vercel-build] migrate attempt ${attempt}/${maxAttempts} failed (P1002/advisory lock or cold start), retrying in ${waitSec}s...`,
+        `[vercel-build] migrate attempt ${attempt}/${maxAttempts} failed, retrying in ${waitSec}s...`,
       );
       await setTimeout(waitSec * 1000);
     }

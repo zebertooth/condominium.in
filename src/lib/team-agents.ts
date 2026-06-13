@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { getAgentRatingMap } from "@/lib/agent-reviews";
 import { DEFAULT_TEAM_AGENTS } from "@/lib/default-content";
 import type { AgentCategory } from "@/lib/agent-application";
 
@@ -14,6 +15,8 @@ export interface TeamAgentView {
   imageUrl: string;
   sortOrder: number;
   published: boolean;
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 function parseJsonArray(value: string): string[] {
@@ -61,7 +64,18 @@ export async function getPublishedTeamAgents(): Promise<TeamAgentView[]> {
       where: { published: true },
       orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
     });
-    if (rows.length > 0) return rows.map(dbTeamAgentToView);
+    if (rows.length > 0) {
+      const views = rows.map(dbTeamAgentToView);
+      const ratingMap = await getAgentRatingMap(views.map((v) => v.id));
+      return views.map((view) => {
+        const stats = ratingMap.get(view.id);
+        return {
+          ...view,
+          averageRating: stats?.averageRating,
+          reviewCount: stats?.reviewCount,
+        };
+      });
+    }
   } catch {
     // DB unavailable — fall back to static defaults
   }

@@ -66,7 +66,9 @@ export const ModelName = {
   MatchingEvent: 'MatchingEvent',
   UserSubscription: 'UserSubscription',
   SavedProperty: 'SavedProperty',
-  SearchAlert: 'SearchAlert'
+  SearchAlert: 'SearchAlert',
+  PriceHistory: 'PriceHistory',
+  AgentReview: 'AgentReview'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -98,6 +100,8 @@ export const UserScalarFieldEnum = {
   isThai: 'isThai',
   lineVerified: 'lineVerified',
   lineUserId: 'lineUserId',
+  googleId: 'googleId',
+  facebookId: 'facebookId',
   idCardHash: 'idCardHash',
   idVerified: 'idVerified',
   idSubmittedAt: 'idSubmittedAt',
@@ -143,6 +147,7 @@ export const TeamAgentScalarFieldEnum = {
   imageUrl: 'imageUrl',
   sortOrder: 'sortOrder',
   published: 'published',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -391,6 +396,33 @@ export const SearchAlertScalarFieldEnum = {
 } as const
 
 export type SearchAlertScalarFieldEnum = (typeof SearchAlertScalarFieldEnum)[keyof typeof SearchAlertScalarFieldEnum]
+
+
+export const PriceHistoryScalarFieldEnum = {
+  id: 'id',
+  propertyId: 'propertyId',
+  price: 'price',
+  listingType: 'listingType',
+  changeType: 'changeType',
+  createdAt: 'createdAt'
+} as const
+
+export type PriceHistoryScalarFieldEnum = (typeof PriceHistoryScalarFieldEnum)[keyof typeof PriceHistoryScalarFieldEnum]
+
+
+export const AgentReviewScalarFieldEnum = {
+  id: 'id',
+  teamAgentId: 'teamAgentId',
+  userId: 'userId',
+  leadId: 'leadId',
+  rating: 'rating',
+  comment: 'comment',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentReviewScalarFieldEnum = (typeof AgentReviewScalarFieldEnum)[keyof typeof AgentReviewScalarFieldEnum]
 
 
 export const SortOrder = {

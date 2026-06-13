@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 32):** Live at **https://www.condominium.in.th**. Phase L1+L2 deployed. Phase L3 in progress — project pages done; next: price history, alert email cron, agent reviews, social login.
+**Current status (session 34):** Live at **https://www.condominium.in.th**. Phase L3 complete. Deploy migration `20260614300000_phase_l3_features`. Next: Phase 7 user listing i18n.
 
 ---
 
@@ -42,11 +42,12 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles, or publish channel |
 | Password reset email not sent | Set `RESEND_API_KEY` + `EMAIL_FROM`; check spam; token expires in 1 hour |
 | AdSense not showing | Set `NEXT_PUBLIC_ADSENSE_CLIENT`; paste slot IDs at `/admin/seo`; user must click cookie “Accept all” |
-| GA4 not tracking | Set `NEXT_PUBLIC_GA_ID`; user must accept analytics cookies |
+| GA4 not tracking | Default ID `G-9MRZ57SWS1` in code; optional `NEXT_PUBLIC_GA_ID` override; user must accept analytics cookies |
+| Turnstile not showing | Set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` on Vercel; add hostnames in Cloudflare dashboard |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
 | `datasource.url property is required` on Vercel | `DATABASE_URL` missing at build time — preview skips migrate; add for runtime |
-| `pg_advisory_lock` timeout on migrate | Another deploy is migrating — wait and redeploy; set `DIRECT_DATABASE_URL` (Neon non-pooler); preview builds no longer run migrate |
-| `P1002` database timed out on migrate | Set `DIRECT_DATABASE_URL` to Neon **direct** URL (no `-pooler` in host); redeploy; Neon cold start may need a retry (build script retries 5×) |
+| `pg_advisory_lock` timeout on migrate | Another deploy is migrating — wait and redeploy; set `DIRECT_DATABASE_URL` (Neon non-pooler); build script auto-derives direct URL and disables advisory lock on Vercel production |
+| `P1002` database timed out on migrate | Neon cold start — build retries 8× with backoff; or run `npm run db:deploy` locally against Neon, then redeploy Vercel (app works once tables exist) |
 
 **Fallback:** `npx prisma db push` then `npm run db:seed` (skips migration history).
 
@@ -121,7 +122,7 @@ If omitted, the Vercel build script **auto-derives** a direct URL from `DATABASE
 ```bash
 curl https://www.condominium.in.th/api/health
 ```
-Expect: `status: ok`, `database: connected`, `paidFeatures: true` (if PROMPTPAY_ID set), `integrations` with provider flags.
+Expect: `status: ok`, `database: connected`, `paidFeatures: true` (if PROMPTPAY_ID set), `integrations` with provider flags including `turnstile` and `ga4`.
 
 **Admin panel:** `/admin` → bilingual (TH/EN via site language switcher). Integration Status shows ✓ for each configured provider.
 
@@ -145,7 +146,9 @@ ADMIN_PASSWORD=<strong-password>
 
 ```env
 OPENAI_API_KEY=
-NEXT_PUBLIC_GA_ID=
+NEXT_PUBLIC_GA_ID=              # optional; default G-9MRZ57SWS1 in src/lib/ga.ts
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
 NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-...
 RESEND_API_KEY=
 EMAIL_FROM=
@@ -161,6 +164,13 @@ LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback
 PROMPTPAY_ID=
 SLIPOK_API_KEY=
 SLIPOK_BRANCH_ID=
+CRON_SECRET=                         # Vercel cron auth for /api/cron/search-alerts
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=https://www.condominium.in.th/api/auth/google/callback
+FACEBOOK_APP_ID=
+FACEBOOK_APP_SECRET=
+FACEBOOK_CALLBACK_URL=https://www.condominium.in.th/api/auth/facebook/callback
 ```
 
 After `PROMPTPAY_ID` is set, paid features turn on automatically (`PAID_FEATURES_ENABLED` env-gated in `src/lib/packages.ts`). Set `PAID_FEATURES_ENABLED=false` on Vercel to force-disable.

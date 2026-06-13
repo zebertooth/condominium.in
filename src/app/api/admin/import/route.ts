@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { parseCsv, validateAndParseRow, type ImportResult } from "@/lib/csv-import";
+import { logPriceChange } from "@/lib/price-history";
 import { uniqueSlug } from "@/lib/user-properties";
 
 export async function POST(request: Request) {
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
           ? data.images.split(",").map((i) => i.trim()).filter(Boolean)
           : [];
 
-        await prisma.userProperty.create({
+        const created = await prisma.userProperty.create({
           data: {
             userId: admin.id,
             slug,
@@ -89,6 +90,7 @@ export async function POST(request: Request) {
             agentManaged: true,
           },
         });
+        await logPriceChange(created.id, data.price, data.listingType);
 
         result.imported++;
       } catch (err) {

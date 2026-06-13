@@ -470,6 +470,7 @@ export type UserPropertyWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  priceHistory?: Prisma.PriceHistoryListRelationFilter
 }
 
 export type UserPropertyOrderByWithRelationInput = {
@@ -508,6 +509,7 @@ export type UserPropertyOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
+  priceHistory?: Prisma.PriceHistoryOrderByRelationAggregateInput
 }
 
 export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -549,6 +551,7 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  priceHistory?: Prisma.PriceHistoryListRelationFilter
 }, "id" | "slug">
 
 export type UserPropertyOrderByWithAggregationInput = {
@@ -665,6 +668,7 @@ export type UserPropertyCreateInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPropertiesInput
   project?: Prisma.ProjectCreateNestedOneWithoutPropertiesInput
+  priceHistory?: Prisma.PriceHistoryCreateNestedManyWithoutPropertyInput
 }
 
 export type UserPropertyUncheckedCreateInput = {
@@ -701,6 +705,7 @@ export type UserPropertyUncheckedCreateInput = {
   projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  priceHistory?: Prisma.PriceHistoryUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type UserPropertyUpdateInput = {
@@ -737,6 +742,7 @@ export type UserPropertyUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPropertiesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPropertiesNestedInput
+  priceHistory?: Prisma.PriceHistoryUpdateManyWithoutPropertyNestedInput
 }
 
 export type UserPropertyUncheckedUpdateInput = {
@@ -773,6 +779,7 @@ export type UserPropertyUncheckedUpdateInput = {
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  priceHistory?: Prisma.PriceHistoryUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type UserPropertyCreateManyInput = {
@@ -1021,6 +1028,11 @@ export type UserPropertySumOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
 }
 
+export type UserPropertyScalarRelationFilter = {
+  is?: Prisma.UserPropertyWhereInput
+  isNot?: Prisma.UserPropertyWhereInput
+}
+
 export type UserPropertyCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutUserInput, Prisma.UserPropertyUncheckedCreateWithoutUserInput> | Prisma.UserPropertyCreateWithoutUserInput[] | Prisma.UserPropertyUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutUserInput | Prisma.UserPropertyCreateOrConnectWithoutUserInput[]
@@ -1121,6 +1133,20 @@ export type UserPropertyUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.UserPropertyScalarWhereInput | Prisma.UserPropertyScalarWhereInput[]
 }
 
+export type UserPropertyCreateNestedOneWithoutPriceHistoryInput = {
+  create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutPriceHistoryInput, Prisma.UserPropertyUncheckedCreateWithoutPriceHistoryInput>
+  connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutPriceHistoryInput
+  connect?: Prisma.UserPropertyWhereUniqueInput
+}
+
+export type UserPropertyUpdateOneRequiredWithoutPriceHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.UserPropertyCreateWithoutPriceHistoryInput, Prisma.UserPropertyUncheckedCreateWithoutPriceHistoryInput>
+  connectOrCreate?: Prisma.UserPropertyCreateOrConnectWithoutPriceHistoryInput
+  upsert?: Prisma.UserPropertyUpsertWithoutPriceHistoryInput
+  connect?: Prisma.UserPropertyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserPropertyUpdateToOneWithWhereWithoutPriceHistoryInput, Prisma.UserPropertyUpdateWithoutPriceHistoryInput>, Prisma.UserPropertyUncheckedUpdateWithoutPriceHistoryInput>
+}
+
 export type UserPropertyCreateWithoutUserInput = {
   id?: string
   slug: string
@@ -1154,6 +1180,7 @@ export type UserPropertyCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutPropertiesInput
+  priceHistory?: Prisma.PriceHistoryCreateNestedManyWithoutPropertyInput
 }
 
 export type UserPropertyUncheckedCreateWithoutUserInput = {
@@ -1189,6 +1216,7 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  priceHistory?: Prisma.PriceHistoryUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type UserPropertyCreateOrConnectWithoutUserInput = {
@@ -1289,6 +1317,7 @@ export type UserPropertyCreateWithoutProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPropertiesInput
+  priceHistory?: Prisma.PriceHistoryCreateNestedManyWithoutPropertyInput
 }
 
 export type UserPropertyUncheckedCreateWithoutProjectInput = {
@@ -1324,6 +1353,7 @@ export type UserPropertyUncheckedCreateWithoutProjectInput = {
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  priceHistory?: Prisma.PriceHistoryUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type UserPropertyCreateOrConnectWithoutProjectInput = {
@@ -1350,6 +1380,166 @@ export type UserPropertyUpdateWithWhereUniqueWithoutProjectInput = {
 export type UserPropertyUpdateManyWithWhereWithoutProjectInput = {
   where: Prisma.UserPropertyScalarWhereInput
   data: Prisma.XOR<Prisma.UserPropertyUpdateManyMutationInput, Prisma.UserPropertyUncheckedUpdateManyWithoutProjectInput>
+}
+
+export type UserPropertyCreateWithoutPriceHistoryInput = {
+  id?: string
+  slug: string
+  title: string
+  description: string
+  highlights?: string
+  listingType: string
+  propertyType?: string
+  price: number
+  priceUnit: string
+  bedrooms: number
+  bathrooms: number
+  areaSqm: number
+  landSqWah?: number | null
+  floor?: number | null
+  district: string
+  btsStation?: string | null
+  address: string
+  latitude?: number | null
+  longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
+  features?: string
+  images?: string
+  status?: string
+  needsReview?: boolean
+  moderationFlags?: string
+  isSponsored?: boolean
+  sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPropertiesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPropertiesInput
+}
+
+export type UserPropertyUncheckedCreateWithoutPriceHistoryInput = {
+  id?: string
+  userId: string
+  slug: string
+  title: string
+  description: string
+  highlights?: string
+  listingType: string
+  propertyType?: string
+  price: number
+  priceUnit: string
+  bedrooms: number
+  bathrooms: number
+  areaSqm: number
+  landSqWah?: number | null
+  floor?: number | null
+  district: string
+  btsStation?: string | null
+  address: string
+  latitude?: number | null
+  longitude?: number | null
+  npaBank?: string | null
+  npaReferenceUrl?: string | null
+  features?: string
+  images?: string
+  status?: string
+  needsReview?: boolean
+  moderationFlags?: string
+  isSponsored?: boolean
+  sponsoredUntil?: Date | string | null
+  agentManaged?: boolean
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserPropertyCreateOrConnectWithoutPriceHistoryInput = {
+  where: Prisma.UserPropertyWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserPropertyCreateWithoutPriceHistoryInput, Prisma.UserPropertyUncheckedCreateWithoutPriceHistoryInput>
+}
+
+export type UserPropertyUpsertWithoutPriceHistoryInput = {
+  update: Prisma.XOR<Prisma.UserPropertyUpdateWithoutPriceHistoryInput, Prisma.UserPropertyUncheckedUpdateWithoutPriceHistoryInput>
+  create: Prisma.XOR<Prisma.UserPropertyCreateWithoutPriceHistoryInput, Prisma.UserPropertyUncheckedCreateWithoutPriceHistoryInput>
+  where?: Prisma.UserPropertyWhereInput
+}
+
+export type UserPropertyUpdateToOneWithWhereWithoutPriceHistoryInput = {
+  where?: Prisma.UserPropertyWhereInput
+  data: Prisma.XOR<Prisma.UserPropertyUpdateWithoutPriceHistoryInput, Prisma.UserPropertyUncheckedUpdateWithoutPriceHistoryInput>
+}
+
+export type UserPropertyUpdateWithoutPriceHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
+  listingType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.StringFieldUpdateOperationsInput | string
+  images?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
+  isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPropertiesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPropertiesNestedInput
+}
+
+export type UserPropertyUncheckedUpdateWithoutPriceHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  highlights?: Prisma.StringFieldUpdateOperationsInput | string
+  listingType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  bedrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  bathrooms?: Prisma.IntFieldUpdateOperationsInput | number
+  areaSqm?: Prisma.FloatFieldUpdateOperationsInput | number
+  landSqWah?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.StringFieldUpdateOperationsInput | string
+  images?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
+  isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyCreateManyUserInput = {
@@ -1420,6 +1610,7 @@ export type UserPropertyUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutPropertiesNestedInput
+  priceHistory?: Prisma.PriceHistoryUpdateManyWithoutPropertyNestedInput
 }
 
 export type UserPropertyUncheckedUpdateWithoutUserInput = {
@@ -1455,6 +1646,7 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  priceHistory?: Prisma.PriceHistoryUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
@@ -1560,6 +1752,7 @@ export type UserPropertyUpdateWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPropertiesNestedInput
+  priceHistory?: Prisma.PriceHistoryUpdateManyWithoutPropertyNestedInput
 }
 
 export type UserPropertyUncheckedUpdateWithoutProjectInput = {
@@ -1595,6 +1788,7 @@ export type UserPropertyUncheckedUpdateWithoutProjectInput = {
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  priceHistory?: Prisma.PriceHistoryUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type UserPropertyUncheckedUpdateManyWithoutProjectInput = {
@@ -1633,6 +1827,35 @@ export type UserPropertyUncheckedUpdateManyWithoutProjectInput = {
 }
 
 
+/**
+ * Count Type UserPropertyCountOutputType
+ */
+
+export type UserPropertyCountOutputType = {
+  priceHistory: number
+}
+
+export type UserPropertyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  priceHistory?: boolean | UserPropertyCountOutputTypeCountPriceHistoryArgs
+}
+
+/**
+ * UserPropertyCountOutputType without action
+ */
+export type UserPropertyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserPropertyCountOutputType
+   */
+  select?: Prisma.UserPropertyCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserPropertyCountOutputType without action
+ */
+export type UserPropertyCountOutputTypeCountPriceHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PriceHistoryWhereInput
+}
+
 
 export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1670,6 +1893,8 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
+  priceHistory?: boolean | Prisma.UserProperty$priceHistoryArgs<ExtArgs>
+  _count?: boolean | Prisma.UserPropertyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
 
 export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1788,6 +2013,8 @@ export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
+  priceHistory?: boolean | Prisma.UserProperty$priceHistoryArgs<ExtArgs>
+  _count?: boolean | Prisma.UserPropertyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserPropertyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1803,6 +2030,7 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     project: Prisma.$ProjectPayload<ExtArgs> | null
+    priceHistory: Prisma.$PriceHistoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2234,6 +2462,7 @@ export interface Prisma__UserPropertyClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.UserProperty$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserProperty$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  priceHistory<T extends Prisma.UserProperty$priceHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserProperty$priceHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PriceHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2713,6 +2942,30 @@ export type UserProperty$projectArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.ProjectInclude<ExtArgs> | null
   where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * UserProperty.priceHistory
+ */
+export type UserProperty$priceHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PriceHistory
+   */
+  select?: Prisma.PriceHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PriceHistory
+   */
+  omit?: Prisma.PriceHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PriceHistoryInclude<ExtArgs> | null
+  where?: Prisma.PriceHistoryWhereInput
+  orderBy?: Prisma.PriceHistoryOrderByWithRelationInput | Prisma.PriceHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.PriceHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PriceHistoryScalarFieldEnum | Prisma.PriceHistoryScalarFieldEnum[]
 }
 
 /**

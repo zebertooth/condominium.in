@@ -77,6 +77,8 @@ export interface Property {
   projectName?: string;
   projectNameEn?: string;
   projectId?: string;
+  /** Recent price decrease within 30 days */
+  priceReduced?: boolean;
 }
 
 export interface AreaGuide {

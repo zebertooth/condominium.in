@@ -1,12 +1,25 @@
 import { properties as staticProperties } from "@/lib/properties";
 import { getPropertySearchText } from "@/lib/property-search-text";
 import { shouldShowDemoListings } from "@/lib/demo-listings";
-import { CATEGORY_PROPERTY_TYPES } from "@/lib/property-types";import {
+import { getPriceReducedSlugSet } from "@/lib/price-history";
+import { CATEGORY_PROPERTY_TYPES } from "@/lib/property-types";
+import {
   getAllPublishedUserProperties,
   getUserPropertyBySlugVisible,
   type PropertyViewer,
 } from "@/lib/user-properties";
 import type { Property, SearchFilters } from "@/types/property";
+
+async function enrichWithPriceReduced(list: Property[]): Promise<Property[]> {
+  const userSlugs = list.filter((p) => p.isUserListing).map((p) => p.slug);
+  if (userSlugs.length === 0) return list;
+  try {
+    const reduced = await getPriceReducedSlugSet(userSlugs);
+    return list.map((p) => ({ ...p, priceReduced: reduced.has(p.slug) }));
+  } catch {
+    return list;
+  }
+}
 
 function sortListingsFeaturedFirst(list: Property[]): Property[] {
   return [...list].sort((a, b) => {
@@ -21,7 +34,7 @@ export async function getAllListings(): Promise<Property[]> {
     shouldShowDemoListings(),
   ]);
   const demos = showDemos ? staticProperties : [];
-  return sortListingsFeaturedFirst([...userListings, ...demos]);
+  return enrichWithPriceReduced(sortListingsFeaturedFirst([...userListings, ...demos]));
 }
 
 export async function getListingBySlug(

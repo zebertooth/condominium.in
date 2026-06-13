@@ -65,6 +65,11 @@ export function PropertyCard({
                 {t("projectBadge", locale)}
               </span>
             )}
+            {property.priceReduced && (
+              <span className="rounded-full bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white">
+                {t("priceReducedBadge", locale)}
+              </span>
+            )}
           </div>
         </div>
 

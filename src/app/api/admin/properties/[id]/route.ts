@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
+import { logPriceChange } from "@/lib/price-history";
 import { validateProjectId } from "@/lib/projects";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -59,6 +60,11 @@ export async function PUT(request: Request, context: RouteContext) {
         images: JSON.stringify(data.images),
         projectId,
       },
+    });
+
+    await logPriceChange(property.id, data.price, data.listingType, {
+      price: existing.price,
+      listingType: existing.listingType,
     });
 
     return NextResponse.json({

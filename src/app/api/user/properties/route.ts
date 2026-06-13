@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { buildModerationUpdate } from "@/lib/listing-moderation";
+import { logPriceChange } from "@/lib/price-history";
 import { validateProjectId } from "@/lib/projects";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing, uniqueSlug } from "@/lib/user-properties";
@@ -120,6 +121,8 @@ export async function POST(request: Request) {
         ...moderation,
       },
     });
+
+    await logPriceChange(property.id, data.price, data.listingType);
 
     const updatedQuota = await getUserQuota(user.id);
 

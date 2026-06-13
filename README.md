@@ -24,9 +24,17 @@
 - **Standalone calculator** — `/tools/mortgage-calculator`
 - **Admin CSV import** — bulk upload listings at `/admin/import`
 
+### Growth (Phase L3 — complete)
+- **Price history** — timeline/chart on property detail + “price reduced” badge
+- **Search alert emails** — Vercel cron digest (daily/weekly)
+- **Agent reviews** — star ratings on `/agents` + admin moderation
+- **Social login** — Google + Facebook OAuth on login/register
+- **NPA hub** — `/npa` bank-owned listings
+
 ### User Experience
-- **Header nav** — text-only links; mobile two-row layout (scroll nav + login/contact row)
+- **Header nav** — text-only links; mobile two-row layout; logged-in top nav = public links only
 - **Hero AI showcase** — interactive demo on homepage
+- **Cloudflare Turnstile CAPTCHA** — login, register, contact/lead forms (spam protection)
 - **Floating feedback widget** — site feedback + agent signup (bottom corner)
 - **Agents page** — profiles grouped by team / freelance / company; signup form at `#join-agent`
 - **Brand logo** — DDproperty-style header + teal building favicon
@@ -42,7 +50,7 @@
 - Blog (5 articles) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
 - Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS, sender `CDMNINTH`)
 - **Forgot password** — email reset link (all roles; no SMS)
-- **Privacy / Terms** + cookie consent (GA4 + AdSense opt-in on "Accept all")
+- **Privacy / Terms** + cookie consent (GA4 `G-9MRZ57SWS1` + AdSense opt-in on "Accept all")
 
 ### Monetization
 - **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
@@ -63,17 +71,15 @@ npm run build
 npx vercel --prod
 ```
 
-Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate when `DATABASE_URL` set; Preview skips migrate).
+Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate; auto-derives Neon direct URL; Node 22.x).
 
 Health check: `GET https://www.condominium.in.th/api/health`
 
-## Next steps (see ROADMAP.md + PHASE-L3-PLAN.md)
+## Next steps (see ROADMAP.md)
 
-1. **Price history** — log listing price changes + chart on property detail
-2. **Search alert emails** — Vercel cron + Resend (DNS + Vercel env)
-3. **Agent reviews** — buyer ratings after closed leads
-4. **Social login** — Google, Facebook OAuth
-5. **Phase 7** — user listing fields per locale in DB
+1. **Phase 7** — per-locale listing title/description in DB + post/edit UI
+2. Optional URL locale routing (`/en/buy`)
+3. **Ops:** `CRON_SECRET`, Google/Facebook OAuth credentials, Resend DNS
 
 ## Documentation
 

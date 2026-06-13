@@ -1,12 +1,12 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 32 — Header/hero UX + L3 project pages)  
-**Current phase:** **Phase L3** — price history, alert emails, agent reviews, social login
+**Last updated:** 2026-06-14 (session 34 — Phase L3 complete)  
+**Current phase:** **Phase 7** — user listing i18n, optional URL locale routing
 
 > ## Build status
-> **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 24).  
-> **GitHub:** `main` — auto-deploy on push (if Vercel connected).  
+> **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 22).  
+> **GitHub:** `main` @ `41c6e0e` — auto-deploy on push (if Vercel connected).  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
@@ -17,16 +17,14 @@
 
 ---
 
-## Model transfer snapshot (session 32)
+## Model transfer snapshot (session 34)
 
 | Area | State |
 |------|--------|
-| **GitHub** | `main` — L1+L2 + header UX deployed; nav text-only style local |
-| **Production** | https://www.condominium.in.th — auto-deploy on push |
-| **Header** | Two-row mobile (logo/auth row 1, text nav row 2); no hamburger; contact beside login |
-| **Hero** | Interactive AI showcase on homepage (desktop right / mobile below search) |
-| **Projects** | `/projects`, `/projects/[slug]`, admin CRUD — **done** |
-| **Next** | Price history, search alert email cron, agent reviews, social login |
+| **Phase** | L3 **complete** — price history, alert cron, agent reviews, OAuth, /npa |
+| **Next** | Phase 7 — `UserProperty` i18n fields + post/edit UI |
+| **Production** | Deploy migration `20260614300000_phase_l3_features` + set `CRON_SECRET` |
+| **OAuth env** | `GOOGLE_*`, `FACEBOOK_*` callback URLs on Vercel (optional) |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -484,7 +482,7 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase L3 — Growth Features (IN PROGRESS)
+## Phase L3 — Growth Features (COMPLETE)
 
 **Goal:** Differentiation and advanced features.
 
@@ -492,30 +490,43 @@ Bangkok condo/house marketplace with:
 - [x] `Project` model — name, developer, location, amenities
 - [x] Link `UserProperty` to projects (`projectId`)
 - [x] `/projects` listing page + `/projects/[slug]` detail
-- [~] Group listings by project on property cards (badge when linked)
+- [x] Project badge on property cards when linked
 
 ### Price History / Trends
-- [ ] `PriceHistory` model — track listing price changes
-- [ ] Area price trend aggregation
-- [ ] Price history chart on property detail page
-- [ ] `/trends` or `/market` analytics page (public)
+- [x] `PriceHistory` model — track listing price changes
+- [x] Log on create + owner/admin edit + CSV import
+- [x] Price history chart on property detail page
+- [x] “Price reduced” badge (30-day window)
+- [ ] Area price trend aggregation + `/market` page (Phase 8+)
 
 ### Agent Reviews / Ratings
-- [ ] `AgentReview` model — buyer ratings after transaction
-- [ ] Review moderation in admin
-- [ ] Agent profile pages with ratings display
-- [ ] Link published `TeamAgent` to real `User` accounts
+- [x] `AgentReview` model — user ratings with admin moderation
+- [x] Review form on `/agents` (logged-in users)
+- [x] Star ratings on agent profiles (approved reviews)
+- [x] `/admin/reviews` moderation queue
+- [ ] Link published `TeamAgent` to real `User` accounts (optional)
 
 ### Social Login
-- [ ] Google OAuth (via NextAuth or custom)
-- [ ] Facebook OAuth
-- [ ] Keep LINE as primary for Thai users
+- [x] Google OAuth (`/api/auth/google/start|callback`)
+- [x] Facebook OAuth (`/api/auth/facebook/start|callback`)
+- [x] Account merge by email when possible
+- [x] Keep LINE as primary for Thai users
+
+### Search Alert Digests
+- [x] `/api/cron/search-alerts` — daily + weekly via `vercel.json`
+- [x] Resend email when `RESEND_API_KEY` + `EMAIL_FROM` set
+- [ ] User: verify Resend DNS on production
+
+### Security & Analytics (session 33)
+- [x] Cloudflare Turnstile CAPTCHA
+- [x] GA4 analytics after cookie consent
+- [x] Vercel migrate hardening — Node 22.x
 
 ### Optional Enhancements
+- [x] NPA hub page (`/npa`)
 - [ ] Virtual tours / video embeds
 - [ ] In-app chat/messaging
 - [ ] Mobile app (React Native / Flutter)
-- [ ] NPA hub page (`/npa`)
 
 **Do NOT:** scrape or copy listings from DDproperty or competitors — use owner posts, agent CRM, or licensed feeds only.
 
@@ -588,18 +599,60 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (session 32+)
+### Next step plan (Phase 7)
 
 | Step | Action | Owner | Priority |
 |------|--------|-------|----------|
-| **1** | **Price history:** `PriceHistory` model + log on edit + chart on detail | Agent | **High** |
-| **2** | **Alert digests:** Vercel cron + Resend email (DNS + env) | Agent + User | **High** |
-| **3** | **Agent reviews:** `AgentReview` model + admin moderation | Agent | Medium |
-| **4** | **Social login:** Google OAuth, then Facebook | Agent | Medium |
-| **5** | Project badge on `PropertyCard` when `projectId` set | Agent | Low |
-| **6** | `/npa` hub page + area trends `/market` | Agent | Low |
-| **7** | Phase 7: `UserProperty` i18n fields + post/edit UI | Agent | Medium |
-| **8** | ThaiBulkSMS / AdSense / GA4 production setup | User | Medium |
+| **1** | **`UserProperty` i18n fields** — titleEn, descriptionEn (+ migration) | Agent | **High** |
+| **2** | **Post/edit UI** — optional EN fields with fallback chain | Agent | **High** |
+| **3** | **Property detail** — use localized owner fields | Agent | **High** |
+| **4** | Optional URL locale routing (`/en/buy`) | Agent | Medium |
+| **5** | `/market` area price trends | Agent | Low |
+| **6** | Set `CRON_SECRET`, Google/Facebook OAuth, Resend DNS | User | Medium |
+
+### Done (2026-06-14, session 34 — Phase L3 complete)
+```
+Price history:
+- PriceHistory model + migration 20260614300000_phase_l3_features
+- src/lib/price-history.ts — log on create/edit/import
+- PriceHistoryPanel on /property/[slug], priceReduced badge on cards
+
+Search alert digests:
+- src/lib/search-alert-digest.ts + /api/cron/search-alerts
+- vercel.json crons (daily 01:00 UTC, weekly Mon 02:00 UTC)
+- Requires CRON_SECRET + Resend on Vercel
+
+Agent reviews:
+- AgentReview model + /api/agent-reviews + /admin/reviews
+- Star ratings on /agents, AgentReviewForm for logged-in users
+
+Social login:
+- Google + Facebook OAuth (env-gated)
+- SocialLoginButtons on /login and /register
+
+NPA hub: /npa page + nav link
+```
+
+### Done (2026-06-14, session 33 — CAPTCHA, GA4, deploy)
+```
+Cloudflare Turnstile CAPTCHA:
+- src/lib/captcha.ts — server verify + requireCaptcha()
+- TurnstileField + TurnstileScript + /api/captcha/config (runtime site key)
+- Wired: login, register, LeadForm, FloatingFeedbackWidget, AgentInterestForm
+
+Google Analytics 4:
+- src/lib/ga.ts — G-9MRZ57SWS1 (override NEXT_PUBLIC_GA_ID)
+- CookieConsent AnalyticsLoader — loads after "Accept all"
+
+Header polish:
+- Logged-in users: top nav = public links only; dashboard links in dashboard sub-nav
+
+Vercel deploy hardening:
+- scripts/vercel-build.mjs — auto-derive DIRECT_DATABASE_URL from pooled URL
+- Migrate retries (5× backoff); package.json engines Node 22.x
+
+Deployed: commits 88dfc33 → 41c6e0e on main
+```
 
 ### Done (2026-06-14, session 32 — header/hero UX + nav polish)
 ```
@@ -1006,6 +1059,14 @@ When starting a new chat/session:
 | **Search alerts** | `src/app/api/user/alerts`, `CreateAlertButton.tsx`, `/dashboard/alerts` |
 | **Projects** | `src/lib/projects.ts`, `/projects`, `/admin/projects`, `/api/admin/projects` |
 | **Header / hero** | `Header.tsx`, `HeaderNav.tsx`, `HeaderMobileMenu.tsx`, `HeroShowcase.tsx` |
+| **CAPTCHA** | `src/lib/captcha.ts`, `TurnstileField.tsx`, `/api/captcha/config` |
+| **GA4** | `src/lib/ga.ts`, `CookieConsent.tsx` AnalyticsLoader |
+| **Vercel build** | `scripts/vercel-build.mjs`, `prisma.config.ts`, `vercel.json` |
+| **Price history** | `src/lib/price-history.ts`, `PriceHistoryPanel.tsx` |
+| **Alert cron** | `src/lib/search-alert-digest.ts`, `/api/cron/search-alerts` |
+| **Agent reviews** | `src/lib/agent-reviews.ts`, `/api/agent-reviews`, `/admin/reviews` |
+| **Social OAuth** | `google-oauth.ts`, `facebook-oauth.ts`, `/api/auth/google/*`, `/api/auth/facebook/*` |
+| **NPA hub** | `/npa` |
 | DB schema | `prisma/schema.prisma` |
 
 ---

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { buildModerationUpdate } from "@/lib/listing-moderation";
+import { logPriceChange } from "@/lib/price-history";
 import { validateProjectId } from "@/lib/projects";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing } from "@/lib/user-properties";
@@ -78,6 +79,11 @@ export async function PUT(request: Request, context: RouteContext) {
         status: "published",
         ...moderation,
       },
+    });
+
+    await logPriceChange(property.id, data.price, data.listingType, {
+      price: existing.price,
+      listingType: existing.listingType,
     });
 
     return NextResponse.json({

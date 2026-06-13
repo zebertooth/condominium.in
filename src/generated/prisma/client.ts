@@ -121,3 +121,13 @@ export type SavedProperty = Prisma.SavedPropertyModel
  * 
  */
 export type SearchAlert = Prisma.SearchAlertModel
+/**
+ * Model PriceHistory
+ * 
+ */
+export type PriceHistory = Prisma.PriceHistoryModel
+/**
+ * Model AgentReview
+ * 
+ */
+export type AgentReview = Prisma.AgentReviewModel

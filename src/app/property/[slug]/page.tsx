@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DemoListingBanner } from "@/components/property/ListingsEmptyState";
 import { MortgageCalculator } from "@/components/property/MortgageCalculator";
+import { PriceHistoryPanel } from "@/components/property/PriceHistoryPanel";
 import { PropertyContactSection } from "@/components/property/PropertyContactSection";
 import { PropertyImageGallery } from "@/components/property/PropertyImageGallery";
 import { PropertyMap } from "@/components/property/PropertyMap";
@@ -18,6 +19,7 @@ import {
 import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
 import { formatNearbyStation } from "@/lib/locations";
+import { getPriceHistoryBySlug, isRecentPriceReduction } from "@/lib/price-history";
 import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
 import { createMetadata, siteConfig } from "@/lib/seo";
 
@@ -50,6 +52,9 @@ export default async function PropertyPage({ params }: PageProps) {
     getLocale(),
   ]);
   if (!property) notFound();
+
+  const priceHistory = property.isUserListing ? await getPriceHistoryBySlug(slug) : [];
+  const priceReduced = isRecentPriceReduction(priceHistory);
 
   const isPublished = property.status === "published" || !property.status;
   const isPreview = !isPublished;
@@ -144,6 +149,11 @@ export default async function PropertyPage({ params }: PageProps) {
             {property.contactMode === "owner_direct" && (
               <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800">
                 {t("contactOwner", locale)}
+              </span>
+            )}
+            {priceReduced && (
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800">
+                {t("priceReducedBadge", locale)}
               </span>
             )}
           </div>
@@ -242,6 +252,15 @@ export default async function PropertyPage({ params }: PageProps) {
         <div className="mt-8">
           <MortgageCalculator propertyPrice={property.price} locale={locale} />
         </div>
+      )}
+
+      {property.isUserListing && priceHistory.length > 0 && (
+        <PriceHistoryPanel
+          history={priceHistory}
+          locale={locale}
+          priceUnit={property.priceUnit}
+          showReducedBadge={priceReduced}
+        />
       )}
 
       {property.latitude != null && property.longitude != null && (
