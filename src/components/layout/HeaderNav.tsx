@@ -20,11 +20,8 @@ function navLinkClass(highlight?: boolean) {
 
 export function HeaderNav({ mainLinks, highlightLink }: HeaderNavProps) {
   return (
-    <nav
-      className="min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      aria-label="Main menu"
-    >
-      <div className="inline-flex min-w-full items-center justify-center gap-0.5 sm:gap-1">
+    <nav className="hidden min-w-0 lg:block" aria-label="Main menu">
+      <div className="flex flex-wrap items-center justify-center gap-0.5 xl:gap-1">
         {mainLinks.map((link) => (
           <Link key={link.href} href={link.href} className={navLinkClass(link.highlight)}>
             {link.label}

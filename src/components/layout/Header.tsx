@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { HeaderAuth } from "@/components/layout/HeaderAuth";
+import {
+  HeaderMobileMenu,
+  HeaderMobileQuickNav,
+} from "@/components/layout/HeaderMobileMenu";
 import { HeaderNav, type HeaderNavItem } from "@/components/layout/HeaderNav";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { SiteLogo, siteLogoAltText } from "@/components/brand/SiteLogo";
@@ -64,14 +68,19 @@ export async function Header({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-md">
       <div className="mx-auto flex max-w-[100rem] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 lg:gap-4">
         <Link href="/" className="min-w-0 shrink-0" aria-label={siteLogoAltText()}>
-          <SiteLogo locale={locale} />
+          <SiteLogo locale={locale} className="max-w-[11rem] sm:max-w-none" />
         </Link>
 
-        <div className="min-w-0 flex-1">
+        <div className="hidden min-w-0 flex-1 lg:block">
           <HeaderNav mainLinks={nav.mainLinks} highlightLink={nav.highlightLink} />
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <HeaderMobileMenu
+            mainLinks={nav.mainLinks}
+            highlightLink={nav.highlightLink}
+            showContact={!user}
+          />
           <HeaderAuth user={user} locale={locale} />
           <div className="hidden h-6 w-px bg-slate-200 sm:block" aria-hidden />
           <LanguageSwitcher />
@@ -85,6 +94,8 @@ export async function Header({ locale }: { locale: Locale }) {
           )}
         </div>
       </div>
+
+      <HeaderMobileQuickNav mainLinks={nav.mainLinks} highlightLink={nav.highlightLink} />
     </header>
   );
 }
