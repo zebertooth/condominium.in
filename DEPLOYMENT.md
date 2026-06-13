@@ -46,6 +46,7 @@ Open http://localhost:3000 — homepage must load without `table User does not e
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
 | `datasource.url property is required` on Vercel | `DATABASE_URL` missing at build time — preview skips migrate; add for runtime |
 | `pg_advisory_lock` timeout on migrate | Another deploy is migrating — wait and redeploy; set `DIRECT_DATABASE_URL` (Neon non-pooler); preview builds no longer run migrate |
+| `P1002` database timed out on migrate | Set `DIRECT_DATABASE_URL` to Neon **direct** URL (no `-pooler` in host); redeploy; Neon cold start may need a retry (build script retries 5×) |
 
 **Fallback:** `npx prisma db push` then `npm run db:seed` (skips migration history).
 
