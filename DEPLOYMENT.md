@@ -115,7 +115,7 @@ npx vercel --prod
 DIRECT_DATABASE_URL=postgresql://...@ep-xxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
 ```
 
-If omitted, `DATABASE_URL` is used for migrate. If migrate fails with `pg_advisory_lock` timeout, use `DIRECT_DATABASE_URL` or redeploy after other builds finish.
+If omitted, the Vercel build script **auto-derives** a direct URL from `DATABASE_URL` by removing the `-pooler` hostname suffix (Neon convention).
 
 **Health check after deploy:**
 ```bash

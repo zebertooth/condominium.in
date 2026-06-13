@@ -8,13 +8,7 @@ function run(command, env = {}) {
   });
 }
 
-/** Neon pooler URLs break migrate locks; direct URL + longer connect timeout helps P1002. */
-function resolveMigrateUrl() {
-  const direct = process.env.DIRECT_DATABASE_URL?.trim();
-  const pooled = process.env.DATABASE_URL?.trim();
-  const raw = direct || pooled;
-  if (!raw) return null;
-
+function withTimeoutParams(raw) {
   try {
     const url = new URL(raw);
     if (!url.searchParams.has("connect_timeout")) {
@@ -27,6 +21,33 @@ function resolveMigrateUrl() {
   } catch {
     return raw;
   }
+}
+
+/** Neon pooler URLs break migrate locks — prefer direct URL or strip `-pooler` from host. */
+function resolveMigrateUrl() {
+  const explicitDirect = process.env.DIRECT_DATABASE_URL?.trim();
+  if (explicitDirect) {
+    console.log("[vercel-build] using DIRECT_DATABASE_URL for migrate");
+    return withTimeoutParams(explicitDirect);
+  }
+
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  if (!databaseUrl) return null;
+
+  try {
+    const url = new URL(databaseUrl);
+    if (url.hostname.includes("-pooler")) {
+      url.hostname = url.hostname.replace("-pooler", "");
+      console.log(
+        "[vercel-build] derived direct migrate URL from DATABASE_URL (removed -pooler suffix)",
+      );
+      return withTimeoutParams(url.toString());
+    }
+  } catch {
+    // fall through to pooled URL below
+  }
+
+  return withTimeoutParams(databaseUrl);
 }
 
 async function migrateWithRetry(databaseUrl) {
@@ -57,15 +78,6 @@ async function main() {
 
   const vercelEnv = process.env.VERCEL_ENV ?? "development";
   const migrateUrl = resolveMigrateUrl();
-  const hasDirect = Boolean(process.env.DIRECT_DATABASE_URL?.trim());
-
-  if (migrateUrl && vercelEnv === "production" && !hasDirect) {
-    console.warn(
-      "[vercel-build] WARNING: DIRECT_DATABASE_URL is not set. " +
-        "Using DATABASE_URL for migrate — Neon pooler often causes P1002 timeouts. " +
-        "Add the direct (non-pooler) Neon URL as DIRECT_DATABASE_URL on Vercel Production.",
-    );
-  }
 
   // Only production deploys run migrations — preview builds share the same DB and
   // concurrent migrate deploy calls cause pg_advisory_lock timeouts.
