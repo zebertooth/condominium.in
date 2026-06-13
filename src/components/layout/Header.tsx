@@ -31,6 +31,7 @@ function publicNavLinks(locale: Locale): HeaderNavItem[] {
     { href: "/projects", label: t("navProjects", locale) },
     { href: "/map", label: t("navMap", locale) },
     { href: "/npa", label: t("navNpa", locale) },
+    { href: "/market", label: t("navMarket", locale) },
     { href: "/ai-search", label: t("aiSearch", locale) },
     { href: "/blog", label: t("blog", locale) },
   ];

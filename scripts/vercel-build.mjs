@@ -110,14 +110,15 @@ async function main() {
   const vercelEnv = process.env.VERCEL_ENV ?? "development";
   const migrateUrl = resolveMigrateUrl();
 
-  // Only production deploys run migrations — preview builds share the same DB and
-  // concurrent migrate deploy calls cause pg_advisory_lock timeouts.
-  if (migrateUrl && vercelEnv === "production") {
+  // Preview and production share the same Neon DB — both must run migrate deploy or
+  // Prisma queries fail (e.g. sitemap / listings missing new columns). Advisory lock
+  // is disabled in migrateWithRetry to avoid Neon pooler P1002 timeouts.
+  if (migrateUrl && (vercelEnv === "production" || vercelEnv === "preview")) {
+    console.log(`[vercel-build] running migrate deploy (VERCEL_ENV=${vercelEnv})`);
     await migrateWithRetry(migrateUrl);
   } else {
     console.warn(
-      `[vercel-build] skipping migrate (VERCEL_ENV=${vercelEnv}, hasDb=${Boolean(migrateUrl)}). ` +
-        "Preview builds use schema from last production migrate.",
+      `[vercel-build] skipping migrate (VERCEL_ENV=${vercelEnv}, hasDb=${Boolean(migrateUrl)}).`,
     );
   }
 
