@@ -86,10 +86,10 @@ export function LanguageSwitcher() {
         aria-label={t("language")}
         disabled={loading}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-9 min-w-[5.5rem] items-center gap-2 rounded-full border border-slate-200 bg-white px-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50/60 disabled:cursor-wait disabled:opacity-60"
+        className="inline-flex h-9 min-w-0 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50/60 disabled:cursor-wait disabled:opacity-60 sm:min-w-[5.5rem] sm:gap-2 sm:px-2.5"
       >
         <LocaleFlag locale={current.code} />
-        <span className="truncate">{current.label}</span>
+        <span className="hidden truncate sm:inline">{current.label}</span>
         <ChevronIcon open={open} />
       </button>
 

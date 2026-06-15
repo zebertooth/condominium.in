@@ -513,7 +513,7 @@ const th = {
   statusDeleted: "ลบแล้ว",
   forgotPassword: "ลืมรหัสผ่าน?",
   forgotPasswordDesc:
-    "กรอกอีเมลที่ผูกกับบัญชี เราจะส่งลิงก์รีเซ็ตรหัสผ่านทางอีเมล (ใช้ได้กับ user, agent และ admin — ไม่ใช้ SMS)",
+    "กรอกอีเมลที่ผูกกับบัญชี เราจะส่งลิงก์รีเซ็ตรหัสผ่านทางอีเมล",
   forgotPasswordSent:
     "หากอีเมลนี้มีในระบบ เราได้ส่งลิงก์รีเซ็ตรหัสผ่านไปแล้ว — ตรวจสอบกล่องจดหมายและโฟลเดอร์สแปม",
   forgotPasswordError: "ไม่สามารถส่งคำขอได้ กรุณาลองใหม่",
@@ -1182,7 +1182,7 @@ const en: Record<keyof typeof th, string> = {
   statusDeleted: "Deleted",
   forgotPassword: "Forgot password?",
   forgotPasswordDesc:
-    "Enter the email on your account. We will email a reset link (all roles — user, agent, admin; email only, no SMS).",
+    "Enter the email on your account. We will email a reset link.",
   forgotPasswordSent:
     "If that email is registered, we sent a reset link — check your inbox and spam folder.",
   forgotPasswordError: "Could not send request. Please try again.",
