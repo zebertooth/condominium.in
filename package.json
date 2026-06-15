@@ -16,6 +16,7 @@
     "db:setup-neon": "prisma generate && prisma migrate deploy && npm run db:seed",
     "db:push": "prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
+    "db:import-inventory": "npx tsx scripts/import-inventory.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

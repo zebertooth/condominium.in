@@ -172,6 +172,8 @@ model UserProperty {
   moderationFlags String   @default("[]")
   isSponsored    Boolean   @default(false)
   sponsoredUntil DateTime?
+  sponsorReminder3dAt DateTime?
+  sponsorReminder1dAt DateTime?
   agentManaged   Boolean   @default(false)
   projectId      String?
   project        Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)

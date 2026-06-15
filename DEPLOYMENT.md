@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 38):** Live at **https://www.condominium.in.th**. Phase 7 complete. `main` @ `301cde4`. Locale fix deployed; crons restored. Next: production CSV import + cron verification.
+**Current status (session 39):** Live at **https://www.condominium.in.th**. Import starter inventory with `npm run db:import-inventory -- --sponsor=3`. Crons: search alerts (01:00/02:00 UTC) + sponsor reminders (03:00 UTC).
 
 ---
 
@@ -26,6 +26,23 @@ npm run dev
 ```
 
 Open http://localhost:3000 — homepage must load without `table User does not exist`.
+
+### Starter inventory (Neon / production DB)
+
+After `db:deploy` + `db:seed`, load demo listings and projects:
+
+```powershell
+npm run db:import-inventory -- --sponsor=3
+```
+
+| Flag | Purpose |
+|------|---------|
+| `--sponsor=3` | Mark 3 newest published listings as ประกาศแนะนำ (30 days) |
+| `--force` | Re-import even if projects/listings already exist |
+| `--projects-only` | Import `starter-projects.csv` only |
+| `--listings-only` | Import `starter-listings.csv` only (run projects first for `projectSlug` links) |
+
+Alternative: upload the same CSVs at **https://www.condominium.in.th/admin/import** (admin login required).
 
 ### Troubleshooting
 
@@ -200,11 +217,20 @@ Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>`. The value **must be
 1. Vercel → Project → **Settings → Environment Variables**
 2. Delete `CRON_SECRET` (Production)
 3. Add again as **one line** (no trailing newline), e.g. generate: `openssl rand -hex 32`
-4. Redeploy — crons are in `vercel.json` (restored session 38)
+4. Merge `vercel.crons.json` into `vercel.json` (copy the `"crons"` array) and redeploy
+
+Crons (production):
+- `0 1 * * *` — search alert digests (daily)
+- `0 2 * * 1` — search alert digests (weekly)
+- `0 3 * * *` — sponsored listing renewal reminders
 
 Until crons work, alert digests can be triggered manually:
 
 `GET https://www.condominium.in.th/api/cron/search-alerts?frequency=daily&secret=YOUR_SECRET`
+
+Sponsor renewal reminders (manual):
+
+`GET https://www.condominium.in.th/api/cron/sponsor-reminders?secret=YOUR_SECRET`
 
 ---
 

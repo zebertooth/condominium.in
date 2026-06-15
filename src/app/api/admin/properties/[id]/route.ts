@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { logPriceChange } from "@/lib/price-history";
+import { clearSponsorReminderFields } from "@/lib/sponsor-renewal-reminders";
 import { normalizePropertyLocaleFields } from "@/lib/property-locale-fields";
 import { validateProjectId } from "@/lib/projects";
 import { dbPropertyToListing } from "@/lib/user-properties";
@@ -96,6 +97,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       moderationFlags?: string;
       isSponsored?: boolean;
       sponsoredUntil?: Date | null;
+      sponsorReminder3dAt?: Date | null;
+      sponsorReminder1dAt?: Date | null;
     } = {};
 
     if (body.status !== undefined) {
@@ -117,6 +120,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       data.isSponsored = body.isSponsored;
       if (!body.isSponsored) {
         data.sponsoredUntil = null;
+        Object.assign(data, clearSponsorReminderFields());
       }
     }
 
@@ -131,6 +135,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         data.sponsoredUntil = until;
         data.isSponsored = true;
       }
+      Object.assign(data, clearSponsorReminderFields());
     }
 
     if (Object.keys(data).length === 0) {

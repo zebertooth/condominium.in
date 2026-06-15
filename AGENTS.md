@@ -12,31 +12,17 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 38 — **Post-Phase-7 ops**)
+> ## 🤝 HANDOFF (session 39 — **inventory + sponsor reminders**)
 >
-> **Production:** https://www.condominium.in.th — `main` @ `301cde4` (locale fix + crons restored)
+> **Production:** https://www.condominium.in.th — deploy after push (inventory import on Neon via script)
 >
-> **Done (session 36 — Phase 7):**
-> - `UserProperty` locale fields — title/description for EN, ZH, JA, AR
-> - Post/edit + admin forms — optional translations section
-> - URL locale routing — `/en/buy`, `/zh/property/…` (Thai unprefixed); middleware + hreflang
+> **Done (session 39):**
+> - `npm run db:import-inventory` — CLI imports `public/inventory/starter-*.csv` (+ `--sponsor=3`)
+> - Shared import logic in `src/lib/inventory-import.ts` (API + script)
+> - Sponsored renewal emails — cron `/api/cron/sponsor-reminders` daily 03:00 UTC
+> - JA/ZH/AR map/NPA/project i18n (sessions 39–40)
 >
-> **Done (session 37):**
-> - Homepage — **ประกาศแนะนำ** / **ประกาศล่าสุด** / **ยอดนิยม** (3 sections × 6 cards)
-> - Admin **ประกาศแนะนำ** at `/admin/sponsored` — 7/30 days + **กำหนดเอง** date picker
-> - Starter inventory CSVs in `public/inventory/` + import tab samples
->
-> **Done (session 38):**
-> - Locale fix — unprefixed URLs always Thai; cookie reset; `LocalizedLink` + switcher from URL prefix
-> - Vercel deploy unblocked — `CRON_SECRET` single-line requirement; `src/lib/cron-auth.ts`
-> - Crons restored in `vercel.json` after user fixed `CRON_SECRET`
->
-> **Next priorities:**
-> 1. Import starter CSVs on production (`/admin/import`)
-> 2. Verify search-alert cron fires (daily 01:00 UTC / weekly Mon 02:00 UTC)
-> 3. Fill JA/ZH i18n gaps (`navProjects`, `navMap`, `marketTitle`, homepage keys)
-> 4. Optional: sitemap locale URL variants; commit `PropertyImageGallery` image normalization
-> 5. User ops: Resend DNS, AdSense slot IDs, ThaiBulkSMS delivery test
+> **Next:** Run import on production Neon if not done; verify crons; AdSense/Resend ops
 
 ---
 

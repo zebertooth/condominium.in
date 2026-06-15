@@ -1960,6 +1960,8 @@ export const UserPropertyScalarFieldEnum = {
   moderationFlags: 'moderationFlags',
   isSponsored: 'isSponsored',
   sponsoredUntil: 'sponsoredUntil',
+  sponsorReminder3dAt: 'sponsorReminder3dAt',
+  sponsorReminder1dAt: 'sponsorReminder1dAt',
   agentManaged: 'agentManaged',
   projectId: 'projectId',
   createdAt: 'createdAt',

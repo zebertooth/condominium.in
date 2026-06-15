@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 38 — locale fix + cron restore)  
-**Current phase:** **Post-Phase-7** — ops, inventory, i18n polish
+**Last updated:** 2026-06-14 (session 39 — inventory import + sponsor reminders)  
+**Current phase:** **Post-Phase-7 ops** — live inventory + cron emails
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 22).  
@@ -26,7 +26,7 @@
 | **Admin** | `/admin/sponsored` — manage recommended listings (7/30/custom expiry) |
 | **Locale** | Unprefixed public URLs = Thai; prefixed `/en/*` … `/ar/*`; cookie synced by middleware |
 | **Cron** | `vercel.json` crons restored; `CRON_SECRET` must be single-line (no newlines) |
-| **Next** | Production CSV import, cron smoke test, JA/ZH nav keys, optional sitemap locale URLs |
+| **Next** | Verify crons on Vercel; AdSense/Resend ops; dashboard i18n polish |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -153,7 +153,7 @@ Bangkok condo/house marketplace with:
 - [x] Owner dashboard — sponsor button, expiry date, block duplicate pending orders
 - [x] Analytics — `PropertyViewEvent.source` = `sponsored` for featured listing views
 - [ ] Dedicated carousel / sidebar slots (optional polish)
-- [ ] Renewal reminders for sponsored posts
+- [x] Renewal reminders for sponsored posts — email 3d + 1d before expiry; cron `/api/cron/sponsor-reminders`
 
 ---
 
@@ -308,7 +308,7 @@ Bangkok condo/house marketplace with:
 ### Owner portal
 - [x] Edit own listings — `PUT /api/user/properties/[id]`, `/dashboard/edit/[id]`, reusable `PostPropertyForm`, edit goes back to `pending`
 - [x] View stats (views, inquiries, contact clicks) per listing — `getOwnerPropertyStats()` + `MyProperties` (session 25)
-- [ ] Renewal reminders for sponsored posts
+- [x] Renewal reminders for sponsored posts — email 3d + 1d before expiry; cron `/api/cron/sponsor-reminders`
 - [ ] Package expiry notifications
 
 ### Roles & quota (DONE)
@@ -659,6 +659,23 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-14, session 39 — inventory import + sponsor reminders)
+```
+Inventory import CLI:
+- src/lib/inventory-import.ts — shared listing + project CSV import
+- scripts/import-inventory.ts — npm run db:import-inventory [--sponsor=3] [--force]
+- Idempotent skip when ≥10 published listings / ≥5 projects
+
+Sponsor renewal emails:
+- Migration 20260614220000_sponsor_reminders (sponsorReminder3dAt, sponsorReminder1dAt)
+- src/lib/sponsor-renewal-reminders.ts + /api/cron/sponsor-reminders
+- vercel.json cron daily 03:00 UTC
+- Emails 3 days and 1 day before sponsoredUntil expiry
+
+i18n polish (sessions 39–40):
+- JA/ZH/AR nav, market, map, NPA, project, favorites labels
 ```
 
 ### Done (2026-06-14, session 38 — locale fix + cron deploy)

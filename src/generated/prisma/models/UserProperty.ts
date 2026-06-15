@@ -86,6 +86,8 @@ export type UserPropertyMinAggregateOutputType = {
   moderationFlags: string | null
   isSponsored: boolean | null
   sponsoredUntil: Date | null
+  sponsorReminder3dAt: Date | null
+  sponsorReminder1dAt: Date | null
   agentManaged: boolean | null
   projectId: string | null
   createdAt: Date | null
@@ -130,6 +132,8 @@ export type UserPropertyMaxAggregateOutputType = {
   moderationFlags: string | null
   isSponsored: boolean | null
   sponsoredUntil: Date | null
+  sponsorReminder3dAt: Date | null
+  sponsorReminder1dAt: Date | null
   agentManaged: boolean | null
   projectId: string | null
   createdAt: Date | null
@@ -174,6 +178,8 @@ export type UserPropertyCountAggregateOutputType = {
   moderationFlags: number
   isSponsored: number
   sponsoredUntil: number
+  sponsorReminder3dAt: number
+  sponsorReminder1dAt: number
   agentManaged: number
   projectId: number
   createdAt: number
@@ -242,6 +248,8 @@ export type UserPropertyMinAggregateInputType = {
   moderationFlags?: true
   isSponsored?: true
   sponsoredUntil?: true
+  sponsorReminder3dAt?: true
+  sponsorReminder1dAt?: true
   agentManaged?: true
   projectId?: true
   createdAt?: true
@@ -286,6 +294,8 @@ export type UserPropertyMaxAggregateInputType = {
   moderationFlags?: true
   isSponsored?: true
   sponsoredUntil?: true
+  sponsorReminder3dAt?: true
+  sponsorReminder1dAt?: true
   agentManaged?: true
   projectId?: true
   createdAt?: true
@@ -330,6 +340,8 @@ export type UserPropertyCountAggregateInputType = {
   moderationFlags?: true
   isSponsored?: true
   sponsoredUntil?: true
+  sponsorReminder3dAt?: true
+  sponsorReminder1dAt?: true
   agentManaged?: true
   projectId?: true
   createdAt?: true
@@ -461,6 +473,8 @@ export type UserPropertyGroupByOutputType = {
   moderationFlags: string
   isSponsored: boolean
   sponsoredUntil: Date | null
+  sponsorReminder3dAt: Date | null
+  sponsorReminder1dAt: Date | null
   agentManaged: boolean
   projectId: string | null
   createdAt: Date
@@ -528,6 +542,8 @@ export type UserPropertyWhereInput = {
   moderationFlags?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  sponsorReminder3dAt?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  sponsorReminder1dAt?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
   projectId?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
@@ -575,6 +591,8 @@ export type UserPropertyOrderByWithRelationInput = {
   moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  sponsorReminder3dAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sponsorReminder1dAt?: Prisma.SortOrderInput | Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -625,6 +643,8 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   moderationFlags?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  sponsorReminder3dAt?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  sponsorReminder1dAt?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
   projectId?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
@@ -672,6 +692,8 @@ export type UserPropertyOrderByWithAggregationInput = {
   moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  sponsorReminder3dAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sponsorReminder1dAt?: Prisma.SortOrderInput | Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -724,6 +746,8 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   moderationFlags?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProperty"> | Date | string | null
+  sponsorReminder3dAt?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProperty"> | Date | string | null
+  sponsorReminder1dAt?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   projectId?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
@@ -767,6 +791,8 @@ export type UserPropertyCreateInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -813,6 +839,8 @@ export type UserPropertyUncheckedCreateInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   projectId?: string | null
   createdAt?: Date | string
@@ -857,6 +885,8 @@ export type UserPropertyUpdateInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -903,6 +933,8 @@ export type UserPropertyUncheckedUpdateInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -948,6 +980,8 @@ export type UserPropertyCreateManyInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   projectId?: string | null
   createdAt?: Date | string
@@ -991,6 +1025,8 @@ export type UserPropertyUpdateManyMutationInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1034,6 +1070,8 @@ export type UserPropertyUncheckedUpdateManyInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1088,6 +1126,8 @@ export type UserPropertyCountOrderByAggregateInput = {
   moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
+  sponsorReminder3dAt?: Prisma.SortOrder
+  sponsorReminder1dAt?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1143,6 +1183,8 @@ export type UserPropertyMaxOrderByAggregateInput = {
   moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
+  sponsorReminder3dAt?: Prisma.SortOrder
+  sponsorReminder1dAt?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1187,6 +1229,8 @@ export type UserPropertyMinOrderByAggregateInput = {
   moderationFlags?: Prisma.SortOrder
   isSponsored?: Prisma.SortOrder
   sponsoredUntil?: Prisma.SortOrder
+  sponsorReminder3dAt?: Prisma.SortOrder
+  sponsorReminder1dAt?: Prisma.SortOrder
   agentManaged?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1360,6 +1404,8 @@ export type UserPropertyCreateWithoutUserInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1404,6 +1450,8 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   projectId?: string | null
   createdAt?: Date | string
@@ -1478,6 +1526,8 @@ export type UserPropertyScalarWhereInput = {
   moderationFlags?: Prisma.StringFilter<"UserProperty"> | string
   isSponsored?: Prisma.BoolFilter<"UserProperty"> | boolean
   sponsoredUntil?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  sponsorReminder3dAt?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
+  sponsorReminder1dAt?: Prisma.DateTimeNullableFilter<"UserProperty"> | Date | string | null
   agentManaged?: Prisma.BoolFilter<"UserProperty"> | boolean
   projectId?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
@@ -1521,6 +1571,8 @@ export type UserPropertyCreateWithoutProjectInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1566,6 +1618,8 @@ export type UserPropertyUncheckedCreateWithoutProjectInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1635,6 +1689,8 @@ export type UserPropertyCreateWithoutPriceHistoryInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1680,6 +1736,8 @@ export type UserPropertyUncheckedCreateWithoutPriceHistoryInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   projectId?: string | null
   createdAt?: Date | string
@@ -1739,6 +1797,8 @@ export type UserPropertyUpdateWithoutPriceHistoryInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1784,6 +1844,8 @@ export type UserPropertyUncheckedUpdateWithoutPriceHistoryInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1827,6 +1889,8 @@ export type UserPropertyCreateManyUserInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   projectId?: string | null
   createdAt?: Date | string
@@ -1870,6 +1934,8 @@ export type UserPropertyUpdateWithoutUserInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1914,6 +1980,8 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1958,6 +2026,8 @@ export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2002,6 +2072,8 @@ export type UserPropertyCreateManyProjectInput = {
   moderationFlags?: string
   isSponsored?: boolean
   sponsoredUntil?: Date | string | null
+  sponsorReminder3dAt?: Date | string | null
+  sponsorReminder1dAt?: Date | string | null
   agentManaged?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2044,6 +2116,8 @@ export type UserPropertyUpdateWithoutProjectInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2089,6 +2163,8 @@ export type UserPropertyUncheckedUpdateWithoutProjectInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2133,6 +2209,8 @@ export type UserPropertyUncheckedUpdateManyWithoutProjectInput = {
   moderationFlags?: Prisma.StringFieldUpdateOperationsInput | string
   isSponsored?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sponsoredUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder3dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sponsorReminder1dAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agentManaged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2207,6 +2285,8 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  sponsorReminder3dAt?: boolean
+  sponsorReminder1dAt?: boolean
   agentManaged?: boolean
   projectId?: boolean
   createdAt?: boolean
@@ -2255,6 +2335,8 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  sponsorReminder3dAt?: boolean
+  sponsorReminder1dAt?: boolean
   agentManaged?: boolean
   projectId?: boolean
   createdAt?: boolean
@@ -2301,6 +2383,8 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  sponsorReminder3dAt?: boolean
+  sponsorReminder1dAt?: boolean
   agentManaged?: boolean
   projectId?: boolean
   createdAt?: boolean
@@ -2347,13 +2431,15 @@ export type UserPropertySelectScalar = {
   moderationFlags?: boolean
   isSponsored?: boolean
   sponsoredUntil?: boolean
+  sponsorReminder3dAt?: boolean
+  sponsorReminder1dAt?: boolean
   agentManaged?: boolean
   projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "titleEn" | "descriptionEn" | "titleZh" | "descriptionZh" | "titleJa" | "descriptionJa" | "titleAr" | "descriptionAr" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "titleEn" | "descriptionEn" | "titleZh" | "descriptionZh" | "titleJa" | "descriptionJa" | "titleAr" | "descriptionAr" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "sponsorReminder3dAt" | "sponsorReminder1dAt" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
@@ -2414,6 +2500,8 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     moderationFlags: string
     isSponsored: boolean
     sponsoredUntil: Date | null
+    sponsorReminder3dAt: Date | null
+    sponsorReminder1dAt: Date | null
     agentManaged: boolean
     projectId: string | null
     createdAt: Date
@@ -2881,6 +2969,8 @@ export interface UserPropertyFieldRefs {
   readonly moderationFlags: Prisma.FieldRef<"UserProperty", 'String'>
   readonly isSponsored: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly sponsoredUntil: Prisma.FieldRef<"UserProperty", 'DateTime'>
+  readonly sponsorReminder3dAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
+  readonly sponsorReminder1dAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
   readonly agentManaged: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly projectId: Prisma.FieldRef<"UserProperty", 'String'>
   readonly createdAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
