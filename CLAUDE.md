@@ -4,7 +4,7 @@ Handoff guide for AI agents and developers continuing this project.
 
 ## Project summary
 
-**Condominium.in.th** is a Thai real-estate marketplace (condos & houses, buy/rent) focused on Bangkok BTS areas. Inspired by DDproperty, PropertyHub, and Baania.
+**Condominium.in.th** is a Thai real-estate marketplace (condos & houses, buy/rent) focused on Bangkok BTS areas. Inspired by DDproperty (listings), Think of Living (reviews), PropertyHub, and Baania.
 
 **Domain:** https://www.condominium.in.th (live on Vercel)
 
@@ -19,21 +19,21 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 38)
+## Model transfer snapshot (session 43)
 
 | Item | Detail |
 |------|--------|
+| **Phase** | **Phase 9 next** — editorial review blog; **Phase 10** — DD-style search UX |
 | **Locales** | TH unprefixed; EN/ZH/JA/AR via URL prefix; middleware forces Thai on unprefixed public pages |
 | **Homepage** | 3 sections — ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม (`HomeListingsSection`) |
-| **Admin sponsored** | `/admin/sponsored` — 7/30/custom days; `isActiveSponsor()` in `sponsored.ts` |
-| **Search** | Advanced filters + Leaflet map at `/map` |
-| **Favorites** | `SavedProperty` model; heart icon; `/dashboard/saved` |
-| **Alerts** | `SearchAlert` + Vercel cron digests (daily/weekly; needs `CRON_SECRET` + Resend) |
-| **Phase 7** | Owner listing title/description per locale in DB + post/edit UI |
-| **Cron deploy** | `CRON_SECRET` must be single line; `readCronSecret()` in `cron-auth.ts` |
-| **Next** | Production CSV import, JA/ZH nav i18n gaps, optional sitemap locale URLs |
+| **Blog today** | 5 SEO guides + admin CMS — plain renderer; **no project reviews yet** |
+| **Search** | Advanced filters + Leaflet map at `/map` — **no sort on buy/rent yet** (Phase 10) |
+| **Differentiator** | AI search + review→listing funnel + 5 locales + BTS niche |
+| **Competitors** | [DDproperty](https://www.ddproperty.com/) listings UX · [Think of Living](https://thinkofliving.com/) editorial |
+| **Phase 8** | Dashboard i18n complete; SEO form fix deployed (`c163d9e`) |
+| **Ops pending** | Cron verify, AdSense slots, GSC |
 
-Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
+Read order: `AGENTS.md` → `ROADMAP.md` → [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) → this file → `DEPLOYMENT.md`
 
 ---
 
@@ -388,7 +388,7 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 - JSON-LD in layout + property/blog pages (`logo` URL → `/logo.svg`)
 - Dynamic sitemap: `src/app/sitemap.ts`
 - Area landing pages: `/areas/[slug]` (9 BTS stations)
-- Blog: 5 SEO articles in `src/lib/blog.ts`
+- Blog: 5 SEO guides in `src/lib/blog.ts` + DB `BlogArticle` via `/admin/blog` — **Phase 9 adds project reviews**
 - Admin SEO editor: `/admin/seo`
 
 ## Agents (public + admin)
@@ -489,11 +489,25 @@ Done / env-gated:
 - [x] `LocalizedLink` + language switcher use URL prefix
 - [x] `src/lib/cron-auth.ts` — sanitize `CRON_SECRET`; crons restored in `vercel.json`
 
-**Next code tasks:**
-- [ ] Fill JA/ZH i18n overrides for nav + market + homepage keys
-- [ ] Sitemap locale URL variants (optional SEO polish)
-- [ ] Commit `PropertyImageGallery` image normalization (local uncommitted change)
-- [ ] Separate marketing vs analytics cookie categories (if AdSense requires)
+**Done (Phase 8 — dashboard i18n + polish):**
+- [x] `/dashboard/saved`, `/dashboard/alerts`, `CreateAlertButton`, `AlertsList` — full 5-locale
+- [x] `/dashboard/agent` + `AgentLeadTable` — agent CRM i18n
+- [x] Admin SEO form — fields no longer reset while typing (`AdminSeoForm` + `LocaleProvider`)
+
+**Next code tasks (Phase 9 — see [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)):**
+- [ ] Extend `BlogArticle` — `articleType`, `projectId`, `factsJson`, author, gallery, video
+- [ ] Review article template — Fact @ box, TOC, listing CTA, “เหมาะกับใคร”
+- [ ] Hubs — `/blog/reviews`, `/blog/guides`, homepage “รีวิวล่าสุด”
+- [ ] Pilot project review for one BTS starter project
+
+**Next code tasks (Phase 10):**
+- [ ] Sort on `/buy` + `/rent` — `?sort=recommended|newest|price_asc|price_desc`
+- [ ] Rich `PropertyCard` — ฿/sqm, photo count, listed date
+- [ ] Optional: sqm/furnishing filters, map/list toggle, SEO filter landing URLs
+
+**Ops (user):**
+- [ ] Verify search-alert + sponsor-reminder crons with `CRON_SECRET`
+- [ ] AdSense slot IDs in `/admin/seo`, GSC, ThaiBulkSMS production verify
 
 ---
 
@@ -516,6 +530,17 @@ Edit `src/lib/packages.ts` — `FREE_PROPERTY_LIMIT`, `LISTING_PACKAGES`, `SPONS
 1. Add option to dropdown arrays in `src/components/property/AdvancedFilters.tsx`
 2. Update `SearchFilters` type in `src/types/property.ts` if needed
 3. Update `applyFilters()` in `src/lib/listings.ts`
+
+### Add a project review article (Phase 9)
+1. Extend schema per [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) §9A
+2. Admin: pick `articleType=project_review`, link `projectId`, fill Fact @ fields
+3. Public: `ReviewArticleLayout` renders TOC + Fact sheet + related listings
+4. Cross-link `/projects/[slug]`, `/areas/[slug]`, live listing slugs
+
+### Add listing sort (Phase 10)
+1. Add `sortListings()` in `src/lib/listings.ts`
+2. `ListingSortBar` on buy/rent — persist `?sort=` in URL
+3. Enrich `PropertyCard` with sqm price, photo count, `publishedAt`
 
 ### Run search alert digests
 Cron is configured in `vercel.json` (daily 01:00 UTC, weekly Mon 02:00 UTC). Requires `CRON_SECRET` (single line, no newlines) + Resend on Vercel. Manual trigger:

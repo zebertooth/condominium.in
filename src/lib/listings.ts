@@ -1,6 +1,7 @@
 import { properties as staticProperties } from "@/lib/properties";
 import { getPropertySearchText } from "@/lib/property-search-text";
 import { shouldShowDemoListings } from "@/lib/demo-listings";
+import { sortListings } from "@/lib/listing-sort";
 import { getPriceReducedSlugSet } from "@/lib/price-history";
 import { CATEGORY_PROPERTY_TYPES } from "@/lib/property-types";
 import {
@@ -25,10 +26,7 @@ async function enrichWithPriceReduced(list: Property[]): Promise<Property[]> {
 }
 
 function sortListingsFeaturedFirst(list: Property[]): Property[] {
-  return [...list].sort((a, b) => {
-    if (a.featured !== b.featured) return a.featured ? -1 : 1;
-    return b.publishedAt.localeCompare(a.publishedAt);
-  });
+  return sortListings(list, "recommended");
 }
 
 export async function getAllListings(): Promise<Property[]> {
@@ -38,6 +36,12 @@ export async function getAllListings(): Promise<Property[]> {
   ]);
   const demos = showDemos ? staticProperties : [];
   return enrichWithPriceReduced(sortListingsFeaturedFirst([...userListings, ...demos]));
+}
+
+export async function getListingsBySlugs(slugs: string[]): Promise<Property[]> {
+  const unique = [...new Set(slugs.map((s) => decodeURIComponent(s).trim()).filter(Boolean))];
+  const results = await Promise.all(unique.map((slug) => getListingBySlug(slug)));
+  return results.filter((p): p is Property => p !== undefined);
 }
 
 export async function getListingBySlug(
@@ -78,7 +82,8 @@ function applyFilters(list: Property[], filters: SearchFilters): Property[] {
 
 export async function filterListings(filters: SearchFilters): Promise<Property[]> {
   const all = await getAllListings();
-  return sortListingsFeaturedFirst(applyFilters(all, filters));
+  const filtered = applyFilters(all, filters);
+  return sortListings(filtered, filters.sort ?? "recommended");
 }
 
 export async function getFeaturedListings(): Promise<Property[]> {

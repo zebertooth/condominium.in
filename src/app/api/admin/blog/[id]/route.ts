@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
+import { blogArticleFromDb, blogArticleToDbData } from "@/lib/blog-admin";
 import { getBlogArticleById, uniqueBlogSlug } from "@/lib/blog-articles";
 import { blogArticleSchema } from "@/lib/content-validation";
 import { prisma } from "@/lib/db";
@@ -17,7 +18,7 @@ export async function GET(_request: Request, context: RouteContext) {
     if (!article) {
       return NextResponse.json({ error: "ไม่พบบทความ" }, { status: 404 });
     }
-    return NextResponse.json({ article });
+    return NextResponse.json({ article: blogArticleFromDb(article) });
   } catch (error) {
     return adminRouteError(error, "โหลดบทความไม่สำเร็จ");
   }
@@ -47,27 +48,13 @@ export async function PATCH(request: Request, context: RouteContext) {
       existing.title !== data.title
         ? await uniqueBlogSlug(data.title, id)
         : existing.slug;
+    const dbData = await blogArticleToDbData(data);
 
     const article = await prisma.blogArticle.update({
       where: { id },
       data: {
         slug,
-        title: data.title,
-        titleEn: data.titleEn ?? "",
-        excerpt: data.excerpt,
-        excerptEn: data.excerptEn ?? "",
-        content: data.content,
-        contentEn: data.contentEn ?? "",
-        category: data.category,
-        categoryEn: data.categoryEn ?? "",
-        imageUrl: data.imageUrl ?? "",
-        publishedAt: new Date(data.publishedAt),
-        readTime: data.readTime,
-        seoTitle: data.seoTitle,
-        seoTitleEn: data.seoTitleEn ?? "",
-        seoDescription: data.seoDescription,
-        seoDescriptionEn: data.seoDescriptionEn ?? "",
-        status: data.status,
+        ...dbData,
       },
     });
 

@@ -6,6 +6,7 @@ const COVER = {
   ai: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80",
   invest: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80",
   docs: "https://images.unsplash.com/photo-1454165804603-c3d57bc86b40?w=1200&q=80",
+  review: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80",
 };
 
 /** Default blog posts — seeded to DB and used as static fallback. */
@@ -115,6 +116,102 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
     seoDescriptionEn: "Checklist of essential documents to rent a condo in Bangkok.",
   },
 ];
+
+/** Phase 9C — pilot project review (Noble Reform Phayathai). */
+export const PILOT_PROJECT_REVIEW: BlogPost = {
+  slug: "review-noble-reform-phayathai",
+  title: "รีวิว Noble Reform พญาไท — คอนโดใหม่ใกล้ BTS 250 เมตร",
+  titleEn: "Noble Reform Phayathai Review — New Condo 250m from BTS",
+  excerpt:
+    "ทำเลพญาไท-ราชเทวี โครงการ Noble ใกล้ BTS พญาไท ห้องตัวอย่างและทรัพย์ขาย-เช่าบน Condominium.in.th",
+  excerptEn:
+    "Phayathai-Ratchathewi location, Noble developer, 250m to BTS — sample units and live listings on Condominium.in.th.",
+  content: `## สรุปโครงการ
+
+Noble Reform ตั้งอยู่ย่านพญาไท ใกล้ BTS พญาไทและ Airport Rail Link เหมาะกับผู้ทำงานในราชเทวี-สยาม และนักลงทุนปล่อยเช่า
+
+## ทำเลและการเดินทาง
+
+เดินถึง BTS พญาไทประมาณ 250 เมตร มีร้านอาหารและห้างสรรพสินค้าในพื้นที่ สะดวกต่อการเดินทางไปสยามและอโศก
+
+## จุดเด่นของโครงการ
+
+- แบรนด์ Noble ที่คุ้นเคยในตลาดคอนโดกรุงเทพฯ
+- สิ่งอำนวยความสะดวกครบ: สระว่ายน้ำ ฟิตเนส ล็obby
+- ห้องขนาดกะทัดรัด เหมาะปล่อยเช่าให้คนทำงาน
+
+## เหมาะกับใคร
+
+- ผู้ซื้อเพื่ออยู่เองที่ทำงานใกล้ BTS พญาไท-ราชเทวี
+- นักลงทุนปล่อยเช่าระยะกลาง-ยาว
+- ชาวต่างชาติที่ต้องการทำเลเชื่อมต่อสนามบิน
+
+## ประกาศที่เกี่ยวข้อง
+
+ดูประกาศขายและเช่า Noble Reform บน Condominium.in.th หรือใช้ AI ค้นหาเพื่อเปรียบเทียบห้องในย่านพญาไท`,
+  contentEn: `## Project summary
+
+Noble Reform sits in Phayathai, about 250m from BTS Phayathai and the Airport Rail Link — ideal for CBD workers and rental investors.
+
+## Location
+
+Easy access to Siam and Asoke via BTS Sukhumvit line. Daily amenities and malls nearby.
+
+## Highlights
+
+- Established Noble brand
+- Pool, fitness, lobby
+- Compact layouts suited to rental demand
+
+## Who is it for?
+
+- Owner-occupiers working near the Sukhumvit BTS corridor
+- Buy-to-let investors
+- Expats wanting airport-linked transit
+
+## Related listings
+
+Browse Noble Reform sale and rent listings on Condominium.in.th or use AI search to compare Phayathai units.`,
+  category: "รีวิวโครงการ",
+  categoryEn: "Project Review",
+  imageUrl: COVER.review,
+  publishedAt: "2026-06-01",
+  readTime: 8,
+  seoTitle: "รีวิว Noble Reform พญาไท | Condominium.in.th",
+  seoTitleEn: "Noble Reform Phayathai Review | Condominium.in.th",
+  seoDescription:
+    "รีวิวโครงการ Noble Reform พญาไท ทำเล BTS 250m จุดเด่น ห้องตัวอย่าง และประกาศขาย-เช่า",
+  seoDescriptionEn:
+    "Noble Reform Phayathai project review — BTS location, highlights, and live sale/rent listings.",
+  articleType: "project_review",
+  projectSlug: "noble-reform",
+  projectName: "Noble Reform",
+  authorName: "ทีม Condominium.in.th",
+  authorTitle: "Editorial",
+  reviewNumber: 1,
+  facts: {
+    developer: "Noble Development",
+    totalUnits: "800+ ยูนิต",
+    pricePerSqm: "฿180,000–220,000/ตร.ม. (ขาย)",
+    btsDistance: "250 ม. ถึง BTS พญาไท",
+    completion: "2019",
+    parking: "1 ที่จอด/ยูนิต (บางแบบ)",
+    facilities: "สระว่ายน้ำ, ฟิตเนส, ล็obby, รปภ. 24 ชม.",
+    suitableFor: "อยู่เองใกล้ BTS, ปล่อยเช่า, ชาวต่างชาติ",
+  },
+  sections: [
+    { id: "summary", title: "สรุปโครงการ" },
+    { id: "location", title: "ทำเลและการเดินทาง" },
+    { id: "highlights", title: "จุดเด่นของโครงการ" },
+    { id: "audience", title: "เหมาะกับใคร" },
+    { id: "listings", title: "ประกาศที่เกี่ยวข้อง" },
+  ],
+  galleryUrls: [
+    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
+    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
+  ],
+  relatedSlugs: ["noble-reform-phayathai-sale"],
+};
 
 export const DEFAULT_TEAM_AGENTS = [
   {

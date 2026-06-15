@@ -10,6 +10,7 @@ interface BlogRow {
   slug: string;
   title: string;
   category: string;
+  articleType: string;
   imageUrl: string;
   publishedAt: string;
   status: string;
@@ -78,6 +79,7 @@ export function AdminBlogTable() {
                 <th className="px-4 py-3">{t("adminBlogCover")}</th>
                 <th className="px-4 py-3">{t("adminBlogColTitle")}</th>
                 <th className="px-4 py-3">{t("adminBlogCategory")}</th>
+                <th className="px-4 py-3">{t("adminBlogArticleType")}</th>
                 <th className="px-4 py-3">{t("adminBlogDate")}</th>
                 <th className="px-4 py-3">{t("adminColStatus")}</th>
                 <th className="px-4 py-3">{t("adminColActions")}</th>
@@ -100,6 +102,9 @@ export function AdminBlogTable() {
                     <p className="text-xs text-slate-400">/blog/{article.slug}</p>
                   </td>
                   <td className="px-4 py-3">{article.category}</td>
+                  <td className="px-4 py-3 text-xs">
+                    {t(`adminBlogType_${article.articleType || "guide"}` as "adminBlogType_guide")}
+                  </td>
                   <td className="px-4 py-3">
                     {new Date(article.publishedAt).toLocaleDateString("th-TH")}
                   </td>

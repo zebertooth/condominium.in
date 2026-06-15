@@ -94,10 +94,23 @@ model BlogArticle {
   seoDescription   String
   seoDescriptionEn String   @default("")
   status           String   @default("published")
+  articleType      String   @default("guide")
+  projectId        String?
+  project          Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  authorName       String   @default("")
+  authorTitle      String   @default("")
+  reviewNumber     Int?
+  factsJson        String   @default("{}")
+  sectionsJson     String   @default("[]")
+  galleryUrls      String   @default("[]")
+  videoUrl         String   @default("")
+  relatedSlugs     String   @default("[]")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
   @@index([status, publishedAt])
+  @@index([articleType, status, publishedAt])
+  @@index([projectId])
 }
 
 model PasswordResetToken {
@@ -206,6 +219,7 @@ model Project {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   properties     UserProperty[]
+  blogArticles     BlogArticle[]
 
   @@index([published])
   @@index([district])

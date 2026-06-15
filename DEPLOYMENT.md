@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 39):** Live at **https://www.condominium.in.th**. Import starter inventory with `npm run db:import-inventory -- --sponsor=3`. Crons: search alerts (01:00/02:00 UTC) + sponsor reminders (03:00 UTC).
+**Current status (session 43):** Live at **https://www.condominium.in.th**. **Phase 9 next** — editorial review blog. Crons: search alerts (01:00/02:00 UTC) + sponsor reminders (03:00 UTC). Verify with `CRON_SECRET` (single line, no newlines).
 
 ---
 

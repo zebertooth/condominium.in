@@ -12,16 +12,22 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 41 — **Phase 8 dashboard i18n**)
+> ## 🤝 HANDOFF (session 43 — **Phase 9 next**)
 >
-> **Production:** https://www.condominium.in.th — deploy after push
+> **Production:** https://www.condominium.in.th  
+> **GitHub `main`:** `c163d9e` (SEO form fix + Phase 8 saved/alerts i18n)
 >
-> **Done (session 41):**
-> - Dashboard saved/alerts pages use `t()` for all 5 locales
-> - `AlertsList` + `CreateAlertButton` — JA/ZH/AR overrides
-> - Resend verified (forgot-password works on production)
+> **Done (Phase 8):**
+> - Dashboard i18n — saved, alerts, agent CRM (`/dashboard/agent`)
+> - Admin SEO form fix — typing no longer clears fields
 >
-> **Next:** Dashboard verify/post/agent i18n audit; cron verification; AdSense ops
+> **Next (Phase 9 — editorial):**
+> 1. BlogArticle schema — review type, project link, Fact @ box
+> 2. Review template + `/blog/reviews` hub
+> 3. Pilot BTS project review linked to live listings
+>
+> **Then (Phase 10 — marketplace UX):** sort on buy/rent + rich listing cards  
+> **Full plan:** [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
 
 ---
 
@@ -31,7 +37,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 8** — dashboard i18n + polish |
+| Phase | **Phase 9** — editorial review blog + Phase 10 marketplace UX |
 | Homepage | 3 sections: recommended / latest / popular (`HomeListingsSection`) |
 | Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (7/30/custom days) |
 | Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |
@@ -43,6 +49,8 @@ Instructions for AI coding agents working in this repository.
 | Security | Cloudflare Turnstile on login, register, contact forms |
 | Analytics | GA4 after cookie consent (`G-9MRZ57SWS1`) |
 | Tools | Mortgage calculator, favorites, search alerts, price history |
+| Editorial | **Phase 9 next** — project reviews (TOL-style) linked to listings |
+| Search UX | **Phase 10** — sort + rich cards (DD-style parity) |
 | Social | Google + Facebook OAuth (env-gated) |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
@@ -52,6 +60,18 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
+# Phase 9 (planned) — Editorial review blog
+PHASE-9-PLAN.md                           Competitive analysis + build order
+src/components/blog/ReviewArticleLayout.tsx  Fact @, TOC, listing CTA (planned)
+src/app/blog/reviews/                     Project reviews hub (planned)
+
+# Session 42 — Phase 8 dashboard i18n + SEO fix
+src/components/admin/AdminSeoForm.tsx     Load once; no reset on keystroke
+src/components/i18n/LocaleProvider.tsx    useT/useTf stable via useCallback
+src/app/dashboard/agent/page.tsx          Agent CRM i18n
+src/components/dashboard/AgentLeadTable.tsx
+src/app/dashboard/saved/ + alerts/        Full 5-locale dashboard flows
+
 # Session 38 — Locale fix + cron deploy
 src/middleware.ts                         Unprefixed → Thai; /en/* rewrite; LOCALE_HEADER
 src/components/i18n/LocalizedLink.tsx     Client links preserve locale prefix
@@ -135,4 +155,4 @@ Admin: `admin@condominium.in.th` / `admin123456` (via `npm run db:seed` only)
 
 ## Related
 
-- [`ROADMAP.md`](./ROADMAP.md) · [`CLAUDE.md`](./CLAUDE.md) · [`DEPLOYMENT.md`](./DEPLOYMENT.md)
+- [`ROADMAP.md`](./ROADMAP.md) · [`CLAUDE.md`](./CLAUDE.md) · [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) · [`DEPLOYMENT.md`](./DEPLOYMENT.md)

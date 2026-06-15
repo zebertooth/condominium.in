@@ -1,12 +1,12 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 39 — inventory import + sponsor reminders)  
-**Current phase:** **Post-Phase-7 ops** — live inventory + cron emails
+**Last updated:** 2026-06-14 (session 43 — Phase 9–10 plan)  
+**Current phase:** **Phase 9** — editorial review blog (Think of Living style)
 
 > ## Build status
-> **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 22).  
-> **GitHub:** `main` @ `301cde4` — auto-deploy on push (if Vercel connected).  
+> **Production:** https://www.condominium.in.th (Vercel, Node 22).  
+> **GitHub `main`:** `c163d9e` — auto-deploy on push.  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
@@ -17,16 +17,16 @@
 
 ---
 
-## Model transfer snapshot (session 38)
+## Model transfer snapshot (session 43)
 
 | Area | State |
 |------|--------|
-| **Phase** | Phase 7 **complete** — user listing i18n + URL locale routing |
-| **Homepage** | 3 sections: ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม |
-| **Admin** | `/admin/sponsored` — manage recommended listings (7/30/custom expiry) |
-| **Locale** | Unprefixed public URLs = Thai; prefixed `/en/*` … `/ar/*`; cookie synced by middleware |
-| **Cron** | `vercel.json` crons restored; `CRON_SECRET` must be single-line (no newlines) |
-| **Next** | Verify crons on Vercel; AdSense/Resend ops; dashboard i18n polish |
+| **Phase** | **Phase 9 next** — review blog + Phase 10 marketplace UX (see [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)) |
+| **Phase 8** | **Complete** — dashboard i18n, SEO form fix, agent CRM i18n |
+| **Competitors** | DDproperty (listings UX) · Think of Living (editorial reviews) |
+| **Differentiator** | AI search + 5 locales + review→listing funnel + BTS niche |
+| **Blog today** | 5 SEO guides + admin CMS — **not** project reviews yet |
+| **Ops pending** | Cron verify, AdSense slots, GSC |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -46,7 +46,7 @@ Bangkok condo/house marketplace with:
 - Verified owner self-listing (quota + paid upgrades)
 - Human agent layer for viewings and closings
 
-**Competitors referenced:** ddproperty.com, propertyhub.in.th, baania.com
+**Competitors referenced:** [ddproperty.com](https://www.ddproperty.com/) (listings), [thinkofliving.com](https://thinkofliving.com/) (reviews), propertyhub.in.th, baania.com
 
 ---
 
@@ -70,6 +70,9 @@ Bangkok condo/house marketplace with:
 | **L2** | Favorites, map search, mortgage calculator, search alerts | **Done** (session 31) | 2027 Q1 |
 | **L3** | Project pages, price history, agent reviews, social login | **Done** (session 34) | 2027 Q2 |
 | **7** | User listing DB i18n + URL locale routing | **Done** (session 36) | 2027 Q2 |
+| **8** | Dashboard i18n + admin polish | **Done** (session 42) | 2027 Q2 |
+| **9** | Editorial review blog (TOL-style) | **Next** | 2027 Q2 |
+| **10** | Marketplace UX (DD-style sort/cards/filters) | Planned | 2027 Q3 |
 
 ---
 
@@ -561,21 +564,58 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 8 — Dashboard i18n + polish (IN PROGRESS)
+## Phase 8 — Dashboard i18n + polish (COMPLETE)
 
-**Goal:** Full 5-locale support on user dashboard favorites/alerts flows.
+**Goal:** Full 5-locale support on user dashboard + fix admin SEO editor.
 
 ### Dashboard i18n
 - [x] `/dashboard/saved` — `t()` keys instead of TH/EN ternaries
 - [x] `/dashboard/alerts` — same
 - [x] `AlertsList` + `CreateAlertButton` — JA/ZH/AR overrides
-- [ ] Remaining dashboard pages audit (verify, post, agent CRM copy)
-- [ ] Sitemap locale URLs for `/en/*` variants (optional)
+- [x] `/dashboard/agent` + `AgentLeadTable` — full 5-locale labels
+- [x] Admin SEO form — text no longer clears while typing (`useT` stable + load once)
+- [ ] Admin CSV import panels — replace `nonTh` ternaries (optional)
+- [x] Sitemap locale URLs for `/en/*` variants (`sitemap.ts` + `ALL_LOCALES`)
 
 ### Ops (user)
 - [x] Resend email delivery verified (forgot-password + production health)
 - [ ] Verify search-alert + sponsor-reminder crons with `CRON_SECRET`
 - [ ] AdSense slot IDs, GSC, ThaiBulkSMS production verify
+
+---
+
+## Phase 9 — Editorial review blog (NEXT)
+
+**Goal:** Property media hub like Think of Living — project reviews + guides linked to live listings.
+
+**Full plan:** [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
+
+### Must-have
+- [ ] `BlogArticle` extensions — `articleType`, `projectId`, `factsJson`, author, gallery
+- [ ] Review article template — Fact @ box, TOC, “เหมาะกับใคร”, listing CTA
+- [ ] Blog hubs — `/blog/reviews`, `/blog/guides`, `/blog/project/[slug]`
+- [ ] Homepage section — “รีวิวโครงการล่าสุด”
+- [ ] Pilot review — 1 BTS project linked to `/projects` + live listings
+
+### Should-have
+- [ ] Rich editor (Markdown/TipTap + multi-image)
+- [ ] YouTube embed on reviews
+- [ ] Area roundup articles (link `/areas`)
+
+---
+
+## Phase 10 — Marketplace UX (DDproperty parity)
+
+**Goal:** Listing search UX matches buyer expectations without nationwide inventory.
+
+### Must-have
+- [ ] Sort on `/buy` + `/rent` — recommended, newest, price asc/desc
+- [ ] Rich `PropertyCard` — ฿/sqm, photo count, listed date
+
+### Should-have
+- [ ] Map/list toggle on results (same filters as `/map`)
+- [ ] Filters — min/max sqm, furnishing
+- [ ] SEO landing URLs — `/rent/bts/[station]`, price/bed hubs
 
 ---
 
@@ -624,16 +664,19 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (post-Phase-7)
+### Next step plan (Phase 9–10)
 
 | Step | Action | Owner | Priority |
 |------|--------|-------|----------|
-| **1** | **Import starter CSVs** — `/admin/import` on production (`public/inventory/starter-*.csv`) | User/Agent | **High** |
-| **2** | **Verify alert cron** — confirm daily/weekly digests after `CRON_SECRET` fix | User | **High** |
-| **3** | **JA/ZH i18n gaps** — `navProjects`, `navMap`, `marketTitle`, homepage section keys | Agent | Medium |
-| **4** | **Sitemap locale URLs** — optional hreflang polish for `/en/*` variants | Agent | Low |
-| **5** | **Resend DNS, AdSense slots, ThaiBulkSMS** — production integration checks | User | Medium |
-| **6** | **`/market` area price trends** | Agent | Low |
+| **1** | **Phase 9A** — BlogArticle schema + admin fields (review type, project, Fact @) | Agent | **High** |
+| **2** | **Phase 9B** — Review template + `/blog/reviews` hub | Agent | **High** |
+| **3** | **Phase 9C** — Publish 1 pilot BTS project review (content) | User/Agent | **High** |
+| **4** | **Phase 10A** — Sort + rich listing cards on buy/rent | Agent | **High** |
+| **5** | Verify crons + AdSense slots in `/admin/seo` | User | **High** |
+| **6** | Phase 10B — sqm/furnishing filters or map toggle | Agent | Medium |
+| **7** | SEO filter landing URLs | Agent | Medium |
+
+See [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) for competitive analysis and week-by-week order.
 
 ### Done (2026-06-14, session 34 — Phase L3 complete)
 ```
@@ -677,6 +720,35 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-14, session 43 — Phase 9–10 plan)
+```
+Competitive recheck: DDproperty (listings UX) vs Think of Living (editorial reviews)
+Created PHASE-9-PLAN.md — must-have vs should-have matrix, week-by-week build order
+ROADMAP: Phase 8 complete; Phase 9 editorial + Phase 10 marketplace UX
+Updated AGENTS.md, CLAUDE.md, README.md, DEPLOYMENT.md handoff
+Must-have: project reviews + sort + rich cards + review→listing funnel
+```
+
+### Done (2026-06-14, session 42 — Phase 8 polish)
+```
+Admin SEO form fix (c163d9e): LocaleProvider useCallback; AdminSeoForm load once
+Agent CRM i18n: /dashboard/agent, AgentLeadTable — full 5-locale labels
+Phase 8 dashboard i18n complete (saved, alerts, agent)
+```
+
+### Done (2026-06-14, session 41 — saved/alerts i18n)
+```
+821a210: /dashboard/saved, /dashboard/alerts, AlertsList, CreateAlertButton
+JA/ZH/AR overrides for dashboard favorites + search alerts flows
+Sitemap locale URL variants for prefixed routes
+```
+
+### Done (2026-06-14, session 40 — i18n polish)
+```
+JA/ZH/AR overrides: nav, market, map, NPA, project, favorites labels
+Continued post-session-39 nav/market gap fill
 ```
 
 ### Done (2026-06-14, session 39 — inventory import + sponsor reminders)

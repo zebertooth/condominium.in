@@ -2,8 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/AdSlot";
+import { BlogSuggestedListings } from "@/components/blog/BlogSuggestedListings";
+import { ReviewArticleLayout } from "@/components/blog/ReviewArticleLayout";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getBlogPostBySlug } from "@/lib/blog";
+import { getBlogPostBySlug, isReviewArticle } from "@/lib/blog";
+import { getBlogSuggestedListings } from "@/lib/blog-suggestions";
+import { renderBlogContent } from "@/lib/blog-render";
 import {
   blogCategory,
   blogContent,
@@ -14,6 +18,7 @@ import {
   dateLocale,
   isNonThaiLocale,
 } from "@/lib/locale-content";
+import { getListingsBySlugs } from "@/lib/listings";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
 import { createMetadata, siteConfig } from "@/lib/seo";
@@ -39,38 +44,31 @@ export async function generateMetadata({ params }: PageProps) {
   });
 }
 
-function renderContent(content: string) {
-  return content.split("\n\n").map((block, i) => {
-    if (block.startsWith("**") && block.includes("**")) {
-      const title = block.replace(/\*\*/g, "").trim();
-      return (
-        <h2 key={i} className="mt-6 text-xl font-bold text-slate-900">
-          {title}
-        </h2>
-      );
-    }
-    const html = block
-      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n/g, "<br />");
-    return (
-      <p
-        key={i}
-        className="mt-3 leading-relaxed text-slate-700"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    );
-  });
-}
-
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
-  const locale = await getLocale();
+  const [locale, suggestedListings] = await Promise.all([
+    getLocale(),
+    getBlogSuggestedListings(),
+  ]);
+
+  if (isReviewArticle(post)) {
+    const slugs = post.relatedSlugs ?? [];
+    const relatedListings = slugs.length > 0 ? await getListingsBySlugs(slugs) : [];
+    return (
+      <ReviewArticleLayout
+        post={post}
+        locale={locale}
+        relatedListings={relatedListings}
+        suggestedListings={suggestedListings}
+      />
+    );
+  }
+
   const lp = (path: string) => localePath(path, locale);
   const nonTh = isNonThaiLocale(locale);
-
   const title = blogTitle(post, locale);
   const excerpt = blogExcerpt(post, locale);
   const content = blogContent(post, locale);
@@ -87,81 +85,85 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <JsonLd data={jsonLd} />
+    <>
+      <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:max-w-4xl">
+        <JsonLd data={jsonLd} />
 
-      <nav className="mb-6 text-sm text-slate-500">
-        <Link href={lp("/blog")} className="hover:text-teal-700">
-          {t("blog", locale)}
-        </Link>
-        {" / "}
-        <span className="text-slate-900">{title}</span>
-      </nav>
+        <nav className="mb-6 text-sm text-slate-500">
+          <Link href={lp("/")} className="hover:text-teal-700">
+            {t("home", locale)}
+          </Link>
+          {" / "}
+          <Link href={lp("/blog")} className="hover:text-teal-700">
+            {t("blog", locale)}
+          </Link>
+          {" / "}
+          <Link href={lp("/blog/guides")} className="hover:text-teal-700">
+            {t("blogHubGuides", locale)}
+          </Link>
+          {" / "}
+          <span className="text-slate-900">{title}</span>
+        </nav>
 
-      <AdSlot position="blogTop" format="auto" className="mb-6" />
+        <AdSlot position="blogTop" format="auto" className="mb-6" />
 
-      {post.imageUrl && (
-        <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100">
-          <Image
-            src={post.imageUrl}
-            alt={title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 768px"
-            priority
-          />
-        </div>
-      )}
+        {post.imageUrl && (
+          <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100">
+            <Image
+              src={post.imageUrl}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 896px"
+              priority
+            />
+          </div>
+        )}
 
-      <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-medium text-teal-800">
-        {category}
-      </span>
-      <h1 className="mt-4 text-3xl font-bold text-slate-900">{title}</h1>
-      <p className="mt-2 text-slate-500">
-        {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}{" "}
-        · {post.readTime} {t("readTime", locale)}
-      </p>
-
-      <AdSlot position="blogInarticle" format="rectangle" className="my-8" />
-
-      <div className="prose mt-8 max-w-none">{renderContent(content)}</div>
-
-      <div className="mt-12 rounded-2xl bg-teal-50 p-6">
-        <h2 className="font-bold text-teal-900">
-          {locale === "zh"
-            ? "准备好找公寓了吗？"
-            : locale === "ja"
-              ? "コンド探しの準備はできましたか？"
-              : locale === "ar"
-                ? "هل أنت مستعد للعثور على شقتك؟"
-                : nonTh
-                  ? "Ready to find your condo?"
-                  : "พร้อมหาคอนโดแล้ว?"}
-        </h2>
-        <p className="mt-2 text-teal-800">
-          {locale === "zh"
-            ? "使用 AI 搜索匹配房源，或联系我们的经纪人团队。"
-            : locale === "ja"
-              ? "AI検索で物件を見つけるか、エージェントチームにお問い合わせください。"
-              : locale === "ar"
-                ? "استخدم البحث بالذكاء الاصطناعي أو تواصل مع فريق الوكلاء لدينا."
-                : nonTh
-                  ? "Use AI search to find matching properties or contact our agent team."
-                  : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
+        <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+          {category}
+        </span>
+        <h1 className="mt-4 text-3xl font-bold text-slate-900">{title}</h1>
+        <p className="mt-2 text-slate-500">
+          {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}{" "}
+          · {post.readTime} {t("readTime", locale)}
         </p>
-        <div className="mt-4 flex gap-3">
-          <Link href={lp("/ai-search")} className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white">
-            {t("aiSearch", locale)}
-          </Link>
-          <Link href={lp("/contact")} className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800">
-            {t("contact", locale)}
-          </Link>
+
+        <AdSlot position="blogInarticle" format="rectangle" className="my-8" />
+
+        <div className="prose mt-8 max-w-none">{renderBlogContent(content)}</div>
+
+        <div className="mt-12 rounded-2xl bg-teal-50 p-6">
+          <h2 className="font-bold text-teal-900">
+            {nonTh ? "Ready to find your condo?" : "พร้อมหาคอนโดแล้ว?"}
+          </h2>
+          <p className="mt-2 text-teal-800">
+            {nonTh
+              ? "Use AI search to find matching properties or contact our agent team."
+              : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
+          </p>
+          <div className="mt-4 flex gap-3">
+            <Link
+              href={lp("/ai-search")}
+              className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white"
+            >
+              {t("aiSearch", locale)}
+            </Link>
+            <Link
+              href={lp("/contact")}
+              className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"
+            >
+              {t("contact", locale)}
+            </Link>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+
+      <BlogSuggestedListings locale={locale} properties={suggestedListings} />
+    </>
   );
 }

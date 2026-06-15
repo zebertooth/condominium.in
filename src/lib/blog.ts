@@ -2,10 +2,16 @@ export { blogPosts } from "./blog-static";
 export {
   getAllBlogPosts,
   getBlogPostBySlug,
+  getBlogPostsByTypes,
+  getBlogPostsByProjectSlug,
+  getLatestReviewPosts,
+  getGuidePosts,
   getAllBlogArticlesAdmin,
   getBlogArticleById,
   uniqueBlogSlug,
   dbArticleToPost,
+  isReviewArticle,
+  BLOG_ARTICLE_TYPES,
 } from "./blog-articles";
 
 import { blogPosts } from "./blog-static";

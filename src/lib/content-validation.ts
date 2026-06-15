@@ -29,6 +29,22 @@ export const projectSchema = z.object({
   published: z.boolean().default(true),
 });
 
+export const blogFactSchema = z.object({
+  developer: z.string().optional(),
+  totalUnits: z.string().optional(),
+  pricePerSqm: z.string().optional(),
+  btsDistance: z.string().optional(),
+  completion: z.string().optional(),
+  parking: z.string().optional(),
+  facilities: z.string().optional(),
+  suitableFor: z.string().optional(),
+});
+
+export const blogSectionSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+});
+
 export const blogArticleSchema = z.object({
   title: z.string().min(5),
   titleEn: z.string().optional(),
@@ -46,4 +62,16 @@ export const blogArticleSchema = z.object({
   seoDescription: z.string().min(10),
   seoDescriptionEn: z.string().optional(),
   status: z.enum(["draft", "published"]).default("published"),
+  articleType: z
+    .enum(["guide", "project_review", "project_preview", "area_review", "news"])
+    .default("guide"),
+  projectId: z.string().nullable().optional(),
+  authorName: z.string().optional(),
+  authorTitle: z.string().optional(),
+  reviewNumber: z.number().int().min(1).max(999).nullable().optional(),
+  facts: blogFactSchema.optional(),
+  sections: z.array(blogSectionSchema).optional(),
+  galleryUrls: z.array(z.string()).optional(),
+  videoUrl: z.string().optional(),
+  relatedSlugs: z.array(z.string()).optional(),
 });

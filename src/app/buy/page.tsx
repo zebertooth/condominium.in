@@ -12,6 +12,8 @@ import { getLocale } from "@/lib/locale";
 import { localePathWithQuery } from "@/lib/locale-routing";
 import { parsePropertyCategory } from "@/lib/property-types";
 import { createMetadata } from "@/lib/seo";
+import { ListingSortBar } from "@/components/property/ListingSortBar";
+import { parseListingSort } from "@/lib/listing-sort";
 import { filterListings } from "@/lib/listings";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -22,6 +24,7 @@ interface BuyPageProps {
     district?: string;
     price?: string;
     beds?: string;
+    sort?: string;
   }>;
 }
 
@@ -61,6 +64,7 @@ export default async function BuyPage({ searchParams }: BuyPageProps) {
       minPrice,
       maxPrice,
       bedrooms,
+      sort: parseListingSort(params.sort),
     }),
     getLocale(),
     getSiteSettings(),
@@ -105,7 +109,11 @@ export default async function BuyPage({ searchParams }: BuyPageProps) {
               </span>
             )}
           </h2>
-          <a
+          <div className="flex flex-wrap items-center gap-3">
+            <Suspense fallback={<div className="h-10 w-36 animate-pulse rounded-lg bg-slate-100" />}>
+              <ListingSortBar basePath="/buy" />
+            </Suspense>
+            <a
             href={localePathWithQuery("/map", locale, {
               type: "sale",
               category: params.category,
@@ -117,6 +125,7 @@ export default async function BuyPage({ searchParams }: BuyPageProps) {
             </svg>
             {locale === "th" ? "ดูบนแผนที่" : "View on map"}
           </a>
+          </div>
           {user && (
             <Suspense fallback={null}>
               <CreateAlertButton listingType="sale" locale={locale} />

@@ -3,8 +3,13 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "../src/generated/prisma/client";
 import pg from "pg";
-import { DEFAULT_BLOG_POSTS, DEFAULT_TEAM_AGENTS } from "../src/lib/default-content";
+import {
+  DEFAULT_BLOG_POSTS,
+  DEFAULT_TEAM_AGENTS,
+  PILOT_PROJECT_REVIEW,
+} from "../src/lib/default-content";
 import { normalizeDatabaseUrl } from "../src/lib/database-url";
+import type { BlogPost } from "../src/types/property";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -14,6 +19,73 @@ if (!connectionString) {
 const pool = new pg.Pool({ connectionString: normalizeDatabaseUrl(connectionString) });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+
+function blogPostData(post: BlogPost, projectId?: string) {
+  return {
+    slug: post.slug,
+    title: post.title,
+    titleEn: post.titleEn ?? "",
+    excerpt: post.excerpt,
+    excerptEn: post.excerptEn ?? "",
+    content: post.content,
+    contentEn: post.contentEn ?? "",
+    category: post.category,
+    categoryEn: post.categoryEn ?? "",
+    imageUrl: post.imageUrl ?? "",
+    publishedAt: new Date(post.publishedAt),
+    readTime: post.readTime,
+    seoTitle: post.seoTitle,
+    seoTitleEn: post.seoTitleEn ?? "",
+    seoDescription: post.seoDescription,
+    seoDescriptionEn: post.seoDescriptionEn ?? "",
+    status: "published" as const,
+    articleType: post.articleType ?? "guide",
+    projectId: projectId ?? null,
+    authorName: post.authorName ?? "",
+    authorTitle: post.authorTitle ?? "",
+    reviewNumber: post.reviewNumber ?? null,
+    factsJson: post.facts ? JSON.stringify(post.facts) : "{}",
+    sectionsJson: post.sections ? JSON.stringify(post.sections) : "[]",
+    galleryUrls: post.galleryUrls ? JSON.stringify(post.galleryUrls) : "[]",
+    videoUrl: post.videoUrl ?? "",
+    relatedSlugs: post.relatedSlugs ? JSON.stringify(post.relatedSlugs) : "[]",
+  };
+}
+
+async function seedPilotProjectAndReview() {
+  let project = await prisma.project.findUnique({ where: { slug: "noble-reform" } });
+  if (!project) {
+    project = await prisma.project.create({
+      data: {
+        slug: "noble-reform",
+        name: "Noble Reform",
+        nameEn: "Noble Reform",
+        developer: "Noble Development",
+        location: "พญาไท กรุงเทพฯ",
+        district: "พญาไท",
+        btsStation: "พญาไท",
+        amenities: JSON.stringify(["สระว่ายน้ำ", "ฟิตเนส", "ล็obby", "รปภ. 24 ชม."]),
+        totalUnits: 800,
+        completionDate: new Date("2019-01-01"),
+        imageUrl: PILOT_PROJECT_REVIEW.imageUrl ?? "",
+        description: "คอนโด Noble Reform ใกล้ BTS พญาไท",
+        descriptionEn: "Noble Reform condo near BTS Phayathai",
+        published: true,
+      },
+    });
+    console.log("Seeded project: Noble Reform");
+  }
+
+  const existingReview = await prisma.blogArticle.findUnique({
+    where: { slug: PILOT_PROJECT_REVIEW.slug },
+  });
+  if (!existingReview) {
+    await prisma.blogArticle.create({
+      data: blogPostData(PILOT_PROJECT_REVIEW, project.id),
+    });
+    console.log(`Seeded pilot review: ${PILOT_PROJECT_REVIEW.slug}`);
+  }
+}
 
 async function seedContent() {
   const agentCount = await prisma.teamAgent.count();
@@ -41,29 +113,13 @@ async function seedContent() {
   if (blogCount === 0) {
     for (const post of DEFAULT_BLOG_POSTS) {
       await prisma.blogArticle.create({
-        data: {
-          slug: post.slug,
-          title: post.title,
-          titleEn: post.titleEn ?? "",
-          excerpt: post.excerpt,
-          excerptEn: post.excerptEn ?? "",
-          content: post.content,
-          contentEn: post.contentEn ?? "",
-          category: post.category,
-          categoryEn: post.categoryEn ?? "",
-          imageUrl: post.imageUrl ?? "",
-          publishedAt: new Date(post.publishedAt),
-          readTime: post.readTime,
-          seoTitle: post.seoTitle,
-          seoTitleEn: post.seoTitleEn ?? "",
-          seoDescription: post.seoDescription,
-          seoDescriptionEn: post.seoDescriptionEn ?? "",
-          status: "published",
-        },
+        data: blogPostData(post),
       });
     }
     console.log(`Seeded ${DEFAULT_BLOG_POSTS.length} blog articles`);
   }
+
+  await seedPilotProjectAndReview();
 }
 
 async function main() {

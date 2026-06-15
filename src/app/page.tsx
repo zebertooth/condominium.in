@@ -3,11 +3,11 @@ import { AdSlot } from "@/components/ads/AdSlot";
 import { Hero } from "@/components/home/Hero";
 import { HomeListingsSection } from "@/components/home/HomeListingsSection";
 import { areaGuides } from "@/lib/areas";
-import { blogPosts } from "@/lib/blog";
+import { getGuidePosts, getLatestReviewPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
-import { areaName, numberLocale } from "@/lib/locale-content";
+import { areaName, blogExcerpt, blogTitle, numberLocale } from "@/lib/locale-content";
 import {
   getLatestListings,
   getPopularListings,
@@ -21,13 +21,16 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [recommended, latest, popular, locale, settings] = await Promise.all([
-    getRecommendedListings(),
-    getLatestListings(),
-    getPopularListings(),
-    getLocale(),
-    getSiteSettings(),
-  ]);
+  const [recommended, latest, popular, locale, settings, reviewPosts, guidePosts] =
+    await Promise.all([
+      getRecommendedListings(),
+      getLatestListings(),
+      getPopularListings(),
+      getLocale(),
+      getSiteSettings(),
+      getLatestReviewPosts(3),
+      getGuidePosts(),
+    ]);
   const lp = (path: string) => localePath(path, locale);
 
   return (
@@ -120,20 +123,59 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {reviewPosts.length > 0 && (
+        <section className="border-t border-slate-200 bg-white py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900">{t("blogReviewSection", locale)}</h2>
+                <p className="mt-1 text-slate-600">{t("blogReviewSectionDesc", locale)}</p>
+              </div>
+              <Link
+                href={lp("/blog/reviews")}
+                className="text-sm font-medium text-teal-700 hover:underline"
+              >
+                {t("blogHubReviews", locale)} →
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {reviewPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={lp(`/blog/${post.slug}`)}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:border-teal-300 hover:shadow-md"
+                >
+                  <span className="text-xs font-medium text-teal-700">{post.category}</span>
+                  <h3 className="mt-2 font-bold text-slate-900">{blogTitle(post, locale)}</h3>
+                  <p className="mt-2 line-clamp-2 text-sm text-slate-600">{blogExcerpt(post, locale)}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="bg-slate-100 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <h2 className="text-2xl font-bold text-slate-900">{t("blogSection", locale)}</h2>
-          <p className="mt-1 text-slate-600">{t("blogSectionDesc", locale)}</p>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">{t("blogSection", locale)}</h2>
+              <p className="mt-1 text-slate-600">{t("blogSectionDesc", locale)}</p>
+            </div>
+            <Link href={lp("/blog/guides")} className="text-sm font-medium text-teal-700 hover:underline">
+              {t("blogHubGuides", locale)} →
+            </Link>
+          </div>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
-            {blogPosts.map((post) => (
+            {guidePosts.slice(0, 3).map((post) => (
               <Link
                 key={post.slug}
                 href={lp(`/blog/${post.slug}`)}
                 className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md"
               >
                 <span className="text-xs font-medium text-teal-700">{post.category}</span>
-                <h3 className="mt-2 font-bold text-slate-900">{post.title}</h3>
-                <p className="mt-2 line-clamp-2 text-sm text-slate-600">{post.excerpt}</p>
+                <h3 className="mt-2 font-bold text-slate-900">{blogTitle(post, locale)}</h3>
+                <p className="mt-2 line-clamp-2 text-sm text-slate-600">{blogExcerpt(post, locale)}</p>
               </Link>
             ))}
           </div>

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import type { Locale } from "@/lib/i18n";
 import { areaGuides } from "@/lib/areas";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllBlogPosts, getBlogPostsByProjectSlug } from "@/lib/blog";
 import { getAllListings } from "@/lib/listings";
 import { ALL_LOCALES, publicPageUrl } from "@/lib/locale-routing";
 import { getPublishedProjectSlugs } from "@/lib/projects";
@@ -39,6 +39,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/areas",
     "/ai-search",
     "/blog",
+    "/blog/reviews",
+    "/blog/guides",
     "/agents",
     "/list-property",
     "/contact",
@@ -101,9 +103,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entriesForPath(`/blog/${b.slug}`, {
       lastModified: new Date(b.publishedAt),
       changeFrequency: "monthly",
-      priority: 0.75,
+      priority: b.articleType?.includes("review") || b.articleType === "project_preview" ? 0.8 : 0.75,
     }),
   );
 
-  return [...staticPages, ...areaPages, ...propertyPages, ...projectPages, ...blogPages];
+  const blogProjectPages: MetadataRoute.Sitemap = [];
+  if (process.env.DATABASE_URL) {
+    try {
+      const projects = await getPublishedProjectSlugs();
+      for (const p of projects) {
+        const articles = await getBlogPostsByProjectSlug(p.slug);
+        if (articles.length > 0) {
+          blogProjectPages.push(
+            ...entriesForPath(`/blog/project/${p.slug}`, {
+              lastModified: p.updatedAt,
+              changeFrequency: "weekly",
+              priority: 0.7,
+            }),
+          );
+        }
+      }
+    } catch (error) {
+      console.warn("[sitemap] Could not fetch blog project pages:", error);
+    }
+  }
+
+  return [
+    ...staticPages,
+    ...areaPages,
+    ...propertyPages,
+    ...projectPages,
+    ...blogPages,
+    ...blogProjectPages,
+  ];
 }

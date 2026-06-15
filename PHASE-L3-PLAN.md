@@ -1,9 +1,9 @@
 # Phase L3 — Growth Features Plan
 
-**Updated:** 2026-06-14 (session 38)  
+**Updated:** 2026-06-14 (session 43)  
 **Status:** **COMPLETE** — all core L3 features shipped (session 34)
 
-Phase 7 (user listing i18n + URL routing) also **complete** (session 36). Sessions 37–38 added homepage discovery UX, admin sponsored panel, locale fix, and cron deploy recovery.
+Phase 7 (user listing i18n + URL routing) **complete** (session 36). Phase 8 (dashboard i18n + SEO fix) **complete** (session 42). **Next:** [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) — editorial review blog + marketplace UX.
 
 ---
 
@@ -23,6 +23,18 @@ Phase 7 (user listing i18n + URL routing) also **complete** (session 36). Sessio
 | Homepage 3 sections | **Done** (session 37) |
 | Admin `/admin/sponsored` | **Done** (session 37) |
 | Locale unprefixed = Thai | **Done** (session 38) |
+| Dashboard i18n (Phase 8) | **Done** (session 42) |
+
+---
+
+## Superseded by Phase 9–10
+
+The items below were deferred; see [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) for current priorities:
+
+- Editorial project reviews (Phase 9)
+- Sort + rich listing cards (Phase 10)
+- SEO filter landing URLs (Phase 10)
+- Map/list toggle on buy/rent (Phase 10)
 
 ---
 
@@ -76,4 +88,4 @@ Phase 7 (user listing i18n + URL routing) also **complete** (session 36). Sessio
 
 ---
 
-*Next priorities: see `ROADMAP.md` → post-Phase-7 plan (inventory import, cron verify, i18n polish).*
+*Next priorities: see [`ROADMAP.md`](./ROADMAP.md) and [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md).*

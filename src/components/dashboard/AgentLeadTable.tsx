@@ -1,13 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LocalizedLink } from "@/components/i18n/LocalizedLink";
+import { useLocale, useT } from "@/components/i18n/LocaleProvider";
 import {
-  LEAD_CONTACT_MODE_LABEL,
-  LEAD_SOURCE_LABEL,
-  LEAD_STATUSES,
-  leadStatusLabel,
+  getLeadStatuses,
+  leadContactModeLabelFor,
+  leadSourceLabelFor,
+  leadStatusLabelFor,
 } from "@/lib/lead-constants";
 
 export interface LeadView {
@@ -39,8 +40,11 @@ const statusStyle: Record<string, string> = {
 
 export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useT();
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const leadStatuses = getLeadStatuses(locale);
 
   async function patchLead(id: string, payload: Record<string, unknown>) {
     setLoading(id);
@@ -53,10 +57,10 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
       });
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error ?? "ไม่สามารถบันทึกข้อมูลได้");
+        setError(data.error ?? t("agentLeadSaveError"));
       }
     } catch {
-      setError("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      setError(t("agentLeadNetworkError"));
     } finally {
       setLoading(null);
       router.refresh();
@@ -64,7 +68,7 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
   }
 
   if (leads.length === 0) {
-    return <p className="text-slate-600 text-center py-8">คุณยังไม่มีลีดที่ได้รับมอบหมาย</p>;
+    return <p className="text-slate-600 text-center py-8">{t("agentLeadsEmpty")}</p>;
   }
 
   return (
@@ -86,13 +90,13 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
                     statusStyle[lead.status] ?? "bg-slate-100 text-slate-700"
                   }`}
                 >
-                  {leadStatusLabel[lead.status] ?? lead.status}
+                  {leadStatusLabelFor(lead.status, locale)}
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-500">
-                {LEAD_SOURCE_LABEL[lead.source] ?? lead.source}
+                {leadSourceLabelFor(lead.source, locale)}
                 {" · "}
-                {LEAD_CONTACT_MODE_LABEL[lead.contactMode] ?? lead.contactMode}
+                {leadContactModeLabelFor(lead.contactMode, locale)}
                 {" · "}
                 {lead.createdAt}
               </p>
@@ -105,11 +109,14 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
 
           {lead.propertyTitle && (
             <p className="mt-2 text-sm text-slate-600">
-              สนใจ:{" "}
+              {t("agentLeadInterested")}:{" "}
               {lead.propertySlug ? (
-                <Link href={`/property/${lead.propertySlug}`} className="text-teal-700 hover:underline font-medium">
+                <LocalizedLink
+                  href={`/property/${lead.propertySlug}`}
+                  className="text-teal-700 hover:underline font-medium"
+                >
                   {lead.propertyTitle}
-                </Link>
+                </LocalizedLink>
               ) : (
                 lead.propertyTitle
               )}
@@ -120,8 +127,17 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
             <div className="mt-3 flex items-center gap-2 rounded-xl bg-violet-50 px-4 py-3 text-sm text-violet-800 border border-violet-100 font-medium">
               <span>📅</span>
               <span>
-                นัดชมทรัพย์วันที่: <span className="underline">{lead.viewingDate}</span>
-                {lead.viewingTime && <> เวลา: <span className="underline">{lead.viewingTime} น.</span></>}
+                {t("agentLeadViewingOn")}: <span className="underline">{lead.viewingDate}</span>
+                {lead.viewingTime && (
+                  <>
+                    {" "}
+                    {t("agentLeadViewingTime")}:{" "}
+                    <span className="underline">
+                      {lead.viewingTime}
+                      {t("agentLeadTimeSuffix") ? ` ${t("agentLeadTimeSuffix")}` : ""}
+                    </span>
+                  </>
+                )}
               </span>
             </div>
           )}
@@ -131,9 +147,11 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
           </p>
 
           <div className="mt-4">
-            <span className="text-xs font-medium text-slate-500 block mb-1.5">เปลี่ยนสถานะลูกค้า</span>
+            <span className="text-xs font-medium text-slate-500 block mb-1.5">
+              {t("agentLeadChangeStatus")}
+            </span>
             <div className="flex flex-wrap items-center gap-2">
-              {LEAD_STATUSES.map((s) => (
+              {leadStatuses.map((s) => (
                 <button
                   key={s.value}
                   type="button"
@@ -153,12 +171,12 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
 
           <div className="mt-4">
             <label className="text-sm block">
-              <span className="text-slate-600 font-medium">บันทึกความคืบหน้า (Agent Note)</span>
+              <span className="text-slate-600 font-medium">{t("agentLeadNoteLabel")}</span>
               <input
                 type="text"
                 defaultValue={lead.agentNote ?? ""}
                 disabled={loading === lead.id}
-                placeholder="เช่น โทรหาลูกค้าแล้ว สนใจเข้าชมวันเสาร์"
+                placeholder={t("agentLeadNotePlaceholder")}
                 onBlur={(e) => {
                   if (e.target.value !== (lead.agentNote ?? "")) {
                     patchLead(lead.id, { agentNote: e.target.value });

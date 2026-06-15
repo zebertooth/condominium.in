@@ -5,6 +5,7 @@ import { localePath } from "@/lib/locale-routing";
 import { formatNearbyStation } from "@/lib/locations";
 import { resolveListingImage } from "@/lib/listing-images";
 import { localizedPropertyDistrict, localizedPropertyTitle } from "@/lib/property-i18n";
+import { formatListedAge, formatPricePerSqm } from "@/lib/listing-sort";
 import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
 import type { Property } from "@/types/property";
 import { SaveButton } from "./SaveButton";
@@ -25,6 +26,14 @@ export function PropertyCard({
   const title = localizedPropertyTitle(property, locale);
   const district = localizedPropertyDistrict(property, locale);
   const coverImage = resolveListingImage(property.images);
+  const photoCount = property.images.length;
+  const pricePerSqm = formatPricePerSqm(
+    property.price,
+    property.areaSqm,
+    property.listingType,
+    locale,
+  );
+  const listedAge = formatListedAge(property.publishedAt, locale);
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
       {showSaveButton && (
@@ -79,12 +88,22 @@ export function PropertyCard({
               </span>
             )}
           </div>
+          {photoCount > 1 && (
+            <span className="absolute bottom-3 right-3 rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white">
+              {photoCount} {t("photos", locale)}
+            </span>
+          )}
         </div>
 
         <div className="p-4">
-          <p className="text-xl font-bold text-teal-700">
-            {formatPrice(property.price, property.priceUnit, locale)}
-          </p>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <p className="text-xl font-bold text-teal-700">
+              {formatPrice(property.price, property.priceUnit, locale)}
+            </p>
+            {pricePerSqm && (
+              <p className="text-xs font-medium text-slate-500">{pricePerSqm}</p>
+            )}
+          </div>
           <h3 className="mt-1 line-clamp-2 font-semibold text-slate-900">
             {title}
           </h3>
@@ -104,6 +123,9 @@ export function PropertyCard({
               <span>{property.areaSqm} {t("sqm", locale)}</span>
             )}
           </div>
+          {listedAge && (
+            <p className="mt-2 text-xs text-slate-400">{listedAge}</p>
+          )}
         </div>
       </Link>
     </article>

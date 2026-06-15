@@ -1,13 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { getAllBlogPosts } from "@/lib/blog";
-import { t } from "@/lib/i18n";
-import {
-  blogCategory,
-  blogExcerpt,
-  blogTitle,
-  dateLocale,
-} from "@/lib/locale-content";
+import { BlogHubLayout } from "@/components/blog/BlogHubLayout";
+import { getAllBlogPosts, getBlogPostsByTypes, getGuidePosts } from "@/lib/blog";
+import { getBlogSuggestedListings } from "@/lib/blog-suggestions";
 import { getLocale } from "@/lib/locale";
 import { createMetadata } from "@/lib/seo";
 
@@ -23,87 +16,42 @@ export async function generateMetadata() {
   };
 
   const descriptions: Record<string, string> = {
-    th: "บทความ SEO เรื่องเช่า-ซื้อคอนโด ย่านใกล้ BTS และการใช้ AI ค้นหาทรัพย์ในกรุงเทพฯ",
-    en: "SEO articles on buying and renting Bangkok condos, BTS guides, and AI matching.",
-    zh: "曼谷公寓租售、BTS 区域指南与 AI 找房相关 SEO 文章。",
-    ja: "バンコクのコンド賃貸・購入、BTSエリアガイド、AI検索に関するSEO記事。",
-    ar: "مقالات SEO حول إيجار وشراء شقق بانكوك، وأدلة BTS، والبحث بالذكاء الاصطناعي.",
+    th: "รีวิวโครงการ คู่มือเช่า-ซื้อคอนโด ย่านใกล้ BTS และประกาศจริง",
+    en: "Project reviews, Bangkok condo guides, BTS areas, and live listings.",
+    zh: "曼谷公寓项目评测、BTS 区域指南与真实房源。",
+    ja: "プロジェクトレビュー、BTSエリアガイド、掲載物件。",
+    ar: "مراجعات المشاريع وأدلة BTS والإعلانات الحية.",
   };
 
   return createMetadata({
     title: titles[locale],
     description: descriptions[locale],
     path: "/blog",
-    keywords: ["บทความคอนโด", "คู่มือเช่าคอนโด", "BTS", "Bangkok condo guides"],
+    keywords: ["บทความคอนโด", "รีวิวโครงการ", "BTS", "Bangkok condo guides"],
     locale,
   });
 }
 
 export default async function BlogPage() {
-  const [locale, blogPosts] = await Promise.all([getLocale(), getAllBlogPosts()]);
+  const [locale, allPosts, reviewPosts, guidePosts, suggestedListings] = await Promise.all([
+    getLocale(),
+    getAllBlogPosts(),
+    getBlogPostsByTypes(["project_review", "project_preview"]),
+    getGuidePosts(),
+    getBlogSuggestedListings(),
+  ]);
+
+  const gridPosts = reviewPosts.length > 0 ? reviewPosts : allPosts;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">{t("blogPageTitle", locale)}</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">{t("blogPageDesc", locale)}</p>
-
-      <div className="mt-10 space-y-6">
-        {blogPosts.map((post) => {
-          const title = blogTitle(post, locale);
-          const excerpt = blogExcerpt(post, locale);
-          const category = blogCategory(post, locale);
-
-          return (
-            <article
-              key={post.slug}
-              className="overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md"
-            >
-              <div className="flex flex-col sm:flex-row">
-                {post.imageUrl && (
-                  <Link href={`/blog/${post.slug}`} className="relative block aspect-[16/9] shrink-0 sm:w-72">
-                    <Image
-                      src={post.imageUrl}
-                      alt={title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, 288px"
-                    />
-                  </Link>
-                )}
-                <div className="p-6">
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
-                    <span className="rounded-full bg-teal-100 px-3 py-1 font-medium text-teal-800">
-                      {category}
-                    </span>
-                    <time dateTime={post.publishedAt}>
-                      {new Date(post.publishedAt).toLocaleDateString(dateLocale(locale), {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </time>
-                    <span>
-                      {post.readTime} {t("readTime", locale)}
-                    </span>
-                  </div>
-                  <h2 className="mt-3 text-xl font-bold text-slate-900">
-                    <Link href={`/blog/${post.slug}`} className="hover:text-teal-700">
-                      {title}
-                    </Link>
-                  </h2>
-                  <p className="mt-2 text-slate-600">{excerpt}</p>
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="mt-4 inline-block text-sm font-medium text-teal-700 hover:underline"
-                  >
-                    {t("readMore", locale)} →
-                  </Link>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    </div>
+    <BlogHubLayout
+      locale={locale}
+      activeTab="all"
+      posts={gridPosts}
+      reviewPosts={reviewPosts}
+      guidePosts={guidePosts}
+      suggestedListings={suggestedListings}
+      gridTitleKey={reviewPosts.length > 0 ? "blogLatestReviews" : "blogLatestArticles"}
+    />
   );
 }

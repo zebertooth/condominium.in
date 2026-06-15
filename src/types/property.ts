@@ -125,6 +125,50 @@ export interface BlogPost {
   seoDescriptionEn?: string;
   /** Cover / hero image for list and article page */
   imageUrl?: string;
+  /** Phase 9 — editorial review fields (DB articles only) */
+  articleType?: BlogArticleType;
+  projectId?: string;
+  projectSlug?: string;
+  projectName?: string;
+  authorName?: string;
+  authorTitle?: string;
+  reviewNumber?: number;
+  facts?: BlogFactSheet;
+  sections?: BlogSection[];
+  galleryUrls?: string[];
+  videoUrl?: string;
+  relatedSlugs?: string[];
+}
+
+export type BlogArticleType =
+  | "guide"
+  | "project_review"
+  | "project_preview"
+  | "area_review"
+  | "news";
+
+export const BLOG_ARTICLE_TYPES: BlogArticleType[] = [
+  "guide",
+  "project_review",
+  "project_preview",
+  "area_review",
+  "news",
+];
+
+export interface BlogFactSheet {
+  developer?: string;
+  totalUnits?: string;
+  pricePerSqm?: string;
+  btsDistance?: string;
+  completion?: string;
+  parking?: string;
+  facilities?: string;
+  suitableFor?: string;
+}
+
+export interface BlogSection {
+  id: string;
+  title: string;
 }
 
 export interface SearchFilters {
@@ -137,7 +181,17 @@ export interface SearchFilters {
   maxPrice?: number;
   bedrooms?: number;
   query?: string;
+  sort?: ListingSort;
 }
+
+export type ListingSort = "recommended" | "newest" | "price_asc" | "price_desc";
+
+export const LISTING_SORT_OPTIONS: ListingSort[] = [
+  "recommended",
+  "newest",
+  "price_asc",
+  "price_desc",
+];
 
 export interface AISearchRequest {
   query: string;

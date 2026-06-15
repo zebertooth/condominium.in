@@ -50,7 +50,8 @@
 - **Google AdSense** — 9 ad placements; slot IDs editable at `/admin/seo`
 
 ### Content & Localization
-- Blog (5 articles) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
+- Blog (5 guides) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
+- **Phase 9 planned** — project review articles (Think of Living style) linked to `/projects` + listings
 - Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS, sender `CDMNINTH`)
 - **Forgot password** — email reset link (all roles; no SMS)
 - **Privacy / Terms** + cookie consent (GA4 `G-9MRZ57SWS1` + AdSense opt-in on "Accept all")
@@ -78,13 +79,19 @@ Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate; auto-de
 
 Health check: `GET https://www.condominium.in.th/api/health`
 
-## Next steps (see ROADMAP.md)
+## Next steps (see ROADMAP.md + PHASE-9-PLAN.md)
 
-1. **Production inventory** — import `public/inventory/starter-*.csv` at `/admin/import`
-2. **Verify alert cron** — daily/weekly digests after `CRON_SECRET` fix on Vercel
-3. **i18n polish** — JA/ZH overrides for nav, market, homepage section keys
-4. **Ops:** Resend DNS, AdSense slot IDs, ThaiBulkSMS delivery test
-5. Optional: sitemap locale URLs, `/market` area price trends
+**Phase 9 — Editorial (must-have)**
+1. BlogArticle schema — review type, project link, Fact @ spec box
+2. Review template + `/blog/reviews` hub + homepage “รีวิวล่าสุด”
+3. Publish 1 pilot BTS project review linked to live listings
+
+**Phase 10 — Marketplace UX (must-have)**
+4. Sort on `/buy` + `/rent` (price, newest, recommended)
+5. Rich listing cards — ฿/sqm, photo count, listed date
+
+**Ops**
+6. Verify alert + sponsor crons; AdSense slot IDs in `/admin/seo`
 
 ## Documentation
 
@@ -92,6 +99,7 @@ Health check: `GET https://www.condominium.in.th/api/health`
 |------|---------|
 | [AGENTS.md](./AGENTS.md) | AI agent handoff (start here) |
 | [ROADMAP.md](./ROADMAP.md) | Phase status + session log |
-| [PHASE-L3-PLAN.md](./PHASE-L3-PLAN.md) | Phase L3 build order + priorities |
+| [PHASE-9-PLAN.md](./PHASE-9-PLAN.md) | Phase 9–10 editorial + search UX plan |
+| [PHASE-L3-PLAN.md](./PHASE-L3-PLAN.md) | Phase L3 build order (complete) |
 | [CLAUDE.md](./CLAUDE.md) | Architecture & API reference |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Vercel + env vars + troubleshooting |
