@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext } from "react";
 import { t as translate, tf as translatef, type Locale, type TranslationKey } from "@/lib/i18n";
 
 const LocaleContext = createContext<Locale>("th");
@@ -21,11 +21,14 @@ export function useLocale(): Locale {
 
 export function useT() {
   const locale = useLocale();
-  return (key: TranslationKey) => translate(key, locale);
+  return useCallback((key: TranslationKey) => translate(key, locale), [locale]);
 }
 
 export function useTf() {
   const locale = useLocale();
-  return (key: TranslationKey, vars: Record<string, string | number>) =>
-    translatef(key, locale, vars);
+  return useCallback(
+    (key: TranslationKey, vars: Record<string, string | number>) =>
+      translatef(key, locale, vars),
+    [locale],
+  );
 }

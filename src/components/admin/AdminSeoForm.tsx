@@ -51,7 +51,9 @@ export function AdminSeoForm() {
       })
       .catch(() => setError(t("adminSeoLoadError")))
       .finally(() => setLoading(false));
-  }, [t]);
+    // Load settings once on mount — do not refetch when locale/t changes or typed text resets.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
