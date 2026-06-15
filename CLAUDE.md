@@ -15,24 +15,23 @@ Handoff guide for AI agents and developers continuing this project.
 4. Agent team for real-world viewings
 5. Monetization via listing packages & sponsored posts
 
-**Language:** Thai-first + **5 locales** (TH/EN/ZH/JA/AR) via cookie switcher.
+**Language:** Thai-first + **5 locales** (TH/EN/ZH/JA/AR). Thai = unprefixed URLs; other locales use `/en/`, `/zh/`, `/ja/`, `/ar/` prefix. Middleware sets `x-condo-locale` header.
 
 ---
 
-## Model transfer snapshot (session 33)
+## Model transfer snapshot (session 38)
 
 | Item | Detail |
 |------|--------|
-| **Locales** | TH, EN, ZH, JA, AR — UI + native content for areas/blog/static listings |
-| **Search** | Advanced filters (price, beds, BTS, district) + Leaflet map at `/map` |
-| **Favorites** | `SavedProperty` model; heart icon on cards; `/dashboard/saved` |
-| **Alerts** | `SearchAlert` model; create from filters; `/dashboard/alerts` (email cron pending) |
-| **Tools** | Mortgage calculator on sale listings + `/tools/mortgage-calculator` |
-| **Projects** | `Project` model; `/projects`, `/projects/[slug]`, admin CRUD |
-| **Header/hero** | Text-only nav; logged-in top nav = public links; hero AI showcase |
-| **Security** | Cloudflare Turnstile on login, register, contact/lead forms |
-| **Analytics** | GA4 `G-9MRZ57SWS1` after cookie consent |
-| **Next** | Phase L3: price history, alert digests, agent reviews, social login |
+| **Locales** | TH unprefixed; EN/ZH/JA/AR via URL prefix; middleware forces Thai on unprefixed public pages |
+| **Homepage** | 3 sections — ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม (`HomeListingsSection`) |
+| **Admin sponsored** | `/admin/sponsored` — 7/30/custom days; `isActiveSponsor()` in `sponsored.ts` |
+| **Search** | Advanced filters + Leaflet map at `/map` |
+| **Favorites** | `SavedProperty` model; heart icon; `/dashboard/saved` |
+| **Alerts** | `SearchAlert` + Vercel cron digests (daily/weekly; needs `CRON_SECRET` + Resend) |
+| **Phase 7** | Owner listing title/description per locale in DB + post/edit UI |
+| **Cron deploy** | `CRON_SECRET` must be single line; `readCronSecret()` in `cron-auth.ts` |
+| **Next** | Production CSV import, JA/ZH nav i18n gaps, optional sitemap locale URLs |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -135,6 +134,7 @@ src/
 │   ├── admin/              # Admin panel (role=admin only)
 │   │   ├── properties/     # list + [id]/edit (admin listing edit)
 │   │   ├── import/         # CSV import page (session 31)
+│   │   ├── sponsored/      # manage ประกาศแนะนำ (session 37)
 │   │   ├── seo/            # home SEO + AdSense slot IDs (SiteSettings)
 │   │   ├── users/, leads/  # manage users + lead pipeline
 │   ├── dashboard/          # User dashboard (auth required)
@@ -171,10 +171,15 @@ src/
 │   ├── lead/               # LeadForm
 │   ├── security/           # TurnstileField, TurnstileScript (session 33)
 │   ├── layout/             # Header, Footer, LanguageSwitcher, CookieConsent
-│   ├── home/, seo/, ai/
+│   ├── home/               # Hero, HomeListingsSection (session 37)
+│   ├── i18n/               # LocalizedLink (session 38)
+│   ├── seo/, ai/
 ├── lib/
 │   ├── csv-import.ts       # CSV parser + validator (session 31)
 │   ├── favorites.ts        # getUserSavedSlugs, getUserSavedProperties (session 31)
+│   ├── sponsored.ts        # isActiveSponsor() (session 37)
+│   ├── cron-auth.ts        # readCronSecret() — strip newlines (session 38)
+│   ├── locale-routing.ts   # localePath, LOCALE_HEADER, hreflang (Phase 7)
 │   ├── site-settings.ts    # getSiteSettings(), resolveHomeMeta(), ad slot mapping
 │   ├── adsense.ts          # AD_SLOT_CATALOG (9 positions)
 │   ├── password-reset.ts   # token hash, Resend reset email
@@ -203,6 +208,7 @@ src/
 │   ├── user-properties.ts  # dbPropertyToListing, uniqueSlug
 │   ├── locations.ts        # BTS coords, OSM embed URLs
 │   ├── areas.ts, blog.ts, seo.ts, i18n.ts
+├── middleware.ts           # Locale routing; unprefixed = Thai (session 38)
 ├── types/property.ts
 └── generated/prisma/       # Prisma client (auto-generated)
 
@@ -314,7 +320,7 @@ Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, 
 ### Auth session
 - Cookie: `condo_session` (httpOnly JWT, 7 days)
 - `getCurrentUser()` in server components / API routes
-- No middleware.ts yet — each route checks auth individually
+- `src/middleware.ts` — locale routing for public pages (`x-condo-locale` header); auth still checked per route
 
 ---
 
@@ -472,8 +478,21 @@ Done / env-gated:
 - [x] CSV import — `titleEn` + `descriptionEn`
 - [x] URL locale routing — `src/middleware.ts`, `src/lib/locale-routing.ts`, hreflang per locale
 
+**Done (session 37 — homepage + admin sponsored):**
+- [x] Homepage — recommended / latest / popular sections (`getRecommendedListings`, etc.)
+- [x] Label **ประกาศแนะนำ** for sponsored/recommended listings
+- [x] Admin `/admin/sponsored` — 7/30 days + custom date (กำหนดเอง)
+- [x] Starter inventory CSVs in `public/inventory/`
+
+**Done (session 38 — locale fix + cron deploy):**
+- [x] Unprefixed public URLs always Thai; cookie reset; `getLocale()` from middleware header
+- [x] `LocalizedLink` + language switcher use URL prefix
+- [x] `src/lib/cron-auth.ts` — sanitize `CRON_SECRET`; crons restored in `vercel.json`
+
 **Next code tasks:**
+- [ ] Fill JA/ZH i18n overrides for nav + market + homepage keys
 - [ ] Sitemap locale URL variants (optional SEO polish)
+- [ ] Commit `PropertyImageGallery` image normalization (local uncommitted change)
 - [ ] Separate marketing vs analytics cookie categories (if AdSense requires)
 
 ---
@@ -499,11 +518,11 @@ Edit `src/lib/packages.ts` — `FREE_PROPERTY_LIMIT`, `LISTING_PACKAGES`, `SPONS
 3. Update `applyFilters()` in `src/lib/listings.ts`
 
 ### Run search alert digests
-1. Create cron job or Vercel scheduled function
-2. Query `SearchAlert` where `active=true` and `lastSentAt` is stale
-3. Run `filterListings()` with alert filters, find new listings
-4. Send email via `sendEmail()` from `src/lib/notifications.ts`
-5. Update `lastSentAt` after sending
+Cron is configured in `vercel.json` (daily 01:00 UTC, weekly Mon 02:00 UTC). Requires `CRON_SECRET` (single line, no newlines) + Resend on Vercel. Manual trigger:
+
+`GET /api/cron/search-alerts?frequency=daily&secret=YOUR_SECRET`
+
+Logic: `src/lib/search-alert-digest.ts` → `src/app/api/cron/search-alerts/route.ts`
 
 ### Deploy to production (current phase)
 See **`DEPLOYMENT.md`** for the full runbook. Summary:

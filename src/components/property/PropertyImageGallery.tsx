@@ -1,16 +1,14 @@
 "use client";
 
 import { useT } from "@/components/i18n/LocaleProvider";
+import { normalizeListingImages } from "@/lib/listing-images";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { PropertyImageLightbox } from "@/components/property/PropertyImageLightbox";
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80";
-
 export function PropertyImageGallery({ images, title }: { images: string[]; title: string }) {
   const t = useT();
-  const list = images.length > 0 ? images : [FALLBACK_IMAGE];
+  const list = normalizeListingImages(images);
   const [active, setActive] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 

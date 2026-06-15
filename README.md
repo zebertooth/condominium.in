@@ -32,6 +32,8 @@
 - **NPA hub** — `/npa` bank-owned listings
 
 ### User Experience
+- **Homepage listing sections** — ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม (6 cards each)
+- **URL locale routing** — Thai unprefixed; `/en/buy`, `/ja/market`, etc.; cookie synced by middleware
 - **Header nav** — text-only links; mobile two-row layout; logged-in top nav = public links only
 - **Hero AI showcase** — interactive demo on homepage
 - **Cloudflare Turnstile CAPTCHA** — login, register, contact/lead forms (spam protection)
@@ -43,6 +45,7 @@
 
 ### Admin
 - Admin panel — approve listings, users, leads, payments, analytics, **SEO + AdSense slots**, **agent applications & profiles by category** — **5 ภาษา**
+- **Admin sponsored** — manage ประกาศแนะนำ at `/admin/sponsored` (7/30/custom expiry)
 - **Admin SEO editor** — home title/description/keywords without redeploy
 - **Google AdSense** — 9 ad placements; slot IDs editable at `/admin/seo`
 
@@ -77,9 +80,11 @@ Health check: `GET https://www.condominium.in.th/api/health`
 
 ## Next steps (see ROADMAP.md)
 
-1. **Phase 7** — per-locale listing title/description in DB + post/edit UI
-2. Optional URL locale routing (`/en/buy`)
-3. **Ops:** `CRON_SECRET`, Google/Facebook OAuth credentials, Resend DNS
+1. **Production inventory** — import `public/inventory/starter-*.csv` at `/admin/import`
+2. **Verify alert cron** — daily/weekly digests after `CRON_SECRET` fix on Vercel
+3. **i18n polish** — JA/ZH overrides for nav, market, homepage section keys
+4. **Ops:** Resend DNS, AdSense slot IDs, ThaiBulkSMS delivery test
+5. Optional: sitemap locale URLs, `/market` area price trends
 
 ## Documentation
 

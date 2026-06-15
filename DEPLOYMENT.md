@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 34):** Live at **https://www.condominium.in.th**. Phase L3 complete. Deploy migration `20260614300000_phase_l3_features`. Next: Phase 7 user listing i18n.
+**Current status (session 38):** Live at **https://www.condominium.in.th**. Phase 7 complete. `main` @ `301cde4`. Locale fix deployed; crons restored. Next: production CSV import + cron verification.
 
 ---
 
@@ -199,10 +199,10 @@ Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>`. The value **must be
 
 1. Vercel → Project → **Settings → Environment Variables**
 2. Delete `CRON_SECRET` (Production)
-3. Add again as one line, e.g. generate: `openssl rand -hex 32`
-4. Merge `vercel.crons.json` into `vercel.json` (copy the `"crons"` array) and redeploy
+3. Add again as **one line** (no trailing newline), e.g. generate: `openssl rand -hex 32`
+4. Redeploy — crons are in `vercel.json` (restored session 38)
 
-Until crons are restored, alert digests can be triggered manually:
+Until crons work, alert digests can be triggered manually:
 
 `GET https://www.condominium.in.th/api/cron/search-alerts?frequency=daily&secret=YOUR_SECRET`
 
@@ -226,12 +226,17 @@ Until crons are restored, alert digests can be triggered manually:
 - [ ] Rate limit: /api/ai-search returns 429 when hammered
 - [ ] ThaiBulkSMS delivery (user to verify on production next)
 - [ ] AdSense units render after cookie accept + slot IDs in `/admin/seo`
-- [ ] Advanced filters on /buy and /rent (price, beds, BTS, district)
-- [ ] Map search at /map with property pins
-- [ ] Save favorite (heart icon) → appears in /dashboard/saved
-- [ ] Create search alert → appears in /dashboard/alerts
-- [ ] Mortgage calculator on sale property detail pages
-- [ ] Admin CSV import at /admin/import
+- [x] Advanced filters on /buy and /rent (price, beds, BTS, district)
+- [x] Map search at /map with property pins
+- [x] Save favorite (heart icon) → appears in /dashboard/saved
+- [x] Create search alert → appears in /dashboard/alerts
+- [x] Mortgage calculator on sale property detail pages
+- [x] Admin CSV import at /admin/import
+- [x] Homepage 3 sections (recommended / latest / popular)
+- [x] Admin sponsored management at /admin/sponsored
+- [x] Unprefixed URLs show Thai; `/en/buy` shows English (locale fix session 38)
+- [ ] Search alert cron fires on schedule (verify after CRON_SECRET fix)
+- [ ] Starter CSV inventory imported on production
 
 ---
 

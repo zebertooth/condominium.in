@@ -12,16 +12,31 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 36 — **Phase 7 complete**)
+> ## 🤝 HANDOFF (session 38 — **Post-Phase-7 ops**)
 >
-> **Done (Phase 7):**
+> **Production:** https://www.condominium.in.th — `main` @ `301cde4` (locale fix + crons restored)
+>
+> **Done (session 36 — Phase 7):**
 > - `UserProperty` locale fields — title/description for EN, ZH, JA, AR
 > - Post/edit + admin forms — optional translations section
-> - Property cards/detail — fallback chain locale → en → th for owner listings
-> - CSV import — `titleEn` + `descriptionEn` columns
 > - URL locale routing — `/en/buy`, `/zh/property/…` (Thai unprefixed); middleware + hreflang
 >
-> **Next:** Ops (CRON_SECRET, Resend DNS, inventory) or post-Phase-7 polish (sitemap locale URLs)
+> **Done (session 37):**
+> - Homepage — **ประกาศแนะนำ** / **ประกาศล่าสุด** / **ยอดนิยม** (3 sections × 6 cards)
+> - Admin **ประกาศแนะนำ** at `/admin/sponsored` — 7/30 days + **กำหนดเอง** date picker
+> - Starter inventory CSVs in `public/inventory/` + import tab samples
+>
+> **Done (session 38):**
+> - Locale fix — unprefixed URLs always Thai; cookie reset; `LocalizedLink` + switcher from URL prefix
+> - Vercel deploy unblocked — `CRON_SECRET` single-line requirement; `src/lib/cron-auth.ts`
+> - Crons restored in `vercel.json` after user fixed `CRON_SECRET`
+>
+> **Next priorities:**
+> 1. Import starter CSVs on production (`/admin/import`)
+> 2. Verify search-alert cron fires (daily 01:00 UTC / weekly Mon 02:00 UTC)
+> 3. Fill JA/ZH i18n gaps (`navProjects`, `navMap`, `marketTitle`, homepage keys)
+> 4. Optional: sitemap locale URL variants; commit `PropertyImageGallery` image normalization
+> 5. User ops: Resend DNS, AdSense slot IDs, ThaiBulkSMS delivery test
 
 ---
 
@@ -31,7 +46,10 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 7 complete** — user listing i18n + URL locale routing |
+| Phase | **Post-Phase-7** — ops, inventory scale, i18n polish |
+| Homepage | 3 sections: recommended / latest / popular (`HomeListingsSection`) |
+| Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (7/30/custom days) |
+| Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
 | Search | Advanced filters + Leaflet map at `/map` |
@@ -49,9 +67,22 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
+# Session 38 — Locale fix + cron deploy
+src/middleware.ts                         Unprefixed → Thai; /en/* rewrite; LOCALE_HEADER
+src/components/i18n/LocalizedLink.tsx     Client links preserve locale prefix
+src/lib/cron-auth.ts                      readCronSecret() strips control chars
+vercel.json                               Cron schedules (restored after CRON_SECRET fix)
+
+# Session 37 — Homepage + admin sponsored
+src/components/home/HomeListingsSection.tsx   Recommended / latest / popular sections
+src/lib/listings.ts                           getRecommended/Latest/PopularListings()
+src/app/admin/sponsored/                      Admin ประกาศแนะนำ panel
+src/components/admin/AdminSponsoredPanel.tsx  7/30 days + custom date (กำหนดเอง)
+src/lib/sponsored.ts                          isActiveSponsor() (client-safe)
+public/inventory/                             starter-*.csv sample imports
+
 # Phase 7 — User listing i18n
 src/lib/locale-routing.ts                 localePath, stripLocaleFromPath, hreflang helpers
-src/middleware.ts                         /en/* rewrite + locale cookie
 src/lib/property-locale-fields.ts       Locale field helpers
 src/lib/locale-content.ts               Owner listing fallback in localizedProperty*
 src/components/dashboard/PostPropertyForm.tsx  Translations section

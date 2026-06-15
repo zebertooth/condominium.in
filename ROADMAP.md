@@ -1,12 +1,12 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 36 — Phase 7 complete)  
-**Current phase:** **Phase 7 done** — next: ops + inventory scale
+**Last updated:** 2026-06-14 (session 38 — locale fix + cron restore)  
+**Current phase:** **Post-Phase-7** — ops, inventory, i18n polish
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 22).  
-> **GitHub:** `main` @ `41c6e0e` — auto-deploy on push (if Vercel connected).  
+> **GitHub:** `main` @ `301cde4` — auto-deploy on push (if Vercel connected).  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
@@ -17,14 +17,16 @@
 
 ---
 
-## Model transfer snapshot (session 34)
+## Model transfer snapshot (session 38)
 
 | Area | State |
 |------|--------|
-| **Phase** | L3 **complete** — price history, alert cron, agent reviews, OAuth, /npa |
-| **Next** | Phase 7 — `UserProperty` i18n fields + post/edit UI |
-| **Production** | Deploy migration `20260614300000_phase_l3_features` + set `CRON_SECRET` |
-| **OAuth env** | `GOOGLE_*`, `FACEBOOK_*` callback URLs on Vercel (optional) |
+| **Phase** | Phase 7 **complete** — user listing i18n + URL locale routing |
+| **Homepage** | 3 sections: ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม |
+| **Admin** | `/admin/sponsored` — manage recommended listings (7/30/custom expiry) |
+| **Locale** | Unprefixed public URLs = Thai; prefixed `/en/*` … `/ar/*`; cookie synced by middleware |
+| **Cron** | `vercel.json` crons restored; `CRON_SECRET` must be single-line (no newlines) |
+| **Next** | Production CSV import, cron smoke test, JA/ZH nav keys, optional sitemap locale URLs |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -66,7 +68,7 @@ Bangkok condo/house marketplace with:
 | **6d** | Agent signup + admin sections (team/freelance/company) | **Done** (session 30) | 2027 Q1 |
 | **L1** | Advanced filters, CSV import, real listings inventory | **Done** (session 31) | 2027 Q1 |
 | **L2** | Favorites, map search, mortgage calculator, search alerts | **Done** (session 31) | 2027 Q1 |
-| **L3** | Project pages, price history, agent reviews, social login | **In progress** | 2027 Q2 |
+| **L3** | Project pages, price history, agent reviews, social login | **Done** (session 34) | 2027 Q2 |
 | **7** | User listing DB i18n + URL locale routing | **Done** (session 36) | 2027 Q2 |
 
 ---
@@ -549,6 +551,8 @@ Bangkok condo/house marketplace with:
 - [x] URL locale routing (`/en/buy`, `/zh/property/…`) — `src/middleware.ts` + `locale-routing.ts`
 - [x] hreflang alternates per locale URL; canonical uses active locale path
 - [x] Header, footer, language switcher navigate with locale prefix
+- [x] Unprefixed public URLs force Thai (session 38) — prevents stale cookie locale on `/buy`, `/market`, etc.
+- [x] `LocalizedLink` + language switcher read locale from URL prefix, not cookie alone
 
 ### User / ops (not code)
 - [ ] ThaiBulkSMS production SMS delivery verify
@@ -602,16 +606,16 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (Phase 7)
+### Next step plan (post-Phase-7)
 
 | Step | Action | Owner | Priority |
 |------|--------|-------|----------|
-| **1** | **`UserProperty` i18n fields** — titleEn, descriptionEn (+ migration) | Agent | **High** |
-| **2** | **Post/edit UI** — optional EN fields with fallback chain | Agent | **High** |
-| **3** | **Property detail** — use localized owner fields | Agent | **High** |
-| **4** | Optional URL locale routing (`/en/buy`) | Agent | Medium |
-| **5** | `/market` area price trends | Agent | Low |
-| **6** | Set `CRON_SECRET`, Google/Facebook OAuth, Resend DNS | User | Medium |
+| **1** | **Import starter CSVs** — `/admin/import` on production (`public/inventory/starter-*.csv`) | User/Agent | **High** |
+| **2** | **Verify alert cron** — confirm daily/weekly digests after `CRON_SECRET` fix | User | **High** |
+| **3** | **JA/ZH i18n gaps** — `navProjects`, `navMap`, `marketTitle`, homepage section keys | Agent | Medium |
+| **4** | **Sitemap locale URLs** — optional hreflang polish for `/en/*` variants | Agent | Low |
+| **5** | **Resend DNS, AdSense slots, ThaiBulkSMS** — production integration checks | User | Medium |
+| **6** | **`/market` area price trends** | Agent | Low |
 
 ### Done (2026-06-14, session 34 — Phase L3 complete)
 ```
@@ -655,6 +659,51 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-14, session 38 — locale fix + cron deploy)
+```
+Locale routing fix (30254d3):
+- Unprefixed public URLs (/buy, /market, /rent, …) always Thai
+- Middleware sets LOCALE_HEADER=th + resets locale cookie
+- getLocale() reads middleware header only on public pages
+- LocalizedLink + LanguageSwitcher use URL prefix, not stale cookie
+
+Vercel deploy unblock (e9e2c8e → 301cde4):
+- CRON_SECRET with newline chars blocked all deploys (including locale fix)
+- src/lib/cron-auth.ts — readCronSecret() strips control characters
+- Crons temporarily removed, then restored after user fixed CRON_SECRET
+- vercel.json: daily 01:00 UTC, weekly Mon 02:00 UTC search-alert digests
+
+Verified on production: /buy shows Thai UI after deploy
+```
+
+### Done (2026-06-14, session 37 — homepage sections + admin sponsored)
+```
+Homepage three sections (520485d):
+- ประกาศแนะนำ (recommended/sponsored) — getRecommendedListings()
+- ประกาศล่าสุด (latest) — getLatestListings()
+- ยอดนิยม (popular) — getPopularListings() via PropertyViewEvent stats
+- HomeListingsSection component; label renamed from sponsored-only to ประกาศแนะนำ
+
+Admin sponsored management:
+- /admin/sponsored + AdminSponsoredPanel
+- Presets: 7 days, 30 days; custom date picker (กำหนดเอง)
+- PATCH /api/admin/properties/[id] — isSponsored, sponsoredUntil
+- src/lib/sponsored.ts — isActiveSponsor() extracted for client components
+
+Inventory samples: public/inventory/starter-*.csv + import UI tabs
+AdminHeader responsive polish; listing-images normalization in import path
+```
+
+### Done (2026-06-14, session 36 — Phase 7 user listing i18n)
+```
+UserProperty locale columns — titleEn/Zh/Ja/Ar, descriptionEn/Zh/Ja/Ar
+Migration 20260615000000_user_property_i18n + EN backfill from Thai
+Post/edit + admin forms — collapsible translations section
+localizedPropertyTitle/Description fallback chain (locale → en → th)
+CSV import — titleEn + descriptionEn columns
+URL locale routing — middleware rewrite for /en/* … /ar/*; hreflang per locale
 ```
 
 ### Done (2026-06-14, session 32 — header/hero UX + nav polish)
@@ -1000,7 +1049,9 @@ All markdown docs updated for Deploy phase:
 | 2026-06-10 | SiteSettings in DB for SEO + AdSense slots | Admin-editable without redeploy |
 | 2026-06-10 | AdSense/GA4 gated on cookie consent | GDPR-style; essential cookies only until accept |
 | 2026-06-10 | Favicon via Next.js `app/icon.svg` | Reliable tab icon; matches brand mark |
-| 2026-06-10 | ThaiBulkSMS sender defaults to `CDMNINTH` | Approved sender name in prod |
+| 2026-06-14 | Unprefixed URLs = Thai; cookie reset on public pages | Stale ja/en cookie leaked wrong locale on /buy, /market |
+| 2026-06-14 | CRON_SECRET must be single-line on Vercel | Newline in secret blocked deploys (0x0a error) |
+| 2026-06-14 | Homepage 3 sections + admin /admin/sponsored | DDproperty-style discovery; admin controls ประกาศแนะนำ |
 
 ---
 
@@ -1070,6 +1121,11 @@ When starting a new chat/session:
 | **Agent reviews** | `src/lib/agent-reviews.ts`, `/api/agent-reviews`, `/admin/reviews` |
 | **Social OAuth** | `google-oauth.ts`, `facebook-oauth.ts`, `/api/auth/google/*`, `/api/auth/facebook/*` |
 | **NPA hub** | `/npa` |
+| **Homepage sections** | `HomeListingsSection.tsx`, `listings.ts` getRecommended/Latest/Popular |
+| **Admin sponsored** | `/admin/sponsored`, `AdminSponsoredPanel.tsx`, `sponsored.ts` |
+| **Locale middleware** | `middleware.ts`, `locale-routing.ts`, `LocalizedLink.tsx` |
+| **Cron auth** | `cron-auth.ts`, `/api/cron/search-alerts` |
+| **Phase 7 i18n** | `property-locale-fields.ts`, `locale-content.ts`, migration `20260615000000` |
 | DB schema | `prisma/schema.prisma` |
 
 ---

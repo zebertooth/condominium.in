@@ -1,7 +1,9 @@
 # Phase L3 — Growth Features Plan
 
-**Updated:** 2026-06-14 (session 34)  
-**Status:** **COMPLETE** — all core L3 features shipped
+**Updated:** 2026-06-14 (session 38)  
+**Status:** **COMPLETE** — all core L3 features shipped (session 34)
+
+Phase 7 (user listing i18n + URL routing) also **complete** (session 36). Sessions 37–38 added homepage discovery UX, admin sponsored panel, locale fix, and cron deploy recovery.
 
 ---
 
@@ -13,10 +15,14 @@
 | Header / hero UX | **Done** |
 | Turnstile CAPTCHA + GA4 | **Done** (session 33) |
 | Price history | **Done** |
-| Alert email digests | **Done** (code + cron; user sets Resend + CRON_SECRET) |
+| Alert email digests | **Done** (code + cron in `vercel.json`; user sets Resend + single-line `CRON_SECRET`) |
 | Agent reviews | **Done** |
 | Social login | **Done** (Google + Facebook, env-gated) |
 | NPA hub | **Done** (`/npa`) |
+| User listing i18n (Phase 7) | **Done** (session 36) |
+| Homepage 3 sections | **Done** (session 37) |
+| Admin `/admin/sponsored` | **Done** (session 37) |
+| Locale unprefixed = Thai | **Done** (session 38) |
 
 ---
 
@@ -31,7 +37,7 @@
 - `src/lib/search-alert-digest.ts`
 - `GET /api/cron/search-alerts?frequency=daily|weekly`
 - `vercel.json` cron schedules
-- **Vercel env:** `CRON_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`
+- **Vercel env:** `CRON_SECRET` (single line), `RESEND_API_KEY`, `EMAIL_FROM`
 
 ### Agent reviews
 - `AgentReview` model (pending → approved/rejected)
@@ -48,12 +54,26 @@
 
 ---
 
-## Deferred to Phase 7+
+## Post-L3 / post-Phase-7 (sessions 36–38)
+
+| Item | Detail |
+|------|--------|
+| Phase 7 i18n | Per-locale owner listing fields + URL routing |
+| Homepage | ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม |
+| Admin sponsored | `/admin/sponsored` — 7/30/custom expiry |
+| Locale fix | Unprefixed = Thai; middleware header + cookie sync |
+| Cron deploy | `cron-auth.ts`; crons restored after `CRON_SECRET` fix |
+
+---
+
+## Deferred / next
 
 - `/market` area price trends
+- Sitemap locale URL variants
+- JA/ZH nav/market i18n key gaps
 - Link `TeamAgent.userId` to platform agent accounts
 - Virtual tours, in-app chat, mobile app
 
 ---
 
-*Next: **Phase 7** — user listing i18n. See `ROADMAP.md`.*
+*Next priorities: see `ROADMAP.md` → post-Phase-7 plan (inventory import, cron verify, i18n polish).*
