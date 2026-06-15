@@ -67,7 +67,7 @@ export async function POST(request: Request) {
             title: data.title,
             titleEn: data.titleEn ?? "",
             description: data.description,
-            descriptionEn: "",
+            descriptionEn: data.descriptionEn ?? "",
             highlights: data.highlights || "",
             listingType: data.listingType,
             propertyType: data.propertyType,

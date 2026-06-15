@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n";
+import { localePath } from "@/lib/locale-routing";
 
 function footerSectionLabel(
   locale: Locale,
@@ -16,6 +17,8 @@ function footerSectionLabel(
 }
 
 export function Footer({ locale }: { locale: Locale }) {
+  const lp = (path: string) => localePath(path, locale);
+
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-900 text-slate-300">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-5 sm:px-6">
@@ -27,28 +30,28 @@ export function Footer({ locale }: { locale: Locale }) {
         <div>
           <h3 className="font-semibold text-white">{footerSectionLabel(locale, "menu")}</h3>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/buy" className="hover:text-white">{t("buy", locale)}</Link></li>
-            <li><Link href="/rent" className="hover:text-white">{t("rent", locale)}</Link></li>
-            <li><Link href="/areas" className="hover:text-white">{t("areas", locale)}</Link></li>
-            <li><Link href="/ai-search" className="hover:text-white">{t("aiSearch", locale)}</Link></li>
-            <li><Link href="/list-property" className="hover:text-white">{t("listProperty", locale)}</Link></li>
+            <li><Link href={lp("/buy")} className="hover:text-white">{t("buy", locale)}</Link></li>
+            <li><Link href={lp("/rent")} className="hover:text-white">{t("rent", locale)}</Link></li>
+            <li><Link href={lp("/areas")} className="hover:text-white">{t("areas", locale)}</Link></li>
+            <li><Link href={lp("/ai-search")} className="hover:text-white">{t("aiSearch", locale)}</Link></li>
+            <li><Link href={lp("/list-property")} className="hover:text-white">{t("listProperty", locale)}</Link></li>
           </ul>
         </div>
 
         <div>
           <h3 className="font-semibold text-white">{footerSectionLabel(locale, "services")}</h3>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/agents" className="hover:text-white">{t("agents", locale)}</Link></li>
-            <li><Link href="/blog" className="hover:text-white">{t("blog", locale)}</Link></li>
-            <li><Link href="/contact" className="hover:text-white">{t("contact", locale)}</Link></li>
+            <li><Link href={lp("/agents")} className="hover:text-white">{t("agents", locale)}</Link></li>
+            <li><Link href={lp("/blog")} className="hover:text-white">{t("blog", locale)}</Link></li>
+            <li><Link href={lp("/contact")} className="hover:text-white">{t("contact", locale)}</Link></li>
           </ul>
         </div>
 
         <div>
           <h3 className="font-semibold text-white">{footerSectionLabel(locale, "legal")}</h3>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/privacy" className="hover:text-white">{t("privacyPolicy", locale)}</Link></li>
-            <li><Link href="/terms" className="hover:text-white">{t("termsOfService", locale)}</Link></li>
+            <li><Link href={lp("/privacy")} className="hover:text-white">{t("privacyPolicy", locale)}</Link></li>
+            <li><Link href={lp("/terms")} className="hover:text-white">{t("termsOfService", locale)}</Link></li>
           </ul>
         </div>
       </div>

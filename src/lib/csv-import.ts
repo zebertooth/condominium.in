@@ -4,6 +4,7 @@ export interface CsvPropertyRow {
   title: string;
   titleEn?: string;
   description: string;
+  descriptionEn?: string;
   highlights?: string;
   listingType: ListingType;
   propertyType: PropertyType;
@@ -121,6 +122,7 @@ export function validateAndParseRow(
     title,
     titleEn: obj.titleen?.trim() || undefined,
     description,
+    descriptionEn: obj.descriptionen?.trim() || undefined,
     highlights: obj.highlights?.trim() || undefined,
     listingType,
     propertyType,
@@ -152,6 +154,7 @@ export function generateSampleCsv(): string {
     "title",
     "titleEn",
     "description",
+    "descriptionEn",
     "highlights",
     "listingType",
     "propertyType",
@@ -178,6 +181,7 @@ export function generateSampleCsv(): string {
     "คอนโด 2 ห้องนอน อโศก",
     "2BR Condo Asoke",
     "คอนโดสวย ใกล้ BTS อโศก พร้อมเฟอร์นิเจอร์ครบ",
+    "Beautiful condo near BTS Asoke, fully furnished",
     "ใกล้ BTS 100 เมตร, ใกล้ Emporium",
     "rent",
     "condo",

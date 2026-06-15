@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { Locale } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { publicPageUrl } from "@/lib/locale-routing";
 import {
   formatPageTitle,
   getSiteSettings,
@@ -37,10 +38,11 @@ const HREFLANG_MAP: Record<Locale, string> = {
 };
 
 export function hreflangAlternates(path = ""): Record<string, string> {
-  const url = `${siteConfig.url}${path}`;
-  const languages: Record<string, string> = { "x-default": url };
+  const languages: Record<string, string> = {
+    "x-default": publicPageUrl(path, "th", siteConfig.url),
+  };
   for (const loc of ["th", "en", "zh", "ja", "ar"] as Locale[]) {
-    languages[HREFLANG_MAP[loc]] = url;
+    languages[HREFLANG_MAP[loc]] = publicPageUrl(path, loc, siteConfig.url);
   }
   return languages;
 }
@@ -53,15 +55,17 @@ function buildMetadata(
     path = "",
     keywords = [],
     fullTitle = false,
+    locale,
   }: {
     title: string;
     description: string;
     path?: string;
     keywords?: string[];
     fullTitle?: boolean;
+    locale: Locale;
   },
 ): Metadata {
-  const url = `${siteConfig.url}${path}`;
+  const url = publicPageUrl(path, locale, siteConfig.url);
   const ogTitle = fullTitle ? title : formatPageTitle(title, settings);
   const keywordList = [...new Set([...settings.keywords, ...keywords])];
 
@@ -108,6 +112,7 @@ export async function createRootMetadata(locale?: Locale): Promise<Metadata> {
     description: home.description,
     path: "",
     fullTitle: true,
+    locale: resolvedLocale,
   });
 
   return {
@@ -146,6 +151,7 @@ export async function createMetadata({
     description: description || home.description,
     path,
     keywords,
+    locale: resolvedLocale,
   });
 }
 
@@ -161,5 +167,6 @@ export async function createHomeMetadata(locale?: Locale): Promise<Metadata> {
     description: home.description,
     path: "/",
     fullTitle: true,
+    locale: resolvedLocale,
   });
 }

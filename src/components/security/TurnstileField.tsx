@@ -115,19 +115,28 @@ export function TurnstileField({
   const onVerifyRef = useRef(onVerify);
   const onExpireRef = useRef(onExpire);
   const onErrorRef = useRef(onError);
+  const [mounted, setMounted] = useState(false);
 
-  onVerifyRef.current = onVerify;
-  onExpireRef.current = onExpire;
-  onErrorRef.current = onError;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    onVerifyRef.current = onVerify;
+    onExpireRef.current = onExpire;
+    onErrorRef.current = onError;
+  }, [onVerify, onExpire, onError]);
 
   const scriptReady = useSyncExternalStore(
     subscribeTurnstileReady,
-    () => Boolean(window.turnstile),
+    () => (mounted ? Boolean(window.turnstile) : false),
     () => false,
   );
 
   useEffect(() => {
-    if (loading || !scriptReady || !containerRef.current || !window.turnstile || !siteKey) return;
+    if (!mounted || loading || !scriptReady || !containerRef.current || !window.turnstile || !siteKey) {
+      return;
+    }
 
     if (widgetIdRef.current) {
       window.turnstile.remove(widgetIdRef.current);
@@ -150,15 +159,17 @@ export function TurnstileField({
         widgetIdRef.current = null;
       }
     };
-  }, [loading, scriptReady, siteKey, resetKey]);
+  }, [mounted, loading, scriptReady, siteKey, resetKey]);
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
       <div
         className="flex min-h-[65px] w-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500"
         aria-busy="true"
+        aria-hidden={!mounted}
+        suppressHydrationWarning
       >
-        กำลังโหลด CAPTCHA…
+        {mounted ? "กำลังโหลด CAPTCHA…" : ""}
       </div>
     );
   }
@@ -171,6 +182,7 @@ export function TurnstileField({
       className="flex min-h-[65px] w-full justify-center"
       aria-label="CAPTCHA"
       aria-busy={!scriptReady}
+      suppressHydrationWarning
     />
   );
 }

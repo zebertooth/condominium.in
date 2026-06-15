@@ -6,6 +6,7 @@ import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { SiteLogo, siteLogoAltText } from "@/components/brand/SiteLogo";
 import { getCurrentUser } from "@/lib/auth";
 import { t, type Locale } from "@/lib/i18n";
+import { localePath } from "@/lib/locale-routing";
 
 function ContactIcon({ className }: { className?: string }) {
   return (
@@ -25,15 +26,16 @@ function ContactIcon({ className }: { className?: string }) {
 }
 
 function publicNavLinks(locale: Locale): HeaderNavItem[] {
+  const lp = (path: string) => localePath(path, locale);
   return [
-    { href: "/buy", label: t("buy", locale) },
-    { href: "/rent", label: t("rent", locale) },
-    { href: "/projects", label: t("navProjects", locale) },
-    { href: "/map", label: t("navMap", locale) },
-    { href: "/npa", label: t("navNpa", locale) },
-    { href: "/market", label: t("navMarket", locale) },
-    { href: "/ai-search", label: t("aiSearch", locale) },
-    { href: "/blog", label: t("blog", locale) },
+    { href: lp("/buy"), label: t("buy", locale) },
+    { href: lp("/rent"), label: t("rent", locale) },
+    { href: lp("/projects"), label: t("navProjects", locale) },
+    { href: lp("/map"), label: t("navMap", locale) },
+    { href: lp("/npa"), label: t("navNpa", locale) },
+    { href: lp("/market"), label: t("navMarket", locale) },
+    { href: lp("/ai-search"), label: t("aiSearch", locale) },
+    { href: lp("/blog"), label: t("blog", locale) },
   ];
 }
 
@@ -43,7 +45,7 @@ function guestNav(locale: Locale): {
 } {
   return {
     mainLinks: publicNavLinks(locale),
-    highlightLink: { href: "/list-property", label: t("listProperty", locale), highlight: true },
+    highlightLink: { href: localePath("/list-property", locale), label: t("listProperty", locale), highlight: true },
   };
 }
 
@@ -64,7 +66,7 @@ export async function Header({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-md">
       {/* Row 1: logo + account (mobile & desktop) */}
       <div className="mx-auto flex max-w-[100rem] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 lg:gap-4">
-        <Link href="/" className="min-w-0 shrink-0" aria-label={siteLogoAltText()}>
+        <Link href={localePath("/", locale)} className="min-w-0 shrink-0" aria-label={siteLogoAltText()}>
           <SiteLogo locale={locale} className="max-w-[11rem] sm:max-w-none" />
         </Link>
 
@@ -77,7 +79,7 @@ export async function Header({ locale }: { locale: Locale }) {
           <HeaderAuth user={user} locale={locale} />
           {!user && (
             <Link
-              href="/contact"
+              href={localePath("/contact", locale)}
               title={t("contact", locale)}
               aria-label={t("contact", locale)}
               className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-teal-600 to-teal-500 text-sm font-semibold text-white shadow-sm shadow-teal-600/20 transition hover:from-teal-700 hover:to-teal-600 sm:w-auto sm:gap-1.5 sm:px-3.5"

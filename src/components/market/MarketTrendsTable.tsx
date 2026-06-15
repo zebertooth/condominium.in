@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatPrice, t, type Locale } from "@/lib/i18n";
+import { localePath } from "@/lib/locale-routing";
 import type { DistrictMarketStats, MarketOverview } from "@/lib/market-trends";
 
 function districtLabel(row: DistrictMarketStats, locale: Locale): string {
@@ -21,7 +22,10 @@ export function MarketTrendsTable({ overview, locale }: MarketTrendsTableProps) 
   }
 
   const maxAvg = Math.max(...overview.districts.map((d) => d.avgPrice), 1);
-  const listingPath = overview.listingType === "rent" ? "/rent" : "/buy";
+  const listingPath = localePath(
+    overview.listingType === "rent" ? "/rent" : "/buy",
+    locale,
+  );
   const priceUnit = overview.listingType === "rent" ? "THB/month" as const : "THB" as const;
 
   return (

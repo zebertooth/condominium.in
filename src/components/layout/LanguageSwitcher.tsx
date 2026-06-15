@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LocaleFlag } from "@/components/layout/LocaleFlag";
 import { activeLocales, type Locale } from "@/lib/i18n";
+import { localePath, stripLocaleFromPath } from "@/lib/locale-routing";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
 
 function ChevronIcon({ open }: { open: boolean }) {
@@ -27,6 +28,7 @@ export function LanguageSwitcher() {
   const locale = useLocale();
   const t = useT();
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -59,11 +61,16 @@ export function LanguageSwitcher() {
     setLoading(true);
     setOpen(false);
     try {
+      const { path } = stripLocaleFromPath(pathname);
+      const nextPath = localePath(path, next);
+
       await fetch("/api/locale", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ locale: next }),
       });
+
+      router.push(nextPath);
       router.refresh();
     } finally {
       setLoading(false);

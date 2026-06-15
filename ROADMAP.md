@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 35 — Phase 7 user listing i18n)  
-**Current phase:** **Phase 7** — user listing i18n (core done); optional URL routing next
+**Last updated:** 2026-06-14 (session 36 — Phase 7 complete)  
+**Current phase:** **Phase 7 done** — next: ops + inventory scale
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel `next-js-oouu`, Node 22).  
@@ -67,7 +67,7 @@ Bangkok condo/house marketplace with:
 | **L1** | Advanced filters, CSV import, real listings inventory | **Done** (session 31) | 2027 Q1 |
 | **L2** | Favorites, map search, mortgage calculator, search alerts | **Done** (session 31) | 2027 Q1 |
 | **L3** | Project pages, price history, agent reviews, social login | **In progress** | 2027 Q2 |
-| **7** | User listing DB i18n + optional URL routing | Planned | 2027 Q2 |
+| **7** | User listing DB i18n + URL locale routing | **Done** (session 36) | 2027 Q2 |
 
 ---
 
@@ -532,7 +532,7 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 7 — User listing i18n (IN PROGRESS)
+## Phase 7 — User listing i18n (DONE)
 
 **Goal:** Owner-submitted listings readable in all 5 locales.
 
@@ -543,10 +543,12 @@ Bangkok condo/house marketplace with:
 - [x] Property detail + cards — localized owner fields with fallback chain (locale → en → th)
 - [x] Admin edit form supports same fields
 - [x] AI/search haystack includes all locale fields
+- [x] CSV import — `titleEn` + `descriptionEn` columns
 
-### Optional SEO polish
-- [ ] URL locale routing (`/en/buy`, `/zh/property/…`) — requires middleware + hreflang update
-- [ ] Separate marketing vs analytics cookie categories (if AdSense policy requires)
+### SEO / routing
+- [x] URL locale routing (`/en/buy`, `/zh/property/…`) — `src/middleware.ts` + `locale-routing.ts`
+- [x] hreflang alternates per locale URL; canonical uses active locale path
+- [x] Header, footer, language switcher navigate with locale prefix
 
 ### User / ops (not code)
 - [ ] ThaiBulkSMS production SMS delivery verify

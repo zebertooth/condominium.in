@@ -18,6 +18,7 @@ import {
 } from "@/lib/locale-content";
 import { getCurrentUser } from "@/lib/auth";
 import { getListingBySlug } from "@/lib/listings";
+import { localePath, publicPageUrl } from "@/lib/locale-routing";
 import { formatNearbyStation } from "@/lib/locations";
 import { getPriceHistoryBySlug, isRecentPriceReduction } from "@/lib/price-history";
 import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
@@ -67,7 +68,7 @@ export default async function PropertyPage({ params }: PageProps) {
     "@type": property.listingType === "rent" ? "RentAction" : "Offer",
     name: property.title,
     description: property.description,
-    url: `${siteConfig.url}/property/${property.slug}`,
+    url: publicPageUrl(`/property/${property.slug}`, locale, siteConfig.url),
     price: property.price,
     priceCurrency: "THB",
     address: {
@@ -83,6 +84,7 @@ export default async function PropertyPage({ params }: PageProps) {
   };
 
   const listingLabel = property.listingType === "rent" ? t("rent", locale) : t("sale", locale);
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -111,9 +113,9 @@ export default async function PropertyPage({ params }: PageProps) {
       {isPublished && <JsonLd data={jsonLd} />}
 
       <nav className="mb-6 text-sm text-slate-500">
-        <Link href="/" className="hover:text-teal-700">{t("home", locale)}</Link>
+        <Link href={lp("/")} className="hover:text-teal-700">{t("home", locale)}</Link>
         {" / "}
-        <Link href={property.listingType === "rent" ? "/rent" : "/buy"} className="hover:text-teal-700">
+        <Link href={lp(property.listingType === "rent" ? "/rent" : "/buy")} className="hover:text-teal-700">
           {listingLabel}
         </Link>
         {" / "}
@@ -229,10 +231,10 @@ export default async function PropertyPage({ params }: PageProps) {
 
           {property.contactMode !== "owner_direct" && (
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/contact" className="rounded-xl bg-teal-600 px-6 py-3 font-medium text-white hover:bg-teal-700">
+              <Link href={lp("/contact")} className="rounded-xl bg-teal-600 px-6 py-3 font-medium text-white hover:bg-teal-700">
                 {t("scheduleViewing", locale)}
               </Link>
-              <Link href="/agents" className="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-800 hover:bg-slate-50">
+              <Link href={lp("/agents")} className="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-800 hover:bg-slate-50">
                 {t("contactAgent", locale)}
               </Link>
             </div>

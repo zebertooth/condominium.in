@@ -12,19 +12,16 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 35 — **Phase 7 in progress**)
+> ## 🤝 HANDOFF (session 36 — **Phase 7 complete**)
 >
-> **Production:** deploy migration `20260615000000_user_property_i18n` after `20260614300000_phase_l3_features`
->
-> **Done (Phase 7 core):**
+> **Done (Phase 7):**
 > - `UserProperty` locale fields — title/description for EN, ZH, JA, AR
 > - Post/edit + admin forms — optional translations section
 > - Property cards/detail — fallback chain locale → en → th for owner listings
-> - CSV import saves `titleEn`; backfill EN from Thai on migrate
+> - CSV import — `titleEn` + `descriptionEn` columns
+> - URL locale routing — `/en/buy`, `/zh/property/…` (Thai unprefixed); middleware + hreflang
 >
-> **Next (Phase 7 optional):**
-> - URL locale routing (`/en/buy`, `/zh/property/…`)
-> - `descriptionEn` column in CSV sample
+> **Next:** Ops (CRON_SECRET, Resend DNS, inventory) or post-Phase-7 polish (sitemap locale URLs)
 
 ---
 
@@ -34,7 +31,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 7** — user listing i18n (core done); optional URL locale routing next |
+| Phase | **Phase 7 complete** — user listing i18n + URL locale routing |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
 | Search | Advanced filters + Leaflet map at `/map` |
@@ -53,6 +50,8 @@ Instructions for AI coding agents working in this repository.
 
 ```
 # Phase 7 — User listing i18n
+src/lib/locale-routing.ts                 localePath, stripLocaleFromPath, hreflang helpers
+src/middleware.ts                         /en/* rewrite + locale cookie
 src/lib/property-locale-fields.ts       Locale field helpers
 src/lib/locale-content.ts               Owner listing fallback in localizedProperty*
 src/components/dashboard/PostPropertyForm.tsx  Translations section

@@ -4,6 +4,7 @@ import { formatPrice, t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { isNonThaiLocale, numberLocale } from "@/lib/locale-content";
 import { getMarketOverview } from "@/lib/market-trends";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
 import type { ListingType } from "@/types/property";
 
@@ -69,6 +70,7 @@ export default async function MarketPage({ searchParams }: MarketPageProps) {
     active
       ? "rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white"
       : "rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50";
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -79,10 +81,10 @@ export default async function MarketPage({ searchParams }: MarketPageProps) {
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">
-        <Link href="/market" className={tabClass(listingType === "sale")}>
+        <Link href={lp("/market")} className={tabClass(listingType === "sale")}>
           {t("marketSaleTab", locale)}
         </Link>
-        <Link href="/market?type=rent" className={tabClass(listingType === "rent")}>
+        <Link href={`${lp("/market")}?type=rent`} className={tabClass(listingType === "rent")}>
           {t("marketRentTab", locale)}
         </Link>
       </div>
@@ -128,13 +130,13 @@ export default async function MarketPage({ searchParams }: MarketPageProps) {
         <p className="mt-2 max-w-2xl text-slate-300">{t("marketCtaDesc", locale)}</p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link
-            href={listingType === "rent" ? "/rent" : "/buy"}
+            href={lp(listingType === "rent" ? "/rent" : "/buy")}
             className="rounded-xl bg-teal-500 px-5 py-2.5 text-sm font-medium hover:bg-teal-400"
           >
             {listingType === "rent" ? t("rent", locale) : t("buy", locale)} →
           </Link>
           <Link
-            href="/map"
+            href={lp("/map")}
             className="rounded-xl border border-slate-600 px-5 py-2.5 text-sm font-medium hover:bg-slate-800"
           >
             {t("navMap", locale)} →
