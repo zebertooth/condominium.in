@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { type Locale } from "@/lib/i18n";
+import { dateLocale } from "@/lib/locale-content";
+import { t, type Locale } from "@/lib/i18n";
 
 interface Alert {
   id: string;
@@ -22,11 +23,10 @@ interface AlertsListProps {
 export function AlertsList({ alerts: initialAlerts, locale }: AlertsListProps) {
   const [alerts, setAlerts] = useState(initialAlerts);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  const nonTh = locale !== "th";
+  const dateLoc = dateLocale(locale);
 
   async function handleDelete(alertId: string) {
-    if (!confirm(nonTh ? "Delete this alert?" : "ลบการแจ้งเตือนนี้?")) return;
+    if (!confirm(t("alertDeleteConfirm", locale))) return;
 
     setDeletingId(alertId);
     try {
@@ -47,14 +47,18 @@ export function AlertsList({ alerts: initialAlerts, locale }: AlertsListProps) {
   function formatFilters(filters: Record<string, unknown>): string {
     const parts: string[] = [];
     if (filters.btsStation) parts.push(`BTS: ${filters.btsStation}`);
-    if (filters.district) parts.push(`${nonTh ? "District" : "เขต"}: ${filters.district}`);
-    if (filters.bedrooms) parts.push(`${filters.bedrooms} ${nonTh ? "BR" : "ห้องนอน"}`);
+    if (filters.district) {
+      parts.push(`${t("filterDistrict", locale)}: ${filters.district}`);
+    }
+    if (filters.bedrooms) {
+      parts.push(`${filters.bedrooms} ${t("bedrooms", locale)}`);
+    }
     if (filters.minPrice || filters.maxPrice) {
       const min = (filters.minPrice as number)?.toLocaleString() || "0";
       const max = (filters.maxPrice as number)?.toLocaleString() || "∞";
       parts.push(`฿${min} - ${max}`);
     }
-    return parts.length > 0 ? parts.join(" · ") : nonTh ? "All listings" : "ทุกประกาศ";
+    return parts.length > 0 ? parts.join(" · ") : t("alertAllListings", locale);
   }
 
   return (
@@ -76,40 +80,34 @@ export function AlertsList({ alerts: initialAlerts, locale }: AlertsListProps) {
                   }`}
                 >
                   {alert.listingType === "rent"
-                    ? nonTh
-                      ? "Rent"
-                      : "เช่า"
-                    : nonTh
-                      ? "Buy"
-                      : "ซื้อ"}
+                    ? t("rent", locale)
+                    : t("buy", locale)}
                 </span>
                 <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
                   {alert.frequency === "daily"
-                    ? nonTh
-                      ? "Daily"
-                      : "ทุกวัน"
-                    : nonTh
-                      ? "Weekly"
-                      : "ทุกสัปดาห์"}
+                    ? t("alertFrequencyDaily", locale)
+                    : t("alertFrequencyWeekly", locale)}
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-500">
                 {formatFilters(alert.filters)}
               </p>
               <p className="mt-2 text-xs text-slate-400">
-                {nonTh ? "Created" : "สร้างเมื่อ"}:{" "}
-                {new Date(alert.createdAt).toLocaleDateString(
-                  locale === "th" ? "th-TH" : "en-US",
-                  { year: "numeric", month: "short", day: "numeric" },
-                )}
+                {t("alertCreated", locale)}:{" "}
+                {new Date(alert.createdAt).toLocaleDateString(dateLoc, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
                 {alert.lastSentAt && (
                   <>
                     {" · "}
-                    {nonTh ? "Last sent" : "ส่งล่าสุด"}:{" "}
-                    {new Date(alert.lastSentAt).toLocaleDateString(
-                      locale === "th" ? "th-TH" : "en-US",
-                      { year: "numeric", month: "short", day: "numeric" },
-                    )}
+                    {t("alertLastSent", locale)}:{" "}
+                    {new Date(alert.lastSentAt).toLocaleDateString(dateLoc, {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </>
                 )}
               </p>
@@ -119,7 +117,7 @@ export function AlertsList({ alerts: initialAlerts, locale }: AlertsListProps) {
               onClick={() => handleDelete(alert.id)}
               disabled={deletingId === alert.id}
               className="rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-50"
-              title={nonTh ? "Delete" : "ลบ"}
+              title={t("deleteBtn", locale)}
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path

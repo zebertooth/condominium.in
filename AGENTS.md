@@ -12,17 +12,16 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 39 — **inventory + sponsor reminders**)
+> ## 🤝 HANDOFF (session 41 — **Phase 8 dashboard i18n**)
 >
-> **Production:** https://www.condominium.in.th — deploy after push (inventory import on Neon via script)
+> **Production:** https://www.condominium.in.th — deploy after push
 >
-> **Done (session 39):**
-> - `npm run db:import-inventory` — CLI imports `public/inventory/starter-*.csv` (+ `--sponsor=3`)
-> - Shared import logic in `src/lib/inventory-import.ts` (API + script)
-> - Sponsored renewal emails — cron `/api/cron/sponsor-reminders` daily 03:00 UTC
-> - JA/ZH/AR map/NPA/project i18n (sessions 39–40)
+> **Done (session 41):**
+> - Dashboard saved/alerts pages use `t()` for all 5 locales
+> - `AlertsList` + `CreateAlertButton` — JA/ZH/AR overrides
+> - Resend verified (forgot-password works on production)
 >
-> **Next:** Run import on production Neon if not done; verify crons; AdSense/Resend ops
+> **Next:** Dashboard verify/post/agent i18n audit; cron verification; AdSense ops
 
 ---
 
@@ -32,7 +31,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Post-Phase-7** — ops, inventory scale, i18n polish |
+| Phase | **Phase 8** — dashboard i18n + polish |
 | Homepage | 3 sections: recommended / latest / popular (`HomeListingsSection`) |
 | Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (7/30/custom days) |
 | Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |

@@ -499,7 +499,7 @@ Bangkok condo/house marketplace with:
 - [x] Log on create + owner/admin edit + CSV import
 - [x] Price history chart on property detail page
 - [x] “Price reduced” badge (30-day window)
-- [ ] Area price trend aggregation + `/market` page (Phase 8+)
+- [x] Area price trend aggregation + `/market` page
 
 ### Agent Reviews / Ratings
 - [x] `AgentReview` model — user ratings with admin moderation
@@ -558,6 +558,24 @@ Bangkok condo/house marketplace with:
 - [ ] ThaiBulkSMS production SMS delivery verify
 - [ ] Optional Vercel keys: `OPENAI_API_KEY`, `SLIPOK_*`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_ADSENSE_CLIENT`
 - [ ] Google Search Console + AdSense approval (user)
+
+---
+
+## Phase 8 — Dashboard i18n + polish (IN PROGRESS)
+
+**Goal:** Full 5-locale support on user dashboard favorites/alerts flows.
+
+### Dashboard i18n
+- [x] `/dashboard/saved` — `t()` keys instead of TH/EN ternaries
+- [x] `/dashboard/alerts` — same
+- [x] `AlertsList` + `CreateAlertButton` — JA/ZH/AR overrides
+- [ ] Remaining dashboard pages audit (verify, post, agent CRM copy)
+- [ ] Sitemap locale URLs for `/en/*` variants (optional)
+
+### Ops (user)
+- [x] Resend email delivery verified (forgot-password + production health)
+- [ ] Verify search-alert + sponsor-reminder crons with `CRON_SECRET`
+- [ ] AdSense slot IDs, GSC, ThaiBulkSMS production verify
 
 ---
 

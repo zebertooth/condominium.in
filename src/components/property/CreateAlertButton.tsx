@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { type Locale } from "@/lib/i18n";
+import { t, type Locale } from "@/lib/i18n";
 
 interface CreateAlertButtonProps {
   listingType: "sale" | "rent";
@@ -17,8 +17,6 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const nonTh = locale !== "th";
 
   const filters = {
     district: searchParams.get("district") || undefined,
@@ -37,7 +35,7 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
 
   async function handleCreate() {
     if (!name.trim()) {
-      setError(nonTh ? "Please enter a name" : "กรุณาใส่ชื่อ");
+      setError(t("createAlertNameRequired", locale));
       return;
     }
 
@@ -69,7 +67,7 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
         setName("");
       }, 2000);
     } catch {
-      setError(nonTh ? "Network error" : "เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      setError(t("createAlertNetworkError", locale));
     } finally {
       setLoading(false);
     }
@@ -90,19 +88,17 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
-        {nonTh ? "Create Alert" : "สร้างการแจ้งเตือน"}
+        {t("createAlertBtn", locale)}
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
             <h2 className="text-lg font-bold text-slate-900">
-              {nonTh ? "Create Search Alert" : "สร้างการแจ้งเตือนการค้นหา"}
+              {t("createAlertTitle", locale)}
             </h2>
             <p className="mt-1 text-sm text-slate-600">
-              {nonTh
-                ? "Get notified when new properties match your search"
-                : "รับการแจ้งเตือนเมื่อมีทรัพย์ใหม่ตรงกับการค้นหา"}
+              {t("createAlertDesc", locale)}
             </p>
 
             {success ? (
@@ -121,7 +117,7 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                   />
                 </svg>
                 <p className="mt-2 font-medium text-green-800">
-                  {nonTh ? "Alert created!" : "สร้างการแจ้งเตือนแล้ว!"}
+                  {t("createAlertSuccess", locale)}
                 </p>
               </div>
             ) : (
@@ -129,20 +125,20 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                 <div className="mt-4 space-y-4">
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      {nonTh ? "Alert Name" : "ชื่อการแจ้งเตือน"}
+                      {t("createAlertNameLabel", locale)}
                     </label>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder={nonTh ? "e.g. 2BR Asoke under 5M" : "เช่น 2 ห้องนอน อโศก ต่ำกว่า 5 ล้าน"}
+                      placeholder={t("createAlertNamePlaceholder", locale)}
                       className="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 outline-none ring-teal-500 focus:ring-2"
                     />
                   </div>
 
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      {nonTh ? "Frequency" : "ความถี่"}
+                      {t("createAlertFrequency", locale)}
                     </label>
                     <div className="flex gap-3">
                       <label className="flex items-center gap-2">
@@ -153,7 +149,7 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                           className="text-teal-600"
                         />
                         <span className="text-sm text-slate-700">
-                          {nonTh ? "Daily" : "ทุกวัน"}
+                          {t("alertFrequencyDaily", locale)}
                         </span>
                       </label>
                       <label className="flex items-center gap-2">
@@ -164,7 +160,7 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                           className="text-teal-600"
                         />
                         <span className="text-sm text-slate-700">
-                          {nonTh ? "Weekly" : "ทุกสัปดาห์"}
+                          {t("alertFrequencyWeekly", locale)}
                         </span>
                       </label>
                     </div>
@@ -173,21 +169,26 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                   {hasFilters && (
                     <div className="rounded-lg bg-slate-50 p-3">
                       <p className="text-xs font-medium text-slate-500 uppercase">
-                        {nonTh ? "Current Filters" : "ตัวกรองปัจจุบัน"}
+                        {t("createAlertCurrentFilters", locale)}
                       </p>
                       <ul className="mt-1 space-y-1 text-sm text-slate-700">
                         {filters.btsStation && (
                           <li>BTS: {filters.btsStation}</li>
                         )}
                         {filters.district && (
-                          <li>{nonTh ? "District" : "เขต"}: {filters.district}</li>
+                          <li>
+                            {t("filterDistrict", locale)}: {filters.district}
+                          </li>
                         )}
                         {filters.bedrooms && (
-                          <li>{filters.bedrooms} {nonTh ? "Bedrooms" : "ห้องนอน"}</li>
+                          <li>
+                            {filters.bedrooms} {t("bedrooms", locale)}
+                          </li>
                         )}
                         {(filters.minPrice || filters.maxPrice) && (
                           <li>
-                            {nonTh ? "Price" : "ราคา"}: {filters.minPrice?.toLocaleString() || "0"} -{" "}
+                            {t("createAlertPrice", locale)}:{" "}
+                            {filters.minPrice?.toLocaleString() || "0"} -{" "}
                             {filters.maxPrice?.toLocaleString() || "∞"}
                           </li>
                         )}
@@ -206,7 +207,7 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                     onClick={() => setOpen(false)}
                     className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
                   >
-                    {nonTh ? "Cancel" : "ยกเลิก"}
+                    {t("cancelBtn", locale)}
                   </button>
                   <button
                     type="button"
@@ -215,12 +216,8 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                     className="flex-1 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700 disabled:opacity-50"
                   >
                     {loading
-                      ? nonTh
-                        ? "Creating..."
-                        : "กำลังสร้าง..."
-                      : nonTh
-                        ? "Create Alert"
-                        : "สร้างการแจ้งเตือน"}
+                      ? t("createAlertCreating", locale)
+                      : t("createAlertBtn", locale)}
                   </button>
                 </div>
               </>

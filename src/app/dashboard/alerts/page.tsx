@@ -21,7 +21,6 @@ export default async function AlertsPage() {
   if (!user) redirect("/login");
 
   const locale = await getLocale();
-  const nonTh = locale !== "th";
   const lp = (path: string) => localePath(path, locale);
 
   const alerts = await prisma.searchAlert.findMany({
@@ -45,12 +44,10 @@ export default async function AlertsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">
-            {nonTh ? "Search Alerts" : "การแจ้งเตือนการค้นหา"}
+            {t("alertsPageTitle", locale)}
           </h1>
           <p className="mt-1 text-slate-600">
-            {nonTh
-              ? "Get notified when new properties match your criteria"
-              : "รับการแจ้งเตือนเมื่อมีทรัพย์ใหม่ตรงกับเงื่อนไขของคุณ"}
+            {t("alertsPageDesc", locale)}
           </p>
         </div>
         <div className="flex gap-2">
@@ -58,7 +55,7 @@ export default async function AlertsPage() {
             href={lp("/buy")}
             className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
           >
-            {nonTh ? "Browse & Create Alert" : "ดูทรัพย์และสร้างการแจ้งเตือน"}
+            {t("alertsBrowseCreate", locale)}
           </Link>
         </div>
       </div>
@@ -79,14 +76,10 @@ export default async function AlertsPage() {
             />
           </svg>
           <p className="mt-4 text-slate-600">
-            {nonTh
-              ? "You haven't created any alerts yet"
-              : "คุณยังไม่ได้สร้างการแจ้งเตือนใดๆ"}
+            {t("alertsEmpty", locale)}
           </p>
           <p className="mt-2 text-sm text-slate-500">
-            {nonTh
-              ? "Go to Buy or Rent page, apply filters, and click 'Create Alert'"
-              : "ไปที่หน้าซื้อหรือเช่า ใส่ตัวกรอง แล้วกด 'สร้างการแจ้งเตือน'"}
+            {t("alertsEmptyHint", locale)}
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link

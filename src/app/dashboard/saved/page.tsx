@@ -23,7 +23,6 @@ export default async function SavedPropertiesPage() {
   if (!user) redirect("/login");
 
   const locale = await getLocale();
-  const nonTh = locale !== "th";
   const lp = (path: string) => localePath(path, locale);
 
   const [saved, savedSlugs] = await Promise.all([
@@ -41,12 +40,10 @@ export default async function SavedPropertiesPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">
-          {nonTh ? "Saved Properties" : "รายการโปรด"}
+          {t("dashSaved", locale)}
         </h1>
         <p className="mt-1 text-slate-600">
-          {nonTh
-            ? "Properties you have saved for later"
-            : "ทรัพย์ที่คุณบันทึกไว้ดูภายหลัง"}
+          {t("savedPageDesc", locale)}
         </p>
       </div>
 
@@ -66,9 +63,7 @@ export default async function SavedPropertiesPage() {
             />
           </svg>
           <p className="mt-4 text-slate-600">
-            {nonTh
-              ? "You haven't saved any properties yet"
-              : "คุณยังไม่ได้บันทึกทรัพย์ใดๆ"}
+            {t("savedPageEmpty", locale)}
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link
