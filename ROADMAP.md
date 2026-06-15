@@ -6,7 +6,7 @@
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
-> **GitHub `main`:** session 44 pending push — Phase 9+10 shipped  
+> **GitHub `main`:** session 44 pushed — Phase 9+10 + bugfix deploy pending Vercel
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 

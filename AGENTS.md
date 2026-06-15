@@ -15,7 +15,7 @@ Instructions for AI coding agents working in this repository.
 > ## 🤝 HANDOFF (session 44 — **Phase 11 next**)
 >
 > **Production:** https://www.condominium.in.th  
-> **GitHub `main`:** Phase 9+10 shipped (session 44 commit pending push)
+> **GitHub `main`:** session 44 pushed — Vercel auto-deploy from `main`
 >
 > **Done (Phase 9):**
 > - TOL-style review blog — Fact @, TOC, `/blog/reviews`, pilot Noble Reform
