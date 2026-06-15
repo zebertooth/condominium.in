@@ -164,7 +164,7 @@ LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback
 PROMPTPAY_ID=
 SLIPOK_API_KEY=
 SLIPOK_BRANCH_ID=
-CRON_SECRET=                         # Vercel cron auth for /api/cron/search-alerts
+CRON_SECRET=                         # Single line only — see DEPLOYMENT.md § CRON_SECRET
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 GOOGLE_CALLBACK_URL=https://www.condominium.in.th/api/auth/google/callback
@@ -188,6 +188,23 @@ DNS configured. Production URLs:
 - https://condominium.in.th (if apex configured)
 
 To add/change domains: Vercel → Project → Domains.
+
+---
+
+## 6b. CRON_SECRET (search alert emails)
+
+Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>`. The value **must be a single line** with no line breaks — pasted multi-line secrets cause deploy to fail with `control character (0x0a)`.
+
+**If production deploy fails on CRON_SECRET:**
+
+1. Vercel → Project → **Settings → Environment Variables**
+2. Delete `CRON_SECRET` (Production)
+3. Add again as one line, e.g. generate: `openssl rand -hex 32`
+4. Merge `vercel.crons.json` into `vercel.json` (copy the `"crons"` array) and redeploy
+
+Until crons are restored, alert digests can be triggered manually:
+
+`GET https://www.condominium.in.th/api/cron/search-alerts?frequency=daily&secret=YOUR_SECRET`
 
 ---
 

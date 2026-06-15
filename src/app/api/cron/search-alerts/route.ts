@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
+import { readCronSecret } from "@/lib/cron-auth";
 import { runSearchAlertDigests } from "@/lib/search-alert-digest";
 
 function authorizeCron(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
+  const secret = readCronSecret();
   if (!secret) return process.env.NODE_ENV === "development";
 
   const auth = request.headers.get("authorization");
