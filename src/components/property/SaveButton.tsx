@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/components/i18n/LocaleProvider";
 import { useState, useTransition } from "react";
 
 interface SaveButtonProps {
@@ -9,6 +10,7 @@ interface SaveButtonProps {
 }
 
 export function SaveButton({ propertySlug, initialSaved = false, className = "" }: SaveButtonProps) {
+  const t = useT();
   const [saved, setSaved] = useState(initialSaved);
   const [isPending, startTransition] = useTransition();
 
@@ -44,7 +46,7 @@ export function SaveButton({ propertySlug, initialSaved = false, className = "" 
           ? "bg-red-100 text-red-500 hover:bg-red-200"
           : "bg-white/90 text-slate-400 hover:bg-white hover:text-red-500"
       } ${isPending ? "opacity-50" : ""} ${className}`}
-      aria-label={saved ? "Remove from favorites" : "Add to favorites"}
+      aria-label={saved ? t("saveFavoriteRemove") : t("saveFavoriteAdd")}
     >
       <svg
         className="h-5 w-5"

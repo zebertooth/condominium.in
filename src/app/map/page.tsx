@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AdvancedFilters } from "@/components/property/AdvancedFilters";
 import { PropertyCategoryFilter } from "@/components/property/PropertyCategoryFilter";
 import { PropertyListingsMap } from "@/components/property/PropertyListingsMap";
-import { t } from "@/lib/i18n";
+import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath, localePathWithQuery } from "@/lib/locale-routing";
 import { parsePropertyCategory } from "@/lib/property-types";
@@ -22,10 +22,12 @@ interface MapPageProps {
 }
 
 export async function generateMetadata() {
+  const locale = await getLocale();
   return createMetadata({
-    title: "Map Search | Condominium.in.th",
-    description: "ค้นหาคอนโดและบ้านบนแผนที่ ดูตำแหน่งทรัพย์ใกล้ BTS และสถานที่สำคัญ",
+    title: t("mapPageTitle", locale),
+    description: t("mapPageMetaDesc", locale),
     path: "/map",
+    locale,
   });
 }
 
@@ -61,20 +63,15 @@ export default async function MapPage({ searchParams }: MapPageProps) {
   ]);
 
   const propertiesWithCoords = listings.filter((p) => p.latitude && p.longitude);
-  const nonTh = locale !== "th";
   const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            {nonTh ? "Map Search" : "ค้นหาบนแผนที่"}
-          </h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t("mapPageTitle", locale)}</h1>
           <p className="mt-1 text-slate-600">
-            {nonTh
-              ? `${propertiesWithCoords.length} properties with location`
-              : `${propertiesWithCoords.length} ทรัพย์มีพิกัด`}
+            {tf("mapPageCount", locale, { count: propertiesWithCoords.length })}
           </p>
         </div>
         <div className="flex gap-2">
@@ -122,11 +119,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
 
       {propertiesWithCoords.length === 0 && (
         <div className="mt-6 rounded-xl bg-amber-50 p-6 text-center">
-          <p className="text-amber-800">
-            {nonTh
-              ? "No properties with location data found. Try adjusting your filters."
-              : "ไม่พบทรัพย์ที่มีข้อมูลพิกัด ลองปรับตัวกรองใหม่"}
-          </p>
+          <p className="text-amber-800">{t("mapPageEmpty", locale)}</p>
         </div>
       )}
 
@@ -135,7 +128,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
           href={lp(listingType === "rent" ? "/rent" : "/buy")}
           className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
-          {nonTh ? "View as list" : "ดูแบบรายการ"}
+          {t("mapPageViewList", locale)}
         </Link>
       </div>
     </div>
