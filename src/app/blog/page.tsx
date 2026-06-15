@@ -16,7 +16,7 @@ export async function generateMetadata() {
   };
 
   const descriptions: Record<string, string> = {
-    th: "รีวิวโครงการ คู่มือเช่า-ซื้อคอนโด ย่านใกล้ BTS และประกาศจริง",
+    th: "รีวิวโครงการ บทความเกี่ยวกับบ้าน ย่านใกล้ BTS และประกาศจริง",
     en: "Project reviews, Bangkok condo guides, BTS areas, and live listings.",
     zh: "曼谷公寓项目评测、BTS 区域指南与真实房源。",
     ja: "プロジェクトレビュー、BTSエリアガイド、掲載物件。",

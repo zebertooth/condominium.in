@@ -12,12 +12,21 @@
 - **Listing highlights** — nearby POI text for smarter AI matching (e.g. schools, malls)
 - **Demo listings** auto-hide when ≥3 real published listings exist
 
-### Search & Discovery (Session 31+)
-- **Advanced filters** — price range, bedrooms, BTS station, district on buy/rent pages
-- **Map search** — Leaflet map at `/map` with property pins + popups
-- **Save favorites** — heart icon on property cards + `/dashboard/saved`
-- **Search alerts** — subscribe to matching listings + `/dashboard/alerts`
-- **Project pages** — `/projects` + detail pages; admin CRUD at `/admin/projects`
+### Search & Discovery (Phase 10 — complete)
+- **Sort bar** — recommended, newest, price ↑↓ on `/buy` and `/rent`
+- **Rich listing cards** — ฿/sqm, photo count, listed date, price-reduced badge
+- **Advanced filters** — price, beds, BTS, district, **sqm**, **furnishing**
+- **List/map toggle** — `?view=map` inline on buy/rent (same filters)
+- **SEO hub pages** — `/buy/bts/[station]`, `/rent/bts/[station]`, `/rent/under/[price]`, `/buy/2-bedroom`
+- **Map search** — Leaflet at `/map` + inline on buy/rent map view
+- **Save favorites** — heart icon + `/dashboard/saved`
+- **Search alerts** — `/dashboard/alerts`
+- **Project pages** — `/projects` + admin CRUD
+
+### Editorial (Phase 9 — complete)
+- **Review blog** — Fact @, TOC, `/blog/reviews`, pilot Noble Reform review
+- **Blog hub** — TOL-style layout; category **บทความเกี่ยวกับบ้าน**; listing carousel footer
+- **Admin CMS** — review fields at `/admin/blog`
 
 ### Tools (Session 31+)
 - **Mortgage calculator** — down payment, interest rate, loan term on sale listings

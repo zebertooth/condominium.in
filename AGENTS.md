@@ -12,22 +12,21 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 43 — **Phase 9 next**)
+> ## 🤝 HANDOFF (session 44 — **Phase 11 next**)
 >
 > **Production:** https://www.condominium.in.th  
-> **GitHub `main`:** `c163d9e` (SEO form fix + Phase 8 saved/alerts i18n)
+> **GitHub `main`:** Phase 9+10 shipped (session 44 commit pending push)
 >
-> **Done (Phase 8):**
-> - Dashboard i18n — saved, alerts, agent CRM (`/dashboard/agent`)
-> - Admin SEO form fix — typing no longer clears fields
+> **Done (Phase 9):**
+> - TOL-style review blog — Fact @, TOC, `/blog/reviews`, pilot Noble Reform
+> - Blog hub + listing carousel; category **บทความเกี่ยวกับบ้าน**
 >
-> **Next (Phase 9 — editorial):**
-> 1. BlogArticle schema — review type, project link, Fact @ box
-> 2. Review template + `/blog/reviews` hub
-> 3. Pilot BTS project review linked to live listings
+> **Done (Phase 10):**
+> - Sort + rich cards on `/buy` `/rent`
+> - Sqm/furnishing filters, list/map toggle, SEO hubs (`/buy/bts/…`, `/rent/under/…`)
 >
-> **Then (Phase 10 — marketplace UX):** sort on buy/rent + rich listing cards  
-> **Full plan:** [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
+> **Next (Phase 11):** ops (crons, AdSense, GSC) + 2 reviews/month + rich editor  
+> **Full plan:** [`ROADMAP.md`](./ROADMAP.md) Phase 11 · [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
 
 ---
 
@@ -37,7 +36,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 9** — editorial review blog + Phase 10 marketplace UX |
+| Phase | **Phase 11** — ops + editorial scale |
 | Homepage | 3 sections: recommended / latest / popular (`HomeListingsSection`) |
 | Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (7/30/custom days) |
 | Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |
@@ -49,8 +48,8 @@ Instructions for AI coding agents working in this repository.
 | Security | Cloudflare Turnstile on login, register, contact forms |
 | Analytics | GA4 after cookie consent (`G-9MRZ57SWS1`) |
 | Tools | Mortgage calculator, favorites, search alerts, price history |
-| Editorial | **Phase 9 next** — project reviews (TOL-style) linked to listings |
-| Search UX | **Phase 10** — sort + rich cards (DD-style parity) |
+| Editorial | TOL reviews + **บทความเกี่ยวกับบ้าน** + listing carousel on blog |
+| Search UX | Sort, rich cards, sqm/furnishing, list/map toggle, SEO BTS hubs |
 | Social | Google + Facebook OAuth (env-gated) |
 
 **Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.

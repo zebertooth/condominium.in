@@ -8,11 +8,11 @@ export async function generateMetadata() {
   const locale = await getLocale();
 
   return createMetadata({
-    title: locale === "th" ? "คู่มือคอนโดและ BTS" : "Condo & BTS Guides",
+    title: locale === "th" ? "บทความเกี่ยวกับบ้าน" : "Home & living articles",
     description:
       locale === "th"
-        ? "คู่มือเช่า-ซื้อคอนโด ย่านใกล้ BTS และเคล็ดลับค้นหาทรัพย์"
-        : "Guides for renting and buying Bangkok condos near BTS stations.",
+        ? "บทความเกี่ยวกับบ้าน เช่า-ซื้อคอนโด ย่านใกล้ BTS และเคล็ดลับค้นหาทรัพย์"
+        : "Home articles for renting and buying Bangkok condos near BTS stations.",
     path: "/blog/guides",
     keywords: ["คู่มือเช่าคอนโด", "BTS guide", "Bangkok condo tips"],
     locale,

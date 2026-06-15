@@ -1,12 +1,12 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-14 (session 43 — Phase 9–10 plan)  
-**Current phase:** **Phase 9** — editorial review blog (Think of Living style)
+**Last updated:** 2026-06-15 (session 44 — Phase 9+10 complete)  
+**Current phase:** **Phase 11** — growth, ops, editorial scale
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
-> **GitHub `main`:** `c163d9e` — auto-deploy on push.  
+> **GitHub `main`:** session 44 pending push — Phase 9+10 shipped  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
@@ -17,16 +17,16 @@
 
 ---
 
-## Model transfer snapshot (session 43)
+## Model transfer snapshot (session 44)
 
 | Area | State |
 |------|--------|
-| **Phase** | **Phase 9 next** — review blog + Phase 10 marketplace UX (see [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)) |
-| **Phase 8** | **Complete** — dashboard i18n, SEO form fix, agent CRM i18n |
+| **Phase** | **Phase 11 next** — ops + editorial scale + monetization polish |
+| **Phase 9** | **Complete** — TOL-style review blog, pilot Noble Reform, listing carousel |
+| **Phase 10** | **Complete** — sort, rich cards, sqm/furnishing filters, list/map toggle, SEO hubs |
+| **Blog taxonomy** | รีวิวโครงการ · **บทความเกี่ยวกับบ้าน** (was คู่มือ) · ทั้งหมด |
 | **Competitors** | DDproperty (listings UX) · Think of Living (editorial reviews) |
-| **Differentiator** | AI search + 5 locales + review→listing funnel + BTS niche |
-| **Blog today** | 5 SEO guides + admin CMS — **not** project reviews yet |
-| **Ops pending** | Cron verify, AdSense slots, GSC |
+| **Ops pending** | Cron verify, AdSense slots, GSC, 2+ reviews/month cadence |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -71,8 +71,9 @@ Bangkok condo/house marketplace with:
 | **L3** | Project pages, price history, agent reviews, social login | **Done** (session 34) | 2027 Q2 |
 | **7** | User listing DB i18n + URL locale routing | **Done** (session 36) | 2027 Q2 |
 | **8** | Dashboard i18n + admin polish | **Done** (session 42) | 2027 Q2 |
-| **9** | Editorial review blog (TOL-style) | **Next** | 2027 Q2 |
-| **10** | Marketplace UX (DD-style sort/cards/filters) | Planned | 2027 Q3 |
+| **9** | Editorial review blog (TOL-style) | **Done** (session 44) | 2027 Q2 |
+| **10** | Marketplace UX (DD-style sort/cards/filters) | **Done** (session 44) | 2027 Q2 |
+| **11** | Growth, ops, editorial scale | **Next** | 2027 Q3 |
 
 ---
 
@@ -584,38 +585,65 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Phase 9 — Editorial review blog (NEXT)
+## Phase 9 — Editorial review blog (DONE)
 
 **Goal:** Property media hub like Think of Living — project reviews + guides linked to live listings.
 
 **Full plan:** [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
 
 ### Must-have
-- [ ] `BlogArticle` extensions — `articleType`, `projectId`, `factsJson`, author, gallery
-- [ ] Review article template — Fact @ box, TOC, “เหมาะกับใคร”, listing CTA
-- [ ] Blog hubs — `/blog/reviews`, `/blog/guides`, `/blog/project/[slug]`
-- [ ] Homepage section — “รีวิวโครงการล่าสุด”
-- [ ] Pilot review — 1 BTS project linked to `/projects` + live listings
+- [x] `BlogArticle` extensions — `articleType`, `projectId`, `factsJson`, author, gallery
+- [x] Review article template — Fact @ box, TOC, listing CTA, suggested listings carousel
+- [x] Blog hubs — `/blog/reviews`, `/blog/guides`, `/blog/project/[slug]`
+- [x] Homepage section — “รีวิวโครงการล่าสุด”
+- [x] Pilot review — Noble Reform Phayathai (seed + `/blog/review-noble-reform-phayathai`)
 
-### Should-have
+### Should-have (Phase 11)
 - [ ] Rich editor (Markdown/TipTap + multi-image)
 - [ ] YouTube embed on reviews
 - [ ] Area roundup articles (link `/areas`)
 
 ---
 
-## Phase 10 — Marketplace UX (DDproperty parity)
+## Phase 10 — Marketplace UX (DONE)
 
 **Goal:** Listing search UX matches buyer expectations without nationwide inventory.
 
 ### Must-have
-- [ ] Sort on `/buy` + `/rent` — recommended, newest, price asc/desc
-- [ ] Rich `PropertyCard` — ฿/sqm, photo count, listed date
+- [x] Sort on `/buy` + `/rent` — recommended, newest, price asc/desc
+- [x] Rich `PropertyCard` — ฿/sqm, photo count, listed date
 
 ### Should-have
-- [ ] Map/list toggle on results (same filters as `/map`)
-- [ ] Filters — min/max sqm, furnishing
-- [ ] SEO landing URLs — `/rent/bts/[station]`, price/bed hubs
+- [x] Map/list toggle on results (`?view=map`, same filters)
+- [x] Filters — min/max sqm, furnishing (features-based)
+- [x] SEO landing URLs — `/buy|rent/bts/[station]`, `/rent/under/[price]`, `/buy/2-bedroom`
+
+---
+
+## Phase 11 — Growth & ops (NEXT)
+
+**Goal:** Production reliability, editorial cadence, and conversion polish.
+
+### Must-have (ops)
+- [ ] Verify search-alert + sponsor-reminder crons (`CRON_SECRET` on Vercel)
+- [ ] AdSense slot IDs in `/admin/seo` + cookie-consent test
+- [ ] Google Search Console — submit sitemap, index new SEO hubs
+
+### Must-have (editorial)
+- [ ] Publish **2 project reviews / month** (admin CMS)
+- [ ] Link each review → project page + 2–3 live listings
+- [ ] 1 area roundup article / month (link `/areas`)
+
+### Should-have (product)
+- [ ] `furnishing` enum on `UserProperty` (replace features-string heuristic)
+- [ ] Rich blog editor (TipTap or Markdown preview)
+- [ ] `/market` area trends linked from blog + area pages
+- [ ] Listing compare shortlist (DD-style)
+
+### Nice-to-have
+- [ ] Blog newsletter signup
+- [ ] `/npa` hub SEO + bank inventory CSV refresh
+- [ ] Agent CRM scheduling polish (Phase 3 carryover)
 
 ---
 
@@ -720,6 +748,24 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-15, session 44 — Phase 9+10 ship)
+```
+Phase 9 — Editorial blog (TOL-style):
+- BlogArticle review fields migration + admin form
+- ReviewArticleLayout, Fact @, TOC, hubs (/blog/reviews, /guides, /project/[slug])
+- Blog hub redesign + PropertyListingCarousel on blog pages
+- Pilot review: Noble Reform Phayathai (seed)
+- Blog category renamed: คู่มือ → บทความเกี่ยวกับบ้าน
+
+Phase 10 — Marketplace UX:
+- ListingSortBar + rich PropertyCard (฿/sqm, photos, listed date)
+- Advanced filters: sqm + furnishing; list/map toggle on buy/rent
+- SEO hubs: /buy|rent/bts/[station], /rent/under/[price], /buy/2-bedroom
+- PropertyListingsMap — fix Leaflet double-init on view toggle
+
+Commits: ea44975 (Phase 9+10A), 09eaab0 (10B/C), session 44 polish
 ```
 
 ### Done (2026-06-14, session 43 — Phase 9–10 plan)

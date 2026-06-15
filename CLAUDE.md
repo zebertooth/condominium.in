@@ -494,16 +494,18 @@ Done / env-gated:
 - [x] `/dashboard/agent` + `AgentLeadTable` — agent CRM i18n
 - [x] Admin SEO form — fields no longer reset while typing (`AdminSeoForm` + `LocaleProvider`)
 
-**Next code tasks (Phase 9 — see [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)):**
-- [ ] Extend `BlogArticle` — `articleType`, `projectId`, `factsJson`, author, gallery, video
-- [ ] Review article template — Fact @ box, TOC, listing CTA, “เหมาะกับใคร”
-- [ ] Hubs — `/blog/reviews`, `/blog/guides`, homepage “รีวิวล่าสุด”
-- [ ] Pilot project review for one BTS starter project
+**Done (session 44 — Phase 9+10):**
+- [x] Editorial review blog — schema, review template, hubs, pilot Noble Reform, carousel
+- [x] Blog category **บทความเกี่ยวกับบ้าน** (guides tab)
+- [x] Sort + rich cards on `/buy` `/rent`
+- [x] Sqm/furnishing filters, list/map toggle, SEO hubs (`/buy/bts/…`, etc.)
 
-**Next code tasks (Phase 10):**
-- [ ] Sort on `/buy` + `/rent` — `?sort=recommended|newest|price_asc|price_desc`
-- [ ] Rich `PropertyCard` — ฿/sqm, photo count, listed date
-- [ ] Optional: sqm/furnishing filters, map/list toggle, SEO filter landing URLs
+**Next code tasks (Phase 11):**
+- [ ] Verify crons + AdSense + GSC (ops)
+- [ ] Editorial cadence — 2 reviews/month, area roundups
+- [ ] Rich blog editor (TipTap/Markdown)
+- [ ] `furnishing` field on `UserProperty` (proper enum)
+- [ ] Listing compare shortlist
 
 **Ops (user):**
 - [ ] Verify search-alert + sponsor-reminder crons with `CRON_SECRET`

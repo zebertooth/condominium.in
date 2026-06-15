@@ -1,7 +1,7 @@
 # Phase 9–10 Plan — Editorial + Marketplace UX
 
 **Updated:** 2026-06-14 (session 43 — competitive review)  
-**Status:** **Phase 9 next** · Phase 8 complete · Phase 10 follows Phase 9 core
+**Status:** **Phase 9+10 complete** · Phase 11 next · Phase 8 complete · Phase 10 follows Phase 9 core
 
 Read order: [`AGENTS.md`](./AGENTS.md) → [`ROADMAP.md`](./ROADMAP.md) → this file.
 
@@ -174,8 +174,20 @@ Week 1–2   Phase 9A+9B  Blog schema, review template, /blog/reviews hub
 Week 2     Phase 9C     First pilot project review (content + links)
 Week 3     Phase 10A    Sort + rich cards
 Week 4     Phase 10B    Sqm/furnishing filters OR map toggle (pick one)
-Ongoing    Ops          Crons, AdSense, GSC, 2 reviews/month
+Ongoing    Phase 11     Ops, 2 reviews/month, rich editor, furnishing DB field
 ```
+
+---
+
+## Phase 11 — Growth & ops (NEXT)
+
+See [`ROADMAP.md`](./ROADMAP.md) Phase 11 section.
+
+| Priority | Task |
+|----------|------|
+| **Ops** | Verify crons, AdSense slots, GSC sitemap |
+| **Editorial** | 2 project reviews/month + area roundups |
+| **Product** | Rich blog editor, `furnishing` on UserProperty, compare shortlist |
 
 ---
 

@@ -14,6 +14,14 @@ interface PropertyListingsMapProps {
   onPropertyClick?: (property: Property) => void;
 }
 
+function clearLeafletContainer(container: HTMLDivElement) {
+  const leafletId = (container as HTMLDivElement & { _leaflet_id?: number })._leaflet_id;
+  if (leafletId !== undefined) {
+    delete (container as HTMLDivElement & { _leaflet_id?: number })._leaflet_id;
+    container.replaceChildren();
+  }
+}
+
 export function PropertyListingsMap({
   properties,
   locale,
@@ -22,16 +30,36 @@ export function PropertyListingsMap({
   onPropertyClick,
 }: PropertyListingsMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const markersLayerRef = useRef<L.LayerGroup | null>(null);
+  const onPropertyClickRef = useRef(onPropertyClick);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstance) return;
+    onPropertyClickRef.current = onPropertyClick;
+  }, [onPropertyClick]);
 
-    const loadLeaflet = async () => {
+  useEffect(() => {
+    const container = mapRef.current;
+    if (!container) return;
+
+    let cancelled = false;
+
+    const initMap = async () => {
       const L = (await import("leaflet")).default;
       await import("leaflet/dist/leaflet.css");
 
-      const map = L.map(mapRef.current!, {
+      if (cancelled || !mapRef.current) return;
+
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+        markersLayerRef.current = null;
+      }
+
+      clearLeafletContainer(mapRef.current);
+
+      const map = L.map(mapRef.current, {
         center,
         zoom,
         scrollWheelZoom: true,
@@ -42,27 +70,39 @@ export function PropertyListingsMap({
         maxZoom: 19,
       }).addTo(map);
 
-      setMapInstance(map);
-
-      return () => {
-        map.remove();
-      };
+      markersLayerRef.current = L.layerGroup().addTo(map);
+      mapInstanceRef.current = map;
+      setMapReady(true);
     };
 
-    loadLeaflet();
-  }, [center, zoom, mapInstance]);
+    void initMap();
+
+    return () => {
+      cancelled = true;
+      setMapReady(false);
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+      markersLayerRef.current = null;
+      if (mapRef.current) {
+        clearLeafletContainer(mapRef.current);
+      }
+    };
+  }, [center, zoom]);
 
   useEffect(() => {
-    if (!mapInstance) return;
+    if (!mapReady) return;
 
-    const loadMarkers = async () => {
+    const map = mapInstanceRef.current;
+    const layerGroup = markersLayerRef.current;
+    if (!map || !layerGroup) return;
+
+    let cancelled = false;
+
+    const updateMarkers = async () => {
       const L = (await import("leaflet")).default;
-
-      mapInstance.eachLayer((layer) => {
-        if (layer instanceof L.Marker) {
-          mapInstance.removeLayer(layer);
-        }
-      });
+      layerGroup.clearLayers();
 
       const propertyIcon = L.divIcon({
         className: "property-marker",
@@ -76,6 +116,8 @@ export function PropertyListingsMap({
         popupAnchor: [0, -32],
       });
 
+      const bounds: [number, number][] = [];
+
       properties.forEach((property) => {
         if (!property.latitude || !property.longitude) return;
 
@@ -84,7 +126,7 @@ export function PropertyListingsMap({
 
         const marker = L.marker([property.latitude, property.longitude], {
           icon: propertyIcon,
-        }).addTo(mapInstance);
+        });
 
         marker.bindPopup(`
           <div class="min-w-[200px] p-2">
@@ -98,21 +140,28 @@ export function PropertyListingsMap({
         `);
 
         marker.on("click", () => {
-          onPropertyClick?.(property);
+          onPropertyClickRef.current?.(property);
         });
+
+        marker.addTo(layerGroup);
+        bounds.push([property.latitude, property.longitude]);
       });
 
-      const bounds = properties
-        .filter((p) => p.latitude && p.longitude)
-        .map((p) => [p.latitude!, p.longitude!] as [number, number]);
-
-      if (bounds.length > 0) {
-        mapInstance.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+      if (!cancelled && bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+      } else if (!cancelled) {
+        map.setView(center, zoom);
       }
     };
 
-    loadMarkers();
-  }, [mapInstance, properties, locale, onPropertyClick]);
+    void import("leaflet").then(async (mod) => {
+      if (!cancelled) await updateMarkers();
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [mapReady, properties, locale, center, zoom]);
 
   return (
     <div className="relative">
