@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { MarketTrendsTable } from "@/components/market/MarketTrendsTable";
-import { formatPrice, t } from "@/lib/i18n";
+import { formatPrice, t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
-import { isNonThaiLocale, numberLocale } from "@/lib/locale-content";
+import { numberLocale } from "@/lib/locale-content";
 import { getMarketOverview } from "@/lib/market-trends";
 import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
@@ -59,7 +59,6 @@ export default async function MarketPage({ searchParams }: MarketPageProps) {
 
   const priceUnit = listingType === "rent" ? ("THB/month" as const) : ("THB" as const);
   const numLoc = numberLocale(locale);
-  const nonTh = isNonThaiLocale(locale);
   const updated = overview.updatedAt.toLocaleDateString(numLoc, {
     year: "numeric",
     month: "short",
@@ -107,9 +106,7 @@ export default async function MarketPage({ searchParams }: MarketPageProps) {
           value={overview.priceReducedCount.toLocaleString(numLoc)}
           hint={
             overview.recentPriceDropEvents > 0
-              ? nonTh
-                ? `${overview.recentPriceDropEvents} price cuts (30d)`
-                : `ปรับลง ${overview.recentPriceDropEvents} ครั้ง (30 วัน)`
+              ? tf("marketPriceCuts30d", locale, { count: overview.recentPriceDropEvents })
               : undefined
           }
         />
