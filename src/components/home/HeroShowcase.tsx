@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
+import { localePath } from "@/lib/locale-routing";
 import { getHeroDemos } from "@/lib/hero-showcase";
 
 const ROTATE_MS = 7000;
@@ -164,7 +165,7 @@ export function HeroShowcase() {
               ))}
             </div>
             <Link
-              href="/ai-search"
+              href={localePath("/ai-search", locale)}
               className="rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-teal-800 shadow transition hover:bg-teal-50 sm:text-sm"
             >
               {t("heroShowcaseTry")}

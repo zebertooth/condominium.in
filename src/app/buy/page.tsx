@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { getUserSavedSlugs } from "@/lib/favorites";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { localePathWithQuery } from "@/lib/locale-routing";
 import { parsePropertyCategory } from "@/lib/property-types";
 import { createMetadata } from "@/lib/seo";
 import { filterListings } from "@/lib/listings";
@@ -105,7 +106,10 @@ export default async function BuyPage({ searchParams }: BuyPageProps) {
             )}
           </h2>
           <a
-            href={`/map?type=sale${params.category ? `&category=${params.category}` : ""}`}
+            href={localePathWithQuery("/map", locale, {
+              type: "sale",
+              category: params.category,
+            })}
             className="flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

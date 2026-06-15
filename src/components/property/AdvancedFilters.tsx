@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, useTransition } from "react";
 import { useT, useLocale } from "@/components/i18n/LocaleProvider";
+import { localePath, localePathWithQuery } from "@/lib/locale-routing";
 
 const BTS_STATIONS = [
   { value: "อโศก", label: "อโศก", labelEn: "Asoke" },
@@ -91,9 +92,10 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
     if (priceRange) params.set("price", priceRange);
     if (bedrooms) params.set("beds", bedrooms);
 
-    const resolvedBasePath = basePath ?? (listingType === "rent" ? "/rent" : "/buy");
+    const internalPath = basePath ?? (listingType === "rent" ? "/rent" : "/buy");
     if (basePath === "/map") params.set("type", listingType);
     const query = params.toString();
+    const resolvedBasePath = localePath(internalPath, locale);
 
     const [minStr, maxStr] = priceRange?.split("-") ?? [];
     void fetch("/api/analytics/search-filter", {
@@ -112,22 +114,23 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
     startTransition(() => {
       router.push(query ? `${resolvedBasePath}?${query}` : resolvedBasePath);
     });
-  }, [btsStation, district, priceRange, bedrooms, currentCategory, listingType, basePath, router]);
+  }, [btsStation, district, priceRange, bedrooms, currentCategory, listingType, basePath, locale, router]);
 
   const resetFilters = useCallback(() => {
     setBtsStation("");
     setDistrict("");
     setPriceRange("");
     setBedrooms("");
-    const resolvedBasePath = basePath ?? (listingType === "rent" ? "/rent" : "/buy");
-    const params = new URLSearchParams();
-    if (currentCategory && currentCategory !== "all") params.set("category", currentCategory);
-    if (basePath === "/map") params.set("type", listingType);
-    const query = params.toString();
+    const internalPath = basePath ?? (listingType === "rent" ? "/rent" : "/buy");
     startTransition(() => {
-      router.push(query ? `${resolvedBasePath}?${query}` : resolvedBasePath);
+      router.push(
+        localePathWithQuery(internalPath, locale, {
+          category: currentCategory && currentCategory !== "all" ? currentCategory : undefined,
+          type: basePath === "/map" ? listingType : undefined,
+        }),
+      );
     });
-  }, [currentCategory, listingType, basePath, router]);
+  }, [currentCategory, listingType, basePath, locale, router]);
 
   const hasFilters = btsStation || district || priceRange || bedrooms;
 

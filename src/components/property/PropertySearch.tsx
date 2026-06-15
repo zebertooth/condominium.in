@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useT } from "@/components/i18n/LocaleProvider";
+import { useT, useLocale } from "@/components/i18n/LocaleProvider";
+import { localePathWithQuery } from "@/lib/locale-routing";
 
 interface PropertySearchProps {
   defaultType?: "sale" | "rent";
@@ -14,15 +15,13 @@ export function PropertySearch({
   redirectTo = "/ai-search",
 }: PropertySearchProps) {
   const t = useT();
+  const locale = useLocale();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [type, setType] = useState<"sale" | "rent">(defaultType);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (query) params.set("q", query);
-    params.set("type", type);
 
     // Log browse search event (fire-and-forget)
     void fetch("/api/analytics/search-filter", {
@@ -31,7 +30,12 @@ export function PropertySearch({
       body: JSON.stringify({ listingType: type, query: query || undefined }),
     });
 
-    router.push(`${redirectTo}?${params.toString()}`);
+    router.push(
+      localePathWithQuery(redirectTo, locale, {
+        q: query || undefined,
+        type,
+      }),
+    );
   }
 
   return (

@@ -5,6 +5,7 @@ import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { formatNearbyStation } from "@/lib/locations";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import {
   getProjectListings,
   getPublishedProjectBySlug,
@@ -49,6 +50,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   const description = localizedProjectDescription(project, locale);
   const saleListings = listings.filter((l) => l.listingType === "sale");
   const rentListings = listings.filter((l) => l.listingType === "rent");
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -134,7 +136,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                 ? "No listings in this project yet."
                 : "ยังไม่มีประกาศในโครงการนี้"}
             </p>
-            <Link href="/buy" className="mt-4 inline-block text-teal-700 hover:underline">
+            <Link href={lp("/buy")} className="mt-4 inline-block text-teal-700 hover:underline">
               {t("buy", locale)}
             </Link>
           </div>
@@ -142,7 +144,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       </div>
 
       <div className="mt-10">
-        <Link href="/projects" className="text-sm font-medium text-teal-700 hover:underline">
+        <Link href={lp("/projects")} className="text-sm font-medium text-teal-700 hover:underline">
           ← {t("navProjects", locale)}
         </Link>
       </div>

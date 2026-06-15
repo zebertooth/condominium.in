@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Property } from "@/types/property";
 import { formatPrice, type Locale } from "@/lib/i18n";
+import { localePath } from "@/lib/locale-routing";
 import { localizedPropertyTitle } from "@/lib/property-i18n";
 
 interface PropertyListingsMapProps {
@@ -90,7 +91,7 @@ export function PropertyListingsMap({
             <p class="font-bold text-teal-700">${price}</p>
             <p class="text-sm font-medium text-slate-900 line-clamp-2">${title}</p>
             <p class="text-xs text-slate-500 mt-1">${property.bedrooms} bed · ${property.bathrooms} bath · ${property.areaSqm} sqm</p>
-            <a href="/property/${property.slug}" class="mt-2 inline-block text-xs text-teal-600 hover:underline">
+            <a href="${localePath(`/property/${property.slug}`, locale)}" class="mt-2 inline-block text-xs text-teal-600 hover:underline">
               ${locale === "th" ? "ดูรายละเอียด →" : "View details →"}
             </a>
           </div>

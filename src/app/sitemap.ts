@@ -1,15 +1,34 @@
 import type { MetadataRoute } from "next";
+import type { Locale } from "@/lib/i18n";
 import { areaGuides } from "@/lib/areas";
 import { getAllBlogPosts } from "@/lib/blog";
 import { getAllListings } from "@/lib/listings";
+import { ALL_LOCALES, publicPageUrl } from "@/lib/locale-routing";
 import { getPublishedProjectSlugs } from "@/lib/projects";
 import { siteConfig } from "@/lib/seo";
 
+type SitemapEntry = MetadataRoute.Sitemap[number];
+
+function entriesForPath(
+  path: string,
+  opts: {
+    lastModified: Date;
+    changeFrequency: SitemapEntry["changeFrequency"];
+    priority: number;
+  },
+): MetadataRoute.Sitemap {
+  return ALL_LOCALES.map((locale: Locale) => ({
+    url: publicPageUrl(path, locale, siteConfig.url),
+    lastModified: opts.lastModified,
+    changeFrequency: opts.changeFrequency,
+    priority: opts.priority,
+  }));
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = siteConfig.url;
   const now = new Date();
 
-  const staticPages = [
+  const staticPaths = [
     "",
     "/buy",
     "/rent",
@@ -25,12 +44,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/contact",
     "/privacy",
     "/terms",
-  ].map((path) => ({
-    url: `${base}${path}`,
-    lastModified: now,
-    changeFrequency: "daily" as const,
-    priority: path === "" ? 1 : 0.8,
-  }));
+  ];
+
+  const staticPages = staticPaths.flatMap((path) =>
+    entriesForPath(path, {
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: path === "" ? 1 : 0.8,
+    }),
+  );
 
   let listings: Awaited<ReturnType<typeof getAllListings>> = [];
   if (process.env.DATABASE_URL) {
@@ -41,19 +63,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  const propertyPages = listings.map((p) => ({
-    url: `${base}/property/${p.slug}`,
-    lastModified: new Date(p.publishedAt),
-    changeFrequency: "weekly" as const,
-    priority: p.isDemo ? 0.5 : p.isUserListing ? 0.65 : 0.7,
-  }));
+  const propertyPages = listings.flatMap((p) =>
+    entriesForPath(`/property/${p.slug}`, {
+      lastModified: new Date(p.publishedAt),
+      changeFrequency: "weekly",
+      priority: p.isDemo ? 0.5 : p.isUserListing ? 0.65 : 0.7,
+    }),
+  );
 
-  const areaPages = areaGuides.map((a) => ({
-    url: `${base}/areas/${a.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.85,
-  }));
+  const areaPages = areaGuides.flatMap((a) =>
+    entriesForPath(`/areas/${a.slug}`, {
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    }),
+  );
 
   const blogPosts = await getAllBlogPosts();
 
@@ -61,23 +85,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (process.env.DATABASE_URL) {
     try {
       const projects = await getPublishedProjectSlugs();
-      projectPages = projects.map((p) => ({
-        url: `${base}/projects/${p.slug}`,
-        lastModified: p.updatedAt,
-        changeFrequency: "weekly" as const,
-        priority: 0.75,
-      }));
+      projectPages = projects.flatMap((p) =>
+        entriesForPath(`/projects/${p.slug}`, {
+          lastModified: p.updatedAt,
+          changeFrequency: "weekly",
+          priority: 0.75,
+        }),
+      );
     } catch (error) {
       console.warn("[sitemap] Could not fetch projects:", error);
     }
   }
 
-  const blogPages = blogPosts.map((b) => ({
-    url: `${base}/blog/${b.slug}`,
-    lastModified: new Date(b.publishedAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.75,
-  }));
+  const blogPages = blogPosts.flatMap((b) =>
+    entriesForPath(`/blog/${b.slug}`, {
+      lastModified: new Date(b.publishedAt),
+      changeFrequency: "monthly",
+      priority: 0.75,
+    }),
+  );
 
   return [...staticPages, ...areaPages, ...propertyPages, ...projectPages, ...blogPages];
 }

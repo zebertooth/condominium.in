@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, t, type Locale, defaultLocale } from "@/lib/i18n";
+import { localePath } from "@/lib/locale-routing";
 import { formatNearbyStation } from "@/lib/locations";
 import { localizedPropertyDistrict, localizedPropertyTitle } from "@/lib/property-i18n";
 import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
@@ -29,7 +30,7 @@ export function PropertyCard({
           <SaveButton propertySlug={property.slug} initialSaved={isSaved} />
         </div>
       )}
-      <Link href={`/property/${property.slug}`} className="block">
+      <Link href={localePath(`/property/${property.slug}`, locale)} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
           <Image
             src={property.images[0]}
@@ -58,6 +59,11 @@ export function PropertyCard({
             {property.btsStation && (
               <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-slate-800">
                 {formatNearbyStation(property.btsStation)}
+              </span>
+            )}
+            {property.npaBank && (
+              <span className="rounded-full bg-amber-600 px-2.5 py-1 text-xs font-medium text-white">
+                {property.npaBank}
               </span>
             )}
             {property.projectSlug && (

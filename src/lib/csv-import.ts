@@ -24,6 +24,7 @@ export interface CsvPropertyRow {
   longitude?: number;
   npaBank?: string;
   npaReferenceUrl?: string;
+  projectSlug?: string;
   features?: string;
   images?: string;
 }
@@ -142,6 +143,7 @@ export function validateAndParseRow(
     longitude: obj.longitude ? parseFloat(obj.longitude) : undefined,
     npaBank: obj.npabank?.trim() || undefined,
     npaReferenceUrl: obj.npareferenceurl?.trim() || undefined,
+    projectSlug: obj.projectslug?.trim() || undefined,
     features: obj.features?.trim() || undefined,
     images: obj.images?.trim() || undefined,
   };
@@ -173,6 +175,7 @@ export function generateSampleCsv(): string {
     "longitude",
     "npaBank",
     "npaReferenceUrl",
+    "projectSlug",
     "features",
     "images",
   ];
@@ -200,9 +203,35 @@ export function generateSampleCsv(): string {
     "100.5608",
     "",
     "",
+    "life-sathorn-silom",
     "สระว่ายน้ำ,ฟิตเนส,ที่จอดรถ",
     "https://example.com/img1.jpg,https://example.com/img2.jpg",
   ];
 
-  return `${headers.join(",")}\n${sampleRow.join(",")}`;
+  return `${headers.join(",")}\n${sampleRow.join(",")}\n${[
+    "คอนโด NPA กสิกร สาทร",
+    "KBank NPA Condo Sathorn",
+    "ทรัพย์ NPA ธนาคารกสิกรไทย ใกล้ BTS สุรศักดิ์",
+    "KBank foreclosed condo near BTS Surasak",
+    "ขายด่วน ราคาพิเศษ",
+    "sale",
+    "npa",
+    "4200000",
+    "1",
+    "1",
+    "42",
+    "",
+    "18",
+    "สาทร",
+    "Sathorn",
+    "สุรศักดิ์",
+    "สีลม",
+    "สาทร กรุงเทพฯ",
+    "13.7194",
+    "100.5212",
+    "กสิกรไทย",
+    "https://example.com/npa-listing",
+    "",
+    "https://example.com/npa1.jpg",
+  ].join(",")}`;
 }

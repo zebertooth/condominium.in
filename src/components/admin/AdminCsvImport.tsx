@@ -204,6 +204,7 @@ export function AdminCsvImport({ locale }: AdminCsvImportProps) {
             <li>features - {nonTh ? "Comma-separated features" : "คุณสมบัติ คั่นด้วยเครื่องหมายจุลภาค"}</li>
             <li>images - {nonTh ? "Comma-separated image URLs" : "URL รูปภาพ คั่นด้วยเครื่องหมายจุลภาค"}</li>
             <li>npaBank, npaReferenceUrl - {nonTh ? "For NPA listings" : "สำหรับทรัพย์ NPA"}</li>
+            <li>projectSlug - {nonTh ? "Link to an existing project slug" : "เชื่อมกับ slug โครงการที่มีอยู่"}</li>
           </ul>
         </div>
       </div>

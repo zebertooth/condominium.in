@@ -166,6 +166,19 @@ export default async function PropertyPage({ params }: PageProps) {
           </p>
           <p className="mt-2 text-sm text-slate-600">{property.address}</p>
 
+          {property.projectSlug && (
+            <Link
+              href={lp(`/projects/${property.projectSlug}`)}
+              className="mt-3 inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-800 hover:bg-indigo-100"
+            >
+              {t("projectBadge", locale)}:{" "}
+              {locale !== "th" && property.projectNameEn
+                ? property.projectNameEn
+                : property.projectName}
+              <span aria-hidden>→</span>
+            </Link>
+          )}
+
           <div className={`mt-6 grid gap-4 rounded-xl bg-slate-50 p-4 ${showsRoomCounts(property.propertyType) ? "grid-cols-3" : "grid-cols-2"}`}>
             {showsRoomCounts(property.propertyType) && (
               <>

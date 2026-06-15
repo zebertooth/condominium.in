@@ -6,6 +6,7 @@ import { areaGuides } from "@/lib/areas";
 import { blogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { areaName, numberLocale } from "@/lib/locale-content";
 import { getFeaturedListings } from "@/lib/listings";
 import { createHomeMetadata } from "@/lib/seo";
@@ -21,6 +22,7 @@ export default async function HomePage() {
     getLocale(),
     getSiteSettings(),
   ]);
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <>
@@ -36,7 +38,7 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold text-slate-900">{t("featuredListings", locale)}</h2>
             <p className="mt-1 text-slate-600">{t("featuredDesc", locale)}</p>
           </div>
-          <Link href="/rent" className="text-sm font-medium text-teal-700 hover:underline">
+          <Link href={lp("/rent")} className="text-sm font-medium text-teal-700 hover:underline">
             {t("viewAll", locale)} →
           </Link>
         </div>
@@ -59,7 +61,7 @@ export default async function HomePage() {
             {areaGuides.map((area) => (
               <Link
                 key={area.slug}
-                href={`/areas/${area.slug}`}
+                href={lp(`/areas/${area.slug}`)}
                 className="rounded-2xl border border-slate-200 p-5 transition hover:border-teal-300 hover:shadow-md"
               >
                 <p className="text-sm font-medium text-teal-700">BTS {area.btsStation}</p>
@@ -82,7 +84,7 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold">{t("aiTitle", locale)}</h2>
             <p className="mt-3 text-violet-100">{t("aiDesc", locale)}</p>
             <Link
-              href="/ai-search"
+              href={lp("/ai-search")}
               className="mt-6 inline-block rounded-xl bg-white px-5 py-3 font-medium text-indigo-700 transition hover:bg-violet-50"
             >
               {t("heroAiCta", locale)}
@@ -93,7 +95,7 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold text-slate-900">{t("ownerTitle", locale)}</h2>
             <p className="mt-3 text-slate-600">{t("ownerDesc", locale)}</p>
             <Link
-              href="/list-property"
+              href={lp("/list-property")}
               className="mt-6 inline-block rounded-xl bg-teal-600 px-5 py-3 font-medium text-white transition hover:bg-teal-700"
             >
               {t("heroListCta", locale)}
@@ -110,7 +112,7 @@ export default async function HomePage() {
             {blogPosts.map((post) => (
               <Link
                 key={post.slug}
-                href={`/blog/${post.slug}`}
+                href={lp(`/blog/${post.slug}`)}
                 className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md"
               >
                 <span className="text-xs font-medium text-teal-700">{post.category}</span>

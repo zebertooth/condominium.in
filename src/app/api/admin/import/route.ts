@@ -5,6 +5,21 @@ import { parseCsv, validateAndParseRow, type ImportResult } from "@/lib/csv-impo
 import { logPriceChange } from "@/lib/price-history";
 import { uniqueSlug } from "@/lib/user-properties";
 
+async function resolveProjectId(projectSlug?: string): Promise<{ id: string } | { error: string } | null> {
+  if (!projectSlug) return null;
+
+  const project = await prisma.project.findFirst({
+    where: { slug: projectSlug.trim() },
+    select: { id: true },
+  });
+
+  if (!project) {
+    return { error: `Project not found: "${projectSlug}"` };
+  }
+
+  return { id: project.id };
+}
+
 export async function POST(request: Request) {
   try {
     const admin = await getAdminUser();
@@ -50,6 +65,12 @@ export async function POST(request: Request) {
       const data = parsed.data;
 
       try {
+        const projectResult = await resolveProjectId(data.projectSlug);
+        if (projectResult && "error" in projectResult) {
+          result.errors.push({ row: rowNum, message: projectResult.error });
+          continue;
+        }
+
         const slug = await uniqueSlug(data.title);
 
         const features = data.features
@@ -85,6 +106,7 @@ export async function POST(request: Request) {
             longitude: data.longitude,
             npaBank: data.npaBank,
             npaReferenceUrl: data.npaReferenceUrl,
+            projectId: projectResult && "id" in projectResult ? projectResult.id : null,
             features: JSON.stringify(features),
             images: JSON.stringify(images),
             status: "published",

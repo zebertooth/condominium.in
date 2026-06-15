@@ -5,6 +5,7 @@ import {
   localizedProjectName,
 } from "@/lib/projects";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
 import { t } from "@/lib/i18n";
 import { formatNearbyStation } from "@/lib/locations";
@@ -25,6 +26,7 @@ export async function generateMetadata() {
 export default async function ProjectsPage() {
   const [projects, locale] = await Promise.all([getPublishedProjects(), getLocale()]);
   const nonTh = locale !== "th";
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -44,7 +46,7 @@ export default async function ProjectsPage() {
             return (
               <Link
                 key={project.id}
-                href={`/projects/${project.slug}`}
+                href={lp(`/projects/${project.slug}`)}
                 className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
               >
                 <div className="relative aspect-[16/10] bg-slate-100">

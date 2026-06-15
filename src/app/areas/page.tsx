@@ -3,6 +3,7 @@ import { areaGuides } from "@/lib/areas";
 import { t } from "@/lib/i18n";
 import { areaBtsLineLabel, areaDescription, areaHighlights, areaName } from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
 
 export async function generateMetadata() {
@@ -17,6 +18,7 @@ export async function generateMetadata() {
 
 export default async function AreasPage() {
   const locale = await getLocale();
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -33,7 +35,7 @@ export default async function AreasPage() {
           return (
             <Link
               key={area.slug}
-              href={`/areas/${area.slug}`}
+              href={lp(`/areas/${area.slug}`)}
               className="rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-teal-300 hover:shadow-md"
             >
               <p className="text-sm font-medium text-teal-700">

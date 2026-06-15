@@ -37,3 +37,20 @@ export function publicPageUrl(path: string, locale: Locale, siteUrl: string): st
   const localized = localePath(path, locale);
   return localized === "/" ? `${siteUrl}/` : `${siteUrl}${localized}`;
 }
+
+export function localePathWithQuery(
+  path: string,
+  locale: Locale,
+  query: Record<string, string | undefined>,
+): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value) params.set(key, value);
+  }
+  const qs = params.toString();
+  const base = localePath(path, locale);
+  return qs ? `${base}?${qs}` : base;
+}
+
+/** All locales for sitemap / hreflang expansion. */
+export const ALL_LOCALES: Locale[] = ["th", ...LOCALE_PREFIXED];

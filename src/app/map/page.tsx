@@ -5,6 +5,7 @@ import { PropertyCategoryFilter } from "@/components/property/PropertyCategoryFi
 import { PropertyListingsMap } from "@/components/property/PropertyListingsMap";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { localePath, localePathWithQuery } from "@/lib/locale-routing";
 import { parsePropertyCategory } from "@/lib/property-types";
 import { createMetadata } from "@/lib/seo";
 import { filterListings } from "@/lib/listings";
@@ -61,6 +62,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
 
   const propertiesWithCoords = listings.filter((p) => p.latitude && p.longitude);
   const nonTh = locale !== "th";
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -77,7 +79,10 @@ export default async function MapPage({ searchParams }: MapPageProps) {
         </div>
         <div className="flex gap-2">
           <Link
-            href={`/map?type=rent${params.category ? `&category=${params.category}` : ""}`}
+            href={localePathWithQuery("/map", locale, {
+              type: "rent",
+              category: params.category,
+            })}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               listingType === "rent"
                 ? "bg-teal-600 text-white"
@@ -87,7 +92,10 @@ export default async function MapPage({ searchParams }: MapPageProps) {
             {t("rent", locale)}
           </Link>
           <Link
-            href={`/map?type=sale${params.category ? `&category=${params.category}` : ""}`}
+            href={localePathWithQuery("/map", locale, {
+              type: "sale",
+              category: params.category,
+            })}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               listingType === "sale"
                 ? "bg-teal-600 text-white"
@@ -124,7 +132,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
 
       <div className="mt-6 flex justify-center gap-4">
         <Link
-          href={listingType === "rent" ? "/rent" : "/buy"}
+          href={lp(listingType === "rent" ? "/rent" : "/buy")}
           className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
           {nonTh ? "View as list" : "ดูแบบรายการ"}

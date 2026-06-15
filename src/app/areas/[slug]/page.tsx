@@ -15,6 +15,7 @@ import {
   numberLocale,
 } from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
 
 interface PageProps {
@@ -53,11 +54,12 @@ export default async function AreaPage({ params }: PageProps) {
   const highlights = areaHighlights(area, locale);
   const nonTh = isNonThaiLocale(locale);
   const numLoc = numberLocale(locale);
+  const lp = (path: string) => localePath(path, locale);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <nav className="mb-6 text-sm text-slate-500">
-        <Link href="/areas" className="hover:text-teal-700">
+        <Link href={lp("/areas")} className="hover:text-teal-700">
           {t("areas", locale)}
         </Link>
         {" / "}

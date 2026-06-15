@@ -3,9 +3,11 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { AISearchResult } from "@/types/property";
 
 export function AISearchClient() {
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") ?? "";
   const [query, setQuery] = useState(initialQuery);
@@ -100,7 +102,7 @@ export function AISearchClient() {
           <h2 className="mb-6 mt-10 text-xl font-semibold text-slate-900">
             ทรัพย์ที่แนะนำ ({result.properties.length})
           </h2>
-          <PropertyGrid properties={result.properties} />
+          <PropertyGrid properties={result.properties} locale={locale} />
         </div>
       )}
 

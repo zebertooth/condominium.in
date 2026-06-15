@@ -6,6 +6,7 @@ import { getUserSavedProperties, getUserSavedSlugs } from "@/lib/favorites";
 import { t } from "@/lib/i18n";
 import { getListingBySlug } from "@/lib/listings";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
 import type { Property } from "@/types/property";
 
@@ -23,6 +24,7 @@ export default async function SavedPropertiesPage() {
 
   const locale = await getLocale();
   const nonTh = locale !== "th";
+  const lp = (path: string) => localePath(path, locale);
 
   const [saved, savedSlugs] = await Promise.all([
     getUserSavedProperties(user.id),
@@ -70,13 +72,13 @@ export default async function SavedPropertiesPage() {
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link
-              href="/buy"
+              href={lp("/buy")}
               className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
             >
               {t("buyPageTitle", locale)}
             </Link>
             <Link
-              href="/rent"
+              href={lp("/rent")}
               className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
             >
               {t("rentPageTitle", locale)}
