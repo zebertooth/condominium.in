@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import Script from "next/script";
 import { useState, useSyncExternalStore } from "react";
+import { LocalizedLink } from "@/components/i18n/LocalizedLink";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { getGaMeasurementId } from "@/lib/ga";
 
@@ -57,9 +57,9 @@ export function CookieConsent() {
         <div className="max-w-3xl">
           <p className="font-semibold text-slate-900">{t("cookieBannerTitle")}</p>
           <p className="mt-1 text-sm text-slate-600">{t("cookieBannerDesc")}</p>
-          <Link href="/privacy#cookies" className="mt-2 inline-block text-sm text-teal-700 hover:underline">
+          <LocalizedLink href="/privacy#cookies" className="mt-2 inline-block text-sm text-teal-700 hover:underline">
             {t("cookieLearnMore")}
-          </Link>
+          </LocalizedLink>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
           <button

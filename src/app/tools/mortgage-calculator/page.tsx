@@ -1,6 +1,7 @@
 import { MortgageCalculator } from "@/components/property/MortgageCalculator";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
 import Link from "next/link";
 
@@ -77,7 +78,7 @@ export default async function MortgageCalculatorPage() {
 
       <div className="mt-8 text-center">
         <Link
-          href="/buy"
+          href={localePath("/buy", locale)}
           className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 font-medium text-white transition hover:bg-teal-700"
         >
           {t("buyPageTitle", locale)}

@@ -12,6 +12,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { createMetadata } from "@/lib/seo";
 import { getPublishedTeamAgents } from "@/lib/team-agents";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { t } from "@/lib/i18n";
 
 export async function generateMetadata() {
@@ -80,6 +81,7 @@ export default async function AgentsPage() {
     getCurrentUser(),
   ]);
   const nonTh = locale !== "th";
+  const lp = (path: string) => localePath(path, locale);
   const grouped = groupByAgentCategory(agents);
 
   return (
@@ -156,7 +158,7 @@ export default async function AgentsPage() {
           </li>
         </ol>
         <Link
-          href="/contact"
+          href={lp("/contact")}
           className="mt-6 inline-block rounded-xl bg-teal-500 px-6 py-3 font-medium text-white hover:bg-teal-400"
         >
           {nonTh ? "Talk to an agent →" : "นัดคุยกับเอเจนต์ →"}

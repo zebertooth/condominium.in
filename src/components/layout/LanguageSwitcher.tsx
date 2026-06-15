@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LocaleFlag } from "@/components/layout/LocaleFlag";
 import { activeLocales, type Locale } from "@/lib/i18n";
 import { localePath, stripLocaleFromPath } from "@/lib/locale-routing";
-import { useLocale, useT } from "@/components/i18n/LocaleProvider";
+import { useT } from "@/components/i18n/LocaleProvider";
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -25,15 +25,15 @@ function ChevronIcon({ open }: { open: boolean }) {
 }
 
 export function LanguageSwitcher() {
-  const locale = useLocale();
   const t = useT();
   const router = useRouter();
   const pathname = usePathname();
+  const pathLocale = stripLocaleFromPath(pathname).locale;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const current = activeLocales.find((item) => item.code === locale) ?? activeLocales[0];
+  const current = activeLocales.find((item) => item.code === pathLocale) ?? activeLocales[0];
 
   useEffect(() => {
     if (!open) return;
@@ -57,7 +57,7 @@ export function LanguageSwitcher() {
   }, [open]);
 
   async function switchLocale(next: Locale) {
-    if (next === locale || loading) return;
+    if (next === pathLocale || loading) return;
     setLoading(true);
     setOpen(false);
     try {
@@ -100,7 +100,7 @@ export function LanguageSwitcher() {
           className="absolute right-0 z-[200] mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
         >
           {activeLocales.map((item) => {
-            const selected = item.code === locale;
+            const selected = item.code === pathLocale;
             return (
               <li key={item.code} role="option" aria-selected={selected}>
                 <button

@@ -15,6 +15,7 @@ import {
   isNonThaiLocale,
 } from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
+import { localePath } from "@/lib/locale-routing";
 import { createMetadata, siteConfig } from "@/lib/seo";
 import { t } from "@/lib/i18n";
 
@@ -67,6 +68,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) notFound();
 
   const locale = await getLocale();
+  const lp = (path: string) => localePath(path, locale);
   const nonTh = isNonThaiLocale(locale);
 
   const title = blogTitle(post, locale);
@@ -89,7 +91,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       <JsonLd data={jsonLd} />
 
       <nav className="mb-6 text-sm text-slate-500">
-        <Link href="/blog" className="hover:text-teal-700">
+        <Link href={lp("/blog")} className="hover:text-teal-700">
           {t("blog", locale)}
         </Link>
         {" / "}
@@ -152,10 +154,10 @@ export default async function BlogPostPage({ params }: PageProps) {
                   : "ใช้ AI ค้นหาทรัพย์ที่ตรงใจ หรือติดต่อทีมเอเจนต์เพื่อนัดชมจริง"}
         </p>
         <div className="mt-4 flex gap-3">
-          <Link href="/ai-search" className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white">
+          <Link href={lp("/ai-search")} className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white">
             {t("aiSearch", locale)}
           </Link>
-          <Link href="/contact" className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800">
+          <Link href={lp("/contact")} className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800">
             {t("contact", locale)}
           </Link>
         </div>

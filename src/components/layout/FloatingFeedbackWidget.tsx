@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AgentInterestForm } from "@/components/agents/AgentInterestForm";
+import { LocalizedLink } from "@/components/i18n/LocalizedLink";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
 
@@ -130,12 +130,12 @@ export function FloatingFeedbackWidget() {
               {tab === "agent" ? (
                 <>
                   <p className="text-sm leading-relaxed text-slate-600">{t("feedbackTabAgentDesc")}</p>
-                  <Link
+                  <LocalizedLink
                     href="/agents#join-agent"
                     className="mt-2 inline-block text-sm font-medium text-teal-700 hover:underline"
                   >
                     {t("agentsJoinTitle")} →
-                  </Link>
+                  </LocalizedLink>
                   <div className="mt-4">
                     <AgentInterestForm compact />
                   </div>
