@@ -246,7 +246,7 @@ export function AdminUserTable({ users }: { users: AdminUser[] }) {
         <p className="text-sm text-slate-500">{t("adminUsersNoResults")}</p>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-          <table className="w-full text-left text-sm">
+          <table className="min-w-[48rem] w-full text-left text-sm">
             <thead className="border-b bg-slate-50 text-slate-600">
               <tr>
                 <th className="px-4 py-3">{t("adminUsers")}</th>

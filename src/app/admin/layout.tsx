@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LogoutButton } from "@/components/auth/LogoutButton";
+import { AdminHeader } from "@/components/admin/AdminHeader";
 import { getCurrentUser } from "@/lib/auth";
 import { getLocale } from "@/lib/locale";
 import { t } from "@/lib/i18n";
@@ -12,59 +11,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const locale = await getLocale();
 
+  const navItems = [
+    { href: "/admin", label: t("adminOverview", locale) },
+    { href: "/admin/properties", label: t("adminProperties", locale) },
+    { href: "/admin/sponsored", label: t("adminSponsored", locale) },
+    { href: "/admin/users", label: t("adminUsers", locale) },
+    { href: "/admin/leads", label: t("adminLeads", locale) },
+    { href: "/admin/payments", label: t("adminPayments", locale) },
+    { href: "/admin/analytics", label: t("adminAnalytics", locale) },
+    { href: "/admin/seo", label: t("adminSeo", locale) },
+    { href: "/admin/agents", label: t("adminTeam", locale) },
+    { href: "/admin/blog", label: t("adminBlog", locale) },
+    { href: "/admin/import", label: t("adminImport", locale) },
+    { href: "/admin/projects", label: t("adminProjects", locale) },
+    { href: "/admin/reviews", label: t("adminReviews", locale) },
+  ];
+
   return (
     <div className="min-h-screen bg-slate-100">
-      <header className="border-b border-slate-200 bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
-          <div>
-            <p className="text-lg font-bold">Admin Panel</p>
-            <p className="text-xs text-slate-400">Condominium.in.th</p>
-          </div>
-          <nav className="flex gap-2 text-sm">
-            <Link href="/admin" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminOverview", locale)}
-            </Link>
-            <Link href="/admin/properties" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminProperties", locale)}
-            </Link>
-            <Link href="/admin/users" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminUsers", locale)}
-            </Link>
-            <Link href="/admin/leads" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminLeads", locale)}
-            </Link>
-            <Link href="/admin/payments" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminPayments", locale)}
-            </Link>
-            <Link href="/admin/analytics" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminAnalytics", locale)}
-            </Link>
-            <Link href="/admin/seo" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminSeo", locale)}
-            </Link>
-            <Link href="/admin/agents" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminTeam", locale)}
-            </Link>
-            <Link href="/admin/blog" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminBlog", locale)}
-            </Link>
-            <Link href="/admin/import" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminImport", locale)}
-            </Link>
-            <Link href="/admin/projects" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminProjects", locale)}
-            </Link>
-            <Link href="/admin/reviews" className="rounded-lg bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
-              {t("adminReviews", locale)}
-            </Link>
-            <Link href="/" className="rounded-lg border border-slate-600 px-3 py-1.5 hover:bg-slate-800">
-              {t("backToWebsite", locale)}
-            </Link>
-            <LogoutButton className="rounded-lg border border-red-400/60 px-3 py-1.5 text-red-200 hover:bg-red-950/50" />
-          </nav>
-        </div>
-      </header>
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">{children}</main>
+      <AdminHeader items={navItems} backLabel={t("backToWebsite", locale)} />
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
     </div>
   );
 }

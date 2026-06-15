@@ -109,7 +109,7 @@ export function AdminPropertyTable({ properties }: { properties: AdminProperty[]
         </div>
       )}
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
+        <table className="min-w-[40rem] w-full text-left text-sm">
           <thead className="border-b bg-slate-50 text-slate-600">
             <tr>
               <th className="px-4 py-3">

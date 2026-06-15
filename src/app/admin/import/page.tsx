@@ -42,7 +42,7 @@ export default async function AdminImportPage() {
             ? "Imported listings are automatically published. You can review and edit them in the properties section."
             : "ประกาศที่นำเข้าจะเผยแพร่โดยอัตโนมัติ คุณสามารถตรวจสอบและแก้ไขได้ในส่วนประกาศทรัพย์"}
         </p>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap gap-3">
           <Link
             href="/admin/projects"
             className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
@@ -54,7 +54,7 @@ export default async function AdminImportPage() {
           </Link>
           <Link
             href="/admin/properties"
-            className="ml-3 inline-flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+            className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
           >
             {t("adminPropertiesTitle", locale)}
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

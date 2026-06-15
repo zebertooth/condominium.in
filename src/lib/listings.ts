@@ -8,7 +8,10 @@ import {
   getUserPropertyBySlugVisible,
   type PropertyViewer,
 } from "@/lib/user-properties";
+import { getOwnerPropertyStats } from "@/lib/analytics";
 import type { Property, SearchFilters } from "@/types/property";
+
+export const HOME_LISTINGS_LIMIT = 6;
 
 async function enrichWithPriceReduced(list: Property[]): Promise<Property[]> {
   const userSlugs = list.filter((p) => p.isUserListing).map((p) => p.slug);
@@ -80,5 +83,35 @@ export async function filterListings(filters: SearchFilters): Promise<Property[]
 
 export async function getFeaturedListings(): Promise<Property[]> {
   const all = await getAllListings();
-  return all.filter((p) => p.featured);
+  return all.filter((p) => p.featured).slice(0, HOME_LISTINGS_LIMIT);
+}
+
+/** ประกาศแนะนำ — active sponsored / featured listings for homepage. */
+export async function getRecommendedListings(): Promise<Property[]> {
+  return getFeaturedListings();
+}
+
+/** ประกาศล่าสุด — newest published listings. */
+export async function getLatestListings(limit = HOME_LISTINGS_LIMIT): Promise<Property[]> {
+  const all = await getAllListings();
+  return [...all]
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    .slice(0, limit);
+}
+
+/** ยอดนิยม — most viewed listings (falls back to newest when no view data). */
+export async function getPopularListings(limit = HOME_LISTINGS_LIMIT): Promise<Property[]> {
+  const all = await getAllListings();
+  if (all.length === 0) return [];
+
+  const slugs = all.map((p) => p.slug);
+  const stats = await getOwnerPropertyStats(slugs);
+
+  return [...all]
+    .sort((a, b) => {
+      const viewsDiff = (stats[b.slug]?.viewsCount ?? 0) - (stats[a.slug]?.viewsCount ?? 0);
+      if (viewsDiff !== 0) return viewsDiff;
+      return b.publishedAt.localeCompare(a.publishedAt);
+    })
+    .slice(0, limit);
 }

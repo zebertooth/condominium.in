@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
 import { resolveListingContactMode } from "@/lib/contact-routing";
+import { normalizeListingImages } from "@/lib/listing-images";
 import { parseModerationFlags } from "@/lib/listing-moderation";
 import { properties as staticProperties } from "@/lib/properties";
+import { isActiveSponsor } from "@/lib/sponsored";
 import type { Property } from "@/types/property";
 
 const staticSlugs = new Set(staticProperties.map((p) => p.slug));
@@ -93,13 +95,7 @@ type DbProperty = {
   } | null;
 };
 
-export function isActiveSponsor(
-  isSponsored: boolean,
-  sponsoredUntil: Date | null,
-  now = new Date(),
-): boolean {
-  return isSponsored && (!sponsoredUntil || sponsoredUntil > now);
-}
+export { isActiveSponsor } from "@/lib/sponsored";
 
 export function dbPropertyToListing(p: DbProperty): Property {
   const poster =
@@ -150,7 +146,7 @@ export function dbPropertyToListing(p: DbProperty): Property {
     npaBank: p.npaBank ?? undefined,
     npaReferenceUrl: p.npaReferenceUrl ?? undefined,
     features: parseJsonArray(p.features),
-    images: parseJsonArray(p.images),
+    images: normalizeListingImages(parseJsonArray(p.images)),
     featured: activeSponsor,
     sponsoredUntil: p.sponsoredUntil?.toISOString() ?? undefined,
     publishedAt: p.createdAt.toISOString().slice(0, 10),

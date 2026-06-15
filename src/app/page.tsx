@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { Hero } from "@/components/home/Hero";
-import { PropertyGrid } from "@/components/property/PropertyGrid";
+import { HomeListingsSection } from "@/components/home/HomeListingsSection";
 import { areaGuides } from "@/lib/areas";
 import { blogPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
 import { areaName, numberLocale } from "@/lib/locale-content";
-import { getFeaturedListings } from "@/lib/listings";
+import {
+  getLatestListings,
+  getPopularListings,
+  getRecommendedListings,
+} from "@/lib/listings";
 import { createHomeMetadata } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -17,8 +21,10 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [featured, locale, settings] = await Promise.all([
-    getFeaturedListings(),
+  const [recommended, latest, popular, locale, settings] = await Promise.all([
+    getRecommendedListings(),
+    getLatestListings(),
+    getPopularListings(),
     getLocale(),
     getSiteSettings(),
   ]);
@@ -32,22 +38,32 @@ export default async function HomePage() {
         <AdSlot position="homeLeaderboard" format="auto" />
       </div>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">{t("featuredListings", locale)}</h2>
-            <p className="mt-1 text-slate-600">{t("featuredDesc", locale)}</p>
-          </div>
-          <Link href={lp("/rent")} className="text-sm font-medium text-teal-700 hover:underline">
-            {t("viewAll", locale)} →
-          </Link>
-        </div>
-        <PropertyGrid
-          properties={featured}
-          locale={locale}
-          infeedSlotId={settings.adSlots.listingInfeed}
-        />
-      </section>
+      <HomeListingsSection
+        titleKey="featuredListings"
+        descKey="featuredDesc"
+        properties={recommended}
+        locale={locale}
+        viewAllHref={lp("/buy")}
+        infeedSlotId={settings.adSlots.listingInfeed}
+      />
+
+      <HomeListingsSection
+        titleKey="latestListings"
+        descKey="latestListingsDesc"
+        properties={latest}
+        locale={locale}
+        viewAllHref={lp("/buy")}
+        className="border-t border-slate-200 bg-white"
+      />
+
+      <HomeListingsSection
+        titleKey="popularListings"
+        descKey="popularListingsDesc"
+        properties={popular}
+        locale={locale}
+        viewAllHref={lp("/rent")}
+        className="border-t border-slate-200"
+      />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AdSlot position="homeMid" format="auto" />

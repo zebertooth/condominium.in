@@ -29,6 +29,7 @@ export async function getAdminStats() {
     pendingVerifications,
     newLeads,
     pendingPayments,
+    sponsoredListings,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.userProperty.count({ where: { status: "published" } }),
@@ -45,6 +46,13 @@ export async function getAdminStats() {
     prisma.userSubscription.count({
       where: { paymentStatus: { in: ["pending", "pending_review"] } },
     }),
+    prisma.userProperty.count({
+      where: {
+        status: "published",
+        isSponsored: true,
+        OR: [{ sponsoredUntil: null }, { sponsoredUntil: { gt: new Date() } }],
+      },
+    }),
   ]);
 
   return {
@@ -55,5 +63,6 @@ export async function getAdminStats() {
     pendingVerifications,
     newLeads,
     pendingPayments,
+    sponsoredListings,
   };
 }

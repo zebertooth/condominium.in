@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { parseCsv, validateAndParseRow, type ImportResult } from "@/lib/csv-import";
+import { normalizeListingImages, parseListingImageUrls } from "@/lib/listing-images";
 import { logPriceChange } from "@/lib/price-history";
 import { uniqueSlug } from "@/lib/user-properties";
 
@@ -77,9 +78,15 @@ export async function POST(request: Request) {
           ? data.features.split(",").map((f) => f.trim()).filter(Boolean)
           : [];
 
-        const images = data.images
-          ? data.images.split(",").map((i) => i.trim()).filter(Boolean)
-          : [];
+        const imageUrls = parseListingImageUrls(data.images);
+        if (data.images?.trim() && imageUrls.length === 0) {
+          result.errors.push({
+            row: rowNum,
+            message:
+              "No valid image URLs in images column (need https://…). If features contain commas, wrap that column in double quotes.",
+          });
+        }
+        const images = normalizeListingImages(imageUrls);
 
         const created = await prisma.userProperty.create({
           data: {

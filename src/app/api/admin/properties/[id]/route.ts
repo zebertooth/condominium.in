@@ -83,9 +83,20 @@ export async function PATCH(request: Request, context: RouteContext) {
   try {
     await requireAdmin();
     const { id } = await context.params;
-    const body = (await request.json()) as { status?: string; needsReview?: boolean };
+    const body = (await request.json()) as {
+      status?: string;
+      needsReview?: boolean;
+      isSponsored?: boolean;
+      sponsoredUntil?: string | null;
+    };
 
-    const data: { status?: string; needsReview?: boolean; moderationFlags?: string } = {};
+    const data: {
+      status?: string;
+      needsReview?: boolean;
+      moderationFlags?: string;
+      isSponsored?: boolean;
+      sponsoredUntil?: Date | null;
+    } = {};
 
     if (body.status !== undefined) {
       if (!["pending", "published", "rejected", "deleted"].includes(body.status)) {
@@ -100,6 +111,26 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     if (body.needsReview === false) {
       data.needsReview = false;
+    }
+
+    if (body.isSponsored !== undefined) {
+      data.isSponsored = body.isSponsored;
+      if (!body.isSponsored) {
+        data.sponsoredUntil = null;
+      }
+    }
+
+    if (body.sponsoredUntil !== undefined) {
+      if (body.sponsoredUntil === null || body.sponsoredUntil === "") {
+        data.sponsoredUntil = null;
+      } else {
+        const until = new Date(body.sponsoredUntil);
+        if (Number.isNaN(until.getTime())) {
+          return NextResponse.json({ error: "วันหมดอายุไม่ถูกต้อง" }, { status: 400 });
+        }
+        data.sponsoredUntil = until;
+        data.isSponsored = true;
+      }
     }
 
     if (Object.keys(data).length === 0) {

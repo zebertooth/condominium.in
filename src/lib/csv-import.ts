@@ -78,6 +78,12 @@ export function validateAndParseRow(
   values: string[],
   rowNum: number,
 ): { data?: CsvPropertyRow; error?: string } {
+  if (values.length !== headers.length) {
+    return {
+      error: `Row ${rowNum}: Expected ${headers.length} columns, found ${values.length}. Quote fields that contain commas (especially features).`,
+    };
+  }
+
   const obj: Record<string, string> = {};
   headers.forEach((h, i) => {
     obj[h] = values[i] || "";
