@@ -313,6 +313,7 @@ export type ProjectWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   properties?: Prisma.UserPropertyListRelationFilter
+  blogArticles?: Prisma.BlogArticleListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -334,6 +335,7 @@ export type ProjectOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   properties?: Prisma.UserPropertyOrderByRelationAggregateInput
+  blogArticles?: Prisma.BlogArticleOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -358,6 +360,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   properties?: Prisma.UserPropertyListRelationFilter
+  blogArticles?: Prisma.BlogArticleListRelationFilter
 }, "id" | "slug">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -427,6 +430,7 @@ export type ProjectCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.UserPropertyCreateNestedManyWithoutProjectInput
+  blogArticles?: Prisma.BlogArticleCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -448,6 +452,7 @@ export type ProjectUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutProjectInput
+  blogArticles?: Prisma.BlogArticleUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -469,6 +474,7 @@ export type ProjectUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.UserPropertyUpdateManyWithoutProjectNestedInput
+  blogArticles?: Prisma.BlogArticleUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -490,6 +496,7 @@ export type ProjectUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.UserPropertyUncheckedUpdateManyWithoutProjectNestedInput
+  blogArticles?: Prisma.BlogArticleUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -625,6 +632,22 @@ export type ProjectSumOrderByAggregateInput = {
   totalUnits?: Prisma.SortOrder
 }
 
+export type ProjectCreateNestedOneWithoutBlogArticlesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutBlogArticlesInput, Prisma.ProjectUncheckedCreateWithoutBlogArticlesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutBlogArticlesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneWithoutBlogArticlesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutBlogArticlesInput, Prisma.ProjectUncheckedCreateWithoutBlogArticlesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutBlogArticlesInput
+  upsert?: Prisma.ProjectUpsertWithoutBlogArticlesInput
+  disconnect?: Prisma.ProjectWhereInput | boolean
+  delete?: Prisma.ProjectWhereInput | boolean
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutBlogArticlesInput, Prisma.ProjectUpdateWithoutBlogArticlesInput>, Prisma.ProjectUncheckedUpdateWithoutBlogArticlesInput>
+}
+
 export type ProjectCreateNestedOneWithoutPropertiesInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutPropertiesInput, Prisma.ProjectUncheckedCreateWithoutPropertiesInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutPropertiesInput
@@ -639,6 +662,106 @@ export type ProjectUpdateOneWithoutPropertiesNestedInput = {
   delete?: Prisma.ProjectWhereInput | boolean
   connect?: Prisma.ProjectWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutPropertiesInput, Prisma.ProjectUpdateWithoutPropertiesInput>, Prisma.ProjectUncheckedUpdateWithoutPropertiesInput>
+}
+
+export type ProjectCreateWithoutBlogArticlesInput = {
+  id?: string
+  slug: string
+  name: string
+  nameEn?: string
+  developer: string
+  location: string
+  district?: string
+  btsStation?: string | null
+  amenities?: string
+  totalUnits?: number | null
+  completionDate?: Date | string | null
+  imageUrl?: string
+  description?: string
+  descriptionEn?: string
+  published?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.UserPropertyCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutBlogArticlesInput = {
+  id?: string
+  slug: string
+  name: string
+  nameEn?: string
+  developer: string
+  location: string
+  district?: string
+  btsStation?: string | null
+  amenities?: string
+  totalUnits?: number | null
+  completionDate?: Date | string | null
+  imageUrl?: string
+  description?: string
+  descriptionEn?: string
+  published?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutBlogArticlesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutBlogArticlesInput, Prisma.ProjectUncheckedCreateWithoutBlogArticlesInput>
+}
+
+export type ProjectUpsertWithoutBlogArticlesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutBlogArticlesInput, Prisma.ProjectUncheckedUpdateWithoutBlogArticlesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutBlogArticlesInput, Prisma.ProjectUncheckedCreateWithoutBlogArticlesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutBlogArticlesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutBlogArticlesInput, Prisma.ProjectUncheckedUpdateWithoutBlogArticlesInput>
+}
+
+export type ProjectUpdateWithoutBlogArticlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameEn?: Prisma.StringFieldUpdateOperationsInput | string
+  developer?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenities?: Prisma.StringFieldUpdateOperationsInput | string
+  totalUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.UserPropertyUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutBlogArticlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameEn?: Prisma.StringFieldUpdateOperationsInput | string
+  developer?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  btsStation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenities?: Prisma.StringFieldUpdateOperationsInput | string
+  totalUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.UserPropertyUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutPropertiesInput = {
@@ -659,6 +782,7 @@ export type ProjectCreateWithoutPropertiesInput = {
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  blogArticles?: Prisma.BlogArticleCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutPropertiesInput = {
@@ -679,6 +803,7 @@ export type ProjectUncheckedCreateWithoutPropertiesInput = {
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  blogArticles?: Prisma.BlogArticleUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutPropertiesInput = {
@@ -715,6 +840,7 @@ export type ProjectUpdateWithoutPropertiesInput = {
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  blogArticles?: Prisma.BlogArticleUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutPropertiesInput = {
@@ -735,6 +861,7 @@ export type ProjectUncheckedUpdateWithoutPropertiesInput = {
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  blogArticles?: Prisma.BlogArticleUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 
@@ -744,10 +871,12 @@ export type ProjectUncheckedUpdateWithoutPropertiesInput = {
 
 export type ProjectCountOutputType = {
   properties: number
+  blogArticles: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | ProjectCountOutputTypeCountPropertiesArgs
+  blogArticles?: boolean | ProjectCountOutputTypeCountBlogArticlesArgs
 }
 
 /**
@@ -765,6 +894,13 @@ export type ProjectCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type ProjectCountOutputTypeCountPropertiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserPropertyWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountBlogArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BlogArticleWhereInput
 }
 
 
@@ -787,6 +923,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   properties?: boolean | Prisma.Project$propertiesArgs<ExtArgs>
+  blogArticles?: boolean | Prisma.Project$blogArticlesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -853,6 +990,7 @@ export type ProjectSelectScalar = {
 export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "nameEn" | "developer" | "location" | "district" | "btsStation" | "amenities" | "totalUnits" | "completionDate" | "imageUrl" | "description" | "descriptionEn" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | Prisma.Project$propertiesArgs<ExtArgs>
+  blogArticles?: boolean | Prisma.Project$blogArticlesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -862,6 +1000,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Project"
   objects: {
     properties: Prisma.$UserPropertyPayload<ExtArgs>[]
+    blogArticles: Prisma.$BlogArticlePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1276,6 +1415,7 @@ readonly fields: ProjectFieldRefs;
 export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   properties<T extends Prisma.Project$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blogArticles<T extends Prisma.Project$blogArticlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$blogArticlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1736,6 +1876,30 @@ export type Project$propertiesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.UserPropertyScalarFieldEnum | Prisma.UserPropertyScalarFieldEnum[]
+}
+
+/**
+ * Project.blogArticles
+ */
+export type Project$blogArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BlogArticle
+   */
+  select?: Prisma.BlogArticleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BlogArticle
+   */
+  omit?: Prisma.BlogArticleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BlogArticleInclude<ExtArgs> | null
+  where?: Prisma.BlogArticleWhereInput
+  orderBy?: Prisma.BlogArticleOrderByWithRelationInput | Prisma.BlogArticleOrderByWithRelationInput[]
+  cursor?: Prisma.BlogArticleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BlogArticleScalarFieldEnum | Prisma.BlogArticleScalarFieldEnum[]
 }
 
 /**

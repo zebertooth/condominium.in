@@ -174,6 +174,16 @@ export const BlogArticleScalarFieldEnum = {
   seoDescription: 'seoDescription',
   seoDescriptionEn: 'seoDescriptionEn',
   status: 'status',
+  articleType: 'articleType',
+  projectId: 'projectId',
+  authorName: 'authorName',
+  authorTitle: 'authorTitle',
+  reviewNumber: 'reviewNumber',
+  factsJson: 'factsJson',
+  sectionsJson: 'sectionsJson',
+  galleryUrls: 'galleryUrls',
+  videoUrl: 'videoUrl',
+  relatedSlugs: 'relatedSlugs',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

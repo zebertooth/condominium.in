@@ -60,13 +60,27 @@ const BEDROOM_OPTIONS = [
   { value: "4", label: "4+ ห้องนอน", labelEn: "4+ Bedrooms" },
 ];
 
+const SQM_RANGES = [
+  { min: 0, max: 30, label: "ไม่เกิน 30 ตร.ม.", labelEn: "Under 30 sqm" },
+  { min: 30, max: 50, label: "30–50 ตร.ม.", labelEn: "30–50 sqm" },
+  { min: 50, max: 80, label: "50–80 ตร.ม.", labelEn: "50–80 sqm" },
+  { min: 80, max: 0, label: "80+ ตร.ม.", labelEn: "80+ sqm" },
+];
+
+const FURNISHING_OPTIONS = [
+  { value: "", label: "ทั้งหมด", labelEn: "Any" },
+  { value: "furnished", label: "เฟอร์นิเจอร์ครบ", labelEn: "Fully furnished" },
+  { value: "unfurnished", label: "ไม่มีเฟอร์นิเจอร์", labelEn: "Unfurnished" },
+];
+
 interface AdvancedFiltersProps {
   listingType: "sale" | "rent";
   currentCategory?: string;
   basePath?: string;
+  lockedBts?: string;
 }
 
-export function AdvancedFilters({ listingType, currentCategory, basePath }: AdvancedFiltersProps) {
+export function AdvancedFilters({ listingType, currentCategory, basePath, lockedBts }: AdvancedFiltersProps) {
   const t = useT();
   const locale = useLocale();
   const router = useRouter();
@@ -74,12 +88,21 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
   const [isPending, startTransition] = useTransition();
   const nonTh = locale !== "th";
 
-  const [btsStation, setBtsStation] = useState(searchParams.get("bts") ?? "");
+  const [btsStation, setBtsStation] = useState(searchParams.get("bts") ?? lockedBts ?? "");
   const [district, setDistrict] = useState(searchParams.get("district") ?? "");
   const [priceRange, setPriceRange] = useState(searchParams.get("price") ?? "");
   const [bedrooms, setBedrooms] = useState(searchParams.get("beds") ?? "");
+  const [sqmRange, setSqmRange] = useState(searchParams.get("sqm") ?? "");
+  const [furnishing, setFurnishing] = useState(searchParams.get("furnish") ?? "");
   const [expanded, setExpanded] = useState(
-    !!(searchParams.get("bts") || searchParams.get("district") || searchParams.get("price") || searchParams.get("beds"))
+    !!(
+      searchParams.get("bts") ||
+      searchParams.get("district") ||
+      searchParams.get("price") ||
+      searchParams.get("beds") ||
+      searchParams.get("sqm") ||
+      searchParams.get("furnish")
+    ),
   );
 
   const priceRanges = listingType === "rent" ? PRICE_RANGES_RENT : PRICE_RANGES_SALE;
@@ -87,10 +110,17 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
   const applyFilters = useCallback(() => {
     const params = new URLSearchParams();
     if (currentCategory && currentCategory !== "all") params.set("category", currentCategory);
-    if (btsStation) params.set("bts", btsStation);
+    const bts = lockedBts ?? btsStation;
+    if (bts) params.set("bts", bts);
     if (district) params.set("district", district);
     if (priceRange) params.set("price", priceRange);
     if (bedrooms) params.set("beds", bedrooms);
+    if (sqmRange) params.set("sqm", sqmRange);
+    if (furnishing) params.set("furnish", furnishing);
+    const sort = searchParams.get("sort");
+    if (sort) params.set("sort", sort);
+    const view = searchParams.get("view");
+    if (view === "map") params.set("view", "map");
 
     const internalPath = basePath ?? (listingType === "rent" ? "/rent" : "/buy");
     if (basePath === "/map") params.set("type", listingType);
@@ -108,31 +138,54 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
         minPrice: minStr ? parseInt(minStr, 10) || undefined : undefined,
         maxPrice: maxStr ? parseInt(maxStr, 10) || undefined : undefined,
         bedrooms: bedrooms ? parseInt(bedrooms, 10) : undefined,
+        minSqm: sqmRange ? parseInt(sqmRange.split("-")[0], 10) || undefined : undefined,
+        maxSqm: sqmRange ? parseInt(sqmRange.split("-")[1], 10) || undefined : undefined,
+        furnishing: furnishing || undefined,
       }),
     });
 
     startTransition(() => {
       router.push(query ? `${resolvedBasePath}?${query}` : resolvedBasePath);
     });
-  }, [btsStation, district, priceRange, bedrooms, currentCategory, listingType, basePath, locale, router]);
+  }, [
+    btsStation,
+    lockedBts,
+    district,
+    priceRange,
+    bedrooms,
+    sqmRange,
+    furnishing,
+    currentCategory,
+    listingType,
+    basePath,
+    locale,
+    router,
+    searchParams,
+  ]);
 
   const resetFilters = useCallback(() => {
     setBtsStation("");
     setDistrict("");
     setPriceRange("");
     setBedrooms("");
+    setSqmRange("");
+    setFurnishing("");
     const internalPath = basePath ?? (listingType === "rent" ? "/rent" : "/buy");
     startTransition(() => {
       router.push(
         localePathWithQuery(internalPath, locale, {
           category: currentCategory && currentCategory !== "all" ? currentCategory : undefined,
           type: basePath === "/map" ? listingType : undefined,
+          bts: lockedBts,
+          sort: searchParams.get("sort") ?? undefined,
+          view: searchParams.get("view") === "map" ? "map" : undefined,
         }),
       );
     });
-  }, [currentCategory, listingType, basePath, locale, router]);
+  }, [currentCategory, listingType, basePath, locale, router, lockedBts, searchParams]);
 
-  const hasFilters = btsStation || district || priceRange || bedrooms;
+  const hasFilters =
+    (lockedBts ? false : btsStation) || district || priceRange || bedrooms || sqmRange || furnishing;
 
   const selectClass =
     "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring-2";
@@ -148,7 +201,7 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
           {nonTh ? "Advanced Filters" : "ตัวกรองขั้นสูง"}
           {hasFilters && (
             <span className="ml-2 rounded-full bg-teal-100 px-2 py-0.5 text-xs text-teal-800">
-              {[btsStation, district, priceRange, bedrooms].filter(Boolean).length}
+              {[btsStation, district, priceRange, bedrooms, sqmRange, furnishing].filter(Boolean).length}
             </span>
           )}
         </span>
@@ -164,7 +217,8 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
 
       {expanded && (
         <div className="mt-4 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {!lockedBts && (
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
                 {t("filterBts")}
@@ -182,6 +236,7 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
                 ))}
               </select>
             </div>
+            )}
 
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -231,6 +286,41 @@ export function AdvancedFilters({ listingType, currentCategory, basePath }: Adva
                 {BEDROOM_OPTIONS.map((b) => (
                   <option key={b.value} value={b.value}>
                     {nonTh ? b.labelEn : b.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                {t("filterSqm")}
+              </label>
+              <select
+                value={sqmRange}
+                onChange={(e) => setSqmRange(e.target.value)}
+                className={selectClass}
+              >
+                <option value="">{t("any")}</option>
+                {SQM_RANGES.map((range, i) => (
+                  <option key={i} value={`${range.min}-${range.max}`}>
+                    {nonTh ? range.labelEn : range.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                {t("filterFurnishing")}
+              </label>
+              <select
+                value={furnishing}
+                onChange={(e) => setFurnishing(e.target.value)}
+                className={selectClass}
+              >
+                {FURNISHING_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {nonTh ? option.labelEn : option.label}
                   </option>
                 ))}
               </select>

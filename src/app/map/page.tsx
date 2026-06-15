@@ -6,19 +6,16 @@ import { PropertyListingsMap } from "@/components/property/PropertyListingsMap";
 import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath, localePathWithQuery } from "@/lib/locale-routing";
-import { parsePropertyCategory } from "@/lib/property-types";
-import { createMetadata } from "@/lib/seo";
+import { parseListingSearchParams, type ListingSearchParams } from "@/lib/listing-search-params";
 import { filterListings } from "@/lib/listings";
+import { createMetadata } from "@/lib/seo";
 
 interface MapPageProps {
-  searchParams: Promise<{
-    type?: string;
-    category?: string;
-    bts?: string;
-    district?: string;
-    price?: string;
-    beds?: string;
-  }>;
+  searchParams: Promise<
+    ListingSearchParams & {
+      type?: string;
+    }
+  >;
 }
 
 export async function generateMetadata() {
@@ -31,38 +28,15 @@ export async function generateMetadata() {
   });
 }
 
-function parsePriceRange(price?: string): { minPrice?: number; maxPrice?: number } {
-  if (!price) return {};
-  const [minStr, maxStr] = price.split("-");
-  const min = parseInt(minStr, 10);
-  const max = parseInt(maxStr, 10);
-  return {
-    minPrice: min > 0 ? min : undefined,
-    maxPrice: max > 0 ? max : undefined,
-  };
-}
-
 export default async function MapPage({ searchParams }: MapPageProps) {
   const params = await searchParams;
   const listingType = (params.type === "sale" ? "sale" : "rent") as "sale" | "rent";
-  const category = parsePropertyCategory(params.category);
-  const { minPrice, maxPrice } = parsePriceRange(params.price);
-  const bedrooms = params.beds ? parseInt(params.beds, 10) : undefined;
+  const filters = parseListingSearchParams(params, listingType);
 
-  const [listings, locale] = await Promise.all([
-    filterListings({
-      listingType,
-      propertyCategory: category,
-      btsStation: params.bts,
-      district: params.district,
-      minPrice,
-      maxPrice,
-      bedrooms,
-    }),
-    getLocale(),
-  ]);
+  const [listings, locale] = await Promise.all([filterListings(filters), getLocale()]);
 
   const propertiesWithCoords = listings.filter((p) => p.latitude && p.longitude);
+  const category = filters.propertyCategory ?? "all";
   const lp = (path: string) => localePath(path, locale);
 
   return (
@@ -76,10 +50,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
         </div>
         <div className="flex gap-2">
           <Link
-            href={localePathWithQuery("/map", locale, {
-              type: "rent",
-              category: params.category,
-            })}
+            href={localePathWithQuery("/map", locale, { ...params, type: "rent" })}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               listingType === "rent"
                 ? "bg-teal-600 text-white"
@@ -89,10 +60,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
             {t("rent", locale)}
           </Link>
           <Link
-            href={localePathWithQuery("/map", locale, {
-              type: "sale",
-              category: params.category,
-            })}
+            href={localePathWithQuery("/map", locale, { ...params, type: "sale" })}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               listingType === "sale"
                 ? "bg-teal-600 text-white"
@@ -109,7 +77,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
           <PropertyCategoryFilter />
         </Suspense>
         <Suspense fallback={<div className="h-12 animate-pulse rounded-2xl bg-slate-100" />}>
-          <MapAdvancedFilters listingType={listingType} currentCategory={category} />
+          <AdvancedFilters listingType={listingType} currentCategory={category} basePath="/map" />
         </Suspense>
       </div>
 
@@ -125,7 +93,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
 
       <div className="mt-6 flex justify-center gap-4">
         <Link
-          href={lp(listingType === "rent" ? "/rent" : "/buy")}
+          href={localePathWithQuery(listingType === "rent" ? "/rent" : "/buy", locale, params)}
           className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
           {t("mapPageViewList", locale)}
@@ -133,14 +101,4 @@ export default async function MapPage({ searchParams }: MapPageProps) {
       </div>
     </div>
   );
-}
-
-function MapAdvancedFilters({
-  listingType,
-  currentCategory,
-}: {
-  listingType: "sale" | "rent";
-  currentCategory?: string;
-}) {
-  return <AdvancedFilters listingType={listingType} currentCategory={currentCategory} basePath="/map" />;
 }

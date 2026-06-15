@@ -1,5 +1,6 @@
 import { properties as staticProperties } from "@/lib/properties";
 import { getPropertySearchText } from "@/lib/property-search-text";
+import { isPropertyFurnished } from "@/lib/furnishing";
 import { shouldShowDemoListings } from "@/lib/demo-listings";
 import { sortListings } from "@/lib/listing-sort";
 import { getPriceReducedSlugSet } from "@/lib/price-history";
@@ -71,6 +72,10 @@ function applyFilters(list: Property[], filters: SearchFilters): Property[] {
     if (filters.bedrooms && p.bedrooms < filters.bedrooms) return false;
     if (filters.minPrice && p.price < filters.minPrice) return false;
     if (filters.maxPrice && p.price > filters.maxPrice) return false;
+    if (filters.minSqm && p.areaSqm < filters.minSqm) return false;
+    if (filters.maxSqm && p.areaSqm > filters.maxSqm) return false;
+    if (filters.furnishing === "furnished" && !isPropertyFurnished(p)) return false;
+    if (filters.furnishing === "unfurnished" && isPropertyFurnished(p)) return false;
     if (filters.query) {
       const tokens = filters.query.toLowerCase().split(/[\s,]+/).filter((t) => t.length >= 2);
       const haystack = getPropertySearchText(p);

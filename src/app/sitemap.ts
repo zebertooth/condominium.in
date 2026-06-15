@@ -128,9 +128,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  const rentUnderPages = ["15000", "25000", "40000", "60000"].flatMap((price) =>
+    entriesForPath(`/rent/under/${price}`, {
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.75,
+    }),
+  );
+
+  const buyBedroomPages = ["1-bedroom", "2-bedroom", "3-bedroom"].flatMap((slug) =>
+    entriesForPath(`/buy/${slug}`, {
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.75,
+    }),
+  );
+
+  const btsHubPages = areaGuides.flatMap((area) => {
+    const station = area.slug.replace(/-bts$/, "");
+    return [
+      ...entriesForPath(`/buy/bts/${station}`, {
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.8,
+      }),
+      ...entriesForPath(`/rent/bts/${station}`, {
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.8,
+      }),
+    ];
+  });
+
   return [
     ...staticPages,
     ...areaPages,
+    ...btsHubPages,
+    ...rentUnderPages,
+    ...buyBedroomPages,
     ...propertyPages,
     ...projectPages,
     ...blogPages,

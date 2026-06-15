@@ -179,12 +179,17 @@ export interface SearchFilters {
   btsStation?: string;
   minPrice?: number;
   maxPrice?: number;
+  minSqm?: number;
+  maxSqm?: number;
+  furnishing?: FurnishingFilter;
   bedrooms?: number;
   query?: string;
   sort?: ListingSort;
 }
 
 export type ListingSort = "recommended" | "newest" | "price_asc" | "price_desc";
+
+export type FurnishingFilter = "furnished" | "unfurnished";
 
 export const LISTING_SORT_OPTIONS: ListingSort[] = [
   "recommended",

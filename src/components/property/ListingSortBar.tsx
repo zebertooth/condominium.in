@@ -3,12 +3,13 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
+import { listingQueryFromParams } from "@/lib/listing-search-params";
 import { localePathWithQuery } from "@/lib/locale-routing";
 import type { ListingSort } from "@/types/property";
 import { LISTING_SORT_OPTIONS } from "@/types/property";
 
 interface ListingSortBarProps {
-  basePath: "/buy" | "/rent";
+  basePath: string;
 }
 
 const SORT_LABEL_KEYS: Record<ListingSort, "sortRecommended" | "sortNewest" | "sortPriceAsc" | "sortPriceDesc"> = {
@@ -25,19 +26,31 @@ export function ListingSortBar({ basePath }: ListingSortBarProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
 
+  const currentParams = {
+    category: searchParams.get("category") ?? undefined,
+    bts: searchParams.get("bts") ?? undefined,
+    district: searchParams.get("district") ?? undefined,
+    price: searchParams.get("price") ?? undefined,
+    beds: searchParams.get("beds") ?? undefined,
+    sqm: searchParams.get("sqm") ?? undefined,
+    furnish: searchParams.get("furnish") ?? undefined,
+    sort: searchParams.get("sort") ?? undefined,
+    view: searchParams.get("view") ?? undefined,
+  };
+
   const current = (searchParams.get("sort") as ListingSort) || "recommended";
 
   function onChange(next: ListingSort) {
     startTransition(() => {
-      const query: Record<string, string | undefined> = {
-        category: searchParams.get("category") ?? undefined,
-        bts: searchParams.get("bts") ?? undefined,
-        district: searchParams.get("district") ?? undefined,
-        price: searchParams.get("price") ?? undefined,
-        beds: searchParams.get("beds") ?? undefined,
-        sort: next === "recommended" ? undefined : next,
-      };
-      router.push(localePathWithQuery(basePath, locale, query));
+      router.push(
+        localePathWithQuery(
+          basePath,
+          locale,
+          listingQueryFromParams(currentParams, {
+            sort: next === "recommended" ? undefined : next,
+          }),
+        ),
+      );
     });
   }
 
