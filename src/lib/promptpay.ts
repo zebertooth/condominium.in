@@ -23,7 +23,7 @@ export function promptPayConfigured(): boolean {
 
 /** Returns true if SlipOK API keys are configured for automated verification. */
 export function slipOkConfigured(): boolean {
-  return Boolean(process.env.SLIPOK_API_KEY && process.env.SLIPOK_BRANCH_ID);
+  return Boolean(process.env.SLIPOK_API_KEY?.trim() && process.env.SLIPOK_BRANCH_ID?.trim());
 }
 
 /**
@@ -67,61 +67,82 @@ export interface SlipVerifyResult {
   error?: string;
 }
 
+interface SlipOkResponse {
+  success?: boolean;
+  code?: string | number;
+  message?: string;
+  data?: {
+    success?: boolean;
+    amount?: number;
+    sender?: { name?: string };
+    receiver?: { name?: string };
+    transRef?: string;
+    transactionId?: string;
+  };
+}
+
+function parseSlipAmount(data: SlipOkResponse["data"]): number | undefined {
+  if (!data?.amount) return undefined;
+  const n = Number(data.amount);
+  return Number.isFinite(n) ? n : undefined;
+}
+
 /**
  * Verify a payment slip image via SlipOK API.
  * Falls back to returning unverified if SlipOK is not configured (admin manual flow).
  *
  * @param slipUrl - URL of the uploaded slip image (Cloudinary or local)
+ * @param expectedAmountBaht - optional amount check (recommended)
  */
-export async function verifySlip(slipUrl: string): Promise<SlipVerifyResult> {
+export async function verifySlip(
+  slipUrl: string,
+  expectedAmountBaht?: number,
+): Promise<SlipVerifyResult> {
   if (!slipOkConfigured()) {
-    // No automated verification — flag for admin manual review
     console.log("[promptpay] SlipOK not configured — slip requires manual admin review");
     return { verified: false, error: "MANUAL_REVIEW_REQUIRED" };
   }
 
-  const apiKey = process.env.SLIPOK_API_KEY!;
-  const branchId = process.env.SLIPOK_BRANCH_ID!;
+  const apiKey = process.env.SLIPOK_API_KEY!.trim();
+  const branchId = process.env.SLIPOK_BRANCH_ID!.trim();
+  const url = `https://api.slipok.com/api/line/apikey/${branchId}`;
 
   try {
-    const res = await fetch("https://api.slipok.com/api/line/apikey/18", {
-      method: "POST",
-      headers: {
-        "x-authorization": apiKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: slipUrl,
-        log: true,
-        branch_id: branchId,
-      }),
-    });
-
-    if (!res.ok) {
-      console.error(`[promptpay:slipok] API error: ${res.status}`);
-      return { verified: false, error: "SLIPOK_API_ERROR" };
+    const form = new FormData();
+    form.append("url", slipUrl);
+    form.append("log", "true");
+    if (expectedAmountBaht != null) {
+      form.append("amount", String(expectedAmountBaht));
     }
 
-    const data = (await res.json()) as {
-      success?: boolean;
-      data?: {
-        amount?: number;
-        sender?: { name?: string };
-        receiver?: { name?: string };
-        transactionId?: string;
-      };
-    };
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "x-authorization": apiKey },
+      body: form,
+    });
 
-    if (!data.success || !data.data) {
+    const data = (await res.json()) as SlipOkResponse;
+
+    if (!res.ok || !data.success) {
+      console.error("[promptpay:slipok] rejected:", data.code, data.message);
+      return {
+        verified: false,
+        error: data.message || "SLIP_INVALID",
+      };
+    }
+
+    if (data.data?.success === false) {
       return { verified: false, error: "SLIP_INVALID" };
     }
 
+    const amount = parseSlipAmount(data.data);
+
     return {
       verified: true,
-      amount: data.data.amount,
-      sender: data.data.sender?.name,
-      receiver: data.data.receiver?.name,
-      transactionId: data.data.transactionId,
+      amount,
+      sender: data.data?.sender?.name,
+      receiver: data.data?.receiver?.name,
+      transactionId: data.data?.transRef || data.data?.transactionId,
     };
   } catch (err) {
     console.error("[promptpay:slipok] verification failed:", err);

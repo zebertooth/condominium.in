@@ -25,7 +25,19 @@ async function resolveProjectId(projectSlug?: string): Promise<{ id: string } | 
   return { id: project.id };
 }
 
-export async function importListingsCsv(content: string, adminUserId: string): Promise<ImportResult> {
+export interface ImportListingsOptions {
+  /** Default `published` (admin import). User bulk import uses `pending`. */
+  status?: "pending" | "published";
+  agentManaged?: boolean;
+}
+
+export async function importListingsCsv(
+  content: string,
+  userId: string,
+  options: ImportListingsOptions = {},
+): Promise<ImportResult> {
+  const status = options.status ?? "published";
+  const agentManaged = options.agentManaged ?? status === "published";
   const { headers, rows } = parseCsv(content);
 
   if (headers.length === 0) {
@@ -88,7 +100,7 @@ export async function importListingsCsv(content: string, adminUserId: string): P
 
       const created = await prisma.userProperty.create({
         data: {
-          userId: adminUserId,
+          userId,
           slug,
           title: data.title,
           titleEn: data.titleEn ?? "",
@@ -115,16 +127,18 @@ export async function importListingsCsv(content: string, adminUserId: string): P
           features: JSON.stringify(features),
           furnishing,
           images: JSON.stringify(images),
-          status: "published",
-          needsReview: false,
-          agentManaged: true,
+          status,
+          needsReview: status === "pending",
+          agentManaged,
         },
       });
       await logPriceChange(created.id, data.price, data.listingType);
 
-      void notifySearchAlertsForPublishedListing(dbPropertyToListing(created)).catch((err) => {
-        console.error("[search-alerts] import notify failed", err);
-      });
+      if (status === "published") {
+        void notifySearchAlertsForPublishedListing(dbPropertyToListing(created)).catch((err) => {
+          console.error("[search-alerts] import notify failed", err);
+        });
+      }
 
       result.imported++;
     } catch (err) {

@@ -1,6 +1,6 @@
 import { isContactVerified } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { AGENT_DEFAULT_LIMIT, FREE_PROPERTY_LIMIT, PAID_FEATURES_ENABLED } from "@/lib/packages";
+import { PAID_FEATURES_ENABLED } from "@/lib/packages";
 import {
   countPostingVerifications,
   isPostingVerified,
@@ -82,6 +82,7 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
       status: "active",
       paymentStatus: "confirmed",
       expiresAt: { gt: new Date() },
+      packageId: { in: ["extra_4_monthly", "extra_10_monthly"] },
     },
     orderBy: { expiresAt: "asc" },
   });
@@ -93,10 +94,8 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
   const isAdmin = user.role === "admin";
   const isAgent = user.role === "agent";
   const isThai = user.isThai;
-  const unlimited = isAdmin;
   const isNormalUser = !isAdmin && !isAgent;
 
-  // Thai users unlock posting when 2 of 3 channels are verified: phone, email, identity (ID or LINE).
   const verificationCount = countPostingVerifications(user);
   const postingVerified = isPostingVerified(user);
   const postingBlocked = isNormalUser && !isThai;
@@ -104,21 +103,19 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
 
   const fullyVerified = isAdmin || isAgent || (isThai && postingVerified);
 
-  const canBuyPackages = PAID_FEATURES_ENABLED && isNormalUser && isThai;
+  /** Listing packages disabled — only sponsor boosts are paid. */
+  const canBuyPackages = false;
 
-  // Base allowance per role. Admin can override any account's base limit.
-  const baseLimit =
-    user.listingLimitOverride ?? (isAgent ? AGENT_DEFAULT_LIMIT : FREE_PROPERTY_LIMIT);
+  // Unlimited listings for admin, agents, and verified Thai users.
+  const unlimited = isAdmin || isAgent || (isNormalUser && isThai && postingVerified);
 
   let maxAllowed: number;
   if (unlimited) {
     maxAllowed = Number.MAX_SAFE_INTEGER;
-  } else if (isAgent) {
-    maxAllowed = baseLimit; // agents cannot buy packages — limit is admin-controlled
   } else if (postingBlocked || requiresVerification) {
     maxAllowed = 0;
   } else {
-    maxAllowed = baseLimit + extraSlots;
+    maxAllowed = extraSlots;
   }
 
   const remaining = unlimited ? Number.MAX_SAFE_INTEGER : Math.max(0, maxAllowed - used);
@@ -134,7 +131,7 @@ export async function getUserQuota(userId: string): Promise<UserQuota> {
     isThai,
     lineVerified: user.lineVerified,
     listingLimitOverride: user.listingLimitOverride,
-    freeLimit: baseLimit,
+    freeLimit: unlimited ? 0 : 0,
     extraSlots,
     maxAllowed,
     used,

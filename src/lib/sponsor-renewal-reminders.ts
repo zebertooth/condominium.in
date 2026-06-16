@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/notifications";
+import {
+  sendSponsorExpiredEmail,
+  sponsorPricingLine,
+} from "@/lib/payment-notifications";
 import { isActiveSponsor } from "@/lib/sponsored";
 import { siteConfig } from "@/lib/seo";
 
@@ -7,6 +11,14 @@ export interface SponsorReminderResult {
   processed: number;
   sent3d: number;
   sent1d: number;
+  skipped: number;
+  errors: string[];
+}
+
+export interface SponsorExpiredResult {
+  processed: number;
+  sent: number;
+  deactivated: number;
   skipped: number;
   errors: string[];
 }
@@ -41,8 +53,9 @@ function buildReminderEmail(opts: {
       ? `ประกาศแนะนำ "${opts.title}" จะหมดอายุใน 3 วัน (ถึง ${untilLabel})`
       : `ประกาศแนะนำ "${opts.title}" จะหมดอายุพรุ่งนี้ (ถึง ${untilLabel})`,
     ``,
-    `ต่ออายุได้ที่แดชบอร์ดหรือติดต่อทีมงาน:`,
+    `ต่ออายุประกาศแนะนำได้ที่แดชบอร์ด:`,
     `${siteConfig.url}/dashboard`,
+    `ราคา: ${sponsorPricingLine()}`,
     `${siteConfig.url}/property/${opts.slug}`,
     ``,
     `— Condominium.in.th`,
@@ -137,10 +150,83 @@ export async function runSponsorRenewalReminders(): Promise<SponsorReminderResul
   return result;
 }
 
-/** Clear reminder flags when sponsorship is extended or removed. */
+/** Email owners once when featured placement ends; clear isSponsored flag. */
+export async function runSponsorExpiredNotices(): Promise<SponsorExpiredResult> {
+  const result: SponsorExpiredResult = {
+    processed: 0,
+    sent: 0,
+    deactivated: 0,
+    skipped: 0,
+    errors: [],
+  };
+
+  const now = new Date();
+
+  const expired = await prisma.userProperty.findMany({
+    where: {
+      isSponsored: true,
+      sponsoredUntil: { not: null, lte: now },
+      sponsorExpiredNoticeAt: null,
+    },
+    include: {
+      user: { select: { email: true, fullName: true } },
+    },
+  });
+
+  for (const listing of expired) {
+    result.processed++;
+    const email = listing.user.email?.trim();
+
+    try {
+      if (email) {
+        await sendSponsorExpiredEmail({
+          email,
+          ownerName: listing.user.fullName || "เจ้าของประกาศ",
+          title: listing.title,
+          slug: listing.slug,
+        });
+        result.sent++;
+      } else {
+        result.skipped++;
+      }
+
+      await prisma.userProperty.update({
+        where: { id: listing.id },
+        data: {
+          isSponsored: false,
+          sponsorExpiredNoticeAt: new Date(),
+        },
+      });
+      result.deactivated++;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Send failed";
+      result.errors.push(`${listing.slug}: ${message}`);
+    }
+  }
+
+  // Deactivate stale flags where notice was already sent (e.g. pre-migration)
+  const stale = await prisma.userProperty.updateMany({
+    where: {
+      isSponsored: true,
+      sponsoredUntil: { not: null, lte: now },
+      sponsorExpiredNoticeAt: { not: null },
+    },
+    data: { isSponsored: false },
+  });
+  result.deactivated += stale.count;
+
+  return result;
+}
+
+/** Clear reminder / expiry flags when sponsorship is extended or removed. */
 export function clearSponsorReminderFields(): {
   sponsorReminder3dAt: null;
   sponsorReminder1dAt: null;
+  sponsorExpiredNoticeAt: null;
 } {
-  return { sponsorReminder3dAt: null, sponsorReminder1dAt: null };
+  return {
+    sponsorReminder3dAt: null,
+    sponsorReminder1dAt: null,
+    sponsorExpiredNoticeAt: null,
+  };
 }

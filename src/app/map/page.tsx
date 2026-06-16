@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { AdvancedFilters } from "@/components/property/AdvancedFilters";
 import { PropertyCategoryFilter } from "@/components/property/PropertyCategoryFilter";
-import { PropertyListingsMap } from "@/components/property/PropertyListingsMap";
+import { PropertyListingsMapLazy } from "@/components/property/PropertyListingsMapLazy";
 import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath, localePathWithQuery } from "@/lib/locale-routing";
@@ -82,7 +82,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <PropertyListingsMap properties={propertiesWithCoords} locale={locale} />
+        <PropertyListingsMapLazy properties={propertiesWithCoords} locale={locale} />
       </div>
 
       {propertiesWithCoords.length === 0 && (

@@ -128,7 +128,7 @@ export const jaOverrides = {
   postSuccessSponsorCta: "了解",
   editBtn: "編集",
   deleteBtn: "削除",
-  sponsorBtn: "おすすめ掲載 ฿50",
+  sponsorBtn: "おすすめ掲載",
   deleteConfirm: "この物件を削除しますか？",
   postBlockedTitle: "掲載は利用できません",
   postBlockedDesc: "非タイ国籍アカウントはまだ掲載できません。物件検索とエージェントチームへの連絡は可能です。",

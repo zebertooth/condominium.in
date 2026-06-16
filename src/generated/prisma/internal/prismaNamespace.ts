@@ -2051,6 +2051,7 @@ export const UserPropertyScalarFieldEnum = {
   sponsoredUntil: 'sponsoredUntil',
   sponsorReminder3dAt: 'sponsorReminder3dAt',
   sponsorReminder1dAt: 'sponsorReminder1dAt',
+  sponsorExpiredNoticeAt: 'sponsorExpiredNoticeAt',
   agentManaged: 'agentManaged',
   projectId: 'projectId',
   createdAt: 'createdAt',

@@ -128,7 +128,7 @@ export const arOverrides = {
   postSuccessSponsorCta: "فهمت",
   editBtn: "تعديل",
   deleteBtn: "حذف",
-  sponsorBtn: "إعلان مميز ฿50",
+  sponsorBtn: "إعلان مميز",
   deleteConfirm: "حذف هذا الإعلان؟",
   postBlockedTitle: "النشر غير متاح",
   postBlockedDesc: "حسابات غير التايلانديين لا يمكنها النشر بعد. يمكنك البحث والتواصل مع فريق الوكلاء.",

@@ -1,12 +1,12 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-16 (session 46 — **Phase 11 complete**)  
-**Current phase:** **Phase 11 done** — ongoing ops + editorial cadence (see backlog below)
+**Last updated:** 2026-06-17 (session 47 — **Phase 12 started**)  
+**Current phase:** **Phase 12** — growth, editorial cadence, inventory & ops (all platform phases 1–11 done)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
-> **GitHub `main`:** session 46 — Phase 11 complete (newsletter, hybrid alerts, compare, ops)  
+> **GitHub `main`:** through `598bf30` — AdSense fix, newsletter unsubscribe, homepage blog images  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
@@ -17,16 +17,15 @@
 
 ---
 
-## Model transfer snapshot (session 44)
+## Model transfer snapshot (session 47)
 
 | Area | State |
 |------|--------|
-| **Phase** | **Phase 11 complete** — ops checklist + editorial tools shipped |
-| **Phase 9** | **Complete** — TOL-style review blog, pilot Noble Reform, listing carousel |
-| **Phase 10** | **Complete** — sort, rich cards, sqm/furnishing filters, list/map toggle, SEO hubs |
-| **Blog taxonomy** | รีวิวโครงการ · **บทความเกี่ยวกับบ้าน** (was คู่มือ) · ทั้งหมด |
+| **Phase** | **Phase 12** — inventory, editorial cadence, ops monitoring |
+| **Platform** | Phases 1–11 **code-complete** — no blocking dev work |
+| **Production** | Live; AdSense verified; GSC verified; hybrid alerts + newsletter working |
 | **Competitors** | DDproperty (listings UX) · Think of Living (editorial reviews) |
-| **Ops pending** | Cron verify, AdSense slots, GSC, 2+ reviews/month cadence |
+| **Focus now** | Content + listings volume, not new features |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -74,8 +73,55 @@ Bangkok condo/house marketplace with:
 | **9** | Editorial review blog (TOL-style) | **Done** (session 44) | 2027 Q2 |
 | **10** | Marketplace UX (DD-style sort/cards/filters) | **Done** (session 44) | 2027 Q2 |
 | **11** | Growth, ops, editorial scale | **Done** (session 46) | 2027 Q3 |
+| **12** | Inventory, editorial cadence, ops monitoring | **Active** | 2026 Q3–Q4 |
 
 ---
+
+## Phase 12 — Growth & ops (ACTIVE)
+
+**Goal:** Grow traffic and conversions without new platform features. Compete on **depth** (BTS niche + reviews + AI) not nationwide listing volume.
+
+### Timeline (Jun–Dec 2026)
+
+| When | Focus | Owner | Done when |
+|------|--------|-------|-----------|
+| **Jun W3** | Ops close-out — all 9 AdSense slots in `/admin/seo`; GSC sitemap monitor | User | `/admin/ops` all green |
+| **Jul** | Inventory — import starter CSV or approve owner posts; target **≥20** live listings | User/Agent | `/buy` + `/rent` feel populated |
+| **Jul–Aug** | Editorial — **2 project reviews/month** + **1 area roundup/month** | User | New articles indexed in GSC |
+| **Aug** | Newsletter — grow subscribers; publish on schedule | User | Steady open rate via Resend |
+| **Sep** | Optional keys — `OPENAI_API_KEY`, `PROMPTPAY_ID` on prod if monetizing | User | `/api/health` flags true |
+| **Q4** | Backlog pick **one**: agent CRM scheduling · in-app chat · pgvector search | Agent | Scoped PR if chosen |
+
+### Must-have (ops — ongoing)
+
+- [x] AdSense client + site verification (`layout` `<head>` script + `/ads.txt`)
+- [~] All **9 ad slot IDs** pasted in `/admin/seo` (units render after cookie accept)
+- [x] Google Search Console — domain verified + sitemap submitted
+- [x] Hybrid search alerts — instant + on publish + weekly cron (`vercel.json` Mon 02:00 UTC)
+- [x] Newsletter — signup, publish blast, unsubscribe flow
+- [ ] Starter inventory on production DB (`npm run db:import-inventory` or `/admin/import`)
+- [ ] ThaiBulkSMS production delivery test (optional)
+
+### Must-have (editorial — monthly cadence)
+
+- [ ] **2 project reviews/month** — link each to `/projects/[slug]` + live listings
+- [ ] **1 area roundup/month** — cross-link `/areas/[slug]` + `/market`
+- [x] Homepage shows latest review + guide cards **with featured images**
+
+### Should-have (product backlog — pick when ready)
+
+- [ ] Agent CRM scheduling polish (Phase 3 carryover)
+- [ ] OpenAI AI search (`OPENAI_API_KEY` on Vercel)
+- [ ] Package expiry reminder emails
+- [ ] In-app chat / mobile app / pgvector search (2027+)
+
+### Competitive positioning (keep investing)
+
+| Us vs competitors | Our edge |
+|-------------------|----------|
+| vs DDproperty | AI search, 5 locales, owner-direct, price history, BTS depth |
+| vs Think of Living | Live listings funnel, rental marketplace, search alerts |
+| vs PropertyHub | Bangkok BTS niche — quality over nationwide breadth |
 
 ## Launch prep — Go-live without paid (DONE)
 
@@ -380,7 +426,7 @@ Bangkok condo/house marketplace with:
 ### Google AdSense
 - [x] `SiteSettings` ad slot ID fields + migration (`20260612210000_adsense_slots`)
 - [x] Slot catalog — 9 positions in `src/lib/adsense.ts` (home, buy/rent, property, blog, footer)
-- [x] `AdPlacement`, `AdSlot`, `AdSenseScript` components
+- [x] `AdPlacement`, `AdSlot` components; global script in `layout` `<head>`
 - [x] Placements wired on home, buy/rent (top + in-feed every 6 cards), property, blog, footer
 - [x] Admin SEO form section to paste AdSense unit slot IDs
 - [x] AdSense + GA4 load only after cookie “Accept all” (`CookieConsent.tsx`)
@@ -589,7 +635,7 @@ Bangkok condo/house marketplace with:
 
 **Goal:** Property media hub like Think of Living — project reviews + guides linked to live listings.
 
-**Full plan:** [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
+**Status:** **Complete** — see Phase 12 for ongoing editorial cadence.
 
 ### Must-have
 - [x] `BlogArticle` extensions — `articleType`, `projectId`, `factsJson`, author, gallery
@@ -611,8 +657,8 @@ Bangkok condo/house marketplace with:
 
 ### Must-have (ops)
 - [x] Search-alert + sponsor-reminder crons — hybrid alerts + `/admin/ops` checklist
-- [~] AdSense slot IDs in `/admin/seo` + cookie-consent test — **user:** paste slots + env
-- [~] Google Search Console — **user:** verify domain + submit sitemap
+- [x] AdSense — client env + `<head>` script for verification; units cookie-gated
+- [x] Google Search Console — domain verified + sitemap
 
 ### Must-have (editorial)
 - [x] Publish **2 project reviews / month** (admin CMS) — Life Asoke + Noble Reform seeded
@@ -632,11 +678,11 @@ Bangkok condo/house marketplace with:
 
 ---
 
-## Backlog (post Phase 11 — not blocking launch)
+## Backlog (post Phase 11 — deferred to Phase 12+)
 
-**User ops (no code):** AdSense approval, GSC indexing, ThaiBulkSMS prod verify, optional OPENAI/SLIPOK keys.
+**User ops (no code unless noted):** fill all AdSense slot IDs, import inventory, ThaiBulkSMS verify, optional OPENAI/SLIPOK/PromptPay keys.
 
-**Future product:** in-app chat, mobile app, pgvector search, package expiry emails, agent tour planner, audit log.
+**Future product (2027+):** in-app chat, mobile app, pgvector search, package expiry emails, agent tour planner, audit log.
 
 ---
 
@@ -700,19 +746,17 @@ Built Agent CRM Dashboard (/dashboard/agent) with stats, pipeline, viewing agend
 Configured agent-based lead updating API permissions
 ```
 
-### Next step plan (Phase 9–10)
+### Next step plan (Phase 12 — see timeline above)
 
-| Step | Action | Owner | Priority |
-|------|--------|-------|----------|
-| **1** | **Phase 9A** — BlogArticle schema + admin fields (review type, project, Fact @) | Agent | **High** |
-| **2** | **Phase 9B** — Review template + `/blog/reviews` hub | Agent | **High** |
-| **3** | **Phase 9C** — Publish 1 pilot BTS project review (content) | User/Agent | **High** |
-| **4** | **Phase 10A** — Sort + rich listing cards on buy/rent | Agent | **High** |
-| **5** | Verify crons + AdSense slots in `/admin/seo` | User | **High** |
-| **6** | Phase 10B — sqm/furnishing filters or map toggle | Agent | Medium |
-| **7** | SEO filter landing URLs | Agent | Medium |
+| Step | Action | Owner | When |
+|------|--------|-------|------|
+| **1** | Paste all 9 AdSense slot IDs in `/admin/seo` | User | Jun W3 |
+| **2** | Import production inventory (CSV or owner posts) | User | Jul |
+| **3** | Publish 2 reviews + 1 roundup this month | User | Ongoing |
+| **4** | Monitor GSC indexing + weekly alert cron in `/admin/ops` | User | Weekly |
+| **5** | Optional: agent CRM scheduling OR OpenAI key | Agent | Q4 if picked |
 
-See [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) for competitive analysis and week-by-week order.
+~~See PHASE-9-PLAN.md~~ — removed; plan lives in Phase 12 section above.
 
 ### Done (2026-06-14, session 34 — Phase L3 complete)
 ```
@@ -756,6 +800,18 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-17, session 47 — Phase 12 kickoff)
+```
+Production polish + docs refresh:
+- AdSense: script in layout <head> for Google verification; /ads.txt route
+- Newsletter unsubscribe (/newsletter/unsubscribe, /admin/newsletter)
+- Homepage blog section: BlogGridCard with featured images
+- Perf: lazy-load Leaflet (PropertyListingsMapLazy), optimizePackageImports
+- Removed dead files: AdSenseScript stub, create-next-app SVGs, PHASE-*-PLAN.md (merged into ROADMAP)
+
+Commits: 316a884, 598bf30
 ```
 
 ### Done (2026-06-16, session 46 — Phase 11 complete)

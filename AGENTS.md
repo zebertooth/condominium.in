@@ -12,23 +12,19 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 46 — **Phase 11 complete**)
+> ## 🤝 HANDOFF (session 48 — **Phase 13B next**)
 >
-> **Production:** https://www.condominium.in.th  
-> **GitHub `main`:** Phase 11 shipped — `de153ad` + session 46 newsletter
+> **Production:** https://www.condominium.in.th — deploy Phase 13A pending push  
+> **GitHub `main`:** local — Phase 13A monetization polish + prior session 31–47 work
 >
-> **All dev phases (1 → 11) code-complete.** Remaining work is **ops + content**, not new platform features.
+> **Phase 13A shipped (monetization polish):**
+> - SlipOK auto-verify fixed (`multipart/form-data`, `SLIPOK_BRANCH_ID`, amount check)
+> - Shared `activateConfirmedSubscription()` — confirm route + admin approve + confirmation email
+> - Sponsor renewal emails include tier pricing (฿29/79/159)
+> - Cron: expiry notices + deactivate expired `isSponsored` (`sponsorExpiredNoticeAt` migration)
+> - `/admin/ops` — PromptPay + SlipOK health checks
 >
-> **Phase 11 shipped:**
-> - Compare, furnishing, Markdown blog editor, `/admin/ops`, `/market` links
-> - Hybrid search alerts (instant + publish + weekly backup)
-> - Blog newsletter signup + email on publish
-> - art4d source credit, YouTube on articles, NPA in footer
->
-> **User ops (backlog):**
-> - AdSense slots in `/admin/seo` + `NEXT_PUBLIC_ADSENSE_CLIENT`
-> - GSC: `GOOGLE_SITE_VERIFICATION` + submit sitemap
-> - Editorial cadence: 2 reviews/month via `/admin/blog`
+> **Next (Phase 13B):** lead nurture emails, inquiry follow-up, conversion UX
 
 ---
 
@@ -38,18 +34,17 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 11 done** — ops + editorial cadence ongoing |
-| Homepage | 3 sections: recommended / latest / popular (`HomeListingsSection`) |
+| Phase | **Phase 13B** — lead nurture + conversion UX |
+| Homepage | 3 sections + blog cards with images |
 | Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (7/30/custom days) |
 | Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
-| Ads | AdSense when `NEXT_PUBLIC_ADSENSE_CLIENT` + slot IDs + cookie accept |
-| Search | Advanced filters + Leaflet map at `/map` |
+| Ads | AdSense client in `<head>`; units after cookie “Accept all” + slot IDs in `/admin/seo` |
+| Search | Advanced filters + Leaflet map at `/map` (lazy-loaded) |
 | Projects | `/projects` + admin CRUD (L3 partial) |
-| Header | Two-row mobile nav (text links); desktop inline nav; hero AI showcase |
 | Security | Cloudflare Turnstile on login, register, contact forms |
 | Analytics | GA4 after cookie consent (`G-9MRZ57SWS1`) |
-| Tools | Mortgage calculator, favorites, hybrid search alerts, price history |
+| Tools | Mortgage calculator, favorites, hybrid search alerts, price history, compare |
 | Editorial | TOL reviews + **บทความเกี่ยวกับบ้าน** + listing carousel + newsletter |
 | Search UX | Sort, rich cards, sqm/furnishing, list/map toggle, SEO BTS hubs |
 | Social | Google + Facebook OAuth (env-gated) |
@@ -61,15 +56,16 @@ Instructions for AI coding agents working in this repository.
 ## Key paths
 
 ```
-# Phase 11
+# Phase 11–12
 src/components/property/CompareProvider.tsx   Compare shortlist (max 4)
 src/app/compare/page.tsx                      Compare table page
 src/app/admin/ops/page.tsx                    Ops checklist (cron, Resend, GSC)
 src/lib/search-alert-digest.ts                Hybrid alerts (instant + publish + weekly)
 src/lib/newsletter-digest.ts                  Newsletter blast on blog publish
+src/lib/newsletter-unsubscribe.ts             Token unsubscribe flow
+src/app/ads.txt/route.ts                        AdSense ads.txt
 src/components/blog/NewsletterSignup.tsx      /blog subscribe form
-src/components/admin/MarkdownEditor.tsx       Blog edit/preview tabs
-src/components/blog/SourceCredit.tsx            art4d / partner credit footer
+src/components/property/PropertyListingsMapLazy.tsx  Leaflet code-split
 
 # Core
 src/components/brand/SiteLogo.tsx

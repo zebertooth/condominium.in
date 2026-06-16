@@ -9,65 +9,52 @@
 
 ### Core Platform
 - หน้าแรก + ค้นหาทรัพย์ (ซื้อ/เช่า) + **7 ประเภททรัพย์** (คอนโด, อพาร์ท, บ้าน, ทาวน์เฮ้าส์, ที่ดิน, อาคารพาณิชย์, NPA) + AI Search — **5 ภาษา**
-- **Listing highlights** — nearby POI text for smarter AI matching (e.g. schools, malls)
+- **Listing highlights** — nearby POI text for smarter AI matching
 - **Demo listings** auto-hide when ≥3 real published listings exist
 
-### Search & Discovery (Phase 10 — complete)
+### Search & Discovery
 - **Sort bar** — recommended, newest, price ↑↓ on `/buy` and `/rent`
 - **Rich listing cards** — ฿/sqm, photo count, listed date, price-reduced badge
-- **Advanced filters** — price, beds, BTS, district, **sqm**, **furnishing**
-- **List/map toggle** — `?view=map` inline on buy/rent (same filters)
+- **Advanced filters** — price, beds, BTS, district, sqm, furnishing
+- **List/map toggle** — `?view=map` inline on buy/rent (Leaflet lazy-loaded)
 - **SEO hub pages** — `/buy/bts/[station]`, `/rent/bts/[station]`, `/rent/under/[price]`, `/buy/2-bedroom`
-- **Map search** — Leaflet at `/map` + inline on buy/rent map view
+- **Map search** — `/map` + inline map view
 - **Save favorites** — heart icon + `/dashboard/saved`
-- **Search alerts** — `/dashboard/alerts`
+- **Hybrid search alerts** — instant + on publish + weekly backup
+- **Listing compare** — shortlist up to 4 at `/compare`
 - **Project pages** — `/projects` + admin CRUD
 
-### Editorial (Phase 9 — complete)
-- **Review blog** — Fact @, TOC, `/blog/reviews`, pilot Noble Reform review
-- **Blog hub** — TOL-style layout; category **บทความเกี่ยวกับบ้าน**; listing carousel footer
-- **Admin CMS** — review fields at `/admin/blog`
+### Editorial
+- **Review blog** — Fact @, TOC, `/blog/reviews`, project-linked reviews
+- **Blog hub** — TOL-style layout; category **บทความเกี่ยวกับบ้าน**; listing carousel
+- **Newsletter** — signup on `/blog`, email on publish, unsubscribe flow
+- **Homepage blog cards** — featured images on latest reviews/guides
+- **Admin CMS** — Markdown editor + review fields at `/admin/blog`
 
-### Tools (Session 31+)
-- **Mortgage calculator** — down payment, interest rate, loan term on sale listings
-- **Standalone calculator** — `/tools/mortgage-calculator`
-- **Admin CSV import** — bulk upload listings at `/admin/import`
+### Tools
+- **Mortgage calculator** — sale listings + `/tools/mortgage-calculator`
+- **Admin CSV import** — bulk upload at `/admin/import`
+- **Price history** — chart on property detail + “price reduced” badge
 
-### Growth (Phase L3 — complete)
-- **Price history** — timeline/chart on property detail + “price reduced” badge
-- **Search alert emails** — Vercel cron digest (daily/weekly)
-- **Agent reviews** — star ratings on `/agents` + admin moderation
-- **Social login** — Google + Facebook OAuth on login/register
-- **NPA hub** — `/npa` bank-owned listings
+### Growth (L3 + Phase 11)
+- **Agent reviews** — star ratings on `/agents`
+- **Social login** — Google + Facebook OAuth
+- **NPA hub** — `/npa`
 
 ### User Experience
-- **Homepage listing sections** — ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม (6 cards each)
-- **URL locale routing** — Thai unprefixed; `/en/buy`, `/ja/market`, etc.; cookie synced by middleware
-- **Header nav** — text-only links; mobile two-row layout; logged-in top nav = public links only
-- **Hero AI showcase** — interactive demo on homepage
-- **Cloudflare Turnstile CAPTCHA** — login, register, contact/lead forms (spam protection)
-- **Floating feedback widget** — site feedback + agent signup (bottom corner)
-- **Agents page** — profiles grouped by team / freelance / company; signup form at `#join-agent`
-- **Brand logo** — DDproperty-style header + teal building favicon
-- Owner dashboard — verify LINE+Email, post listings, stats, sponsor boost — **5 ภาษา**
-- Agent CRM — `/dashboard/agent`, viewing scheduler, lead pipeline
+- **Homepage** — ประกาศแนะนำ / ล่าสุด / ยอดนิยม + blog section
+- **URL locale routing** — Thai unprefixed; `/en/buy`, etc.
+- **Cloudflare Turnstile** — login, register, contact forms
+- Owner dashboard + agent CRM — **5 ภาษา**
 
 ### Admin
-- Admin panel — approve listings, users, leads, payments, analytics, **SEO + AdSense slots**, **agent applications & profiles by category** — **5 ภาษา**
-- **Admin sponsored** — manage ประกาศแนะนำ at `/admin/sponsored` (7/30/custom expiry)
-- **Admin SEO editor** — home title/description/keywords without redeploy
-- **Google AdSense** — 9 ad placements; slot IDs editable at `/admin/seo`
-
-### Content & Localization
-- Blog (5 guides) + 9 BTS area guides — **native ZH/JA/AR content** (+ TH/EN base)
-- **Phase 9 planned** — project review articles (Think of Living style) linked to `/projects` + listings
-- Email OTP (Resend) + LINE Login on production; SMS optional (ThaiBulkSMS, sender `CDMNINTH`)
-- **Forgot password** — email reset link (all roles; no SMS)
-- **Privacy / Terms** + cookie consent (GA4 `G-9MRZ57SWS1` + AdSense opt-in on "Accept all")
+- Approve listings, users, leads, payments, analytics, SEO + AdSense slots, agents
+- **Ops checklist** — `/admin/ops` (cron, Resend, GSC, newsletter)
+- **Sponsored** — `/admin/sponsored`
 
 ### Monetization
-- **Sponsored posts** — ฿50 / 7 days, featured badge + sort boost (PromptPay)
-- Owner direct contact + security-hardened lead routing
+- **Sponsored posts** — PromptPay ฿50 / 7 days (env-gated)
+- **Google AdSense** — script in `<head>`; units after cookie consent
 
 ## Local setup
 
@@ -84,31 +71,26 @@ npm run build
 npx vercel --prod
 ```
 
-Vercel CI runs `node scripts/vercel-build.mjs` (Production-only migrate; auto-derives Neon direct URL; Node 22.x).
-
 Health check: `GET https://www.condominium.in.th/api/health`
 
-## Next steps (see ROADMAP.md + PHASE-9-PLAN.md)
+## Phase 12 — what’s next (see ROADMAP.md)
 
-**Phase 9 — Editorial (must-have)**
-1. BlogArticle schema — review type, project link, Fact @ spec box
-2. Review template + `/blog/reviews` hub + homepage “รีวิวล่าสุด”
-3. Publish 1 pilot BTS project review linked to live listings
+Platform development (phases 1–11) is **complete**. Current focus:
 
-**Phase 10 — Marketplace UX (must-have)**
-4. Sort on `/buy` + `/rent` (price, newest, recommended)
-5. Rich listing cards — ฿/sqm, photo count, listed date
+| Priority | Task |
+|----------|------|
+| **Ops** | Fill all 9 AdSense slot IDs in `/admin/seo`; monitor GSC + crons |
+| **Inventory** | Import CSV or grow owner posts (target ≥20 live listings) |
+| **Editorial** | ~2 project reviews/month + 1 area roundup/month |
+| **Optional** | OpenAI search key, PromptPay on prod, agent CRM scheduling |
 
-**Ops**
-6. Verify alert + sponsor crons; AdSense slot IDs in `/admin/seo`
+**Timeline:** Jun–Dec 2026 — see [`ROADMAP.md`](./ROADMAP.md) § Phase 12.
 
 ## Documentation
 
 | File | Purpose |
 |------|---------|
 | [AGENTS.md](./AGENTS.md) | AI agent handoff (start here) |
-| [ROADMAP.md](./ROADMAP.md) | Phase status + session log |
-| [PHASE-9-PLAN.md](./PHASE-9-PLAN.md) | Phase 9–10 editorial + search UX plan |
-| [PHASE-L3-PLAN.md](./PHASE-L3-PLAN.md) | Phase L3 build order (complete) |
+| [ROADMAP.md](./ROADMAP.md) | Phase status, Phase 12 timeline, session log |
 | [CLAUDE.md](./CLAUDE.md) | Architecture & API reference |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Vercel + env vars + troubleshooting |

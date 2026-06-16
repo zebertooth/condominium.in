@@ -6,7 +6,7 @@ import { ListingSortBar } from "@/components/property/ListingSortBar";
 import { ListingViewToggle } from "@/components/property/ListingViewToggle";
 import { PropertyCategoryFilter } from "@/components/property/PropertyCategoryFilter";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
-import { PropertyListingsMap } from "@/components/property/PropertyListingsMap";
+import { PropertyListingsMapLazy } from "@/components/property/PropertyListingsMapLazy";
 import { PropertySearch } from "@/components/property/PropertySearch";
 import { getCurrentUser } from "@/lib/auth";
 import { getUserSavedSlugs } from "@/lib/favorites";
@@ -124,7 +124,7 @@ export async function ListingResultsLayout({
 
         {mapView ? (
           <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <PropertyListingsMap properties={mapListings} locale={locale} />
+            <PropertyListingsMapLazy properties={mapListings} locale={locale} />
             {mapListings.length === 0 && (
               <p className="mt-4 text-center text-sm text-amber-800">{t("mapPageEmpty", locale)}</p>
             )}

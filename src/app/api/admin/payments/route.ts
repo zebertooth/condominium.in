@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
+import { activateConfirmedSubscription } from "@/lib/payment-activation";
 import { prisma } from "@/lib/db";
 
 /**
@@ -69,29 +70,12 @@ export async function PATCH(request: Request) {
         );
       }
 
-      await prisma.userSubscription.update({
-        where: { id: subscriptionId },
-        data: {
-          paymentStatus: "confirmed",
-          status: "active",
-        },
-      });
-
-      // If sponsor, activate it on the property
-      if (subscription.packageId.startsWith("sponsor_")) {
-        const propertyId = subscription.packageId.replace("sponsor_", "");
-        await prisma.userProperty.update({
-          where: { id: propertyId },
-          data: {
-            isSponsored: true,
-            sponsoredUntil: subscription.expiresAt,
-          },
-        });
-      }
+      const activation = await activateConfirmedSubscription(subscriptionId);
 
       return NextResponse.json({
         message: "อนุมัติการชำระเงินสำเร็จ",
         status: "confirmed",
+        emailSent: activation.emailSent,
       });
     }
 

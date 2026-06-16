@@ -19,21 +19,20 @@ Handoff guide for AI agents and developers continuing this project.
 
 ---
 
-## Model transfer snapshot (session 43)
+## Model transfer snapshot (session 47)
 
 | Item | Detail |
 |------|--------|
-| **Phase** | **Phase 9 next** — editorial review blog; **Phase 10** — DD-style search UX |
+| **Phase** | **Phase 12 active** — inventory, editorial cadence, ops (platform 1–11 done) |
 | **Locales** | TH unprefixed; EN/ZH/JA/AR via URL prefix; middleware forces Thai on unprefixed public pages |
-| **Homepage** | 3 sections — ประกาศแนะนำ / ประกาศล่าสุด / ยอดนิยม (`HomeListingsSection`) |
-| **Blog today** | 5 SEO guides + admin CMS — plain renderer; **no project reviews yet** |
-| **Search** | Advanced filters + Leaflet map at `/map` — **no sort on buy/rent yet** (Phase 10) |
+| **Homepage** | 3 listing sections + blog cards with featured images |
+| **Blog** | TOL-style reviews + guides + newsletter + admin Markdown editor |
+| **Search** | Sort, rich cards, filters, map toggle, hybrid alerts, compare |
+| **Ads** | AdSense script in `<head>` for verification; ad units after cookie consent |
 | **Differentiator** | AI search + review→listing funnel + 5 locales + BTS niche |
 | **Competitors** | [DDproperty](https://www.ddproperty.com/) listings UX · [Think of Living](https://thinkofliving.com/) editorial |
-| **Phase 8** | Dashboard i18n complete; SEO form fix deployed (`c163d9e`) |
-| **Ops pending** | Cron verify, AdSense slots, GSC |
 
-Read order: `AGENTS.md` → `ROADMAP.md` → [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) → this file → `DEPLOYMENT.md`
+Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
 ---
 
@@ -163,7 +162,7 @@ src/
 │   └── layout.tsx
 ├── components/
 │   ├── admin/              # AdminPropertyTable, AdminSeoForm, AdminCsvImport, ...
-│   ├── ads/                # AdPlacement, AdSlot, AdSenseScript
+│   ├── ads/                # AdPlacement, AdSlot; script in layout <head>
 │   ├── auth/               # RegisterForm, LoginForm, LogoutButton
 │   ├── brand/              # SiteLogo, SiteLogoMark
 │   ├── dashboard/          # VerifyForm, PostPropertyForm, QuotaCard, PackageShop, AlertsList
@@ -511,13 +510,19 @@ Done / env-gated:
 - [x] Blog newsletter — signup on `/blog`, email subscribers on publish
 - [x] YouTube embed on all blog articles; NPA in footer + sitemap
 
-**All planned dev phases (1–11) complete.** Ongoing: ops env vars, AdSense/GSC, editorial cadence.
+**All planned dev phases (1–11) complete.** **Phase 12** = growth + ops + editorial cadence.
 
-**Ops (user — backlog):**
-- [ ] AdSense client + slot IDs in `/admin/seo`
-- [ ] GSC: `GOOGLE_SITE_VERIFICATION` + submit sitemap
-- [ ] ThaiBulkSMS production verify
-- [ ] Editorial: ~2 reviews/month via `/admin/blog`
+**Done (session 47):**
+- [x] AdSense verification fix (`layout` `<head>` + `/ads.txt`)
+- [x] Newsletter unsubscribe flow
+- [x] Homepage blog cards with featured images
+- [x] Leaflet lazy-load (`PropertyListingsMapLazy`)
+
+**Phase 12 (ongoing — see ROADMAP timeline):**
+- [ ] Fill all 9 AdSense slot IDs in `/admin/seo`
+- [ ] Production inventory import (≥20 listings target)
+- [ ] Editorial: ~2 reviews/month + 1 roundup/month
+- [ ] Optional: `OPENAI_API_KEY`, `PROMPTPAY_ID` on prod, ThaiBulkSMS verify
 
 ---
 
@@ -541,21 +546,17 @@ Edit `src/lib/packages.ts` — `FREE_PROPERTY_LIMIT`, `LISTING_PACKAGES`, `SPONS
 2. Update `SearchFilters` type in `src/types/property.ts` if needed
 3. Update `applyFilters()` in `src/lib/listings.ts`
 
-### Add a project review article (Phase 9)
-1. Extend schema per [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md) §9A
-2. Admin: pick `articleType=project_review`, link `projectId`, fill Fact @ fields
-3. Public: `ReviewArticleLayout` renders TOC + Fact sheet + related listings
-4. Cross-link `/projects/[slug]`, `/areas/[slug]`, live listing slugs
-
-### Add listing sort (Phase 10)
-1. Add `sortListings()` in `src/lib/listings.ts`
-2. `ListingSortBar` on buy/rent — persist `?sort=` in URL
-3. Enrich `PropertyCard` with sqm price, photo count, `publishedAt`
+### Add a project review article
+1. Admin: `/admin/blog` → `articleType=project_review`, link `projectId`, fill Fact @ fields
+2. Public: `ReviewArticleLayout` renders TOC + Fact sheet + related listings
+3. Cross-link `/projects/[slug]`, `/areas/[slug]`, live listing slugs
 
 ### Run search alert digests
-Cron is configured in `vercel.json` (daily 01:00 UTC, weekly Mon 02:00 UTC). Requires `CRON_SECRET` (single line, no newlines) + Resend on Vercel. Manual trigger:
+Hybrid model: instant on subscribe, on listing publish (admin approve/import), weekly backup cron.
 
-`GET /api/cron/search-alerts?frequency=daily&secret=YOUR_SECRET`
+Cron in `vercel.json`: weekly Mon 02:00 UTC + sponsor reminders daily 03:00 UTC. Requires `CRON_SECRET` (single line) + Resend. Manual trigger:
+
+`GET /api/cron/search-alerts?frequency=weekly&secret=YOUR_SECRET`
 
 Logic: `src/lib/search-alert-digest.ts` → `src/app/api/cron/search-alerts/route.ts`
 

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { readCronSecret } from "@/lib/cron-auth";
-import { runSponsorRenewalReminders } from "@/lib/sponsor-renewal-reminders";
+import {
+  runSponsorExpiredNotices,
+  runSponsorRenewalReminders,
+} from "@/lib/sponsor-renewal-reminders";
 
 function authorizeCron(request: Request): boolean {
   const secret = readCronSecret();
@@ -19,8 +22,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await runSponsorRenewalReminders();
-    return NextResponse.json({ ok: true, ...result });
+    const expired = await runSponsorExpiredNotices();
+    const reminders = await runSponsorRenewalReminders();
+    return NextResponse.json({ ok: true, expired, reminders });
   } catch (err) {
     console.error("[cron/sponsor-reminders]", err);
     return NextResponse.json(

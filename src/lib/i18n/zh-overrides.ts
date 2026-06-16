@@ -128,7 +128,7 @@ export const zhOverrides = {
   postSuccessSponsorCta: "知道了",
   editBtn: "编辑",
   deleteBtn: "删除",
-  sponsorBtn: "精选房源 ฿50",
+  sponsorBtn: "精选推荐",
   deleteConfirm: "确定删除此房源？",
   postBlockedTitle: "暂不可发布",
   postBlockedDesc: "非泰国账户暂不可发布。您仍可搜索房源并联系我们的经纪人团队。",

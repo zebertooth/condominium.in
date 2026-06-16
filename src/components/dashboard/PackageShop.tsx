@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useCallback } from "react";
 import { useT, useTf } from "@/components/i18n/LocaleProvider";
-import type { TranslationKey } from "@/lib/i18n";
-import { LISTING_PACKAGES, PENDING_PAYMENT_STORAGE, SPONSOR_PACKAGE } from "@/lib/packages";
+import { PENDING_PAYMENT_STORAGE, SPONSOR_PACKAGES } from "@/lib/packages";
 
 interface PendingPayment {
   subscriptionId: string;
@@ -14,16 +13,16 @@ interface PendingPayment {
   packageName: string;
 }
 
-const PACKAGE_KEYS: Record<string, { name: TranslationKey; desc: TranslationKey; badge?: TranslationKey }> = {
-  extra_4_monthly: { name: "pkgExtra4Name", desc: "pkgExtra4Desc", badge: "pkgExtra4Badge" },
-  extra_10_monthly: { name: "pkgExtra10Name", desc: "pkgExtra10Desc" },
+const TIER_KEYS: Record<string, { name: string; desc: string }> = {
+  sponsor_1d: { name: "sponsorTier1dName", desc: "sponsorTier1dDesc" },
+  sponsor_3d: { name: "sponsorTier3dName", desc: "sponsorTier3dDesc" },
+  sponsor_7d: { name: "sponsorTier7dName", desc: "sponsorTier7dDesc" },
 };
 
 export function PackageShop() {
   const router = useRouter();
   const t = useT();
   const tf = useTf();
-  const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "info">("info");
   const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(() => {
@@ -47,56 +46,6 @@ export function PackageShop() {
     setMessage(msg);
     setMessageType(type);
   }, []);
-
-  function packageName(id: string, fallback: string) {
-    const keys = PACKAGE_KEYS[id];
-    return keys ? t(keys.name) : fallback;
-  }
-
-  function packageDesc(id: string, fallback: string) {
-    const keys = PACKAGE_KEYS[id];
-    return keys ? t(keys.desc) : fallback;
-  }
-
-  function packageBadge(id: string, fallback?: string) {
-    const keys = PACKAGE_KEYS[id];
-    return keys?.badge ? t(keys.badge) : fallback;
-  }
-
-  async function buyPackage(packageId: string) {
-    setLoading(packageId);
-    setMessage("");
-    setPendingPayment(null);
-    setPaymentStatus(null);
-
-    try {
-      const res = await fetch("/api/packages/purchase", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageId }),
-      });
-      const data = await res.json();
-      setLoading(null);
-
-      if (!res.ok) {
-        showMessage(data.error, "error");
-        return;
-      }
-
-      const pkg = LISTING_PACKAGES.find((p) => p.id === packageId);
-      setPendingPayment({
-        subscriptionId: data.subscriptionId,
-        transactionRef: data.transactionRef,
-        amount: data.amount,
-        qrDataUrl: data.qrDataUrl,
-        packageName: packageName(packageId, pkg?.name ?? packageId),
-      });
-      showMessage(data.message, "info");
-    } catch {
-      setLoading(null);
-      showMessage(t("genericError"), "error");
-    }
-  }
 
   async function uploadSlip() {
     if (!fileInputRef.current?.files?.length || !pendingPayment) return;
@@ -168,13 +117,11 @@ export function PackageShop() {
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="font-bold text-slate-900">{t("packageShopTitle")}</h2>
-      <p className="mt-1 text-sm text-slate-600">{t("packageShopDesc")}</p>
+      <h2 className="font-bold text-slate-900">{t("sponsorShopTitle")}</h2>
+      <p className="mt-1 text-sm text-slate-600">{t("sponsorShopDesc")}</p>
 
       {message && (
-        <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${msgBg}`}>
-          {message}
-        </div>
+        <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${msgBg}`}>{message}</div>
       )}
 
       {pendingPayment && !paymentStatus && (
@@ -221,25 +168,22 @@ export function PackageShop() {
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              className="mt-1 block w-full text-sm text-violet-700 file:mr-3 file:rounded-lg file:border-0 file:bg-violet-600 file:px-4 file:py-2 file:text-sm file:text-white hover:file:bg-violet-700"
+              className="mt-2 block w-full text-sm text-violet-700 file:mr-4 file:rounded-lg file:border-0 file:bg-violet-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-violet-800"
             />
-          </div>
-
-          <div className="mt-4 flex gap-3">
             <button
               type="button"
               onClick={uploadSlip}
               disabled={slipUploading}
-              className="flex-1 rounded-lg bg-violet-600 py-2.5 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+              className="mt-3 w-full rounded-lg bg-violet-600 py-2.5 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
             >
-              {slipUploading ? t("verifyingPayment") : t("confirmPaymentBtn")}
+              {slipUploading ? t("creatingOrder") : t("confirmPaymentBtn")}
             </button>
             <button
               type="button"
               onClick={cancelPayment}
-              className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50"
+              className="mt-2 w-full text-sm text-violet-600 underline hover:text-violet-800"
             >
-              {t("cancelBtn")}
+              {t("closeBtn")}
             </button>
           </div>
         </div>
@@ -273,46 +217,37 @@ export function PackageShop() {
       )}
 
       {!pendingPayment && !paymentStatus && (
-        <>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {LISTING_PACKAGES.map((pkg) => (
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {SPONSOR_PACKAGES.map((pkg) => {
+            const keys = TIER_KEYS[pkg.id];
+            return (
               <div
                 key={pkg.id}
-                className="relative rounded-xl border border-violet-200 bg-violet-50 p-5"
+                className="relative rounded-xl border border-amber-200 bg-amber-50 p-5"
               >
-                {packageBadge(pkg.id, pkg.badge) && (
-                  <span className="absolute -top-2 right-3 rounded-full bg-violet-600 px-2 py-0.5 text-xs text-white">
-                    {packageBadge(pkg.id, pkg.badge)}
+                {pkg.badge && (
+                  <span className="absolute -top-2 right-3 rounded-full bg-amber-600 px-2 py-0.5 text-xs text-white">
+                    {pkg.badge}
                   </span>
                 )}
-                <h3 className="font-bold text-violet-900">{packageName(pkg.id, pkg.name)}</h3>
-                <p className="mt-1 text-sm text-violet-800">{packageDesc(pkg.id, pkg.description)}</p>
-                <p className="mt-3 text-2xl font-bold text-violet-900">฿{pkg.priceBaht}</p>
-                <div className="mt-1 flex items-center gap-1.5 text-xs text-violet-600">
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {t("payViaPromptPay")}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => buyPackage(pkg.id)}
-                  disabled={loading === pkg.id}
-                  className="mt-4 w-full rounded-lg bg-violet-600 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
-                >
-                  {loading === pkg.id ? t("creatingOrder") : t("buyPackageBtn")}
-                </button>
+                <h3 className="font-bold text-amber-900">
+                  {keys ? t(keys.name as Parameters<typeof t>[0]) : pkg.name}
+                </h3>
+                <p className="mt-1 text-sm text-amber-800">
+                  {keys ? t(keys.desc as Parameters<typeof t>[0]) : pkg.description}
+                </p>
+                <p className="mt-3 text-2xl font-bold text-amber-900">฿{pkg.priceBaht}</p>
+                <p className="mt-1 text-xs text-amber-700">
+                  {pkg.durationDays} {t("sponsorDaysUnit")}
+                </p>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
+      )}
 
-          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <h3 className="font-semibold text-amber-900">{t("sponsorPkgName")}</h3>
-            <p className="text-sm text-amber-800">{t("sponsorPkgDesc")}</p>
-            <p className="mt-2 font-bold text-amber-900">฿{SPONSOR_PACKAGE.priceBaht}</p>
-            <p className="mt-1 text-xs text-amber-700">{t("sponsorPackageHint")}</p>
-          </div>
-        </>
+      {!pendingPayment && !paymentStatus && (
+        <p className="mt-4 text-sm text-slate-600">{t("sponsorPackageHint")}</p>
       )}
     </div>
   );

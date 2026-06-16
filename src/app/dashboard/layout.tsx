@@ -32,6 +32,15 @@ export default async function DashboardLayout({
           <Link href="/dashboard/post" className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200">
             {t("dashPost", locale)}
           </Link>
+          {user.role !== "admin" && (
+            <Link
+              href="/dashboard/import"
+              prefetch={false}
+              className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200"
+            >
+              {t("dashImport", locale)}
+            </Link>
+          )}
           <Link href="/dashboard/verify" className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200">
             {t("dashVerify", locale)}
           </Link>

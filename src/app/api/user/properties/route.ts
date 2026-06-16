@@ -58,9 +58,7 @@ export async function POST(request: Request) {
     if (!quota.canPost) {
       return NextResponse.json(
         {
-          error: quota.canBuyPackages
-            ? `คุณลงประกาศครบ ${quota.maxAllowed} รายการแล้ว ซื้อแพ็กเพิ่มเพื่อลงต่อ`
-            : `คุณลงประกาศครบ ${quota.maxAllowed} รายการแล้ว ติดต่อแอดมินเพื่อเพิ่มโควตา`,
+          error: "กรุณายืนยันตัวตนก่อนลงประกาศ",
           quota,
         },
         { status: 403 },

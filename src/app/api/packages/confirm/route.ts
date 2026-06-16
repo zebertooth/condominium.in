@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAID_FEATURES_ENABLED } from "@/lib/packages";
+import { activateConfirmedSubscription } from "@/lib/payment-activation";
 import { verifySlip } from "@/lib/promptpay";
 import { getUserQuota } from "@/lib/quota";
 
@@ -40,7 +41,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Find the pending subscription belonging to this user
     const subscription = await prisma.userSubscription.findFirst({
       where: {
         id: subscriptionId,
@@ -56,14 +56,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save slip URL
     await prisma.userSubscription.update({
       where: { id: subscriptionId },
       data: { slipUrl },
     });
 
-    // Try automated verification via SlipOK
-    const result = await verifySlip(slipUrl);
+    const result = await verifySlip(slipUrl, subscription.pricePaid);
 
     if (result.verified) {
       const receivedAmount = result.amount;
@@ -72,53 +70,36 @@ export async function POST(request: Request) {
           where: { id: subscriptionId },
           data: { paymentStatus: "pending_review" },
         });
-        return NextResponse.json({
-          message:
-            receivedAmount == null
-              ? "ไม่สามารถตรวจสอบยอดเงินอัตโนมัติได้ รอแอดมินตรวจสอบ"
-              : "จำนวนเงินในสลิปไม่ตรงกับยอดที่ต้องชำระ",
-          status: receivedAmount == null ? "pending_review" : "amount_mismatch",
-          expected: subscription.pricePaid,
-          received: receivedAmount ?? undefined,
-        }, { status: receivedAmount == null ? 200 : 400 });
-      }
-
-      // Activate the subscription
-      await prisma.userSubscription.update({
-        where: { id: subscriptionId },
-        data: {
-          paymentStatus: "confirmed",
-          status: "active",
-        },
-      });
-
-      // If this is a sponsor payment, activate the sponsor on the property
-      if (subscription.packageId.startsWith("sponsor_")) {
-        const propertyId = subscription.packageId.replace("sponsor_", "");
-        await prisma.userProperty.update({
-          where: { id: propertyId },
-          data: {
-            isSponsored: true,
-            sponsoredUntil: subscription.expiresAt,
+        return NextResponse.json(
+          {
+            message:
+              receivedAmount == null
+                ? "ไม่สามารถตรวจสอบยอดเงินอัตโนมัติได้ รอแอดมินตรวจสอบ"
+                : "จำนวนเงินในสลิปไม่ตรงกับยอดที่ต้องชำระ",
+            status: receivedAmount == null ? "pending_review" : "amount_mismatch",
+            expected: subscription.pricePaid,
+            received: receivedAmount ?? undefined,
           },
-        });
+          { status: receivedAmount == null ? 200 : 400 },
+        );
       }
 
+      const activation = await activateConfirmedSubscription(subscriptionId);
       const quota = await getUserQuota(user.id);
 
       return NextResponse.json({
-        message: "ยืนยันการชำระเงินสำเร็จ! แพ็กเกจเปิดใช้งานแล้ว",
+        message: activation.sponsorPropertyId
+          ? "ยืนยันการชำระเงินสำเร็จ! ประกาศแนะนำเปิดใช้งานแล้ว"
+          : "ยืนยันการชำระเงินสำเร็จ!",
         status: "confirmed",
+        emailSent: activation.emailSent,
         quota,
       });
     }
 
-    // Not auto-verified — pending admin review
     await prisma.userSubscription.update({
       where: { id: subscriptionId },
-      data: {
-        paymentStatus: "pending_review",
-      },
+      data: { paymentStatus: "pending_review" },
     });
 
     return NextResponse.json({

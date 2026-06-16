@@ -30,6 +30,20 @@ export async function AdminOpsPanel() {
       hint: integrations.resend ? t("adminOpsResendOk", locale) : t("adminOpsResendMissing", locale),
     },
     {
+      label: "PromptPay",
+      ok: integrations.promptpay,
+      hint: integrations.promptpay
+        ? t("adminOpsPromptPayOk", locale)
+        : t("adminOpsPromptPayMissing", locale),
+    },
+    {
+      label: "SlipOK",
+      ok: integrations.slipok,
+      hint: integrations.slipok
+        ? t("adminOpsSlipOkOk", locale)
+        : t("adminOpsSlipOkMissing", locale),
+    },
+    {
       label: "AdSense client",
       ok: adsense,
       hint: adsense ? adsenseClientId() : t("adminOpsAdsenseClientMissing", locale),
@@ -76,7 +90,7 @@ export async function AdminOpsPanel() {
         <p className="font-medium text-slate-900">{t("adminOpsCronSchedule", locale)}</p>
         <ul className="mt-2 list-inside list-disc space-y-1">
           <li>02:00 UTC Mon — search alert backup (weekly; inactive users monthly)</li>
-          <li>03:00 UTC — sponsor reminders</li>
+          <li>03:00 UTC — sponsor reminders + expiry notices</li>
           <li>{t("adminOpsAlertInstant", locale)}</li>
         </ul>
         <p className="mt-3">

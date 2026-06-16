@@ -5,7 +5,7 @@ import { googleConfigured } from "@/lib/google-oauth";
 import { facebookConfigured } from "@/lib/facebook-oauth";
 import { turnstileConfigured } from "@/lib/captcha";
 import { isGaConfigured } from "@/lib/ga";
-import { promptPayConfigured } from "@/lib/promptpay";
+import { promptPayConfigured, slipOkConfigured } from "@/lib/promptpay";
 import { cloudinaryConfigured } from "@/lib/storage";
 import { emailProviderConfigured, thaiBulkSmsConfigured } from "@/lib/notifications";
 
@@ -37,7 +37,7 @@ export function getIntegrationStatus(): IntegrationStatus {
     google: googleConfigured(),
     facebook: facebookConfigured(),
     promptpay: promptPayConfigured(),
-    slipok: Boolean(process.env.SLIPOK_API_KEY),
+    slipok: slipOkConfigured(),
     ga4: isGaConfigured(),
     turnstile: turnstileConfigured(),
     adsense: Boolean(adsenseClientId()),

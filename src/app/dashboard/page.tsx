@@ -6,6 +6,7 @@ import { SponsorUpsellBanner } from "@/components/dashboard/SponsorUpsellBanner"
 import { getCurrentUser } from "@/lib/auth";
 import { getOwnerPropertyStats } from "@/lib/analytics";
 import { prisma } from "@/lib/db";
+import { PAID_FEATURES_ENABLED } from "@/lib/packages";
 import { getUserQuota } from "@/lib/quota";
 import { dbPropertyToListing } from "@/lib/user-properties";
 
@@ -43,10 +44,17 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   return (
     <div className="space-y-8">
-      {posted === "1" && <SponsorUpsellBanner />}
+      {posted === "1" && <SponsorUpsellBanner paidFeaturesEnabled={PAID_FEATURES_ENABLED} />}
       <QuotaCard quota={quota} />
-      <MyProperties properties={properties} canPost={quota.canPost} userRole={user.role} />
-      {quota.canBuyPackages && <PackageShop />}
+      <MyProperties
+        properties={properties}
+        canPost={quota.canPost}
+        userRole={user.role}
+        paidFeaturesEnabled={PAID_FEATURES_ENABLED}
+      />
+      {PAID_FEATURES_ENABLED && user.role !== "admin" && quota.fullyVerified && (
+        <PackageShop />
+      )}
     </div>
   );
 }

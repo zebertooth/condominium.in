@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 45):** Live at **https://www.condominium.in.th**. Phase 11 code shipped locally. Set on Vercel: `CRON_SECRET`, `GOOGLE_SITE_VERIFICATION`, AdSense client + slot IDs. Run `npm run db:deploy` for furnishing migration.
+**Current status (session 47):** Live at **https://www.condominium.in.th**. Phases 1–11 code-complete; **Phase 12** = inventory + editorial + ops. AdSense verified (script in `<head>`); GSC verified. Crons: weekly search alerts (Mon 02:00 UTC) + daily sponsor reminders.
 
 ---
 
@@ -58,7 +58,7 @@ Alternative: upload the same CSVs at **https://www.condominium.in.th/admin/impor
 | SMS OTP not received | ThaiBulkSMS optional — set `THAIBULKSMS_API_KEY` + `THAIBULKSMS_API_SECRET`; sender defaults to `CDMNINTH` |
 | LINE "400 Bad Request / developing status" | Add your LINE ID as **Tester** in [developers.line.biz](https://developers.line.biz) → Channel → Roles, or publish channel |
 | Password reset email not sent | Set `RESEND_API_KEY` + `EMAIL_FROM`; check spam; token expires in 1 hour |
-| AdSense not showing | Set `NEXT_PUBLIC_ADSENSE_CLIENT`; paste slot IDs at `/admin/seo`; user must click cookie “Accept all” |
+| AdSense not showing units | Set `NEXT_PUBLIC_ADSENSE_CLIENT`; paste slot IDs at `/admin/seo`; visitor must click cookie “Accept all” (verification script loads in `<head>` always) |
 | GA4 not tracking | Default ID `G-9MRZ57SWS1` in code; optional `NEXT_PUBLIC_GA_ID` override; user must accept analytics cookies |
 | Turnstile not showing | Set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` on Vercel; add hostnames in Cloudflare dashboard |
 | LINE callback error | Set `LINE_LOGIN_CALLBACK_URL=https://www.condominium.in.th/api/auth/line/callback` on Vercel |
@@ -192,7 +192,7 @@ FACEBOOK_CALLBACK_URL=https://www.condominium.in.th/api/auth/facebook/callback
 
 After `PROMPTPAY_ID` is set, paid features turn on automatically (`PAID_FEATURES_ENABLED` env-gated in `src/lib/packages.ts`). Set `PAID_FEATURES_ENABLED=false` on Vercel to force-disable.
 
-**AdSense:** Set `NEXT_PUBLIC_ADSENSE_CLIENT` on Vercel, then paste each ad unit slot ID at **/admin/seo** (matches positions in Google AdSense dashboard). Ads load only after visitors accept cookies.
+**AdSense:** Set `NEXT_PUBLIC_ADSENSE_CLIENT` on Vercel. Verification script loads in layout `<head>`; **ad units** render only after cookie “Accept all”. Paste slot IDs at **/admin/seo**. Optional `/ads.txt` route serves publisher ID.
 
 **SEO:** Home title, description, and keywords are editable at **/admin/seo** (stored in `SiteSettings` — no redeploy needed).
 
@@ -220,13 +220,12 @@ Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>`. The value **must be
 4. Merge `vercel.crons.json` into `vercel.json` (copy the `"crons"` array) and redeploy
 
 Crons (production):
-- `0 1 * * *` — search alert digests (daily)
-- `0 2 * * 1` — search alert digests (weekly)
+- `0 2 * * 1` — search alert weekly backup digest
 - `0 3 * * *` — sponsored listing renewal reminders
 
 Until crons work, alert digests can be triggered manually:
 
-`GET https://www.condominium.in.th/api/cron/search-alerts?frequency=daily&secret=YOUR_SECRET`
+`GET https://www.condominium.in.th/api/cron/search-alerts?frequency=weekly&secret=YOUR_SECRET`
 
 Sponsor renewal reminders (manual):
 
@@ -251,18 +250,12 @@ Sponsor renewal reminders (manual):
 - [ ] Image upload works (needs Cloudinary on Vercel)
 - [ ] Rate limit: /api/ai-search returns 429 when hammered
 - [ ] ThaiBulkSMS delivery (user to verify on production next)
-- [ ] AdSense units render after cookie accept + slot IDs in `/admin/seo`
-- [x] Advanced filters on /buy and /rent (price, beds, BTS, district)
-- [x] Map search at /map with property pins
-- [x] Save favorite (heart icon) → appears in /dashboard/saved
-- [x] Create search alert → appears in /dashboard/alerts
-- [x] Mortgage calculator on sale property detail pages
-- [x] Admin CSV import at /admin/import
-- [x] Homepage 3 sections (recommended / latest / popular)
-- [x] Admin sponsored management at /admin/sponsored
-- [x] Unprefixed URLs show Thai; `/en/buy` shows English (locale fix session 38)
-- [ ] Search alert cron fires on schedule (verify after CRON_SECRET fix)
+- [x] AdSense verified (`NEXT_PUBLIC_ADSENSE_CLIENT` + `<head>` script); units after cookie accept + slot IDs
+- [x] Hybrid search alerts (instant + publish + weekly cron)
+- [x] Blog newsletter signup + publish emails + unsubscribe
+- [x] Homepage blog cards with featured images
 - [ ] Starter CSV inventory imported on production
+- [ ] All 9 AdSense slot IDs pasted in `/admin/seo`
 
 ---
 
@@ -274,7 +267,7 @@ Sponsor renewal reminders (manual):
 - **OTP fallback:** If Resend/ThaiBulkSMS fails, authenticated users see the OTP code on `/dashboard/verify` so verification can still complete.
 - **LINE Developing channel** only allows Testers until channel is Published (no troubleshooting UI shown to users).
 - **Pending listings** return 404 publicly until admin approves; owner can preview when logged in.
-- **Cookie consent:** GA4 and AdSense scripts load only after “Accept all”. Essential cookies always on.
+- **Cookie consent:** GA4 loads after “Accept all”. AdSense **verification script** in `<head>` always when client env set; **ad units** load after consent.
 - **SiteSettings:** Default row seeded on `db:seed`; migrations include `20260612190000_site_settings`, `20260612210000_adsense_slots`, `20260612180000_password_reset_token`, `20260614000000_property_categories`, `20260614120000_lead_agent_type`, `20260614140000_team_agent_category`, `20260614200000_saved_properties`, `20260614210000_search_alerts`.
 - **Rotate Neon password** if connection string was shared in chat.
 

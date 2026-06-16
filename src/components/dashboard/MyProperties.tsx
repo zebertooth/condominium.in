@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useLocale, useT, useTf } from "@/components/i18n/LocaleProvider";
 import { formatPrice } from "@/lib/i18n";
 import { dateLocale } from "@/lib/locale-content";
-import { PAID_FEATURES_ENABLED, PENDING_PAYMENT_STORAGE } from "@/lib/packages";
+import { PENDING_PAYMENT_STORAGE, SPONSOR_PACKAGES } from "@/lib/packages";
 import type { Property } from "@/types/property";
 
 function formatSponsorDate(iso: string, locale: "th" | "en" | "zh" | "ja" | "ar") {
@@ -21,16 +21,20 @@ export function MyProperties({
   properties,
   canPost,
   userRole = "user",
+  paidFeaturesEnabled = false,
 }: {
   properties: Property[];
   canPost: boolean;
   userRole?: string;
+  /** From server — PROMPTPAY_ID is not available in the client bundle. */
+  paidFeaturesEnabled?: boolean;
 }) {
   const router = useRouter();
   const t = useT();
   const tf = useTf();
   const locale = useLocale();
   const [loading, setLoading] = useState<string | null>(null);
+  const [sponsorPickerFor, setSponsorPickerFor] = useState<string | null>(null);
   const isOwnerUser = userRole === "user";
   const totalInquiries = properties.reduce((sum, p) => sum + (p.inquiriesCount ?? 0), 0);
 
@@ -63,12 +67,14 @@ export function MyProperties({
     router.refresh();
   }
 
-  async function sponsorProperty(id: string) {
+  async function sponsorProperty(id: string, sponsorTierId: string) {
     setLoading(`sponsor-${id}`);
+    setSponsorPickerFor(null);
+    const tier = SPONSOR_PACKAGES.find((p) => p.id === sponsorTierId);
     const res = await fetch("/api/packages/sponsor", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ propertyId: id }),
+      body: JSON.stringify({ propertyId: id, sponsorTierId }),
     });
     const data = await res.json();
     setLoading(null);
@@ -83,7 +89,9 @@ export function MyProperties({
         transactionRef: data.transactionRef,
         amount: data.amount,
         qrDataUrl: data.qrDataUrl,
-        packageName: t("sponsorPkgName"),
+        packageName: tier
+          ? `${t("sponsorPkgName")} ${tier.durationDays} ${t("sponsorDaysUnit")}`
+          : t("sponsorPkgName"),
       }),
     );
     router.push("/dashboard");
@@ -104,9 +112,7 @@ export function MyProperties({
             {t("newListing")}
           </Link>
         ) : (
-          <span className="text-sm text-amber-700">
-            {PAID_FEATURES_ENABLED ? t("quotaFullBuy") : t("quotaFull")}
-          </span>
+          <span className="text-sm text-amber-700">{t("verifyToPost")}</span>
         )}
       </div>
 
@@ -131,7 +137,7 @@ export function MyProperties({
         <ul className="mt-6 space-y-4">
           {properties.map((p) => {
             const canSponsor =
-              PAID_FEATURES_ENABLED && p.status === "published" && !p.featured;
+              paidFeaturesEnabled && p.status === "published" && !p.featured;
             const statsPending = p.status !== "published";
 
             return (
@@ -291,7 +297,7 @@ export function MyProperties({
                   {canSponsor && (
                     <button
                       type="button"
-                      onClick={() => sponsorProperty(p.id)}
+                      onClick={() => setSponsorPickerFor(p.id)}
                       disabled={loading === `sponsor-${p.id}`}
                       className="rounded-lg border border-amber-300 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-50"
                     >
@@ -311,6 +317,43 @@ export function MyProperties({
             );
           })}
         </ul>
+      )}
+
+      {sponsorPickerFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-slate-900">{t("sponsorChooseTier")}</h3>
+            <p className="mt-1 text-sm text-slate-600">{t("sponsorPkgDesc")}</p>
+            <div className="mt-4 space-y-2">
+              {SPONSOR_PACKAGES.map((tier) => (
+                <button
+                  key={tier.id}
+                  type="button"
+                  onClick={() => sponsorProperty(sponsorPickerFor, tier.id)}
+                  disabled={loading === `sponsor-${sponsorPickerFor}`}
+                  className="flex w-full items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-left hover:bg-amber-100 disabled:opacity-50"
+                >
+                  <span className="font-medium text-amber-900">
+                    {tier.durationDays} {t("sponsorDaysUnit")}
+                    {tier.badge ? ` · ${tier.badge}` : ""}
+                  </span>
+                  <span className="font-bold text-amber-900">฿{tier.priceBaht}</span>
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setSponsorPickerFor(null)}
+              className="mt-4 w-full text-sm text-slate-600 hover:text-slate-900"
+            >
+              {t("closeBtn")}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
