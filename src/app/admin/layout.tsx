@@ -23,6 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin/ops", label: t("adminOps", locale) },
     { href: "/admin/agents", label: t("adminTeam", locale) },
     { href: "/admin/blog", label: t("adminBlog", locale) },
+    { href: "/admin/newsletter", label: t("adminNewsletter", locale) },
     { href: "/admin/import", label: t("adminImport", locale) },
     { href: "/admin/projects", label: t("adminProjects", locale) },
     { href: "/admin/reviews", label: t("adminReviews", locale) },

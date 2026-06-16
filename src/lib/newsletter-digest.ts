@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/notifications";
 import type { Locale } from "@/lib/i18n";
+import { appendNewsletterUnsubscribe } from "@/lib/newsletter-unsubscribe";
 import { siteConfig } from "@/lib/seo";
 
 export interface NewsletterArticleNotifyResult {
@@ -30,6 +31,7 @@ function articleCopy(article: ArticleForNewsletter, locale: Locale): { title: st
 function buildNewsletterEmail(
   article: ArticleForNewsletter,
   locale: Locale,
+  email: string,
 ): { subject: string; text: string } {
   const { title, excerpt } = articleCopy(article, locale);
   const url = `${siteConfig.url}/blog/${article.slug}`;
@@ -37,39 +39,47 @@ function buildNewsletterEmail(
   if (locale === "en") {
     return {
       subject: `[${siteConfig.name}] New article: ${title}`,
-      text: [
-        "Hello,",
-        "",
-        `We published a new article on ${siteConfig.name}:`,
-        "",
-        title,
-        excerpt,
-        "",
-        `Read more: ${url}`,
-        "",
-        `Browse all articles: ${siteConfig.url}/blog`,
-        "",
-        `— ${siteConfig.name}`,
-      ].join("\n"),
+      text: appendNewsletterUnsubscribe(
+        [
+          "Hello,",
+          "",
+          `We published a new article on ${siteConfig.name}:`,
+          "",
+          title,
+          excerpt,
+          "",
+          `Read more: ${url}`,
+          "",
+          `Browse all articles: ${siteConfig.url}/blog`,
+          "",
+          `— ${siteConfig.name}`,
+        ].join("\n"),
+        email,
+        locale,
+      ),
     };
   }
 
   return {
     subject: `[${siteConfig.name}] บทความใหม่: ${title}`,
-    text: [
-      "สวัสดีครับ/ค่ะ",
-      "",
-      `มีบทความใหม่บน ${siteConfig.name}:`,
-      "",
-      title,
-      excerpt,
-      "",
-      `อ่านต่อ: ${url}`,
-      "",
-      `ดูบทความทั้งหมด: ${siteConfig.url}/blog`,
-      "",
-      `— ${siteConfig.name}`,
-    ].join("\n"),
+    text: appendNewsletterUnsubscribe(
+      [
+        "สวัสดีครับ/ค่ะ",
+        "",
+        `มีบทความใหม่บน ${siteConfig.name}:`,
+        "",
+        title,
+        excerpt,
+        "",
+        `อ่านต่อ: ${url}`,
+        "",
+        `ดูบทความทั้งหมด: ${siteConfig.url}/blog`,
+        "",
+        `— ${siteConfig.name}`,
+      ].join("\n"),
+      email,
+      locale,
+    ),
   };
 }
 
@@ -90,7 +100,7 @@ export async function notifyNewsletterSubscribersForArticle(
 
   for (const sub of subscribers) {
     const locale = (sub.locale || "th") as Locale;
-    const { subject, text } = buildNewsletterEmail(article, locale);
+    const { subject, text } = buildNewsletterEmail(article, locale, sub.email);
     const emailResult = await sendEmail(sub.email, subject, text);
 
     if (emailResult.delivered) {

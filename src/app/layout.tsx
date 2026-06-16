@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
-import { AdSenseScript } from "@/components/ads/AdSenseScript";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AnalyticsLoader, CookieConsent } from "@/components/layout/CookieConsent";
 import { FloatingFeedbackWidget } from "@/components/layout/FloatingFeedbackWidget";
@@ -11,6 +10,7 @@ import { CompareProvider } from "@/components/property/CompareProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { adsenseClientId } from "@/lib/adsense";
 import { getLocale } from "@/lib/locale";
 import { htmlLang, isRtlLocale } from "@/lib/locale-content";
 import { createRootMetadata, siteConfig } from "@/lib/seo";
@@ -35,6 +35,7 @@ export default async function RootLayout({
   const [locale, settings] = await Promise.all([getLocale(), getSiteSettings()]);
   const dir = isRtlLocale(locale) ? "rtl" : "ltr";
   const homeMeta = resolveHomeMeta(settings, locale);
+  const adsenseClient = adsenseClientId();
 
   const organizationJsonLd = {
     "@context": "https://schema.org",
@@ -52,13 +53,21 @@ export default async function RootLayout({
 
   return (
     <html lang={htmlLang(locale)} dir={dir} className={`${notoSansThai.variable} h-full antialiased`}>
+      <head>
+        {adsenseClient ? (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            crossOrigin="anonymous"
+          />
+        ) : null}
+      </head>
       <body className="flex min-h-full flex-col font-sans">
         <LocaleProvider locale={locale}>
           <CompareProvider>
           <JsonLd data={organizationJsonLd} />
           <AnalyticsLoader />
           <TurnstileScript />
-          <AdSenseScript />
           <Header locale={locale} />
           <main className="flex-1">{children}</main>
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">

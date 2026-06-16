@@ -106,6 +106,13 @@ export function adsenseClientId(): string | null {
   return client || null;
 }
 
+/** For ads.txt — ca-pub-XXX → pub-XXX */
+export function adsensePublisherId(): string | null {
+  const client = adsenseClientId();
+  if (!client?.startsWith("ca-pub-")) return null;
+  return client.replace("ca-pub-", "pub-");
+}
+
 export function adsenseConfigured(clientId: string | null, slotId?: string | null): boolean {
   return Boolean(clientId && slotId?.trim());
 }

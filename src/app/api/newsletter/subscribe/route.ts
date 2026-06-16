@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/notifications";
+import { appendNewsletterUnsubscribe } from "@/lib/newsletter-unsubscribe";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { siteConfig } from "@/lib/seo";
 
@@ -14,31 +15,39 @@ function buildWelcomeEmail(locale: string, email: string): { subject: string; te
   if (locale === "en") {
     return {
       subject: `[${siteConfig.name}] Newsletter subscribed`,
-      text: [
-        "Hello,",
-        "",
-        `Thanks for subscribing to ${siteConfig.name} newsletter (${email}).`,
-        "We'll email you when we publish new project reviews, area guides, and market tips.",
-        "",
-        `Browse articles: ${siteConfig.url}/blog`,
-        "",
-        `— ${siteConfig.name}`,
-      ].join("\n"),
+      text: appendNewsletterUnsubscribe(
+        [
+          "Hello,",
+          "",
+          `Thanks for subscribing to ${siteConfig.name} newsletter (${email}).`,
+          "We'll email you when we publish new project reviews, area guides, and market tips.",
+          "",
+          `Browse articles: ${siteConfig.url}/blog`,
+          "",
+          `— ${siteConfig.name}`,
+        ].join("\n"),
+        email,
+        locale,
+      ),
     };
   }
 
   return {
     subject: `[${siteConfig.name}] สมัครรับจดหมายข่าวแล้ว`,
-    text: [
-      "สวัสดีครับ/ค่ะ",
-      "",
-      `ขอบคุณที่สมัครรับจดหมายข่าว ${siteConfig.name} (${email})`,
-      "เราจะส่งอีเมลเมื่อมีรีวิวโครงการ บทความย่าน BTS และเคล็ดลับตลาดอสังหาริมทรัพย์ใหม่",
-      "",
-      `อ่านบทความ: ${siteConfig.url}/blog`,
-      "",
-      `— ${siteConfig.name}`,
-    ].join("\n"),
+    text: appendNewsletterUnsubscribe(
+      [
+        "สวัสดีครับ/ค่ะ",
+        "",
+        `ขอบคุณที่สมัครรับจดหมายข่าว ${siteConfig.name} (${email})`,
+        "เราจะส่งอีเมลเมื่อมีรีวิวโครงการ บทความย่าน BTS และเคล็ดลับตลาดอสังหาริมทรัพย์ใหม่",
+        "",
+        `อ่านบทความ: ${siteConfig.url}/blog`,
+        "",
+        `— ${siteConfig.name}`,
+      ].join("\n"),
+      email,
+      locale,
+    ),
   };
 }
 

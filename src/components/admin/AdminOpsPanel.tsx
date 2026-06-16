@@ -84,6 +84,10 @@ export async function AdminOpsPanel() {
             {t("adminSeo", locale)}
           </Link>
           {" · "}
+          <Link href="/admin/newsletter" className="text-teal-700 hover:underline">
+            {t("adminNewsletter", locale)}
+          </Link>
+          {" · "}
           <a
             href="https://search.google.com/search-console"
             target="_blank"
