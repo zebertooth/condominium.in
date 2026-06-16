@@ -360,6 +360,16 @@ model SearchAlert {
   @@index([active, frequency])
 }
 
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  locale    String   @default("th")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([active])
+}
+
 model PriceHistory {
   id          String       @id @default(cuid())
   propertyId  String

@@ -4,6 +4,7 @@ import { blogArticleToDbData } from "@/lib/blog-admin";
 import { getAllBlogArticlesAdmin, uniqueBlogSlug } from "@/lib/blog-articles";
 import { blogArticleSchema } from "@/lib/content-validation";
 import { prisma } from "@/lib/db";
+import { notifyNewsletterSubscribersForArticle } from "@/lib/newsletter-digest";
 import { parseRequestJson } from "@/lib/request";
 
 export async function GET() {
@@ -39,6 +40,16 @@ export async function POST(request: Request) {
         ...dbData,
       },
     });
+
+    if (data.status === "published") {
+      void notifyNewsletterSubscribersForArticle({
+        slug: article.slug,
+        title: article.title,
+        titleEn: article.titleEn,
+        excerpt: article.excerpt,
+        excerptEn: article.excerptEn,
+      }).catch((err) => console.error("[newsletter] publish notify failed", err));
+    }
 
     return NextResponse.json({ message: "สร้างบทความแล้ว", article });
   } catch (error) {

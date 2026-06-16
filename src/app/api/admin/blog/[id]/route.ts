@@ -4,6 +4,7 @@ import { blogArticleFromDb, blogArticleToDbData } from "@/lib/blog-admin";
 import { getBlogArticleById, uniqueBlogSlug } from "@/lib/blog-articles";
 import { blogArticleSchema } from "@/lib/content-validation";
 import { prisma } from "@/lib/db";
+import { notifyNewsletterSubscribersForArticle } from "@/lib/newsletter-digest";
 import { parseRequestJson } from "@/lib/request";
 
 interface RouteContext {
@@ -57,6 +58,16 @@ export async function PATCH(request: Request, context: RouteContext) {
         ...dbData,
       },
     });
+
+    if (data.status === "published" && existing.status !== "published") {
+      void notifyNewsletterSubscribersForArticle({
+        slug: article.slug,
+        title: article.title,
+        titleEn: article.titleEn,
+        excerpt: article.excerpt,
+        excerptEn: article.excerptEn,
+      }).catch((err) => console.error("[newsletter] publish notify failed", err));
+    }
 
     return NextResponse.json({ message: "บันทึกบทความแล้ว", article });
   } catch (error) {

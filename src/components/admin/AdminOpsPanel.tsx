@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getIntegrationStatus } from "@/lib/integrations";
 import { readCronSecret } from "@/lib/cron-auth";
+import { countActiveNewsletterSubscribers } from "@/lib/newsletter-digest";
 import { adsenseClientId } from "@/lib/adsense";
 import { getSiteSettings } from "@/lib/site-settings";
-import { t } from "@/lib/i18n";
+import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 
 export async function AdminOpsPanel() {
@@ -13,6 +14,7 @@ export async function AdminOpsPanel() {
   const adsense = Boolean(adsenseClientId());
   const settings = await getSiteSettings();
   const filledSlots = Object.values(settings.adSlots).filter((s) => s?.trim()).length;
+  const newsletterCount = await countActiveNewsletterSubscribers();
 
   const gscMeta = Boolean(process.env.GOOGLE_SITE_VERIFICATION?.trim());
 
@@ -42,6 +44,11 @@ export async function AdminOpsPanel() {
       ok: gscMeta,
       hint: gscMeta ? t("adminOpsGscOk", locale) : t("adminOpsGscMissing", locale),
     },
+    {
+      label: t("adminOpsNewsletter", locale),
+      ok: newsletterCount > 0,
+      hint: tf("adminOpsNewsletterCount", locale, { count: newsletterCount }),
+    },
   ];
 
   return (
@@ -68,9 +75,9 @@ export async function AdminOpsPanel() {
       <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
         <p className="font-medium text-slate-900">{t("adminOpsCronSchedule", locale)}</p>
         <ul className="mt-2 list-inside list-disc space-y-1">
-          <li>01:00 UTC — search alerts (daily)</li>
-          <li>02:00 UTC Mon — search alerts (weekly)</li>
+          <li>02:00 UTC Mon — search alert backup (weekly; inactive users monthly)</li>
           <li>03:00 UTC — sponsor reminders</li>
+          <li>{t("adminOpsAlertInstant", locale)}</li>
         </ul>
         <p className="mt-3">
           <Link href="/admin/seo" className="text-teal-700 hover:underline">

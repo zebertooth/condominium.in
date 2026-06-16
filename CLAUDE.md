@@ -465,7 +465,7 @@ Done / env-gated:
 
 **Done (session 34 — Phase L3 complete):**
 - [x] Price history — `PriceHistory` model, logging, property detail UI, reduced badge
-- [x] Search alert cron — `/api/cron/search-alerts` + `vercel.json`
+- [x] Search alert cron — hybrid model (instant + publish + weekly backup)
 - [x] Agent reviews — `AgentReview`, `/admin/reviews`, stars on `/agents`
 - [x] Social login — Google + Facebook OAuth
 - [x] NPA hub — `/npa`
@@ -500,19 +500,24 @@ Done / env-gated:
 - [x] Sort + rich cards on `/buy` `/rent`
 - [x] Sqm/furnishing filters, list/map toggle, SEO hubs (`/buy/bts/…`, etc.)
 
-**Done (Phase 11 — session 45):**
-- [x] `/admin/ops` checklist (cron, AdSense, GSC env)
+**Done (Phase 11 — sessions 45–46):**
+- [x] `/admin/ops` checklist (cron, AdSense, GSC env, newsletter count)
 - [x] `furnishing` enum on `UserProperty` + post form + CSV
 - [x] Markdown blog editor (edit/preview) in admin
 - [x] Listing compare shortlist — `/compare`, max 4
 - [x] `/market` linked from area pages + review articles
-- [x] Editorial seed — Life Asoke Hype review #2 + Sukhumvit area roundup
+- [x] Editorial seed — Life Asoke Hype review #2 + Sukhumvit roundup + art4d articles
+- [x] Hybrid search alerts — instant on subscribe, on listing publish, weekly backup
+- [x] Blog newsletter — signup on `/blog`, email subscribers on publish
+- [x] YouTube embed on all blog articles; NPA in footer + sitemap
 
-**Ops (user — still on Vercel/GSC):**
-- [ ] Set `CRON_SECRET`, `GOOGLE_SITE_VERIFICATION`, AdSense client + slot IDs
-- [ ] `npm run db:deploy` for furnishing migration
-- [ ] GSC: submit sitemap, request indexing for SEO hubs
+**All planned dev phases (1–11) complete.** Ongoing: ops env vars, AdSense/GSC, editorial cadence.
+
+**Ops (user — backlog):**
+- [ ] AdSense client + slot IDs in `/admin/seo`
+- [ ] GSC: `GOOGLE_SITE_VERIFICATION` + submit sitemap
 - [ ] ThaiBulkSMS production verify
+- [ ] Editorial: ~2 reviews/month via `/admin/blog`
 
 ---
 

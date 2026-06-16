@@ -10,7 +10,8 @@ import { SourceCredit } from "@/components/blog/SourceCredit";
 import { MarketTrendsBanner } from "@/components/market/MarketTrendsBanner";
 import type { Locale } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
-import { renderBlogContent, youtubeEmbedUrl } from "@/lib/blog-render";
+import { BlogVideoEmbed } from "@/components/blog/BlogVideoEmbed";
+import { renderBlogContent } from "@/lib/blog-render";
 import {
   blogCategory,
   blogContent,
@@ -42,7 +43,6 @@ export function ReviewArticleLayout({
   const excerpt = blogExcerpt(post, locale);
   const content = blogContent(post, locale);
   const category = blogCategory(post, locale);
-  const embedUrl = post.videoUrl ? youtubeEmbedUrl(post.videoUrl) : null;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -151,16 +151,8 @@ export function ReviewArticleLayout({
             </div>
           )}
 
-          {embedUrl && (
-            <div className="aspect-video overflow-hidden rounded-2xl bg-black">
-              <iframe
-                src={embedUrl}
-                title={title}
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
+          {post.videoUrl && (
+            <BlogVideoEmbed url={post.videoUrl} title={title} className="my-2" />
           )}
 
           {post.galleryUrls && post.galleryUrls.length > 0 && (

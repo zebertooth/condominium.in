@@ -43,6 +43,7 @@ export function Footer({ locale }: { locale: Locale }) {
           <ul className="mt-3 space-y-2 text-sm">
             <li><Link href={lp("/agents")} className="hover:text-white">{t("agents", locale)}</Link></li>
             <li><Link href={lp("/blog")} className="hover:text-white">{t("blog", locale)}</Link></li>
+            <li><Link href={lp("/npa")} className="hover:text-white">{t("navNpa", locale)}</Link></li>
             <li><Link href={lp("/contact")} className="hover:text-white">{t("contact", locale)}</Link></li>
           </ul>
         </div>

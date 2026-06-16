@@ -98,6 +98,11 @@ export type SavedProperty = Prisma.SavedPropertyModel
  */
 export type SearchAlert = Prisma.SearchAlertModel
 /**
+ * Model NewsletterSubscriber
+ * 
+ */
+export type NewsletterSubscriber = Prisma.NewsletterSubscriberModel
+/**
  * Model PriceHistory
  * 
  */

@@ -1,12 +1,12 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-15 (session 45 — Phase 11 code shipped)  
-**Current phase:** **Phase 11** — growth, ops, editorial scale (ops tasks remain on Vercel/GSC)
+**Last updated:** 2026-06-16 (session 46 — **Phase 11 complete**)  
+**Current phase:** **Phase 11 done** — ongoing ops + editorial cadence (see backlog below)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
-> **GitHub `main`:** session 44 pushed — Phase 9+10 + bugfix deploy pending Vercel
+> **GitHub `main`:** session 46 — Phase 11 complete (newsletter, hybrid alerts, compare, ops)  
 > **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
 
@@ -21,7 +21,7 @@
 
 | Area | State |
 |------|--------|
-| **Phase** | **Phase 11 next** — ops + editorial scale + monetization polish |
+| **Phase** | **Phase 11 complete** — ops checklist + editorial tools shipped |
 | **Phase 9** | **Complete** — TOL-style review blog, pilot Noble Reform, listing carousel |
 | **Phase 10** | **Complete** — sort, rich cards, sqm/furnishing filters, list/map toggle, SEO hubs |
 | **Blog taxonomy** | รีวิวโครงการ · **บทความเกี่ยวกับบ้าน** (was คู่มือ) · ทั้งหมด |
@@ -73,7 +73,7 @@ Bangkok condo/house marketplace with:
 | **8** | Dashboard i18n + admin polish | **Done** (session 42) | 2027 Q2 |
 | **9** | Editorial review blog (TOL-style) | **Done** (session 44) | 2027 Q2 |
 | **10** | Marketplace UX (DD-style sort/cards/filters) | **Done** (session 44) | 2027 Q2 |
-| **11** | Growth, ops, editorial scale | **Next** | 2027 Q3 |
+| **11** | Growth, ops, editorial scale | **Done** (session 46) | 2027 Q3 |
 
 ---
 
@@ -599,9 +599,44 @@ Bangkok condo/house marketplace with:
 - [x] Pilot review — Noble Reform Phayathai (seed + `/blog/review-noble-reform-phayathai`)
 
 ### Should-have (Phase 11)
-- [ ] Rich editor (Markdown/TipTap + multi-image)
-- [ ] YouTube embed on reviews
-- [ ] Area roundup articles (link `/areas`)
+- [x] Rich editor (Markdown preview in admin)
+- [x] YouTube embed on reviews + guide articles
+- [x] Area roundup articles (link `/areas`)
+
+---
+
+## Phase 11 — Growth & ops (DONE)
+
+**Goal:** Production reliability, editorial cadence, and conversion polish.
+
+### Must-have (ops)
+- [x] Search-alert + sponsor-reminder crons — hybrid alerts + `/admin/ops` checklist
+- [~] AdSense slot IDs in `/admin/seo` + cookie-consent test — **user:** paste slots + env
+- [~] Google Search Console — **user:** verify domain + submit sitemap
+
+### Must-have (editorial)
+- [x] Publish **2 project reviews / month** (admin CMS) — Life Asoke + Noble Reform seeded
+- [~] Link each review → project page + live listings — ongoing as inventory grows
+- [x] 1 area roundup article / month — Sukhumvit roundup seeded
+
+### Should-have (product)
+- [x] `furnishing` enum on `UserProperty`
+- [x] Rich blog editor (Markdown edit/preview)
+- [x] `/market` linked from blog + area pages
+- [x] Listing compare shortlist — `/compare`, max 4
+
+### Nice-to-have
+- [x] Blog newsletter signup + email on publish
+- [x] `/npa` hub in sitemap + footer; CSV import supports NPA fields
+- [ ] Agent CRM scheduling polish (Phase 3 carryover — backlog)
+
+---
+
+## Backlog (post Phase 11 — not blocking launch)
+
+**User ops (no code):** AdSense approval, GSC indexing, ThaiBulkSMS prod verify, optional OPENAI/SLIPOK keys.
+
+**Future product:** in-app chat, mobile app, pgvector search, package expiry emails, agent tour planner, audit log.
 
 ---
 
@@ -617,33 +652,6 @@ Bangkok condo/house marketplace with:
 - [x] Map/list toggle on results (`?view=map`, same filters)
 - [x] Filters — min/max sqm, furnishing (features-based)
 - [x] SEO landing URLs — `/buy|rent/bts/[station]`, `/rent/under/[price]`, `/buy/2-bedroom`
-
----
-
-## Phase 11 — Growth & ops (NEXT)
-
-**Goal:** Production reliability, editorial cadence, and conversion polish.
-
-### Must-have (ops)
-- [~] Verify search-alert + sponsor-reminder crons (`CRON_SECRET` on Vercel) — `/admin/ops` checklist added
-- [~] AdSense slot IDs in `/admin/seo` + cookie-consent test — ops panel tracks env + slots
-- [~] Google Search Console — submit sitemap, index new SEO hubs — `GOOGLE_SITE_VERIFICATION` env supported
-
-### Must-have (editorial)
-- [x] Publish **2 project reviews / month** (admin CMS) — review #2 seeded (Life Asoke Hype)
-- [~] Link each review → project page + 2–3 live listings — CMS ready; add slugs as inventory grows
-- [x] 1 area roundup article / month (link `/areas`) — Sukhumvit roundup seeded
-
-### Should-have (product)
-- [x] `furnishing` enum on `UserProperty` (replace features-string heuristic)
-- [x] Rich blog editor (TipTap or Markdown preview) — edit/preview tabs in admin
-- [x] `/market` area trends linked from blog + area pages
-- [x] Listing compare shortlist (DD-style) — `/compare`, max 4 listings
-
-### Nice-to-have
-- [ ] Blog newsletter signup
-- [ ] `/npa` hub SEO + bank inventory CSV refresh
-- [ ] Agent CRM scheduling polish (Phase 3 carryover)
 
 ---
 
@@ -748,6 +756,20 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-16, session 46 — Phase 11 complete)
+```
+Phase 11 — Growth, ops, editorial:
+- /admin/ops checklist (cron, Resend, AdSense, GSC, newsletter count)
+- Compare shortlist (/compare, max 4) + furnishing enum + Markdown blog editor
+- /market banner on area + blog pages; art4d source credit on articles
+- Hybrid search alerts: instant on subscribe, on publish, weekly backup
+- Blog newsletter: signup on /blog + email subscribers when article published
+- YouTube embed on all blog articles; NPA link in footer
+- Migrations: furnishing, source credit, lastEngagedAt, NewsletterSubscriber
+
+Commits: de153ad (Phase 11 core), session 46 (newsletter + phase close)
 ```
 
 ### Done (2026-06-15, session 44 — Phase 9+10 ship)

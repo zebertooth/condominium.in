@@ -67,6 +67,7 @@ export const ModelName = {
   UserSubscription: 'UserSubscription',
   SavedProperty: 'SavedProperty',
   SearchAlert: 'SearchAlert',
+  NewsletterSubscriber: 'NewsletterSubscriber',
   PriceHistory: 'PriceHistory',
   AgentReview: 'AgentReview'
 } as const
@@ -421,6 +422,17 @@ export const SearchAlertScalarFieldEnum = {
 } as const
 
 export type SearchAlertScalarFieldEnum = (typeof SearchAlertScalarFieldEnum)[keyof typeof SearchAlertScalarFieldEnum]
+
+
+export const NewsletterSubscriberScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  locale: 'locale',
+  active: 'active',
+  createdAt: 'createdAt'
+} as const
+
+export type NewsletterSubscriberScalarFieldEnum = (typeof NewsletterSubscriberScalarFieldEnum)[keyof typeof NewsletterSubscriberScalarFieldEnum]
 
 
 export const PriceHistoryScalarFieldEnum = {

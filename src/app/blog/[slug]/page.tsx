@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { BlogSuggestedListings } from "@/components/blog/BlogSuggestedListings";
+import { BlogVideoEmbed } from "@/components/blog/BlogVideoEmbed";
 import { SourceCredit } from "@/components/blog/SourceCredit";
 import { ReviewArticleLayout } from "@/components/blog/ReviewArticleLayout";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -135,6 +136,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         </p>
 
         <AdSlot position="blogInarticle" format="rectangle" className="my-8" />
+
+        {post.videoUrl && (
+          <BlogVideoEmbed url={post.videoUrl} title={title} className="mt-8" />
+        )}
 
         <div className="prose mt-8 max-w-none">{renderBlogContent(content)}</div>
 

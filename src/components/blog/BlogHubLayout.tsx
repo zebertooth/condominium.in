@@ -5,6 +5,7 @@ import { BlogFeaturedSection } from "@/components/blog/BlogFeaturedSection";
 import { BlogGridCard } from "@/components/blog/BlogGridCard";
 import { BlogHubNav } from "@/components/blog/BlogHubNav";
 import { BlogSuggestedListings } from "@/components/blog/BlogSuggestedListings";
+import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
 import type { Locale } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
 import { localePath } from "@/lib/locale-routing";
@@ -130,6 +131,8 @@ export function BlogHubLayout({
         </section>
 
         {showAreaStrip && activeTab === "all" && <BlogAreaStrip locale={locale} />}
+
+        <NewsletterSignup locale={locale} />
       </div>
 
       <BlogSuggestedListings locale={locale} properties={suggestedListings} />
