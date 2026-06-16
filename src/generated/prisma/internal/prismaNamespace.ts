@@ -1889,6 +1889,9 @@ export const BlogArticleScalarFieldEnum = {
   galleryUrls: 'galleryUrls',
   videoUrl: 'videoUrl',
   relatedSlugs: 'relatedSlugs',
+  sourceName: 'sourceName',
+  sourceUrl: 'sourceUrl',
+  sourceTitle: 'sourceTitle',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1964,6 +1967,7 @@ export const UserPropertyScalarFieldEnum = {
   npaBank: 'npaBank',
   npaReferenceUrl: 'npaReferenceUrl',
   features: 'features',
+  furnishing: 'furnishing',
   images: 'images',
   status: 'status',
   needsReview: 'needsReview',
@@ -2116,6 +2120,7 @@ export const SearchAlertScalarFieldEnum = {
   frequency: 'frequency',
   active: 'active',
   lastSentAt: 'lastSentAt',
+  lastEngagedAt: 'lastEngagedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

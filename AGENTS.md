@@ -12,21 +12,23 @@ Instructions for AI coding agents working in this repository.
 4. Production check: `GET https://www.condominium.in.th/api/health`
 5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
 
-> ## 🤝 HANDOFF (session 44 — **Phase 11 next**)
+> ## 🤝 HANDOFF (session 45 — **Phase 11 in progress**)
 >
 > **Production:** https://www.condominium.in.th  
-> **GitHub `main`:** session 44 pushed — Vercel auto-deploy from `main`
+> **GitHub `main`:** Phase 11 code local — commit + deploy pending
 >
-> **Done (Phase 9):**
-> - TOL-style review blog — Fact @, TOC, `/blog/reviews`, pilot Noble Reform
-> - Blog hub + listing carousel; category **บทความเกี่ยวกับบ้าน**
+> **Done (Phase 11 code):**
+> - `/admin/ops` — cron/AdSense/GSC checklist
+> - `furnishing` enum on listings + post form + CSV
+> - Markdown blog editor (edit/preview) in admin
+> - Compare shortlist (4 max) + `/compare` page
+> - `/market` linked from area pages + review articles
+> - Editorial seed: Life Asoke Hype review #2 + Sukhumvit area roundup
 >
-> **Done (Phase 10):**
-> - Sort + rich cards on `/buy` `/rent`
-> - Sqm/furnishing filters, list/map toggle, SEO hubs (`/buy/bts/…`, `/rent/under/…`)
->
-> **Next (Phase 11):** ops (crons, AdSense, GSC) + 2 reviews/month + rich editor  
-> **Full plan:** [`ROADMAP.md`](./ROADMAP.md) Phase 11 · [`PHASE-9-PLAN.md`](./PHASE-9-PLAN.md)
+> **User ops still needed:**
+> - `CRON_SECRET`, `GOOGLE_SITE_VERIFICATION`, AdSense slots on Vercel
+> - GSC: submit sitemap + request indexing
+> - `npm run db:deploy` for furnishing migration
 
 ---
 

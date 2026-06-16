@@ -108,8 +108,8 @@ async function main() {
   }
 
   if (args.includes("--cron") || runAll) {
-    console.log("\n=== Search alert digest (daily) ===");
-    console.log(await runSearchAlertDigests("daily"));
+    console.log("\n=== Search alert digest (weekly backup) ===");
+    console.log(await runSearchAlertDigests());
 
     console.log("\n=== Sponsor renewal reminders ===");
     console.log(await runSponsorRenewalReminders());

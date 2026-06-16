@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { BlogSuggestedListings } from "@/components/blog/BlogSuggestedListings";
+import { SourceCredit } from "@/components/blog/SourceCredit";
 import { ReviewArticleLayout } from "@/components/blog/ReviewArticleLayout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBlogPostBySlug, isReviewArticle } from "@/lib/blog";
@@ -136,6 +137,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         <AdSlot position="blogInarticle" format="rectangle" className="my-8" />
 
         <div className="prose mt-8 max-w-none">{renderBlogContent(content)}</div>
+
+        <SourceCredit post={post} locale={locale} />
 
         <div className="mt-12 rounded-2xl bg-teal-50 p-6">
           <h2 className="font-bold text-teal-900">

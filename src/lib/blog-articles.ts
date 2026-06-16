@@ -39,6 +39,9 @@ type DbArticle = {
   galleryUrls?: string;
   videoUrl?: string;
   relatedSlugs?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceTitle?: string;
   project?: { slug: string; name: string } | null;
 };
 
@@ -115,6 +118,9 @@ export function dbArticleToPost(row: DbArticle): BlogPost {
     galleryUrls: galleryUrls.length > 0 ? galleryUrls : undefined,
     videoUrl: row.videoUrl || undefined,
     relatedSlugs: relatedSlugs.length > 0 ? relatedSlugs : undefined,
+    sourceName: row.sourceName || undefined,
+    sourceUrl: row.sourceUrl || undefined,
+    sourceTitle: row.sourceTitle || undefined,
   };
 }
 

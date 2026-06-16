@@ -1,4 +1,5 @@
 import type { PropertyCategory } from "@/lib/property-types";
+import type { FurnishingStatus } from "@/lib/furnishing";
 
 export type ListingType = "sale" | "rent";
 export type PropertyType =
@@ -56,6 +57,8 @@ export interface Property {
   npaBank?: string;
   npaReferenceUrl?: string;
   features: string[];
+  /** DB listings — furnished, unfurnished, partially, unknown */
+  furnishing?: FurnishingStatus;
   images: string[];
   status?: "pending" | "published" | "rejected" | "deleted";
   /** Admin recheck queue — listing may still be published */
@@ -138,6 +141,10 @@ export interface BlogPost {
   galleryUrls?: string[];
   videoUrl?: string;
   relatedSlugs?: string[];
+  /** Syndicated / referenced editorial — credit shown at article footer */
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceTitle?: string;
 }
 
 export type BlogArticleType =

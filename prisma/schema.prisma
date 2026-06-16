@@ -105,6 +105,9 @@ model BlogArticle {
   galleryUrls      String   @default("[]")
   videoUrl         String   @default("")
   relatedSlugs     String   @default("[]")
+  sourceName       String   @default("")
+  sourceUrl        String   @default("")
+  sourceTitle      String   @default("")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -179,6 +182,7 @@ model UserProperty {
   npaBank        String?
   npaReferenceUrl String?
   features       String    @default("[]")
+  furnishing     String    @default("unknown")
   images         String    @default("[]")
   status         String    @default("published")
   needsReview    Boolean   @default(false)
@@ -340,16 +344,17 @@ model SavedProperty {
 }
 
 model SearchAlert {
-  id          String    @id @default(cuid())
-  userId      String
-  name        String
-  listingType String
-  filters     String    @default("{}")
-  frequency   String    @default("daily")
-  active      Boolean   @default(true)
-  lastSentAt  DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  userId         String
+  name           String
+  listingType    String
+  filters        String    @default("{}")
+  frequency      String    @default("weekly")
+  active         Boolean   @default(true)
+  lastSentAt     DateTime?
+  lastEngagedAt  DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([userId])
   @@index([active, frequency])

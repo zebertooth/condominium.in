@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 44):** Live at **https://www.condominium.in.th**. **Phase 11 next** — ops + editorial scale. Phase 9+10 shipped. Crons: search alerts (01:00/02:00 UTC) + sponsor reminders (03:00 UTC). Verify with `CRON_SECRET` (single line, no newlines).
+**Current status (session 45):** Live at **https://www.condominium.in.th**. Phase 11 code shipped locally. Set on Vercel: `CRON_SECRET`, `GOOGLE_SITE_VERIFICATION`, AdSense client + slot IDs. Run `npm run db:deploy` for furnishing migration.
 
 ---
 

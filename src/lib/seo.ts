@@ -121,6 +121,9 @@ export async function createRootMetadata(locale?: Locale): Promise<Metadata> {
       default: home.title,
       template: `%s ${settings.titleSuffix}`.replace(/\s+/g, " ").trim(),
     },
+    verification: process.env.GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.GOOGLE_SITE_VERIFICATION.trim() }
+      : undefined,
     icons: {
       icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
       shortcut: "/logo.svg",

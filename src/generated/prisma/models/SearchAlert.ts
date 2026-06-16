@@ -33,6 +33,7 @@ export type SearchAlertMinAggregateOutputType = {
   frequency: string | null
   active: boolean | null
   lastSentAt: Date | null
+  lastEngagedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +47,7 @@ export type SearchAlertMaxAggregateOutputType = {
   frequency: string | null
   active: boolean | null
   lastSentAt: Date | null
+  lastEngagedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +61,7 @@ export type SearchAlertCountAggregateOutputType = {
   frequency: number
   active: number
   lastSentAt: number
+  lastEngagedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +77,7 @@ export type SearchAlertMinAggregateInputType = {
   frequency?: true
   active?: true
   lastSentAt?: true
+  lastEngagedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +91,7 @@ export type SearchAlertMaxAggregateInputType = {
   frequency?: true
   active?: true
   lastSentAt?: true
+  lastEngagedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type SearchAlertCountAggregateInputType = {
   frequency?: true
   active?: true
   lastSentAt?: true
+  lastEngagedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +192,7 @@ export type SearchAlertGroupByOutputType = {
   frequency: string
   active: boolean
   lastSentAt: Date | null
+  lastEngagedAt: Date
   createdAt: Date
   updatedAt: Date
   _count: SearchAlertCountAggregateOutputType | null
@@ -220,6 +227,7 @@ export type SearchAlertWhereInput = {
   frequency?: Prisma.StringFilter<"SearchAlert"> | string
   active?: Prisma.BoolFilter<"SearchAlert"> | boolean
   lastSentAt?: Prisma.DateTimeNullableFilter<"SearchAlert"> | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeFilter<"SearchAlert"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"SearchAlert"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SearchAlert"> | Date | string
 }
@@ -233,6 +241,7 @@ export type SearchAlertOrderByWithRelationInput = {
   frequency?: Prisma.SortOrder
   active?: Prisma.SortOrder
   lastSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastEngagedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -249,6 +258,7 @@ export type SearchAlertWhereUniqueInput = Prisma.AtLeast<{
   frequency?: Prisma.StringFilter<"SearchAlert"> | string
   active?: Prisma.BoolFilter<"SearchAlert"> | boolean
   lastSentAt?: Prisma.DateTimeNullableFilter<"SearchAlert"> | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeFilter<"SearchAlert"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"SearchAlert"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SearchAlert"> | Date | string
 }, "id">
@@ -262,6 +272,7 @@ export type SearchAlertOrderByWithAggregationInput = {
   frequency?: Prisma.SortOrder
   active?: Prisma.SortOrder
   lastSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastEngagedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SearchAlertCountOrderByAggregateInput
@@ -281,6 +292,7 @@ export type SearchAlertScalarWhereWithAggregatesInput = {
   frequency?: Prisma.StringWithAggregatesFilter<"SearchAlert"> | string
   active?: Prisma.BoolWithAggregatesFilter<"SearchAlert"> | boolean
   lastSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SearchAlert"> | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeWithAggregatesFilter<"SearchAlert"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SearchAlert"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SearchAlert"> | Date | string
 }
@@ -294,6 +306,7 @@ export type SearchAlertCreateInput = {
   frequency?: string
   active?: boolean
   lastSentAt?: Date | string | null
+  lastEngagedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -307,6 +320,7 @@ export type SearchAlertUncheckedCreateInput = {
   frequency?: string
   active?: boolean
   lastSentAt?: Date | string | null
+  lastEngagedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -320,6 +334,7 @@ export type SearchAlertUpdateInput = {
   frequency?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -333,6 +348,7 @@ export type SearchAlertUncheckedUpdateInput = {
   frequency?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -346,6 +362,7 @@ export type SearchAlertCreateManyInput = {
   frequency?: string
   active?: boolean
   lastSentAt?: Date | string | null
+  lastEngagedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -359,6 +376,7 @@ export type SearchAlertUpdateManyMutationInput = {
   frequency?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -372,6 +390,7 @@ export type SearchAlertUncheckedUpdateManyInput = {
   frequency?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastEngagedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -385,6 +404,7 @@ export type SearchAlertCountOrderByAggregateInput = {
   frequency?: Prisma.SortOrder
   active?: Prisma.SortOrder
   lastSentAt?: Prisma.SortOrder
+  lastEngagedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -398,6 +418,7 @@ export type SearchAlertMaxOrderByAggregateInput = {
   frequency?: Prisma.SortOrder
   active?: Prisma.SortOrder
   lastSentAt?: Prisma.SortOrder
+  lastEngagedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -411,6 +432,7 @@ export type SearchAlertMinOrderByAggregateInput = {
   frequency?: Prisma.SortOrder
   active?: Prisma.SortOrder
   lastSentAt?: Prisma.SortOrder
+  lastEngagedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -426,6 +448,7 @@ export type SearchAlertSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   frequency?: boolean
   active?: boolean
   lastSentAt?: boolean
+  lastEngagedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["searchAlert"]>
@@ -439,6 +462,7 @@ export type SearchAlertSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   frequency?: boolean
   active?: boolean
   lastSentAt?: boolean
+  lastEngagedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["searchAlert"]>
@@ -452,6 +476,7 @@ export type SearchAlertSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   frequency?: boolean
   active?: boolean
   lastSentAt?: boolean
+  lastEngagedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["searchAlert"]>
@@ -465,11 +490,12 @@ export type SearchAlertSelectScalar = {
   frequency?: boolean
   active?: boolean
   lastSentAt?: boolean
+  lastEngagedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SearchAlertOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "listingType" | "filters" | "frequency" | "active" | "lastSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["searchAlert"]>
+export type SearchAlertOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "listingType" | "filters" | "frequency" | "active" | "lastSentAt" | "lastEngagedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["searchAlert"]>
 
 export type $SearchAlertPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SearchAlert"
@@ -483,6 +509,7 @@ export type $SearchAlertPayload<ExtArgs extends runtime.Types.Extensions.Interna
     frequency: string
     active: boolean
     lastSentAt: Date | null
+    lastEngagedAt: Date
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["searchAlert"]>
@@ -916,6 +943,7 @@ export interface SearchAlertFieldRefs {
   readonly frequency: Prisma.FieldRef<"SearchAlert", 'String'>
   readonly active: Prisma.FieldRef<"SearchAlert", 'Boolean'>
   readonly lastSentAt: Prisma.FieldRef<"SearchAlert", 'DateTime'>
+  readonly lastEngagedAt: Prisma.FieldRef<"SearchAlert", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"SearchAlert", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SearchAlert", 'DateTime'>
 }

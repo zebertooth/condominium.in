@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { SingleImageInput } from "@/components/admin/SingleImageInput";
+import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import type { BlogArticleType, BlogFactSheet, BlogSection } from "@/types/property";
 import { BLOG_ARTICLE_TYPES } from "@/types/property";
 
@@ -40,6 +41,9 @@ interface BlogFormState {
   galleryUrlsText: string;
   videoUrl: string;
   relatedSlugsText: string;
+  sourceName: string;
+  sourceUrl: string;
+  sourceTitle: string;
 }
 
 const emptyFacts: BlogFactSheet = {};
@@ -71,6 +75,9 @@ const emptyForm: BlogFormState = {
   galleryUrlsText: "",
   videoUrl: "",
   relatedSlugsText: "",
+  sourceName: "",
+  sourceUrl: "",
+  sourceTitle: "",
 };
 
 function linesToArray(text: string): string[] {
@@ -137,6 +144,9 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
           galleryUrlsText: (a.galleryUrls ?? []).join("\n"),
           videoUrl: a.videoUrl ?? "",
           relatedSlugsText: (a.relatedSlugs ?? []).join("\n"),
+          sourceName: a.sourceName ?? "",
+          sourceUrl: a.sourceUrl ?? "",
+          sourceTitle: a.sourceTitle ?? "",
         });
       })
       .catch(() => setError(t("adminBlogLoadError")))
@@ -185,6 +195,9 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
       galleryUrls: linesToArray(form.galleryUrlsText),
       videoUrl: form.videoUrl,
       relatedSlugs: linesToArray(form.relatedSlugsText),
+      sourceName: form.sourceName || undefined,
+      sourceUrl: form.sourceUrl || undefined,
+      sourceTitle: form.sourceTitle || undefined,
     };
 
     const url = articleId ? `/api/admin/blog/${articleId}` : "/api/admin/blog";
@@ -280,26 +293,18 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
             className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2"
           />
         </label>
-        <label className="block sm:col-span-2">
-          <span className="text-sm font-medium text-slate-700">{t("adminBlogContent")} (TH)</span>
-          <textarea
-            required
-            rows={8}
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2 font-mono text-sm"
-          />
-          <p className="mt-1 text-xs text-slate-500">{t("adminBlogContentHint")}</p>
-        </label>
-        <label className="block sm:col-span-2">
-          <span className="text-sm font-medium text-slate-700">{t("adminBlogContent")} (EN)</span>
-          <textarea
-            rows={8}
-            value={form.contentEn}
-            onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2 font-mono text-sm"
-          />
-        </label>
+        <MarkdownEditor
+          label={`${t("adminBlogContent")} (TH)`}
+          value={form.content}
+          onChange={(content) => setForm({ ...form, content })}
+          required
+          hint={t("adminBlogContentHint")}
+        />
+        <MarkdownEditor
+          label={`${t("adminBlogContent")} (EN)`}
+          value={form.contentEn}
+          onChange={(contentEn) => setForm({ ...form, contentEn })}
+        />
         <label className="block">
           <span className="text-sm font-medium text-slate-700">{t("adminBlogCategory")} (TH)</span>
           <input
@@ -505,6 +510,40 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
           </label>
         </div>
       )}
+
+      <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+        <p className="text-sm font-medium text-slate-800">{t("adminBlogSourceCredit")}</p>
+        <p className="mt-1 text-xs text-slate-500">{t("adminBlogSourceCreditHint")}</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <label className="block">
+            <span className="text-xs text-slate-600">{t("adminBlogSourceName")}</span>
+            <input
+              value={form.sourceName}
+              onChange={(e) => setForm({ ...form, sourceName: e.target.value })}
+              placeholder="art4d"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="text-xs text-slate-600">{t("adminBlogSourceTitle")}</span>
+            <input
+              value={form.sourceTitle}
+              onChange={(e) => setForm({ ...form, sourceTitle: e.target.value })}
+              placeholder="Original article title on art4d"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="text-xs text-slate-600">{t("adminBlogSourceUrl")}</span>
+            <input
+              value={form.sourceUrl}
+              onChange={(e) => setForm({ ...form, sourceUrl: e.target.value })}
+              placeholder="https://art4d.com/..."
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm"
+            />
+          </label>
+        </div>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block sm:col-span-2">

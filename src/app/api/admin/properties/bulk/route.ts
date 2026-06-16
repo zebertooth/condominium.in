@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
+import { notifySearchAlertsForPublishedListing } from "@/lib/search-alert-digest";
+import { dbPropertyToListing } from "@/lib/user-properties";
 
 const ALLOWED = ["pending", "published", "rejected", "deleted"];
 
@@ -17,6 +19,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "สถานะไม่ถูกต้อง" }, { status: 400 });
     }
 
+    const before =
+      status === "published"
+        ? await prisma.userProperty.findMany({
+            where: { id: { in: ids } },
+            select: { id: true, status: true },
+          })
+        : [];
+
     const result = await prisma.userProperty.updateMany({
       where: { id: { in: ids } },
       data: {
@@ -26,6 +36,23 @@ export async function POST(request: Request) {
           : {}),
       },
     });
+
+    if (status === "published") {
+      const newlyPublishedIds = before
+        .filter((p) => p.status !== "published")
+        .map((p) => p.id);
+
+      if (newlyPublishedIds.length > 0) {
+        const properties = await prisma.userProperty.findMany({
+          where: { id: { in: newlyPublishedIds } },
+        });
+        for (const property of properties) {
+          void notifySearchAlertsForPublishedListing(dbPropertyToListing(property)).catch((err) => {
+            console.error("[search-alerts] bulk publish notify failed", err);
+          });
+        }
+      }
+    }
 
     return NextResponse.json({ updated: result.count });
   } catch (error) {

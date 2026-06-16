@@ -18,12 +18,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { searchParams } = new URL(request.url);
-  const frequency = searchParams.get("frequency") === "weekly" ? "weekly" : "daily";
-
   try {
-    const result = await runSearchAlertDigests(frequency);
-    return NextResponse.json({ ok: true, frequency, ...result });
+    const result = await runSearchAlertDigests();
+    return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     console.error("[cron/search-alerts]", err);
     return NextResponse.json(

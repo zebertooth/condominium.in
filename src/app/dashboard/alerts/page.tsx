@@ -7,6 +7,7 @@ import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
 import { createMetadata } from "@/lib/seo";
+import { touchSearchAlertEngagement } from "@/lib/search-alert-digest";
 
 export async function generateMetadata() {
   return createMetadata({
@@ -22,6 +23,8 @@ export default async function AlertsPage() {
 
   const locale = await getLocale();
   const lp = (path: string) => localePath(path, locale);
+
+  await touchSearchAlertEngagement(user.id);
 
   const alerts = await prisma.searchAlert.findMany({
     where: { userId: user.id },

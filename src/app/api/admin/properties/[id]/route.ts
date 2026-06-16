@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { adminRouteError, requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/db";
 import { logPriceChange } from "@/lib/price-history";
-import { clearSponsorReminderFields } from "@/lib/sponsor-renewal-reminders";
-import { normalizePropertyLocaleFields } from "@/lib/property-locale-fields";
+import { notifySearchAlertsForPublishedListing } from "@/lib/search-alert-digest";
+import { clearSponsorReminderFields } from "@/lib/sponsor-renewal-reminders";import { normalizePropertyLocaleFields } from "@/lib/property-locale-fields";
 import { validateProjectId } from "@/lib/projects";
 import { dbPropertyToListing } from "@/lib/user-properties";
 import { propertySchema } from "@/lib/validation";
@@ -61,6 +61,7 @@ export async function PUT(request: Request, context: RouteContext) {
         npaBank: data.npaBank,
         npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
+        furnishing: data.furnishing ?? "unknown",
         images: JSON.stringify(data.images),
         projectId,
       },
@@ -142,10 +143,22 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "ไม่มีข้อมูลที่จะอัปเดต" }, { status: 400 });
     }
 
+    const existing = await prisma.userProperty.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "ไม่พบประกาศ" }, { status: 404 });
+    }
+
     const property = await prisma.userProperty.update({
       where: { id },
       data,
     });
+
+    if (data.status === "published" && existing.status !== "published") {
+      const listing = dbPropertyToListing(property);
+      void notifySearchAlertsForPublishedListing(listing).catch((err) => {
+        console.error("[search-alerts] publish notify failed", err);
+      });
+    }
 
     return NextResponse.json({ property: dbPropertyToListing(property) });
   } catch (error) {

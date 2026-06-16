@@ -500,16 +500,19 @@ Done / env-gated:
 - [x] Sort + rich cards on `/buy` `/rent`
 - [x] Sqm/furnishing filters, list/map toggle, SEO hubs (`/buy/bts/…`, etc.)
 
-**Next code tasks (Phase 11):**
-- [ ] Verify crons + AdSense + GSC (ops)
-- [ ] Editorial cadence — 2 reviews/month, area roundups
-- [ ] Rich blog editor (TipTap/Markdown)
-- [ ] `furnishing` field on `UserProperty` (proper enum)
-- [ ] Listing compare shortlist
+**Done (Phase 11 — session 45):**
+- [x] `/admin/ops` checklist (cron, AdSense, GSC env)
+- [x] `furnishing` enum on `UserProperty` + post form + CSV
+- [x] Markdown blog editor (edit/preview) in admin
+- [x] Listing compare shortlist — `/compare`, max 4
+- [x] `/market` linked from area pages + review articles
+- [x] Editorial seed — Life Asoke Hype review #2 + Sukhumvit area roundup
 
-**Ops (user):**
-- [ ] Verify search-alert + sponsor-reminder crons with `CRON_SECRET`
-- [ ] AdSense slot IDs in `/admin/seo`, GSC, ThaiBulkSMS production verify
+**Ops (user — still on Vercel/GSC):**
+- [ ] Set `CRON_SECRET`, `GOOGLE_SITE_VERIFICATION`, AdSense client + slot IDs
+- [ ] `npm run db:deploy` for furnishing migration
+- [ ] GSC: submit sitemap, request indexing for SEO hubs
+- [ ] ThaiBulkSMS production verify
 
 ---
 

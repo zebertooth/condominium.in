@@ -86,7 +86,7 @@ export function AlertsList({ alerts: initialAlerts, locale }: AlertsListProps) {
                 <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
                   {alert.frequency === "daily"
                     ? t("alertFrequencyDaily", locale)
-                    : t("alertFrequencyWeekly", locale)}
+                    : t("alertFrequencyHybrid", locale)}
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-500">

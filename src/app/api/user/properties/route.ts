@@ -117,6 +117,7 @@ export async function POST(request: Request) {
         npaBank: data.npaBank,
         npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
+        furnishing: data.furnishing ?? "unknown",
         images: JSON.stringify(data.images),
         agentManaged: user.role === "user" ? (data.agentManaged ?? false) : false,
         projectId,

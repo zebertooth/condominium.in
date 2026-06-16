@@ -16,6 +16,7 @@ import {
 } from "@/lib/locale-content";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
+import { MarketTrendsBanner } from "@/components/market/MarketTrendsBanner";
 import { createMetadata } from "@/lib/seo";
 
 interface PageProps {
@@ -136,6 +137,8 @@ export default async function AreaPage({ params }: PageProps) {
           ))}
         </ul>
       )}
+
+      <MarketTrendsBanner locale={locale} district={area.name} />
 
       <div className="mt-10 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 p-6 text-white">
         <h2 className="text-xl font-bold">

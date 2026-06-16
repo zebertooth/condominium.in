@@ -72,6 +72,7 @@ type DbProperty = {
   npaBank: string | null;
   npaReferenceUrl: string | null;
   features: string;
+  furnishing: string;
   images: string;
   status: string;
   needsReview?: boolean;
@@ -146,6 +147,7 @@ export function dbPropertyToListing(p: DbProperty): Property {
     npaBank: p.npaBank ?? undefined,
     npaReferenceUrl: p.npaReferenceUrl ?? undefined,
     features: parseJsonArray(p.features),
+    furnishing: (p.furnishing as Property["furnishing"]) || "unknown",
     images: normalizeListingImages(parseJsonArray(p.images)),
     featured: activeSponsor,
     sponsoredUntil: p.sponsoredUntil?.toISOString() ?? undefined,

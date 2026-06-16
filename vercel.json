@@ -2,11 +2,7 @@
   "buildCommand": "npm run vercel-build",
   "crons": [
     {
-      "path": "/api/cron/search-alerts?frequency=daily",
-      "schedule": "0 1 * * *"
-    },
-    {
-      "path": "/api/cron/search-alerts?frequency=weekly",
+      "path": "/api/cron/search-alerts",
       "schedule": "0 2 * * 1"
     },
     {

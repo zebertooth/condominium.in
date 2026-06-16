@@ -6,6 +6,8 @@ import { AnalyticsLoader, CookieConsent } from "@/components/layout/CookieConsen
 import { FloatingFeedbackWidget } from "@/components/layout/FloatingFeedbackWidget";
 import { TurnstileScript } from "@/components/security/TurnstileScript";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { CompareBar } from "@/components/property/CompareBar";
+import { CompareProvider } from "@/components/property/CompareProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -52,6 +54,7 @@ export default async function RootLayout({
     <html lang={htmlLang(locale)} dir={dir} className={`${notoSansThai.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <LocaleProvider locale={locale}>
+          <CompareProvider>
           <JsonLd data={organizationJsonLd} />
           <AnalyticsLoader />
           <TurnstileScript />
@@ -64,6 +67,8 @@ export default async function RootLayout({
           <Footer locale={locale} />
           <FloatingFeedbackWidget />
           <CookieConsent />
+          <CompareBar />
+          </CompareProvider>
         </LocaleProvider>
       </body>
     </html>

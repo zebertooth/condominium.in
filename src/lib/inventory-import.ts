@@ -2,12 +2,13 @@ import { prisma } from "@/lib/db";
 import { parseCsv, validateAndParseRow, type ImportResult } from "@/lib/csv-import";
 import { normalizeListingImages, parseListingImageUrls } from "@/lib/listing-images";
 import { logPriceChange } from "@/lib/price-history";
+import { notifySearchAlertsForPublishedListing } from "@/lib/search-alert-digest";
 import {
   validateAndParseProjectRow,
   type ProjectImportResult,
 } from "@/lib/project-csv-import";
 import { uniqueProjectSlug } from "@/lib/projects";
-import { uniqueSlug } from "@/lib/user-properties";
+import { dbPropertyToListing, uniqueSlug } from "@/lib/user-properties";
 
 async function resolveProjectId(projectSlug?: string): Promise<{ id: string } | { error: string } | null> {
   if (!projectSlug) return null;
@@ -67,6 +68,13 @@ export async function importListingsCsv(content: string, adminUserId: string): P
         ? data.features.split(",").map((f) => f.trim()).filter(Boolean)
         : [];
 
+      const furnishingValues = ["furnished", "unfurnished", "partially", "unknown"] as const;
+      const furnishingRaw = data.furnishing?.trim().toLowerCase();
+      const furnishing =
+        furnishingRaw && furnishingValues.includes(furnishingRaw as (typeof furnishingValues)[number])
+          ? furnishingRaw
+          : "unknown";
+
       const imageUrls = parseListingImageUrls(data.images);
       if (data.images?.trim() && imageUrls.length === 0) {
         result.errors.push({
@@ -105,6 +113,7 @@ export async function importListingsCsv(content: string, adminUserId: string): P
           npaReferenceUrl: data.npaReferenceUrl,
           projectId: projectResult && "id" in projectResult ? projectResult.id : null,
           features: JSON.stringify(features),
+          furnishing,
           images: JSON.stringify(images),
           status: "published",
           needsReview: false,
@@ -112,6 +121,10 @@ export async function importListingsCsv(content: string, adminUserId: string): P
         },
       });
       await logPriceChange(created.id, data.price, data.listingType);
+
+      void notifySearchAlertsForPublishedListing(dbPropertyToListing(created)).catch((err) => {
+        console.error("[search-alerts] import notify failed", err);
+      });
 
       result.imported++;
     } catch (err) {

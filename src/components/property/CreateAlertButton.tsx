@@ -13,9 +13,9 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [frequency, setFrequency] = useState<"daily" | "weekly">("daily");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [successWithEmail, setSuccessWithEmail] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const filters = {
@@ -50,7 +50,6 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
           name: name.trim(),
           listingType,
           filters,
-          frequency,
         }),
       });
 
@@ -60,12 +59,15 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
         return;
       }
 
+      const data = (await res.json()) as { welcomeEmailSent?: boolean };
+      setSuccessWithEmail(Boolean(data.welcomeEmailSent));
       setSuccess(true);
       setTimeout(() => {
         setOpen(false);
         setSuccess(false);
+        setSuccessWithEmail(false);
         setName("");
-      }, 2000);
+      }, 2500);
     } catch {
       setError(t("createAlertNetworkError", locale));
     } finally {
@@ -117,7 +119,9 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                   />
                 </svg>
                 <p className="mt-2 font-medium text-green-800">
-                  {t("createAlertSuccess", locale)}
+                  {successWithEmail
+                    ? t("createAlertSuccessEmail", locale)
+                    : t("createAlertSuccess", locale)}
                 </p>
               </div>
             ) : (
@@ -136,35 +140,9 @@ export function CreateAlertButton({ listingType, locale }: CreateAlertButtonProp
                     />
                   </div>
 
-                  <div>
-                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      {t("createAlertFrequency", locale)}
-                    </label>
-                    <div className="flex gap-3">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          checked={frequency === "daily"}
-                          onChange={() => setFrequency("daily")}
-                          className="text-teal-600"
-                        />
-                        <span className="text-sm text-slate-700">
-                          {t("alertFrequencyDaily", locale)}
-                        </span>
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          checked={frequency === "weekly"}
-                          onChange={() => setFrequency("weekly")}
-                          className="text-teal-600"
-                        />
-                        <span className="text-sm text-slate-700">
-                          {t("alertFrequencyWeekly", locale)}
-                        </span>
-                      </label>
-                    </div>
-                  </div>
+                  <p className="rounded-lg bg-teal-50 px-3 py-2 text-xs text-teal-800">
+                    {t("createAlertHowItWorks", locale)}
+                  </p>
 
                   {hasFilters && (
                     <div className="rounded-lg bg-slate-50 p-3">

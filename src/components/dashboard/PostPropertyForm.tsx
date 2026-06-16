@@ -130,6 +130,7 @@ export function PostPropertyForm({
         npaBank: String(form.get("npaBank") || "") || undefined,
         npaReferenceUrl: String(form.get("npaReferenceUrl") || "") || undefined,
         features: String(form.get("features") || "").split(",").map((f) => f.trim()).filter(Boolean),
+        furnishing: String(form.get("furnishing") || "unknown"),
         images: finalImages,
         projectId: projectId || null,
         ...(showAgentManaged ? { agentManaged } : {}),
@@ -365,6 +366,20 @@ export function PostPropertyForm({
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("formFloor")}</label>
         <input name="floor" type="number" defaultValue={initial?.floor} className={inputClass} />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700">{t("formFurnishing")}</label>
+        <select
+          name="furnishing"
+          defaultValue={initial?.furnishing ?? "unknown"}
+          className={inputClass}
+        >
+          <option value="unknown">{t("furnishingUnknown")}</option>
+          <option value="furnished">{t("furnishingFurnished")}</option>
+          <option value="partially">{t("furnishingPartially")}</option>
+          <option value="unfurnished">{t("furnishingUnfurnished")}</option>
+        </select>
       </div>
 
       <div>

@@ -16,6 +16,8 @@ const LABELS: Record<keyof ReturnType<typeof getIntegrationStatus>, string> = {
   slipok: "SlipOK",
   ga4: "GA4",
   turnstile: "Turnstile (CAPTCHA)",
+  adsense: "AdSense",
+  cronSecret: "CRON_SECRET",
 };
 
 export async function IntegrationStatus() {

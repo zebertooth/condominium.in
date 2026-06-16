@@ -9,11 +9,13 @@ import { formatListedAge, formatPricePerSqm } from "@/lib/listing-sort";
 import { propertyTypeLabel, showsRoomCounts } from "@/lib/property-types";
 import type { Property } from "@/types/property";
 import { SaveButton } from "./SaveButton";
+import { CompareButton } from "./CompareButton";
 
 interface PropertyCardProps {
   property: Property;
   locale?: Locale;
   showSaveButton?: boolean;
+  showCompareButton?: boolean;
   isSaved?: boolean;
 }
 
@@ -21,6 +23,7 @@ export function PropertyCard({
   property,
   locale = defaultLocale,
   showSaveButton = false,
+  showCompareButton = false,
   isSaved = false,
 }: PropertyCardProps) {
   const title = localizedPropertyTitle(property, locale);
@@ -36,9 +39,14 @@ export function PropertyCard({
   const listedAge = formatListedAge(property.publishedAt, locale);
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
-      {showSaveButton && (
-        <div className="absolute right-3 top-3 z-10">
-          <SaveButton propertySlug={property.slug} initialSaved={isSaved} />
+      {(showSaveButton || showCompareButton) && (
+        <div className="absolute right-3 top-3 z-10 flex gap-2">
+          {showCompareButton && (
+            <CompareButton propertySlug={property.slug} className="relative" />
+          )}
+          {showSaveButton && (
+            <SaveButton propertySlug={property.slug} initialSaved={isSaved} />
+          )}
         </div>
       )}
       <Link href={localePath(`/property/${property.slug}`, locale)} className="block">

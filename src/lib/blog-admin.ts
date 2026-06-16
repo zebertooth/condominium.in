@@ -34,6 +34,9 @@ export async function blogArticleToDbData(data: BlogArticleInput) {
     galleryUrls: JSON.stringify(data.galleryUrls ?? []),
     videoUrl: data.videoUrl ?? "",
     relatedSlugs: JSON.stringify(data.relatedSlugs ?? []),
+    sourceName: data.sourceName ?? "",
+    sourceUrl: data.sourceUrl ?? "",
+    sourceTitle: data.sourceTitle ?? "",
   };
 }
 
@@ -64,6 +67,9 @@ export function blogArticleFromDb(row: {
   galleryUrls: string;
   videoUrl: string;
   relatedSlugs: string;
+  sourceName: string;
+  sourceUrl: string;
+  sourceTitle: string;
 }) {
   let facts = {};
   let sections: { id: string; title: string }[] = [];
@@ -118,5 +124,8 @@ export function blogArticleFromDb(row: {
     galleryUrls,
     videoUrl: row.videoUrl,
     relatedSlugs,
+    sourceName: row.sourceName,
+    sourceUrl: row.sourceUrl,
+    sourceTitle: row.sourceTitle,
   };
 }

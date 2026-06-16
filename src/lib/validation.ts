@@ -129,6 +129,7 @@ export const propertySchema = z.object({
   npaBank: z.string().max(100).optional(),
   npaReferenceUrl: z.string().max(500).optional(),
   features: z.array(z.string()).default([]),
+  furnishing: z.enum(["furnished", "unfurnished", "partially", "unknown"]).default("unknown"),
   images: z
     .array(
       z

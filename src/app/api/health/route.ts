@@ -25,6 +25,8 @@ export async function GET() {
       database: "connected",
       paidFeatures: PAID_FEATURES_ENABLED,
       integrations,
+      cronConfigured: integrations.cronSecret,
+      adsenseConfigured: integrations.adsense,
       thaibulksms,
       demoListings,
       timestamp: new Date().toISOString(),

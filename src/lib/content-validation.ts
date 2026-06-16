@@ -74,4 +74,7 @@ export const blogArticleSchema = z.object({
   galleryUrls: z.array(z.string()).optional(),
   videoUrl: z.string().optional(),
   relatedSlugs: z.array(z.string()).optional(),
+  sourceName: z.string().optional(),
+  sourceUrl: z.string().optional(),
+  sourceTitle: z.string().optional(),
 });

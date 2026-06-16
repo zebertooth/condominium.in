@@ -25,6 +25,7 @@ export interface CsvPropertyRow {
   npaBank?: string;
   npaReferenceUrl?: string;
   projectSlug?: string;
+  furnishing?: string;
   features?: string;
   images?: string;
 }
@@ -150,6 +151,7 @@ export function validateAndParseRow(
     npaBank: obj.npabank?.trim() || undefined,
     npaReferenceUrl: obj.npareferenceurl?.trim() || undefined,
     projectSlug: obj.projectslug?.trim() || undefined,
+    furnishing: obj.furnishing?.trim() || undefined,
     features: obj.features?.trim() || undefined,
     images: obj.images?.trim() || undefined,
   };
@@ -182,6 +184,7 @@ export function generateSampleCsv(): string {
     "npaBank",
     "npaReferenceUrl",
     "projectSlug",
+    "furnishing",
     "features",
     "images",
   ];
@@ -210,6 +213,7 @@ export function generateSampleCsv(): string {
     "",
     "",
     "life-sathorn-silom",
+    "furnished",
     "สระว่ายน้ำ,ฟิตเนส,ที่จอดรถ",
     "https://example.com/img1.jpg,https://example.com/img2.jpg",
   ];

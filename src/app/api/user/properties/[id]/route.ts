@@ -76,6 +76,7 @@ export async function PUT(request: Request, context: RouteContext) {
         npaBank: data.npaBank,
         npaReferenceUrl: data.npaReferenceUrl,
         features: JSON.stringify(data.features),
+        furnishing: data.furnishing ?? "unknown",
         images: JSON.stringify(data.images),
         agentManaged: user.role === "user" ? (data.agentManaged ?? existing.agentManaged) : false,
         projectId,

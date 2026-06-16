@@ -7,6 +7,9 @@ import {
   DEFAULT_BLOG_POSTS,
   DEFAULT_TEAM_AGENTS,
   PILOT_PROJECT_REVIEW,
+  SECOND_PROJECT_REVIEW,
+  SUKHUMVIT_AREA_ROUNDUP,
+  ART4D_ARTICLES,
 } from "../src/lib/default-content";
 import { normalizeDatabaseUrl } from "../src/lib/database-url";
 import type { BlogPost } from "../src/types/property";
@@ -49,7 +52,81 @@ function blogPostData(post: BlogPost, projectId?: string) {
     galleryUrls: post.galleryUrls ? JSON.stringify(post.galleryUrls) : "[]",
     videoUrl: post.videoUrl ?? "",
     relatedSlugs: post.relatedSlugs ? JSON.stringify(post.relatedSlugs) : "[]",
+    sourceName: post.sourceName ?? "",
+    sourceUrl: post.sourceUrl ?? "",
+    sourceTitle: post.sourceTitle ?? "",
   };
+}
+
+async function seedArt4dArticles() {
+  let project = await prisma.project.findUnique({ where: { slug: "dusit-central-park" } });
+  if (!project) {
+    project = await prisma.project.create({
+      data: {
+        slug: "dusit-central-park",
+        name: "Dusit Central Park",
+        nameEn: "Dusit Central Park",
+        developer: "Dusit Thani × Central Pattana",
+        location: "Silom-Sathorn, Bangkok",
+        district: "บางรัก",
+        btsStation: "ศาลาแดง",
+        amenities: JSON.stringify(["Roof Park", "Central Park retail", "Pool", "Fitness"]),
+        totalUnits: 406,
+        completionDate: new Date("2025-01-01"),
+        imageUrl: ART4D_ARTICLES[0]?.imageUrl ?? "",
+        description: "มิกซ์ยูส Dusit Central Park — โรงแรม ที่พักอาศัย ออฟฟิศ Central Park",
+        descriptionEn: "Dusit Central Park mixed-use — hotel, residences, office, Central Park retail",
+        published: true,
+      },
+    });
+    console.log("Seeded project: Dusit Central Park");
+  }
+
+  for (const post of ART4D_ARTICLES) {
+    const existing = await prisma.blogArticle.findUnique({ where: { slug: post.slug } });
+    if (existing) continue;
+    const projectId = post.projectSlug ? project.id : undefined;
+    await prisma.blogArticle.create({
+      data: blogPostData(post, projectId),
+    });
+    console.log(`Seeded art4d article: ${post.slug}`);
+  }
+}
+
+async function seedPhase11Editorial() {
+  let lifeProject = await prisma.project.findUnique({ where: { slug: "life-asoke-hype" } });
+  if (!lifeProject) {
+    lifeProject = await prisma.project.create({
+      data: {
+        slug: "life-asoke-hype",
+        name: "Life Asoke Hype",
+        nameEn: "Life Asoke Hype",
+        developer: "AP (Thailand)",
+        location: "อโศก กรุงเทพฯ",
+        district: "วัฒนา",
+        btsStation: "อโศก",
+        amenities: JSON.stringify(["Infinity pool", "Co-working", "Fitness", "รปภ. 24 ชม."]),
+        totalUnits: 1200,
+        completionDate: new Date("2021-06-01"),
+        imageUrl: SECOND_PROJECT_REVIEW.imageUrl ?? "",
+        description: "คอนโด Life Asoke Hype ใกล้ BTS อโศก",
+        descriptionEn: "Life Asoke Hype condo near BTS Asoke",
+        published: true,
+      },
+    });
+    console.log("Seeded project: Life Asoke Hype");
+  }
+
+  for (const post of [SECOND_PROJECT_REVIEW, SUKHUMVIT_AREA_ROUNDUP]) {
+    const existing = await prisma.blogArticle.findUnique({ where: { slug: post.slug } });
+    if (existing) continue;
+    const projectId =
+      post.slug === SECOND_PROJECT_REVIEW.slug ? lifeProject.id : undefined;
+    await prisma.blogArticle.create({
+      data: blogPostData(post, projectId),
+    });
+    console.log(`Seeded editorial: ${post.slug}`);
+  }
 }
 
 async function seedPilotProjectAndReview() {
@@ -120,6 +197,8 @@ async function seedContent() {
   }
 
   await seedPilotProjectAndReview();
+  await seedPhase11Editorial();
+  await seedArt4dArticles();
 }
 
 async function main() {

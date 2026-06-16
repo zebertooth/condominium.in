@@ -59,30 +59,32 @@ export async function getListingBySlug(
   return demo;
 }
 
+export function propertyMatchesFilters(p: Property, filters: SearchFilters): boolean {
+  if (filters.listingType && p.listingType !== filters.listingType) return false;
+  if (filters.propertyType && p.propertyType !== filters.propertyType) return false;
+  if (filters.propertyCategory && filters.propertyCategory !== "all") {
+    const allowed = CATEGORY_PROPERTY_TYPES[filters.propertyCategory];
+    if (!allowed.includes(p.propertyType)) return false;
+  }
+  if (filters.district && p.district !== filters.district) return false;
+  if (filters.btsStation && p.btsStation !== filters.btsStation) return false;
+  if (filters.bedrooms && p.bedrooms < filters.bedrooms) return false;
+  if (filters.minPrice && p.price < filters.minPrice) return false;
+  if (filters.maxPrice && p.price > filters.maxPrice) return false;
+  if (filters.minSqm && p.areaSqm < filters.minSqm) return false;
+  if (filters.maxSqm && p.areaSqm > filters.maxSqm) return false;
+  if (filters.furnishing === "furnished" && !isPropertyFurnished(p)) return false;
+  if (filters.furnishing === "unfurnished" && isPropertyFurnished(p)) return false;
+  if (filters.query) {
+    const tokens = filters.query.toLowerCase().split(/[\s,]+/).filter((t) => t.length >= 2);
+    const haystack = getPropertySearchText(p);
+    if (tokens.length > 0 && !tokens.some((t) => haystack.includes(t))) return false;
+  }
+  return true;
+}
+
 function applyFilters(list: Property[], filters: SearchFilters): Property[] {
-  return list.filter((p) => {
-    if (filters.listingType && p.listingType !== filters.listingType) return false;
-    if (filters.propertyType && p.propertyType !== filters.propertyType) return false;
-    if (filters.propertyCategory && filters.propertyCategory !== "all") {
-      const allowed = CATEGORY_PROPERTY_TYPES[filters.propertyCategory];
-      if (!allowed.includes(p.propertyType)) return false;
-    }
-    if (filters.district && p.district !== filters.district) return false;
-    if (filters.btsStation && p.btsStation !== filters.btsStation) return false;
-    if (filters.bedrooms && p.bedrooms < filters.bedrooms) return false;
-    if (filters.minPrice && p.price < filters.minPrice) return false;
-    if (filters.maxPrice && p.price > filters.maxPrice) return false;
-    if (filters.minSqm && p.areaSqm < filters.minSqm) return false;
-    if (filters.maxSqm && p.areaSqm > filters.maxSqm) return false;
-    if (filters.furnishing === "furnished" && !isPropertyFurnished(p)) return false;
-    if (filters.furnishing === "unfurnished" && isPropertyFurnished(p)) return false;
-    if (filters.query) {
-      const tokens = filters.query.toLowerCase().split(/[\s,]+/).filter((t) => t.length >= 2);
-      const haystack = getPropertySearchText(p);
-      if (tokens.length > 0 && !tokens.some((t) => haystack.includes(t))) return false;
-    }
-    return true;
-  });
+  return list.filter((p) => propertyMatchesFilters(p, filters));
 }
 
 export async function filterListings(filters: SearchFilters): Promise<Property[]> {

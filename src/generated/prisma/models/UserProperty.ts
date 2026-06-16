@@ -80,6 +80,7 @@ export type UserPropertyMinAggregateOutputType = {
   npaBank: string | null
   npaReferenceUrl: string | null
   features: string | null
+  furnishing: string | null
   images: string | null
   status: string | null
   needsReview: boolean | null
@@ -126,6 +127,7 @@ export type UserPropertyMaxAggregateOutputType = {
   npaBank: string | null
   npaReferenceUrl: string | null
   features: string | null
+  furnishing: string | null
   images: string | null
   status: string | null
   needsReview: boolean | null
@@ -172,6 +174,7 @@ export type UserPropertyCountAggregateOutputType = {
   npaBank: number
   npaReferenceUrl: number
   features: number
+  furnishing: number
   images: number
   status: number
   needsReview: number
@@ -242,6 +245,7 @@ export type UserPropertyMinAggregateInputType = {
   npaBank?: true
   npaReferenceUrl?: true
   features?: true
+  furnishing?: true
   images?: true
   status?: true
   needsReview?: true
@@ -288,6 +292,7 @@ export type UserPropertyMaxAggregateInputType = {
   npaBank?: true
   npaReferenceUrl?: true
   features?: true
+  furnishing?: true
   images?: true
   status?: true
   needsReview?: true
@@ -334,6 +339,7 @@ export type UserPropertyCountAggregateInputType = {
   npaBank?: true
   npaReferenceUrl?: true
   features?: true
+  furnishing?: true
   images?: true
   status?: true
   needsReview?: true
@@ -467,6 +473,7 @@ export type UserPropertyGroupByOutputType = {
   npaBank: string | null
   npaReferenceUrl: string | null
   features: string
+  furnishing: string
   images: string
   status: string
   needsReview: boolean
@@ -536,6 +543,7 @@ export type UserPropertyWhereInput = {
   npaBank?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   npaReferenceUrl?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   features?: Prisma.StringFilter<"UserProperty"> | string
+  furnishing?: Prisma.StringFilter<"UserProperty"> | string
   images?: Prisma.StringFilter<"UserProperty"> | string
   status?: Prisma.StringFilter<"UserProperty"> | string
   needsReview?: Prisma.BoolFilter<"UserProperty"> | boolean
@@ -585,6 +593,7 @@ export type UserPropertyOrderByWithRelationInput = {
   npaBank?: Prisma.SortOrderInput | Prisma.SortOrder
   npaReferenceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
+  furnishing?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
@@ -637,6 +646,7 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   npaBank?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   npaReferenceUrl?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   features?: Prisma.StringFilter<"UserProperty"> | string
+  furnishing?: Prisma.StringFilter<"UserProperty"> | string
   images?: Prisma.StringFilter<"UserProperty"> | string
   status?: Prisma.StringFilter<"UserProperty"> | string
   needsReview?: Prisma.BoolFilter<"UserProperty"> | boolean
@@ -686,6 +696,7 @@ export type UserPropertyOrderByWithAggregationInput = {
   npaBank?: Prisma.SortOrderInput | Prisma.SortOrder
   npaReferenceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
+  furnishing?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
@@ -740,6 +751,7 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   npaBank?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
   npaReferenceUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProperty"> | string | null
   features?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
+  furnishing?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   images?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   status?: Prisma.StringWithAggregatesFilter<"UserProperty"> | string
   needsReview?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
@@ -785,6 +797,7 @@ export type UserPropertyCreateInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -833,6 +846,7 @@ export type UserPropertyUncheckedCreateInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -879,6 +893,7 @@ export type UserPropertyUpdateInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -927,6 +942,7 @@ export type UserPropertyUncheckedUpdateInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -974,6 +990,7 @@ export type UserPropertyCreateManyInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1019,6 +1036,7 @@ export type UserPropertyUpdateManyMutationInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1064,6 +1082,7 @@ export type UserPropertyUncheckedUpdateManyInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1120,6 +1139,7 @@ export type UserPropertyCountOrderByAggregateInput = {
   npaBank?: Prisma.SortOrder
   npaReferenceUrl?: Prisma.SortOrder
   features?: Prisma.SortOrder
+  furnishing?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
@@ -1177,6 +1197,7 @@ export type UserPropertyMaxOrderByAggregateInput = {
   npaBank?: Prisma.SortOrder
   npaReferenceUrl?: Prisma.SortOrder
   features?: Prisma.SortOrder
+  furnishing?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
@@ -1223,6 +1244,7 @@ export type UserPropertyMinOrderByAggregateInput = {
   npaBank?: Prisma.SortOrder
   npaReferenceUrl?: Prisma.SortOrder
   features?: Prisma.SortOrder
+  furnishing?: Prisma.SortOrder
   images?: Prisma.SortOrder
   status?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
@@ -1398,6 +1420,7 @@ export type UserPropertyCreateWithoutUserInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1444,6 +1467,7 @@ export type UserPropertyUncheckedCreateWithoutUserInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1520,6 +1544,7 @@ export type UserPropertyScalarWhereInput = {
   npaBank?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   npaReferenceUrl?: Prisma.StringNullableFilter<"UserProperty"> | string | null
   features?: Prisma.StringFilter<"UserProperty"> | string
+  furnishing?: Prisma.StringFilter<"UserProperty"> | string
   images?: Prisma.StringFilter<"UserProperty"> | string
   status?: Prisma.StringFilter<"UserProperty"> | string
   needsReview?: Prisma.BoolFilter<"UserProperty"> | boolean
@@ -1565,6 +1590,7 @@ export type UserPropertyCreateWithoutProjectInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1612,6 +1638,7 @@ export type UserPropertyUncheckedCreateWithoutProjectInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1683,6 +1710,7 @@ export type UserPropertyCreateWithoutPriceHistoryInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1730,6 +1758,7 @@ export type UserPropertyUncheckedCreateWithoutPriceHistoryInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1791,6 +1820,7 @@ export type UserPropertyUpdateWithoutPriceHistoryInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1838,6 +1868,7 @@ export type UserPropertyUncheckedUpdateWithoutPriceHistoryInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1883,6 +1914,7 @@ export type UserPropertyCreateManyUserInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -1928,6 +1960,7 @@ export type UserPropertyUpdateWithoutUserInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1974,6 +2007,7 @@ export type UserPropertyUncheckedUpdateWithoutUserInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2020,6 +2054,7 @@ export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2066,6 +2101,7 @@ export type UserPropertyCreateManyProjectInput = {
   npaBank?: string | null
   npaReferenceUrl?: string | null
   features?: string
+  furnishing?: string
   images?: string
   status?: string
   needsReview?: boolean
@@ -2110,6 +2146,7 @@ export type UserPropertyUpdateWithoutProjectInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2157,6 +2194,7 @@ export type UserPropertyUncheckedUpdateWithoutProjectInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2203,6 +2241,7 @@ export type UserPropertyUncheckedUpdateManyWithoutProjectInput = {
   npaBank?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   npaReferenceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   features?: Prisma.StringFieldUpdateOperationsInput | string
+  furnishing?: Prisma.StringFieldUpdateOperationsInput | string
   images?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2279,6 +2318,7 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   npaBank?: boolean
   npaReferenceUrl?: boolean
   features?: boolean
+  furnishing?: boolean
   images?: boolean
   status?: boolean
   needsReview?: boolean
@@ -2329,6 +2369,7 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   npaBank?: boolean
   npaReferenceUrl?: boolean
   features?: boolean
+  furnishing?: boolean
   images?: boolean
   status?: boolean
   needsReview?: boolean
@@ -2377,6 +2418,7 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   npaBank?: boolean
   npaReferenceUrl?: boolean
   features?: boolean
+  furnishing?: boolean
   images?: boolean
   status?: boolean
   needsReview?: boolean
@@ -2425,6 +2467,7 @@ export type UserPropertySelectScalar = {
   npaBank?: boolean
   npaReferenceUrl?: boolean
   features?: boolean
+  furnishing?: boolean
   images?: boolean
   status?: boolean
   needsReview?: boolean
@@ -2439,7 +2482,7 @@ export type UserPropertySelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "titleEn" | "descriptionEn" | "titleZh" | "descriptionZh" | "titleJa" | "descriptionJa" | "titleAr" | "descriptionAr" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "sponsorReminder3dAt" | "sponsorReminder1dAt" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "slug" | "title" | "description" | "titleEn" | "descriptionEn" | "titleZh" | "descriptionZh" | "titleJa" | "descriptionJa" | "titleAr" | "descriptionAr" | "highlights" | "listingType" | "propertyType" | "price" | "priceUnit" | "bedrooms" | "bathrooms" | "areaSqm" | "landSqWah" | "floor" | "district" | "btsStation" | "address" | "latitude" | "longitude" | "npaBank" | "npaReferenceUrl" | "features" | "furnishing" | "images" | "status" | "needsReview" | "moderationFlags" | "isSponsored" | "sponsoredUntil" | "sponsorReminder3dAt" | "sponsorReminder1dAt" | "agentManaged" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.UserProperty$projectArgs<ExtArgs>
@@ -2494,6 +2537,7 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     npaBank: string | null
     npaReferenceUrl: string | null
     features: string
+    furnishing: string
     images: string
     status: string
     needsReview: boolean
@@ -2963,6 +3007,7 @@ export interface UserPropertyFieldRefs {
   readonly npaBank: Prisma.FieldRef<"UserProperty", 'String'>
   readonly npaReferenceUrl: Prisma.FieldRef<"UserProperty", 'String'>
   readonly features: Prisma.FieldRef<"UserProperty", 'String'>
+  readonly furnishing: Prisma.FieldRef<"UserProperty", 'String'>
   readonly images: Prisma.FieldRef<"UserProperty", 'String'>
   readonly status: Prisma.FieldRef<"UserProperty", 'String'>
   readonly needsReview: Prisma.FieldRef<"UserProperty", 'Boolean'>

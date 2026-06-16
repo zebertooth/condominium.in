@@ -6,6 +6,8 @@ import { ArticleToc } from "@/components/blog/ArticleToc";
 import { FactSheet } from "@/components/blog/FactSheet";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PropertyListingCarousel } from "@/components/property/PropertyListingCarousel";
+import { SourceCredit } from "@/components/blog/SourceCredit";
+import { MarketTrendsBanner } from "@/components/market/MarketTrendsBanner";
 import type { Locale } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
 import { renderBlogContent, youtubeEmbedUrl } from "@/lib/blog-render";
@@ -174,6 +176,8 @@ export function ReviewArticleLayout({
             </div>
           )}
 
+          <MarketTrendsBanner locale={locale} />
+
           {relatedListings.length > 0 && (
             <div>
               <h2 className="text-xl font-bold text-slate-900">{t("blogRelatedListings", locale)}</h2>
@@ -198,6 +202,8 @@ export function ReviewArticleLayout({
           )}
         </aside>
       </div>
+
+      <SourceCredit post={post} locale={locale} />
 
       <div className="mt-12 rounded-2xl bg-teal-50 p-6">
         <h2 className="font-bold text-teal-900">

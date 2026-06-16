@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-15 (session 44 — Phase 9+10 complete)  
-**Current phase:** **Phase 11** — growth, ops, editorial scale
+**Last updated:** 2026-06-15 (session 45 — Phase 11 code shipped)  
+**Current phase:** **Phase 11** — growth, ops, editorial scale (ops tasks remain on Vercel/GSC)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
@@ -625,20 +625,20 @@ Bangkok condo/house marketplace with:
 **Goal:** Production reliability, editorial cadence, and conversion polish.
 
 ### Must-have (ops)
-- [ ] Verify search-alert + sponsor-reminder crons (`CRON_SECRET` on Vercel)
-- [ ] AdSense slot IDs in `/admin/seo` + cookie-consent test
-- [ ] Google Search Console — submit sitemap, index new SEO hubs
+- [~] Verify search-alert + sponsor-reminder crons (`CRON_SECRET` on Vercel) — `/admin/ops` checklist added
+- [~] AdSense slot IDs in `/admin/seo` + cookie-consent test — ops panel tracks env + slots
+- [~] Google Search Console — submit sitemap, index new SEO hubs — `GOOGLE_SITE_VERIFICATION` env supported
 
 ### Must-have (editorial)
-- [ ] Publish **2 project reviews / month** (admin CMS)
-- [ ] Link each review → project page + 2–3 live listings
-- [ ] 1 area roundup article / month (link `/areas`)
+- [x] Publish **2 project reviews / month** (admin CMS) — review #2 seeded (Life Asoke Hype)
+- [~] Link each review → project page + 2–3 live listings — CMS ready; add slugs as inventory grows
+- [x] 1 area roundup article / month (link `/areas`) — Sukhumvit roundup seeded
 
 ### Should-have (product)
-- [ ] `furnishing` enum on `UserProperty` (replace features-string heuristic)
-- [ ] Rich blog editor (TipTap or Markdown preview)
-- [ ] `/market` area trends linked from blog + area pages
-- [ ] Listing compare shortlist (DD-style)
+- [x] `furnishing` enum on `UserProperty` (replace features-string heuristic)
+- [x] Rich blog editor (TipTap or Markdown preview) — edit/preview tabs in admin
+- [x] `/market` area trends linked from blog + area pages
+- [x] Listing compare shortlist (DD-style) — `/compare`, max 4 listings
 
 ### Nice-to-have
 - [ ] Blog newsletter signup

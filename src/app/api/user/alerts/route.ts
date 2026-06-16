@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { sendWelcomeDigestForAlert } from "@/lib/search-alert-digest";
 import { z } from "zod";
 
 const createAlertSchema = z.object({
@@ -14,7 +15,7 @@ const createAlertSchema = z.object({
     bedrooms: z.number().optional(),
     propertyCategory: z.string().optional(),
   }),
-  frequency: z.enum(["daily", "weekly"]).default("daily"),
+  frequency: z.enum(["daily", "weekly"]).default("weekly"),
 });
 
 export async function GET() {
@@ -75,15 +76,19 @@ export async function POST(request: Request) {
         name: parsed.data.name,
         listingType: parsed.data.listingType,
         filters: JSON.stringify(parsed.data.filters),
-        frequency: parsed.data.frequency,
+        frequency: "weekly",
+        lastEngagedAt: new Date(),
       },
     });
+
+    const welcomeEmail = await sendWelcomeDigestForAlert(alert.id);
 
     return NextResponse.json({
       alert: {
         ...alert,
         filters: JSON.parse(alert.filters),
       },
+      welcomeEmailSent: welcomeEmail.sent,
     });
   } catch (err) {
     console.error("Create alert error:", err);

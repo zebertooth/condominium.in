@@ -1,4 +1,6 @@
 import { lineConfigured } from "@/lib/line";
+import { adsenseClientId } from "@/lib/adsense";
+import { readCronSecret } from "@/lib/cron-auth";
 import { googleConfigured } from "@/lib/google-oauth";
 import { facebookConfigured } from "@/lib/facebook-oauth";
 import { turnstileConfigured } from "@/lib/captcha";
@@ -20,6 +22,8 @@ export interface IntegrationStatus {
   slipok: boolean;
   ga4: boolean;
   turnstile: boolean;
+  adsense: boolean;
+  cronSecret: boolean;
 }
 
 export function getIntegrationStatus(): IntegrationStatus {
@@ -36,6 +40,8 @@ export function getIntegrationStatus(): IntegrationStatus {
     slipok: Boolean(process.env.SLIPOK_API_KEY),
     ga4: isGaConfigured(),
     turnstile: turnstileConfigured(),
+    adsense: Boolean(adsenseClientId()),
+    cronSecret: Boolean(readCronSecret()),
   };
 }
 

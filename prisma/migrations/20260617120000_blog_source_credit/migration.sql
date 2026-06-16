@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "BlogArticle" ADD COLUMN "sourceName" TEXT NOT NULL DEFAULT '';
+ALTER TABLE "BlogArticle" ADD COLUMN "sourceUrl" TEXT NOT NULL DEFAULT '';
+ALTER TABLE "BlogArticle" ADD COLUMN "sourceTitle" TEXT NOT NULL DEFAULT '';

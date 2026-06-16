@@ -12,6 +12,7 @@ interface PropertyGridProps {
   infeedSlotId?: string;
   listingType?: "sale" | "rent";
   showSaveButtons?: boolean;
+  showCompareButtons?: boolean;
   savedSlugs?: Set<string>;
 }
 
@@ -21,6 +22,7 @@ export function PropertyGrid({
   infeedSlotId,
   listingType,
   showSaveButtons = false,
+  showCompareButtons = true,
   savedSlugs,
 }: PropertyGridProps) {
   if (properties.length === 0) {
@@ -49,6 +51,7 @@ export function PropertyGrid({
         property={property}
         locale={locale}
         showSaveButton={showSaveButtons}
+        showCompareButton={showCompareButtons}
         isSaved={savedSlugs?.has(property.slug) ?? false}
       />,
     );

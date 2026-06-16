@@ -65,6 +65,9 @@ export type BlogArticleMinAggregateOutputType = {
   galleryUrls: string | null
   videoUrl: string | null
   relatedSlugs: string | null
+  sourceName: string | null
+  sourceUrl: string | null
+  sourceTitle: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -98,6 +101,9 @@ export type BlogArticleMaxAggregateOutputType = {
   galleryUrls: string | null
   videoUrl: string | null
   relatedSlugs: string | null
+  sourceName: string | null
+  sourceUrl: string | null
+  sourceTitle: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -131,6 +137,9 @@ export type BlogArticleCountAggregateOutputType = {
   galleryUrls: number
   videoUrl: number
   relatedSlugs: number
+  sourceName: number
+  sourceUrl: number
+  sourceTitle: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -176,6 +185,9 @@ export type BlogArticleMinAggregateInputType = {
   galleryUrls?: true
   videoUrl?: true
   relatedSlugs?: true
+  sourceName?: true
+  sourceUrl?: true
+  sourceTitle?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -209,6 +221,9 @@ export type BlogArticleMaxAggregateInputType = {
   galleryUrls?: true
   videoUrl?: true
   relatedSlugs?: true
+  sourceName?: true
+  sourceUrl?: true
+  sourceTitle?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -242,6 +257,9 @@ export type BlogArticleCountAggregateInputType = {
   galleryUrls?: true
   videoUrl?: true
   relatedSlugs?: true
+  sourceName?: true
+  sourceUrl?: true
+  sourceTitle?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -362,6 +380,9 @@ export type BlogArticleGroupByOutputType = {
   galleryUrls: string
   videoUrl: string
   relatedSlugs: string
+  sourceName: string
+  sourceUrl: string
+  sourceTitle: string
   createdAt: Date
   updatedAt: Date
   _count: BlogArticleCountAggregateOutputType | null
@@ -418,6 +439,9 @@ export type BlogArticleWhereInput = {
   galleryUrls?: Prisma.StringFilter<"BlogArticle"> | string
   videoUrl?: Prisma.StringFilter<"BlogArticle"> | string
   relatedSlugs?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceName?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceUrl?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceTitle?: Prisma.StringFilter<"BlogArticle"> | string
   createdAt?: Prisma.DateTimeFilter<"BlogArticle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BlogArticle"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
@@ -452,6 +476,9 @@ export type BlogArticleOrderByWithRelationInput = {
   galleryUrls?: Prisma.SortOrder
   videoUrl?: Prisma.SortOrder
   relatedSlugs?: Prisma.SortOrder
+  sourceName?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  sourceTitle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
@@ -489,6 +516,9 @@ export type BlogArticleWhereUniqueInput = Prisma.AtLeast<{
   galleryUrls?: Prisma.StringFilter<"BlogArticle"> | string
   videoUrl?: Prisma.StringFilter<"BlogArticle"> | string
   relatedSlugs?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceName?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceUrl?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceTitle?: Prisma.StringFilter<"BlogArticle"> | string
   createdAt?: Prisma.DateTimeFilter<"BlogArticle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BlogArticle"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
@@ -523,6 +553,9 @@ export type BlogArticleOrderByWithAggregationInput = {
   galleryUrls?: Prisma.SortOrder
   videoUrl?: Prisma.SortOrder
   relatedSlugs?: Prisma.SortOrder
+  sourceName?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  sourceTitle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BlogArticleCountOrderByAggregateInput
@@ -564,6 +597,9 @@ export type BlogArticleScalarWhereWithAggregatesInput = {
   galleryUrls?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   videoUrl?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   relatedSlugs?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
+  sourceName?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
+  sourceUrl?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
+  sourceTitle?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BlogArticle"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BlogArticle"> | Date | string
 }
@@ -596,6 +632,9 @@ export type BlogArticleCreateInput = {
   galleryUrls?: string
   videoUrl?: string
   relatedSlugs?: string
+  sourceName?: string
+  sourceUrl?: string
+  sourceTitle?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutBlogArticlesInput
@@ -630,6 +669,9 @@ export type BlogArticleUncheckedCreateInput = {
   galleryUrls?: string
   videoUrl?: string
   relatedSlugs?: string
+  sourceName?: string
+  sourceUrl?: string
+  sourceTitle?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -662,6 +704,9 @@ export type BlogArticleUpdateInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutBlogArticlesNestedInput
@@ -696,6 +741,9 @@ export type BlogArticleUncheckedUpdateInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -729,6 +777,9 @@ export type BlogArticleCreateManyInput = {
   galleryUrls?: string
   videoUrl?: string
   relatedSlugs?: string
+  sourceName?: string
+  sourceUrl?: string
+  sourceTitle?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -761,6 +812,9 @@ export type BlogArticleUpdateManyMutationInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -794,6 +848,9 @@ export type BlogArticleUncheckedUpdateManyInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -827,6 +884,9 @@ export type BlogArticleCountOrderByAggregateInput = {
   galleryUrls?: Prisma.SortOrder
   videoUrl?: Prisma.SortOrder
   relatedSlugs?: Prisma.SortOrder
+  sourceName?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  sourceTitle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -865,6 +925,9 @@ export type BlogArticleMaxOrderByAggregateInput = {
   galleryUrls?: Prisma.SortOrder
   videoUrl?: Prisma.SortOrder
   relatedSlugs?: Prisma.SortOrder
+  sourceName?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  sourceTitle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -898,6 +961,9 @@ export type BlogArticleMinOrderByAggregateInput = {
   galleryUrls?: Prisma.SortOrder
   videoUrl?: Prisma.SortOrder
   relatedSlugs?: Prisma.SortOrder
+  sourceName?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  sourceTitle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -987,6 +1053,9 @@ export type BlogArticleCreateWithoutProjectInput = {
   galleryUrls?: string
   videoUrl?: string
   relatedSlugs?: string
+  sourceName?: string
+  sourceUrl?: string
+  sourceTitle?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1019,6 +1088,9 @@ export type BlogArticleUncheckedCreateWithoutProjectInput = {
   galleryUrls?: string
   videoUrl?: string
   relatedSlugs?: string
+  sourceName?: string
+  sourceUrl?: string
+  sourceTitle?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1081,6 +1153,9 @@ export type BlogArticleScalarWhereInput = {
   galleryUrls?: Prisma.StringFilter<"BlogArticle"> | string
   videoUrl?: Prisma.StringFilter<"BlogArticle"> | string
   relatedSlugs?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceName?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceUrl?: Prisma.StringFilter<"BlogArticle"> | string
+  sourceTitle?: Prisma.StringFilter<"BlogArticle"> | string
   createdAt?: Prisma.DateTimeFilter<"BlogArticle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BlogArticle"> | Date | string
 }
@@ -1113,6 +1188,9 @@ export type BlogArticleCreateManyProjectInput = {
   galleryUrls?: string
   videoUrl?: string
   relatedSlugs?: string
+  sourceName?: string
+  sourceUrl?: string
+  sourceTitle?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1145,6 +1223,9 @@ export type BlogArticleUpdateWithoutProjectInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1177,6 +1258,9 @@ export type BlogArticleUncheckedUpdateWithoutProjectInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1209,6 +1293,9 @@ export type BlogArticleUncheckedUpdateManyWithoutProjectInput = {
   galleryUrls?: Prisma.StringFieldUpdateOperationsInput | string
   videoUrl?: Prisma.StringFieldUpdateOperationsInput | string
   relatedSlugs?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceName?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceTitle?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1244,6 +1331,9 @@ export type BlogArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   galleryUrls?: boolean
   videoUrl?: boolean
   relatedSlugs?: boolean
+  sourceName?: boolean
+  sourceUrl?: boolean
+  sourceTitle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.BlogArticle$projectArgs<ExtArgs>
@@ -1278,6 +1368,9 @@ export type BlogArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   galleryUrls?: boolean
   videoUrl?: boolean
   relatedSlugs?: boolean
+  sourceName?: boolean
+  sourceUrl?: boolean
+  sourceTitle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.BlogArticle$projectArgs<ExtArgs>
@@ -1312,6 +1405,9 @@ export type BlogArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   galleryUrls?: boolean
   videoUrl?: boolean
   relatedSlugs?: boolean
+  sourceName?: boolean
+  sourceUrl?: boolean
+  sourceTitle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.BlogArticle$projectArgs<ExtArgs>
@@ -1346,11 +1442,14 @@ export type BlogArticleSelectScalar = {
   galleryUrls?: boolean
   videoUrl?: boolean
   relatedSlugs?: boolean
+  sourceName?: boolean
+  sourceUrl?: boolean
+  sourceTitle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BlogArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "titleEn" | "excerpt" | "excerptEn" | "content" | "contentEn" | "category" | "categoryEn" | "imageUrl" | "publishedAt" | "readTime" | "seoTitle" | "seoTitleEn" | "seoDescription" | "seoDescriptionEn" | "status" | "articleType" | "projectId" | "authorName" | "authorTitle" | "reviewNumber" | "factsJson" | "sectionsJson" | "galleryUrls" | "videoUrl" | "relatedSlugs" | "createdAt" | "updatedAt", ExtArgs["result"]["blogArticle"]>
+export type BlogArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "titleEn" | "excerpt" | "excerptEn" | "content" | "contentEn" | "category" | "categoryEn" | "imageUrl" | "publishedAt" | "readTime" | "seoTitle" | "seoTitleEn" | "seoDescription" | "seoDescriptionEn" | "status" | "articleType" | "projectId" | "authorName" | "authorTitle" | "reviewNumber" | "factsJson" | "sectionsJson" | "galleryUrls" | "videoUrl" | "relatedSlugs" | "sourceName" | "sourceUrl" | "sourceTitle" | "createdAt" | "updatedAt", ExtArgs["result"]["blogArticle"]>
 export type BlogArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.BlogArticle$projectArgs<ExtArgs>
 }
@@ -1395,6 +1494,9 @@ export type $BlogArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     galleryUrls: string
     videoUrl: string
     relatedSlugs: string
+    sourceName: string
+    sourceUrl: string
+    sourceTitle: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["blogArticle"]>
@@ -1849,6 +1951,9 @@ export interface BlogArticleFieldRefs {
   readonly galleryUrls: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly videoUrl: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly relatedSlugs: Prisma.FieldRef<"BlogArticle", 'String'>
+  readonly sourceName: Prisma.FieldRef<"BlogArticle", 'String'>
+  readonly sourceUrl: Prisma.FieldRef<"BlogArticle", 'String'>
+  readonly sourceTitle: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly createdAt: Prisma.FieldRef<"BlogArticle", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BlogArticle", 'DateTime'>
 }
