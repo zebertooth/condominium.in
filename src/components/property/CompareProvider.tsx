@@ -18,6 +18,7 @@ interface CompareContextValue {
   isInCompare: (slug: string) => boolean;
   toggleCompare: (slug: string) => boolean;
   removeCompare: (slug: string) => void;
+  replaceCompare: (slugs: string[]) => void;
   clearCompare: () => void;
 }
 
@@ -77,11 +78,16 @@ export function CompareProvider({ children }: { children: ReactNode }) {
     [persist, slugs],
   );
 
+  const replaceCompare = useCallback(
+    (next: string[]) => persist(next.slice(0, MAX_COMPARE)),
+    [persist],
+  );
+
   const clearCompare = useCallback(() => persist([]), [persist]);
 
   const value = useMemo(
-    () => ({ slugs, isInCompare, toggleCompare, removeCompare, clearCompare }),
-    [slugs, isInCompare, toggleCompare, removeCompare, clearCompare],
+    () => ({ slugs, isInCompare, toggleCompare, removeCompare, replaceCompare, clearCompare }),
+    [slugs, isInCompare, toggleCompare, removeCompare, replaceCompare, clearCompare],
   );
 
   return <CompareContext.Provider value={value}>{children}</CompareContext.Provider>;
