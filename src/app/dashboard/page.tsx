@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { MyProperties } from "@/components/dashboard/MyProperties";
-import { PackageShop } from "@/components/dashboard/PackageShop";
+import { DashboardClientArea } from "@/components/dashboard/DashboardClientArea";
 import { QuotaCard } from "@/components/dashboard/QuotaCard";
 import { SponsorUpsellBanner } from "@/components/dashboard/SponsorUpsellBanner";
 import { getCurrentUser } from "@/lib/auth";
@@ -46,15 +45,15 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     <div className="space-y-8">
       {posted === "1" && <SponsorUpsellBanner paidFeaturesEnabled={PAID_FEATURES_ENABLED} />}
       <QuotaCard quota={quota} />
-      <MyProperties
+      <DashboardClientArea
         properties={properties}
         canPost={quota.canPost}
         userRole={user.role}
         paidFeaturesEnabled={PAID_FEATURES_ENABLED}
+        showPackageShop={
+          PAID_FEATURES_ENABLED && user.role !== "admin" && quota.fullyVerified
+        }
       />
-      {PAID_FEATURES_ENABLED && user.role !== "admin" && quota.fullyVerified && (
-        <PackageShop />
-      )}
     </div>
   );
 }
