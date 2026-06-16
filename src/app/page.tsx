@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AdSlot } from "@/components/ads/AdSlot";
+import { BlogGridCard } from "@/components/blog/BlogGridCard";
 import { Hero } from "@/components/home/Hero";
 import { HomeListingsSection } from "@/components/home/HomeListingsSection";
 import { areaGuides } from "@/lib/areas";
@@ -7,7 +8,7 @@ import { getGuidePosts, getLatestReviewPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
-import { areaName, blogExcerpt, blogTitle, numberLocale } from "@/lib/locale-content";
+import { areaName, numberLocale } from "@/lib/locale-content";
 import {
   getLatestListings,
   getPopularListings,
@@ -138,17 +139,9 @@ export default async function HomePage() {
                 {t("blogHubReviews", locale)} →
               </Link>
             </div>
-            <div className="mt-8 grid gap-6 md:grid-cols-3">
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {reviewPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={lp(`/blog/${post.slug}`)}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:border-teal-300 hover:shadow-md"
-                >
-                  <span className="text-xs font-medium text-teal-700">{post.category}</span>
-                  <h3 className="mt-2 font-bold text-slate-900">{blogTitle(post, locale)}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-slate-600">{blogExcerpt(post, locale)}</p>
-                </Link>
+                <BlogGridCard key={post.slug} post={post} locale={locale} />
               ))}
             </div>
           </div>
@@ -166,17 +159,9 @@ export default async function HomePage() {
               {t("blogHubGuides", locale)} →
             </Link>
           </div>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {guidePosts.slice(0, 3).map((post) => (
-              <Link
-                key={post.slug}
-                href={lp(`/blog/${post.slug}`)}
-                className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md"
-              >
-                <span className="text-xs font-medium text-teal-700">{post.category}</span>
-                <h3 className="mt-2 font-bold text-slate-900">{blogTitle(post, locale)}</h3>
-                <p className="mt-2 line-clamp-2 text-sm text-slate-600">{blogExcerpt(post, locale)}</p>
-              </Link>
+              <BlogGridCard key={post.slug} post={post} locale={locale} />
             ))}
           </div>
         </div>
