@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { formatPrice } from "@/lib/i18n";
+import { SPONSOR_PACKAGES } from "@/lib/packages";
 import { isActiveSponsor } from "@/lib/sponsored";
 import type { Property } from "@/types/property";
 
@@ -160,22 +161,27 @@ export function AdminSponsoredPanel({
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() => patchSponsor(p.id, { sponsoredUntil: addDays(7) })}
-                        className="rounded-lg bg-violet-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-violet-700 disabled:opacity-50"
-                      >
-                        {t("adminSponsoredSetDays").replace("{days}", "7")}
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() => patchSponsor(p.id, { sponsoredUntil: addDays(30) })}
-                        className="rounded-lg border border-violet-300 px-2.5 py-1.5 text-xs font-medium text-violet-800 hover:bg-violet-50 disabled:opacity-50"
-                      >
-                        {t("adminSponsoredSetDays").replace("{days}", "30")}
-                      </button>
+                      {SPONSOR_PACKAGES.map((tier, index) => (
+                        <button
+                          key={tier.id}
+                          type="button"
+                          disabled={busy}
+                          onClick={() =>
+                            patchSponsor(p.id, { sponsoredUntil: addDays(tier.durationDays) })
+                          }
+                          className={
+                            index === SPONSOR_PACKAGES.length - 1
+                              ? "rounded-lg bg-violet-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+                              : "rounded-lg border border-violet-300 px-2.5 py-1.5 text-xs font-medium text-violet-800 hover:bg-violet-50 disabled:opacity-50"
+                          }
+                          title={tier.badge ?? undefined}
+                        >
+                          {t("adminSponsoredSetDays").replace(
+                            "{days}",
+                            String(tier.durationDays),
+                          )}
+                        </button>
+                      ))}
                       <div className="flex items-center gap-1.5">
                         <input
                           type="date"

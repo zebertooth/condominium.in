@@ -36,7 +36,7 @@ Instructions for AI coding agents working in this repository.
 | GitHub | https://github.com/zebertooth/condominium.in |
 | Phase | **Phase 13B** — lead nurture + conversion UX |
 | Homepage | 3 sections + blog cards with images |
-| Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (7/30/custom days) |
+| Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (1/3/7 days + custom) |
 | Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
 | Ads | AdSense client in `<head>`; units after cookie “Accept all” + slot IDs in `/admin/seo` |
