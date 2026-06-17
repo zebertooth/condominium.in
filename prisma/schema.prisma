@@ -95,6 +95,7 @@ model BlogArticle {
   seoDescriptionEn String   @default("")
   status           String   @default("published")
   articleType      String   @default("guide")
+  areaSlug         String   @default("")
   projectId        String?
   project          Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
   authorName       String   @default("")

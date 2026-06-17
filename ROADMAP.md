@@ -1,31 +1,31 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-17 (session 47 — **Phase 12 started**)  
-**Current phase:** **Phase 12** — growth, editorial cadence, inventory & ops (all platform phases 1–11 done)
+**Last updated:** 2026-06-17 (session 50 — **Phase 13B must-haves done**)  
+**Current phase:** **Phase 13B** — lead nurture + conversion UX (must-haves **done**)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
-> **GitHub `main`:** through `598bf30` — AdSense fix, newsletter unsubscribe, homepage blog images  
-> **Local → Vercel:** `npx vercel --prod` after `npm run build` passes locally.  
-> **Vercel CI:** `scripts/vercel-build.mjs` — Production-only migrate; Preview skips if no `DATABASE_URL`.
+> **GitHub `main`:** through `65dad74` — compare fix + Phase 13A monetization stack  
+> **Local verify:** `npm run db:deploy && npm run build` — 133 routes, 25 migrations  
+> **Vercel CI:** `scripts/vercel-build.mjs` — Production migrate; Preview skips if no `DATABASE_URL`.
 
-> **LAUNCH POLICY (current):** Paid features ON on production when `PROMPTPAY_ID` is set (auto). Local dev OFF unless `.env` has `PROMPTPAY_ID`. ID verification removed. Thai users verify **LINE + Email** to post (2 free listings). Non-Thai users verify email only and **cannot post** yet. Phone/SMS verification is wired (ThaiBulkSMS) but **additive** (not a posting gate yet).
+> **LAUNCH POLICY (current):** Paid = **sponsor boost only** (฿29/79/159). Listing packages disabled. Thai users verify **LINE + Email** → **unlimited** free listings. Non-Thai cannot post. PromptPay + SlipOK live when env set.
 
 > Update this file when completing features, changing priorities, or deploying.  
 > Mark items: `[x]` done · `[~]` in progress · `[ ]` planned · `[-]` cancelled
 
 ---
 
-## Model transfer snapshot (session 47)
+## Model transfer snapshot (session 49)
 
 | Area | State |
 |------|--------|
-| **Phase** | **Phase 12** — inventory, editorial cadence, ops monitoring |
-| **Platform** | Phases 1–11 **code-complete** — no blocking dev work |
-| **Production** | Live; AdSense verified; GSC verified; hybrid alerts + newsletter working |
-| **Competitors** | DDproperty (listings UX) · Think of Living (editorial reviews) |
-| **Focus now** | Content + listings volume, not new features |
+| **Phase** | **Phase 13B** — conversion emails + inquiry UX (**must-haves done**) |
+| **13B done** | Lead nurture email, owner alerts w/ dashboard links, post-inquiry UX |
+| **13A done** | Sponsor wizard, SlipOK, payment emails, user CSV import, compare fix |
+| **Production** | Live; PromptPay + SlipOK + Resend on `/api/health` |
+| **Focus now** | Turn inquiries into closed deals; parallel user ops (inventory, editorial) |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -73,11 +73,58 @@ Bangkok condo/house marketplace with:
 | **9** | Editorial review blog (TOL-style) | **Done** (session 44) | 2027 Q2 |
 | **10** | Marketplace UX (DD-style sort/cards/filters) | **Done** (session 44) | 2027 Q2 |
 | **11** | Growth, ops, editorial scale | **Done** (session 46) | 2027 Q3 |
-| **12** | Inventory, editorial cadence, ops monitoring | **Active** | 2026 Q3–Q4 |
+| **12** | Inventory, editorial cadence, ops monitoring | **Ongoing (user ops)** | 2026 Q3–Q4 |
+| **13A** | Monetization polish — sponsor tiers, SlipOK, wizard, emails | **Done** (session 49) | 2026 Q2 |
+| **13B** | Lead nurture, inquiry follow-up, conversion UX | **Active** | 2026 Q3 |
 
 ---
 
-## Phase 12 — Growth & ops (ACTIVE)
+## Phase 13B — Conversion (ACTIVE)
+
+**Goal:** Convert traffic and inquiries into viewings and deals now that sponsor payments work.
+
+### Must-have
+
+| # | Feature | Files / notes |
+|---|---------|----------------|
+| 1 | **Lead nurture email** — auto-reply when contact/property inquiry submitted | [x] `sendLeadNurtureEmail()` in `lead-notifications.ts`, `/api/leads` |
+| 2 | **Owner inquiry alert** — email owner when inquiry on their listing | [x] `notifyOwnerInquiry` + dashboard URL |
+| 3 | **Post-inquiry UX** — success state + “what happens next” on property contact form | [x] `LeadForm` → `LeadSuccessPanel` + i18n steps |
+
+### Should-have
+
+| # | Feature |
+|---|---------|
+| 4 | Dashboard inquiries — unread badge + mark contacted |
+| 5 | Admin lead auto-assign rules (optional) |
+
+### Done when
+
+- Submit inquiry → buyer gets confirmation email within 1 min (Resend)
+- Owner sees inquiry in `/dashboard/inquiries` + optional email
+- Property page shows clear next steps after submit
+
+---
+
+## Phase 13A — Monetization polish (DONE)
+
+**Goal:** Sponsor-only revenue with reliable payment flow.
+
+- [x] Sponsor tiers ฿29 / ฿79 / ฿159 (1/3/7 days) — `SPONSOR_PACKAGES`
+- [x] Listing packages disabled — unlimited listings after verify
+- [x] 4-step sponsor wizard — `SponsorPaymentWizard.tsx`
+- [x] SlipOK multipart verify + amount check — `promptpay.ts`
+- [x] Shared payment activation + confirmation email — `payment-activation.ts`
+- [x] Sponsor renewal + expiry emails — cron 03:00 UTC
+- [x] User CSV import — `/dashboard/import` (pending approve)
+- [x] Admin sponsored 1/3/7 days — `/admin/sponsored`
+- [x] Compare remove fix — URL `?slugs=` sync
+
+**Commits:** `21f958f` … `65dad74`
+
+---
+
+## Phase 12 — Growth & ops (USER OPS — parallel)
 
 **Goal:** Grow traffic and conversions without new platform features. Compete on **depth** (BTS niche + reviews + AI) not nationwide listing volume.
 
@@ -800,6 +847,19 @@ Vercel deploy hardening:
 - Migrate retries (5× backoff); package.json engines Node 22.x
 
 Deployed: commits 88dfc33 → 41c6e0e on main
+```
+
+### Done (2026-06-17, session 49 — Phase 13A + docs)
+```
+Monetization + UX polish (deployed):
+- Unlimited listings; sponsor-only paid (29/79/159 THB tiers)
+- SponsorPaymentWizard: 4-step modal (tier → QR → slip → approve)
+- SlipOK fix, payment-activation, confirmation + expiry emails
+- User CSV import /dashboard/import; admin sponsored 1/3/7 days
+- Compare page: remove top-right + localStorage sync fix
+
+Commits: 21f958f, cb87d8e, 462e90b, 65dad74
+Local verify: db:deploy OK (25 migrations), build OK (133 routes)
 ```
 
 ### Done (2026-06-17, session 47 — Phase 12 kickoff)

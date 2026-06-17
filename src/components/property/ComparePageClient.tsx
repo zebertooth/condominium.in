@@ -13,19 +13,30 @@ import { localizedPropertyTitle } from "@/lib/property-i18n";
 import { furnishingLabel } from "@/lib/furnishing";
 import type { Property } from "@/types/property";
 
+function CompareLoadingState() {
+  const t = useT();
+  return <p className="text-slate-600">{t("compareLoading")}</p>;
+}
+
 export function ComparePageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { slugs, removeCompare, replaceCompare } = useCompare();
   const t = useT();
   const locale = useLocale();
+  const [mounted, setMounted] = useState(false);
   const [listings, setListings] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const lp = (path: string) => localePath(path, locale);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Import ?slugs= from compare bar into localStorage, then use storage as source of truth.
   useEffect(() => {
+    if (!mounted) return;
     const raw = searchParams.get("slugs");
     if (!raw) return;
     const querySlugs = raw
@@ -35,9 +46,10 @@ export function ComparePageClient() {
     if (querySlugs.length === 0) return;
     replaceCompare(querySlugs);
     router.replace(lp("/compare"), { scroll: false });
-  }, [searchParams, replaceCompare, router, locale]);
+  }, [mounted, searchParams, replaceCompare, router, locale]);
 
   useEffect(() => {
+    if (!mounted) return;
     if (slugs.length === 0) {
       setListings([]);
       setLoading(false);
@@ -48,15 +60,15 @@ export function ComparePageClient() {
       .then((r) => r.json())
       .then((data: { listings?: Property[] }) => setListings(data.listings ?? []))
       .finally(() => setLoading(false));
-  }, [slugs.join(",")]);
+  }, [mounted, slugs.join(",")]);
 
   function handleRemove(slug: string) {
     removeCompare(slug);
     setListings((prev) => prev.filter((p) => p.slug !== slug));
   }
 
-  if (loading) {
-    return <p className="text-slate-600">{t("compareLoading")}</p>;
+  if (!mounted || loading) {
+    return <CompareLoadingState />;
   }
 
   if (listings.length === 0) {

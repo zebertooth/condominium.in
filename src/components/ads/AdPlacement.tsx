@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { hasAnalyticsConsent } from "@/components/layout/CookieConsent";
 import { adsenseClientId, adsenseConfigured, pushAdSenseSlot, type AdSlotKey } from "@/lib/adsense";
-
-function subscribeConsent(onChange: () => void) {
-  window.addEventListener("condo-cookie-consent", onChange);
-  return () => window.removeEventListener("condo-cookie-consent", onChange);
-}
 
 export interface AdPlacementProps {
   slotId: string;
@@ -29,12 +24,15 @@ export function AdPlacement({
 }: AdPlacementProps) {
   const t = useT();
   const client = adsenseClientId();
-  const consent = useSyncExternalStore(
-    subscribeConsent,
-    () => hasAnalyticsConsent(),
-    () => false,
-  );
+  const [consent, setConsent] = useState(false);
   const pushed = useRef(false);
+
+  useEffect(() => {
+    setConsent(hasAnalyticsConsent());
+    const onChange = () => setConsent(hasAnalyticsConsent());
+    window.addEventListener("condo-cookie-consent", onChange);
+    return () => window.removeEventListener("condo-cookie-consent", onChange);
+  }, []);
 
   useEffect(() => {
     if (!consent || !adsenseConfigured(client, slotId) || pushed.current) return;

@@ -18,6 +18,7 @@
     "db:seed": "npx tsx prisma/seed.ts",
     "db:import-inventory": "npx tsx scripts/import-inventory.ts",
     "verify-resend": "npx tsx scripts/verify-resend.ts",
+    "smoke:local": "node scripts/local-smoke.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

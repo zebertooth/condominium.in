@@ -3,7 +3,7 @@
 Step-by-step runbook to deploy to production.  
 Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 
-**Current status (session 47):** Live at **https://www.condominium.in.th**. Phases 1–11 code-complete; **Phase 12** = inventory + editorial + ops. AdSense verified (script in `<head>`); GSC verified. Crons: weekly search alerts (Mon 02:00 UTC) + daily sponsor reminders.
+**Current status (session 49):** Live at **https://www.condominium.in.th**. **Phase 13B** next (conversion). Phase 13A monetization deployed (`65dad74`). Crons: Mon 02:00 UTC alerts · daily 03:00 UTC sponsor reminders + expiry.
 
 ---
 
@@ -12,20 +12,33 @@ Read alongside `CLAUDE.md` (architecture) and `ROADMAP.md` (state).
 ```powershell
 cd C:\Users\NATTASIT\Projects\condominium
 
-# One-shot: clean empty migration dirs, generate, migrate deploy, seed
 powershell -ExecutionPolicy Bypass -File scripts\setup-neon.ps1
+# Or: npx prisma generate && npm run db:deploy && npm run db:seed
 
-# Or manually:
-npx prisma generate
-npm run db:deploy
-npm run db:seed
-
-npm run build
-npm run lint
-npm run dev
+npm run build    # expect 133 routes
+npm run lint     # pre-existing React compiler warnings in some client components
+npm run dev      # http://localhost:3000
+node scripts/local-smoke.mjs   # automated route checks (dev must be running)
 ```
 
 Open http://localhost:3000 — homepage must load without `table User does not exist`.
+
+### Local process checklist (manual — before deploy)
+
+Run with `npm run dev` and admin `admin@condominium.in.th` / `admin123456`:
+
+| # | Flow | Pass when |
+|---|------|-----------|
+| 1 | **Public browse** | `/`, `/buy`, `/rent`, `/compare` → 200 |
+| 2 | **Compare** | Add 2 listings → `/compare` → **ลบออก** top-right removes column |
+| 3 | **Register/login** | `/login` loads; dashboard redirects when logged out |
+| 4 | **Post listing** | Verified user → `/dashboard/post` → pending → admin approve |
+| 5 | **Sponsor** | Published listing → **ทำประกาศแนะนำ** → 4 steps (tier → QR → slip) |
+| 6 | **User import** | `/dashboard/import` CSV → pending listings |
+| 7 | **Admin** | `/admin/sponsored` shows 1/3/7 days; `/admin/payments` approve slip |
+| 8 | **API** | `GET /api/health` → `status: ok`; `POST /api/packages/purchase` → 403 |
+
+**Automated (2026-06-17):** `db:deploy` — 25 migrations, none pending · `npm run build` — 133 routes OK.
 
 ### Starter inventory (Neon / production DB)
 
@@ -37,7 +50,7 @@ npm run db:import-inventory -- --sponsor=3
 
 | Flag | Purpose |
 |------|---------|
-| `--sponsor=3` | Mark 3 newest published listings as ประกาศแนะนำ (30 days) |
+| `--sponsor=3` | Mark 3 newest published listings as ประกาศแนะนำ (7 days) |
 | `--force` | Re-import even if projects/listings already exist |
 | `--projects-only` | Import `starter-projects.csv` only |
 | `--listings-only` | Import `starter-listings.csv` only (run projects first for `projectSlug` links) |

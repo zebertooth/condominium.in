@@ -130,9 +130,12 @@ export interface BlogPost {
   imageUrl?: string;
   /** Phase 9 — editorial review fields (DB articles only) */
   articleType?: BlogArticleType;
+  /** BTS area guide slug for conversion CTAs — e.g. asoke-bts */
+  areaSlug?: string;
   projectId?: string;
   projectSlug?: string;
   projectName?: string;
+  projectBtsStation?: string;
   authorName?: string;
   authorTitle?: string;
   reviewNumber?: number;

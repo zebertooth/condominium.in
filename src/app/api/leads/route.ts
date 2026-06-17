@@ -10,6 +10,7 @@ import {
   notifyAgentManagedInquiry,
   notifyOwnerInquiry,
   notifyPosterInquiry,
+  sendLeadNurtureEmail,
 } from "@/lib/lead-notifications";
 import { logMatchingEvent } from "@/lib/matching";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
@@ -110,6 +111,14 @@ export async function POST(request: Request) {
         await notifyPosterInquiry(property.user, propertyTitle, visitor);
       }
 
+      void sendLeadNurtureEmail(visitor, {
+        kind: "property",
+        contactMode,
+        propertyTitle,
+        propertySlug,
+        agentManaged: property.agentManaged,
+      });
+
       return NextResponse.json({
         message:
           contactMode === "owner_direct"
@@ -135,6 +144,8 @@ export async function POST(request: Request) {
 - Details: Date ${parsed.data.viewingDate}, Time ${parsed.data.viewingTime ?? "not specified"}
 - Google Calendar API: Inserted viewing slot calendar event.`);
     }
+
+    void sendLeadNurtureEmail(visitor, { kind: "contact" });
 
     return NextResponse.json({
       message: "ส่งข้อความเรียบร้อย ทีมงานจะติดต่อกลับโดยเร็ว",

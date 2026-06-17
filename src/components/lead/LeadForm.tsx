@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { useLocale, useT, useTf } from "@/components/i18n/LocaleProvider";
 import { TurnstileField, useCaptchaGate } from "@/components/security/TurnstileField";
+import { localePath } from "@/lib/locale-routing";
 
 interface LeadFormProps {
   source: "contact" | "property";
@@ -16,6 +19,68 @@ interface LeadFormProps {
   successMessage?: string;
 }
 
+function LeadSuccessPanel({
+  email,
+  successMessage,
+  variant,
+}: {
+  email: string;
+  successMessage?: string;
+  variant: "contact" | "agent" | "owner";
+}) {
+  const t = useT();
+  const tf = useTf();
+  const locale = useLocale();
+
+  const steps =
+    variant === "owner"
+      ? [t("leadNextStep1Owner"), t("leadNextStep2Owner"), t("leadNextStep3Owner")]
+      : variant === "contact"
+        ? [t("leadNextStep1Contact"), t("leadNextStep2Contact"), t("leadNextStep3Contact")]
+        : [t("leadNextStep1Agent"), t("leadNextStep2Agent"), t("leadNextStep3Agent")];
+
+  return (
+    <div className="rounded-2xl border border-green-200 bg-green-50 p-6">
+      <p className="text-center font-semibold text-green-800">{t("leadSuccessTitle")}</p>
+      {successMessage && <p className="mt-1 text-center text-sm text-green-700">{successMessage}</p>}
+      {email.trim() && (
+        <p className="mt-2 text-center text-sm text-green-700">
+          {tf("leadSuccessEmailNote", { email: email.trim() })}
+        </p>
+      )}
+
+      <div className="mt-5 rounded-xl border border-green-100 bg-white/80 p-4 text-left">
+        <p className="text-sm font-semibold text-slate-900">{t("leadNextHeading")}</p>
+        <ol className="mt-3 space-y-2">
+          {steps.map((step, i) => (
+            <li key={i} className="flex gap-2 text-sm text-slate-700">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-100 text-xs font-semibold text-teal-800">
+                {i + 1}
+              </span>
+              <span className="pt-0.5">{step}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
+        <Link
+          href={localePath("/rent", locale)}
+          className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
+        >
+          {t("leadBrowseRent")}
+        </Link>
+        <Link
+          href={localePath("/buy", locale)}
+          className="rounded-xl border border-teal-200 bg-white px-4 py-2 text-sm font-medium text-teal-800 hover:bg-teal-50"
+        >
+          {t("leadBrowseBuy")}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export function LeadForm({
   source,
   contactMode = "agent_team",
@@ -26,7 +91,7 @@ export function LeadForm({
   btsStation,
   defaultMessage = "",
   submitLabel = "ส่งข้อความ",
-  successMessage = "ทีมงาน Condominium.in.th จะติดต่อกลับโดยเร็วที่สุด",
+  successMessage,
 }: LeadFormProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -36,8 +101,12 @@ export function LeadForm({
   const [viewingDate, setViewingDate] = useState("");
   const [viewingTime, setViewingTime] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
+  const [doneMessage, setDoneMessage] = useState<string | undefined>();
   const [error, setError] = useState("");
   const captcha = useCaptchaGate();
+
+  const successVariant =
+    source === "contact" ? "contact" : contactMode === "owner_direct" ? "owner" : "agent";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,6 +148,7 @@ export function LeadForm({
         return;
       }
 
+      setDoneMessage(typeof data.message === "string" ? data.message : successMessage);
       setStatus("done");
     } catch {
       setError("ส่งข้อความไม่สำเร็จ ลองใหม่อีกครั้ง");
@@ -88,10 +158,11 @@ export function LeadForm({
 
   if (status === "done") {
     return (
-      <div className="rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
-        <p className="font-semibold text-green-800">ส่งข้อความเรียบร้อย</p>
-        <p className="mt-1 text-sm text-green-700">{successMessage}</p>
-      </div>
+      <LeadSuccessPanel
+        email={email}
+        successMessage={doneMessage ?? successMessage}
+        variant={successVariant}
+      />
     );
   }
 
@@ -146,7 +217,7 @@ export function LeadForm({
 
       {source === "property" && (
         <div className="rounded-xl border border-teal-100 bg-teal-50/50 p-4">
-          <label className="flex items-center gap-2 font-medium text-teal-800 cursor-pointer">
+          <label className="flex cursor-pointer items-center gap-2 font-medium text-teal-800">
             <input
               type="checkbox"
               checked={isViewing}
@@ -166,7 +237,7 @@ export function LeadForm({
                   min={new Date().toISOString().split("T")[0]}
                   value={viewingDate}
                   onChange={(e) => setViewingDate(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none ring-teal-500 focus:ring-2 text-sm text-slate-700"
+                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none ring-teal-500 focus:ring-2"
                 />
               </div>
               <div>
@@ -175,7 +246,7 @@ export function LeadForm({
                   required
                   value={viewingTime}
                   onChange={(e) => setViewingTime(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none ring-teal-500 focus:ring-2 text-sm text-slate-700"
+                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none ring-teal-500 focus:ring-2"
                 >
                   <option value="">— เลือกเวลา —</option>
                   <option value="09:00">09:00</option>

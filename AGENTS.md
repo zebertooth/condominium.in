@@ -9,22 +9,23 @@ Instructions for AI coding agents working in this repository.
 1. Read [`ROADMAP.md`](./ROADMAP.md) — current phase + session log
 2. Read [`CLAUDE.md`](./CLAUDE.md) — architecture, APIs, business rules
 3. Verify locally: `npm run db:deploy && npm run build && npm run lint`
-4. Production check: `GET https://www.condominium.in.th/api/health`
-5. Deploy: merge PR → `npx vercel --prod` or Vercel auto-deploy on `main`
+4. Manual smoke: see [`DEPLOYMENT.md`](./DEPLOYMENT.md) § Local process checklist
+5. Production check: `GET https://www.condominium.in.th/api/health`
+6. Deploy: push `main` → `npx vercel --prod` or Vercel auto-deploy
 
-> ## 🤝 HANDOFF (session 48 — **Phase 13B next**)
+> ## 🤝 HANDOFF (session 50 — **Phase 13B must-haves done**)
 >
-> **Production:** https://www.condominium.in.th — deploy Phase 13A pending push  
-> **GitHub `main`:** local — Phase 13A monetization polish + prior session 31–47 work
+> **Production:** https://www.condominium.in.th — deploy session 50 pending (local)  
+> **Local:** hydration fixes + Phase 13B conversion emails/UX
 >
-> **Phase 13A shipped (monetization polish):**
-> - SlipOK auto-verify fixed (`multipart/form-data`, `SLIPOK_BRANCH_ID`, amount check)
-> - Shared `activateConfirmedSubscription()` — confirm route + admin approve + confirmation email
-> - Sponsor renewal emails include tier pricing (฿29/79/159)
-> - Cron: expiry notices + deactivate expired `isSponsored` (`sponsorExpiredNoticeAt` migration)
-> - `/admin/ops` — PromptPay + SlipOK health checks
+> **Phase 13B shipped (must-haves):**
+> - **Lead nurture email** — buyer auto-reply when email provided (`sendLeadNurtureEmail`)
+> - **Owner/poster alerts** — dashboard links in `lead-notifications.ts`
+> - **Post-inquiry UX** — numbered “what happens next” in `LeadForm`
 >
-> **Next (Phase 13B):** lead nurture emails, inquiry follow-up, conversion UX
+> **Also session 50:** Hydration fixes (`ComparePageClient`, `CookieConsent`, `AdPlacement`)
+>
+> **Next:** 13B should-have (inquiry badge) · deploy · user ops (inventory/editorial)
 
 ---
 
@@ -34,46 +35,45 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 13B** — lead nurture + conversion UX |
-| Homepage | 3 sections + blog cards with images |
-| Admin sponsored | `/admin/sponsored` — manage ประกาศแนะนำ (1/3/7 days + custom) |
-| Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed; middleware `x-condo-locale` |
+| Phase | **Phase 13B** — lead nurture done; should-have next |
+| Monetization | **Sponsor boost only** — 1d ฿29 · 3d ฿79 · 7d ฿159 (PromptPay + SlipOK) |
+| Listings | Unlimited after verify (Thai users); agents admin-capped |
+| Admin sponsored | `/admin/sponsored` — 1/3/7 days + custom date |
+| Compare | `/compare` — max 4; remove syncs localStorage |
+| Locale | Unprefixed = Thai; `/en/*` … `/ar/*` prefixed |
 | Paid | Auto-ON when `PROMPTPAY_ID` on Vercel |
-| Ads | AdSense client in `<head>`; units after cookie “Accept all” + slot IDs in `/admin/seo` |
-| Search | Advanced filters + Leaflet map at `/map` (lazy-loaded) |
-| Projects | `/projects` + admin CRUD (L3 partial) |
-| Security | Cloudflare Turnstile on login, register, contact forms |
-| Analytics | GA4 after cookie consent (`G-9MRZ57SWS1`) |
-| Tools | Mortgage calculator, favorites, hybrid search alerts, price history, compare |
-| Editorial | TOL reviews + **บทความเกี่ยวกับบ้าน** + listing carousel + newsletter |
-| Search UX | Sort, rich cards, sqm/furnishing, list/map toggle, SEO BTS hubs |
-| Social | Google + Facebook OAuth (env-gated) |
+| Ads | AdSense in `<head>`; units after cookie accept + slot IDs in `/admin/seo` |
+| Security | Cloudflare Turnstile on login, register, contact |
+| Crons | Mon 02:00 UTC alerts · daily 03:00 UTC sponsor reminders + expiry |
 
-**Launch policy:** Thai = LINE + Email to post (2 free). Non-Thai blocked. Owner listings → direct contact.
+**Launch policy:** Thai = LINE + Email to post (**unlimited**). Non-Thai blocked from posting. Owner listings → direct contact.
 
 ---
 
 ## Key paths
 
 ```
+# Phase 13A — monetization
+src/components/dashboard/SponsorPaymentWizard.tsx   4-step sponsor checkout modal
+src/components/dashboard/DashboardClientArea.tsx    Wizard + MyProperties wiring
+src/lib/payment-activation.ts                       Shared confirm + sponsor activate
+src/lib/payment-notifications.ts                    Payment confirm + expiry emails
+src/lib/sponsor-subscription.ts                     Tier packageId parsing
+src/lib/promptpay.ts                                QR + SlipOK verify
+src/app/dashboard/import/                           User CSV bulk import
+src/app/api/user/import/                            User import API
+
 # Phase 11–12
-src/components/property/CompareProvider.tsx   Compare shortlist (max 4)
-src/app/compare/page.tsx                      Compare table page
-src/app/admin/ops/page.tsx                    Ops checklist (cron, Resend, GSC)
-src/lib/search-alert-digest.ts                Hybrid alerts (instant + publish + weekly)
-src/lib/newsletter-digest.ts                  Newsletter blast on blog publish
-src/lib/newsletter-unsubscribe.ts             Token unsubscribe flow
-src/app/ads.txt/route.ts                        AdSense ads.txt
-src/components/blog/NewsletterSignup.tsx      /blog subscribe form
-src/components/property/PropertyListingsMapLazy.tsx  Leaflet code-split
+src/components/property/CompareProvider.tsx         Compare shortlist (max 4)
+src/components/property/ComparePageClient.tsx       Compare table + remove fix
+src/app/admin/ops/page.tsx                          Ops checklist
+src/lib/search-alert-digest.ts                      Hybrid search alerts
+src/components/property/PropertyListingsMapLazy.tsx Leaflet code-split
 
 # Core
-src/components/brand/SiteLogo.tsx
-src/lib/site-settings.ts
-src/lib/property-types.ts
-src/lib/demo-listings.ts
-src/lib/agent-application.ts
-src/components/layout/FloatingFeedbackWidget.tsx
+src/lib/quota.ts                                    Unlimited listings logic
+src/lib/packages.ts                                 SPONSOR_PACKAGES + PAID_FEATURES_ENABLED
+src/lib/site-settings.ts                            SEO + AdSense slots
 ```
 
 ---

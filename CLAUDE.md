@@ -13,24 +13,22 @@ Handoff guide for AI agents and developers continuing this project.
 2. AI-assisted property search (natural language)
 3. Owner self-listing with verification & quotas
 4. Agent team for real-world viewings
-5. Monetization via listing packages & sponsored posts
+5. Monetization via **sponsored posts only** (listing packages disabled)
 
 **Language:** Thai-first + **5 locales** (TH/EN/ZH/JA/AR). Thai = unprefixed URLs; other locales use `/en/`, `/zh/`, `/ja/`, `/ar/` prefix. Middleware sets `x-condo-locale` header.
 
 ---
 
-## Model transfer snapshot (session 47)
+## Model transfer snapshot (session 49)
 
 | Item | Detail |
 |------|--------|
-| **Phase** | **Phase 12 active** — inventory, editorial cadence, ops (platform 1–11 done) |
-| **Locales** | TH unprefixed; EN/ZH/JA/AR via URL prefix; middleware forces Thai on unprefixed public pages |
-| **Homepage** | 3 listing sections + blog cards with featured images |
-| **Blog** | TOL-style reviews + guides + newsletter + admin Markdown editor |
-| **Search** | Sort, rich cards, filters, map toggle, hybrid alerts, compare |
-| **Ads** | AdSense script in `<head>` for verification; ad units after cookie consent |
-| **Differentiator** | AI search + review→listing funnel + 5 locales + BTS niche |
-| **Competitors** | [DDproperty](https://www.ddproperty.com/) listings UX · [Think of Living](https://thinkofliving.com/) editorial |
+| **Phase** | **Phase 13B active** — lead nurture + conversion UX |
+| **13A done** | Sponsor wizard, SlipOK, payment emails, unlimited listings, user CSV import |
+| **Monetization** | Sponsor only: 1d ฿29 · 3d ฿79 · 7d ฿159 via PromptPay + SlipOK |
+| **Listings** | Unlimited after LINE+Email verify (Thai users); agents admin-capped |
+| **Compare** | `/compare` max 4; remove syncs localStorage (not URL-only) |
+| **Locales** | TH unprefixed; EN/ZH/JA/AR via URL prefix |
 
 Read order: `AGENTS.md` → `ROADMAP.md` → this file → `DEPLOYMENT.md`
 
@@ -289,7 +287,7 @@ prisma/
 ### Verification by role/nationality
 - **admin** — unlimited listings; no verification needed; can edit/check any user.
 - **agent** — listing cap = `listingLimitOverride ?? AGENT_DEFAULT_LIMIT` (5); **cannot buy packages**; no verification gate (admin-managed).
-- **user (Thai)** — must verify **LINE + Email** to post → 2 free listings.
+- **user (Thai)** — must verify **LINE + Email** to post → **unlimited** listings.
 - **user (non-Thai)** — may verify email to use the site/contact agents, but **cannot post listings** (`postingBlocked`); enabled in a later phase.
 
 LINE verification: real LINE Login OAuth when `LINE_LOGIN_*` env set (`src/lib/line.ts`, `/api/auth/line/start|callback`); dev-only manual fallback (`/api/auth/line/dev-verify`) otherwise.
@@ -297,10 +295,10 @@ LINE verification: real LINE Login OAuth when `LINE_LOGIN_*` env set (`src/lib/l
 Quota flags live on `getUserQuota()`: `requiresVerification`, `postingBlocked`, `canBuyPackages`, `unlimited`, `fullyVerified` (= eligible to post).
 
 ### Listing quota
-- **Free:** 2 active listings for verified Thai users (`pending` + `published` count)
+- **Free:** **Unlimited** for verified Thai users (`pending` + `published` count) — see `src/lib/quota.ts`
 - **Agent:** admin-set cap (default 5), no packages
 - **Admin:** unlimited
-- **Packages/Sponsor:** active when `PROMPTPAY_ID` set on Vercel
+- **Listing packages:** **disabled** (`POST /api/packages/purchase` → 403). Only sponsor boost is paid.
 
 ### Listing visibility
 - User posts → `pending`
@@ -480,7 +478,7 @@ Done / env-gated:
 **Done (session 37 — homepage + admin sponsored):**
 - [x] Homepage — recommended / latest / popular sections (`getRecommendedListings`, etc.)
 - [x] Label **ประกาศแนะนำ** for sponsored/recommended listings
-- [x] Admin `/admin/sponsored` — 7/30 days + custom date (กำหนดเอง)
+- [x] Admin `/admin/sponsored` — 1/3/7 days + custom date (กำหนดเอง)
 - [x] Starter inventory CSVs in `public/inventory/`
 
 **Done (session 38 — locale fix + cron deploy):**
@@ -510,9 +508,17 @@ Done / env-gated:
 - [x] Blog newsletter — signup on `/blog`, email subscribers on publish
 - [x] YouTube embed on all blog articles; NPA in footer + sitemap
 
-**All planned dev phases (1–11) complete.** **Phase 12** = growth + ops + editorial cadence.
+**All planned dev phases (1–11) complete.** **Phase 13A done.** **Phase 13B active.**
 
-**Done (session 47):**
+**Done (session 49 — Phase 13A):**
+- Sponsor-only monetization (฿29/79/159), unlimited listings, 4-step wizard
+- SlipOK + payment emails + user CSV import + compare remove fix
+
+**Phase 13B (next — see ROADMAP):**
+- Lead nurture emails on inquiry submit
+- Owner inquiry notifications + post-inquiry UX
+
+**Phase 12 (parallel user ops):**
 - [x] AdSense verification fix (`layout` `<head>` + `/ads.txt`)
 - [x] Newsletter unsubscribe flow
 - [x] Homepage blog cards with featured images
@@ -533,8 +539,11 @@ Done / env-gated:
 2. Sitemap auto-includes from `areaGuides`
 3. Optionally add coords in `src/lib/locations.ts`
 
-### Change listing packages
-Edit `src/lib/packages.ts` — `FREE_PROPERTY_LIMIT`, `LISTING_PACKAGES`, `SPONSOR_PACKAGE`
+### Change sponsor pricing / tiers
+Edit `src/lib/packages.ts` — `SPONSOR_PACKAGES` (listing packages in `LISTING_PACKAGES` are legacy/disabled)
+
+### Change listing quota
+Edit `src/lib/quota.ts` — unlimited logic for verified Thai users
 
 ### Wire real OpenAI search
 1. Add `OPENAI_API_KEY` to env
@@ -595,7 +604,7 @@ Create regular users via `/register`.
 Owner path:  register → verify → post listing → admin approve → live on site
 Buyer path:  browse / AI search → contact agent → schedule viewing
 Agent path:  team receives lead → shortlist → real viewing → close deal
-Revenue:     free 2 listings → paid packages → sponsored posts
+Revenue:     unlimited free listings → sponsored boost (฿29/79/159)
 ```
 
 When in doubt, read `ROADMAP.md` for current phase and priorities.

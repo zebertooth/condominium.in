@@ -21,7 +21,7 @@ export function CompareBar() {
         </p>
         <div className="flex flex-wrap gap-2">
           <Link
-            href={localePath(`/compare?slugs=${encodeURIComponent(slugs.join(","))}`, locale)}
+            href={localePath("/compare", locale)}
             className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
           >
             {t("compareView")}

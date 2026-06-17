@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import { LocalizedLink } from "@/components/i18n/LocalizedLink";
 import { useT } from "@/components/i18n/LocaleProvider";
 import { getGaMeasurementId } from "@/lib/ga";
@@ -22,30 +22,30 @@ function writeConsent(value: CookieConsentValue) {
   window.dispatchEvent(new CustomEvent("condo-cookie-consent", { detail: value }));
 }
 
-function subscribeConsent(onChange: () => void) {
-  window.addEventListener("condo-cookie-consent", onChange);
-  return () => window.removeEventListener("condo-cookie-consent", onChange);
-}
-
 export function hasAnalyticsConsent(): boolean {
   return readConsent() === "all";
 }
 
 export function CookieConsent() {
   const t = useT();
-  const needsConsent = useSyncExternalStore(
-    subscribeConsent,
-    () => readConsent() === null,
-    () => false,
-  );
+  const [mounted, setMounted] = useState(false);
+  const [needsConsent, setNeedsConsent] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setNeedsConsent(readConsent() === null);
+    const onChange = () => setNeedsConsent(readConsent() === null);
+    window.addEventListener("condo-cookie-consent", onChange);
+    return () => window.removeEventListener("condo-cookie-consent", onChange);
+  }, []);
 
   function choose(value: CookieConsentValue) {
     writeConsent(value);
     setDismissed(true);
   }
 
-  if (!needsConsent || dismissed) return null;
+  if (!mounted || !needsConsent || dismissed) return null;
 
   return (
     <div
@@ -84,11 +84,14 @@ export function CookieConsent() {
 
 export function AnalyticsLoader() {
   const gaId = getGaMeasurementId();
-  const enabled = useSyncExternalStore(
-    subscribeConsent,
-    () => hasAnalyticsConsent(),
-    () => false,
-  );
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    setEnabled(hasAnalyticsConsent());
+    const onChange = () => setEnabled(hasAnalyticsConsent());
+    window.addEventListener("condo-cookie-consent", onChange);
+    return () => window.removeEventListener("condo-cookie-consent", onChange);
+  }, []);
 
   if (!gaId || !enabled) return null;
 
