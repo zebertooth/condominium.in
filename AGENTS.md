@@ -13,19 +13,15 @@ Instructions for AI coding agents working in this repository.
 5. Production check: `GET https://www.condominium.in.th/api/health`
 6. Deploy: push `main` → `npx vercel --prod` or Vercel auto-deploy
 
-> ## 🤝 HANDOFF (session 50 — **Phase 13B must-haves done**)
+> ## 🤝 HANDOFF (session 51 — **Phase 13B complete**)
 >
-> **Production:** https://www.condominium.in.th — deploy session 50 pending (local)  
-> **Local:** hydration fixes + Phase 13B conversion emails/UX
+> **Production:** https://www.condominium.in.th — deploy session 51 pending (local)
 >
-> **Phase 13B shipped (must-haves):**
-> - **Lead nurture email** — buyer auto-reply when email provided (`sendLeadNurtureEmail`)
-> - **Owner/poster alerts** — dashboard links in `lead-notifications.ts`
-> - **Post-inquiry UX** — numbered “what happens next” in `LeadForm`
+> **Phase 13B complete:**
+> - Lead nurture + owner alerts + post-inquiry UX (`3a380ac`)
+> - Inquiry unread badge + mark contacted + auto-assign (`pickDefaultLeadAssignee`)
 >
-> **Also session 50:** Hydration fixes (`ComparePageClient`, `CookieConsent`, `AdPlacement`)
->
-> **Next:** 13B should-have (inquiry badge) · deploy · user ops (inventory/editorial)
+> **Next:** Phase 12 user ops — inventory ≥20 listings, editorial cadence, AdSense slots
 
 ---
 
@@ -35,7 +31,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 13B** — lead nurture done; should-have next |
+| Phase | **Phase 13B done** — user ops (inventory/editorial) next |
 | Monetization | **Sponsor boost only** — 1d ฿29 · 3d ฿79 · 7d ฿159 (PromptPay + SlipOK) |
 | Listings | Unlimited after verify (Thai users); agents admin-capped |
 | Admin sponsored | `/admin/sponsored` — 1/3/7 days + custom date |

@@ -2,7 +2,7 @@
 
 **Project:** Condominium.in.th  
 **Last updated:** 2026-06-17 (session 50 — **Phase 13B must-haves done**)  
-**Current phase:** **Phase 13B** — lead nurture + conversion UX (must-haves **done**)
+**Current phase:** **Phase 13B complete** — next: Phase 12 user ops (inventory + editorial)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
@@ -75,11 +75,11 @@ Bangkok condo/house marketplace with:
 | **11** | Growth, ops, editorial scale | **Done** (session 46) | 2027 Q3 |
 | **12** | Inventory, editorial cadence, ops monitoring | **Ongoing (user ops)** | 2026 Q3–Q4 |
 | **13A** | Monetization polish — sponsor tiers, SlipOK, wizard, emails | **Done** (session 49) | 2026 Q2 |
-| **13B** | Lead nurture, inquiry follow-up, conversion UX | **Active** | 2026 Q3 |
+| **13B** | Lead nurture, inquiry follow-up, conversion UX | **Done** | 2026 Q3 |
 
 ---
 
-## Phase 13B — Conversion (ACTIVE)
+## Phase 13B — Conversion (DONE)
 
 **Goal:** Convert traffic and inquiries into viewings and deals now that sponsor payments work.
 
@@ -87,16 +87,16 @@ Bangkok condo/house marketplace with:
 
 | # | Feature | Files / notes |
 |---|---------|----------------|
-| 1 | **Lead nurture email** — auto-reply when contact/property inquiry submitted | [x] `sendLeadNurtureEmail()` in `lead-notifications.ts`, `/api/leads` |
+| 1 | **Lead nurture email** — auto-reply when contact/property inquiry submitted | [x] `sendLeadNurtureEmail()` |
 | 2 | **Owner inquiry alert** — email owner when inquiry on their listing | [x] `notifyOwnerInquiry` + dashboard URL |
-| 3 | **Post-inquiry UX** — success state + “what happens next” on property contact form | [x] `LeadForm` → `LeadSuccessPanel` + i18n steps |
+| 3 | **Post-inquiry UX** — success state + “what happens next” on property contact form | [x] `LeadForm` → `LeadSuccessPanel` |
 
 ### Should-have
 
-| # | Feature |
-|---|---------|
-| 4 | Dashboard inquiries — unread badge + mark contacted |
-| 5 | Admin lead auto-assign rules (optional) |
+| # | Feature | Status |
+|---|---------|--------|
+| 4 | Dashboard inquiries — unread badge + mark contacted | [x] `InquiriesList`, nav badge, `PATCH /api/user/inquiries/[id]` |
+| 5 | Admin lead auto-assign rules | [x] `pickDefaultLeadAssignee()` on agent_team leads |
 
 ### Done when
 

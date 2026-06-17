@@ -30,6 +30,23 @@ export async function createLead(input: CreateLeadInput) {
   });
 }
 
+/** Default CRM assignee for unassigned agent_team leads (admin first, then oldest agent). */
+export async function pickDefaultLeadAssignee(): Promise<string | null> {
+  const admin = await prisma.user.findFirst({
+    where: { role: "admin" },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+  if (admin) return admin.id;
+
+  const agent = await prisma.user.findFirst({
+    where: { role: "agent" },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+  return agent?.id ?? null;
+}
+
 export async function getLeadStats() {
   const [total, newLeads, viewing] = await Promise.all([
     prisma.lead.count(),

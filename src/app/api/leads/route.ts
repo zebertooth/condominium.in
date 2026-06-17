@@ -5,7 +5,7 @@ import {
   resolveLeadAssigneeId,
   resolveListingContactMode,
 } from "@/lib/contact-routing";
-import { createLead } from "@/lib/leads";
+import { createLead, pickDefaultLeadAssignee } from "@/lib/leads";
 import {
   notifyAgentManagedInquiry,
   notifyOwnerInquiry,
@@ -81,6 +81,9 @@ export async function POST(request: Request) {
         property.user.id,
         property.agentManaged,
       );
+      if (!assignedToId && contactMode === "agent_team") {
+        assignedToId = await pickDefaultLeadAssignee();
+      }
 
       const lead = await createLead({
         ...parsed.data,
@@ -128,6 +131,9 @@ export async function POST(request: Request) {
               : "ส่งข้อความเรียบร้อย ผู้ลงประกาศจะติดต่อกลับโดยเร็ว",
       });
     }
+
+    assignedToId =
+      contactMode === "owner_direct" ? null : await pickDefaultLeadAssignee();
 
     const lead = await createLead({
       ...parsed.data,

@@ -4,6 +4,7 @@ import { LogoutButton } from "@/components/auth/LogoutButton";
 import { getCurrentUser } from "@/lib/auth";
 import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+import { getOwnerUnreadInquiryCount } from "@/lib/owner-inquiries";
 
 export default async function DashboardLayout({
   children,
@@ -12,6 +13,9 @@ export default async function DashboardLayout({
 }) {
   const [user, locale] = await Promise.all([getCurrentUser(), getLocale()]);
   if (!user) redirect("/login");
+
+  const unreadInquiries =
+    user.role === "user" ? await getOwnerUnreadInquiryCount(user.id) : 0;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -53,9 +57,17 @@ export default async function DashboardLayout({
           {user.role === "user" && (
             <Link
               href="/dashboard/inquiries"
-              className="rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200"
+              className="relative rounded-lg bg-slate-100 px-3 py-1.5 hover:bg-slate-200"
             >
               {t("dashInquiries", locale)}
+              {unreadInquiries > 0 && (
+                <span
+                  className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white"
+                  aria-label={tf("inquiryUnreadBadge", locale, { count: unreadInquiries })}
+                >
+                  {unreadInquiries > 9 ? "9+" : unreadInquiries}
+                </span>
+              )}
             </Link>
           )}
           {(user.role === "agent" || user.role === "admin") && (
