@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
-import { sendEmail } from "@/lib/notifications";
+import { buildViewingIcs } from "@/lib/calendar-invite";
+import { sendEmail, type EmailAttachment } from "@/lib/notifications";
 import { siteConfig } from "@/lib/seo";
 
 interface ViewingVisitor {
@@ -33,6 +34,33 @@ async function resolveAdminEmail(): Promise<string | null> {
   return admin?.email ?? null;
 }
 
+function viewingIcsAttachment(
+  leadId: string,
+  title: string,
+  visitor: ViewingVisitor,
+  propertyTitle?: string | null,
+): EmailAttachment {
+  const ics = buildViewingIcs({
+    uid: `viewing-${leadId}@condominium.in.th`,
+    title: title,
+    date: visitor.viewingDate!,
+    time: visitor.viewingTime,
+    description: `${visitor.name}: ${visitor.message}`,
+    location: propertyTitle ?? undefined,
+    organizerEmail: process.env.EMAIL_FROM ?? undefined,
+  });
+  return { filename: "viewing.ics", content: ics };
+}
+
+async function sendViewingEmail(
+  to: string,
+  subject: string,
+  text: string,
+  attachment: EmailAttachment,
+): Promise<void> {
+  await sendEmail(to, subject, text, [attachment]);
+}
+
 /** Mark lead as viewing + email assignee (agent_team) when buyer requests a slot. */
 export async function processViewingRequest(
   visitor: ViewingVisitor,
@@ -58,7 +86,7 @@ export async function processViewingRequest(
               ctx.propertySlug ? `\n${siteConfig.url}/property/${ctx.propertySlug}` : ""
             }`
           : "";
-        await sendEmail(
+        await sendViewingEmail(
           owner.email,
           `คำขอนัดชมทรัพย์ — ${ctx.propertyTitle ?? "ประกาศของคุณ"}`,
           [
@@ -75,8 +103,11 @@ export async function processViewingRequest(
             "",
             `จัดการในแดชบอร์ด: ${siteConfig.url}/dashboard/inquiries`,
             "",
+            "ไฟล์ viewing.ics แนบมาด้วย — เปิดเพื่อเพิ่มลงปฏิทิน",
+            "",
             "— Condominium.in.th",
           ].join("\n"),
+          viewingIcsAttachment(ctx.leadId, `นัดชม: ${ctx.propertyTitle ?? "ทรัพย์"}`, visitor, ctx.propertyTitle),
         );
       }
     }
@@ -108,7 +139,7 @@ export async function processViewingRequest(
 
   const greeting = assignee?.fullName ? `สวัสดีคุณ ${assignee.fullName},` : "สวัสดี,";
 
-  await sendEmail(
+  await sendViewingEmail(
     to,
     `คำขอนัดชมทรัพย์ — ${ctx.propertyTitle ?? visitor.name}`,
     [
@@ -126,7 +157,15 @@ export async function processViewingRequest(
       "",
       `จัดการในแดชบอร์ด: ${dashboardUrl}`,
       "",
+      "ไฟล์ viewing.ics แนบมาด้วย — เปิดเพื่อเพิ่มลงปฏิทิน",
+      "",
       "— Condominium.in.th",
     ].join("\n"),
+    viewingIcsAttachment(
+      ctx.leadId,
+      `นัดชม: ${ctx.propertyTitle ?? visitor.name}`,
+      visitor,
+      ctx.propertyTitle,
+    ),
   );
 }

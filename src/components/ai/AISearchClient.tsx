@@ -3,11 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
-import { useLocale } from "@/components/i18n/LocaleProvider";
+import { useLocale, useT } from "@/components/i18n/LocaleProvider";
 import type { AISearchResult } from "@/types/property";
 
 export function AISearchClient() {
   const locale = useLocale();
+  const t = useT();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") ?? "";
   const [query, setQuery] = useState(initialQuery);
@@ -90,7 +91,18 @@ export function AISearchClient() {
       {result && (
         <div className="mt-10">
           <div className="rounded-2xl bg-violet-50 p-6">
-            <h2 className="font-bold text-violet-900">ผลการวิเคราะห์ AI</h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="font-bold text-violet-900">ผลการวิเคราะห์ AI</h2>
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  result.engine === "ai"
+                    ? "bg-violet-600 text-white"
+                    : "bg-slate-200 text-slate-700"
+                }`}
+              >
+                {result.engine === "ai" ? t("aiSearchEngineLlm") : t("aiSearchEngineRules")}
+              </span>
+            </div>
             <p className="mt-2 text-violet-800">{result.summary}</p>
             <ul className="mt-4 space-y-1 text-sm text-violet-700">
               {result.suggestions.map((s) => (

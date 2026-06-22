@@ -13,15 +13,16 @@ Instructions for AI coding agents working in this repository.
 5. Production check: `GET https://www.condominium.in.th/api/health`
 6. Deploy: push `main` → `npx vercel --prod` or Vercel auto-deploy
 
-> ## 🤝 HANDOFF (session 53 — **Phase 12 ops polish**)
+> ## 🤝 HANDOFF (session 54 — **Phase 15 agent tooling**)
 >
-> **Production:** https://www.condominium.in.th — deploy session 53 pending (local)
+> **Production:** https://www.condominium.in.th — deploy session 54 pending (local)
 >
-> **Session 53:**
-> - `/admin/ops` — inventory goal (≥20 published), AdSense 9/9 slots, quick links
-> - Owner viewing emails on `owner_direct` leads with date/time
+> **Session 54:**
+> - One-click starter import — `POST /api/admin/import/starter` + `/admin/ops` button
+> - Viewing emails attach `viewing.ics` calendar file (Bangkok TZ)
+> - OpenAI status on `/admin/ops`; AI search shows engine badge (OpenAI vs rules)
 >
-> **Next:** Run `npm run db:import-inventory` on prod; paste AdSense slots; editorial cadence
+> **Next:** Click starter import on prod ops; set `OPENAI_API_KEY` optional
 
 ---
 

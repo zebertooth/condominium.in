@@ -1,3 +1,4 @@
+import { hasOpenAI } from "@/lib/openai";
 import { lineConfigured } from "@/lib/line";
 import { adsenseClientId } from "@/lib/adsense";
 import { readCronSecret } from "@/lib/cron-auth";
@@ -28,7 +29,7 @@ export interface IntegrationStatus {
 
 export function getIntegrationStatus(): IntegrationStatus {
   return {
-    openai: Boolean(process.env.OPENAI_API_KEY),
+    openai: hasOpenAI(),
     resend: emailProviderConfigured(),
     thaibulksms: thaiBulkSmsConfigured(),
     twilio: Boolean(process.env.TWILIO_ACCOUNT_SID),

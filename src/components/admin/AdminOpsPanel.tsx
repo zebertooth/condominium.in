@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminStarterImport } from "@/components/admin/AdminStarterImport";
 import { getInventoryOpsStats } from "@/lib/admin";
 import { getIntegrationStatus } from "@/lib/integrations";
 import { readCronSecret } from "@/lib/cron-auth";
@@ -32,6 +33,13 @@ export async function AdminOpsPanel() {
         pending: inventory.pending,
       }),
       href: "/admin/import",
+    },
+    {
+      label: "OpenAI",
+      ok: integrations.openai,
+      hint: integrations.openai
+        ? t("adminOpsOpenAiOk", locale)
+        : t("adminOpsOpenAiMissing", locale),
     },
     {
       label: "CRON_SECRET",
@@ -82,6 +90,7 @@ export async function AdminOpsPanel() {
 
   return (
     <div className="space-y-6">
+      <AdminStarterImport compact />
       <p className="text-sm text-slate-600">{t("adminOpsIntro", locale)}</p>
       <div className="grid gap-4 sm:grid-cols-2">
         {checks.map((check) => (

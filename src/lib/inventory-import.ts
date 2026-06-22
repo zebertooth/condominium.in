@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { prisma } from "@/lib/db";
 import { parseCsv, validateAndParseRow, type ImportResult } from "@/lib/csv-import";
 import { normalizeListingImages, parseListingImageUrls } from "@/lib/listing-images";
@@ -267,4 +269,67 @@ export async function resolveImportAdminUserId(): Promise<string> {
   }
 
   return admin.id;
+}
+
+export interface StarterImportOptions {
+  force?: boolean;
+  sponsor?: number;
+  listingsOnly?: boolean;
+  projectsOnly?: boolean;
+}
+
+export interface StarterImportResult {
+  publishedBefore: number;
+  publishedAfter: number;
+  projects: ProjectImportResult | null;
+  listings: ImportResult | null;
+  sponsored: number;
+  skipped: { projects?: string; listings?: string };
+}
+
+function readStarterCsv(name: "starter-projects.csv" | "starter-listings.csv"): string {
+  return readFileSync(join(process.cwd(), "public", "inventory", name), "utf8");
+}
+
+/** One-click starter pack — same data as `npm run db:import-inventory`. */
+export async function runStarterInventoryImport(
+  options: StarterImportOptions = {},
+): Promise<StarterImportResult> {
+  const { force = false, sponsor = 0, listingsOnly = false, projectsOnly = false } = options;
+  const adminUserId = await resolveImportAdminUserId();
+
+  const publishedBefore = await prisma.userProperty.count({ where: { status: "published" } });
+  const projectCount = await prisma.project.count();
+
+  let projects: ProjectImportResult | null = null;
+  let listings: ImportResult | null = null;
+  const skipped: StarterImportResult["skipped"] = {};
+
+  if (!listingsOnly && projectCount >= 5 && !force) {
+    skipped.projects = `${projectCount} projects already exist`;
+  } else if (!listingsOnly) {
+    projects = await importProjectsCsv(readStarterCsv("starter-projects.csv"));
+  }
+
+  if (!projectsOnly && publishedBefore >= 10 && !force) {
+    skipped.listings = `${publishedBefore} published listings already exist`;
+  } else if (!projectsOnly) {
+    listings = await importListingsCsv(readStarterCsv("starter-listings.csv"), adminUserId);
+  }
+
+  let sponsored = 0;
+  if (sponsor > 0) {
+    sponsored = await sponsorLatestListings(sponsor, 30);
+  }
+
+  const publishedAfter = await prisma.userProperty.count({ where: { status: "published" } });
+
+  return {
+    publishedBefore,
+    publishedAfter,
+    projects,
+    listings,
+    sponsored,
+    skipped,
+  };
 }

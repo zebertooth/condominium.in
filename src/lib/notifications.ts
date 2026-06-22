@@ -155,10 +155,16 @@ async function sendViaThaiBulkSms(to: string, body: string): Promise<SendResult>
   }
 }
 
+export interface EmailAttachment {
+  filename: string;
+  content: string;
+}
+
 export async function sendEmail(
   to: string,
   subject: string,
   text: string,
+  attachments?: EmailAttachment[],
 ): Promise<SendResult> {
   if (!emailProviderConfigured()) {
     const missing = !process.env.RESEND_API_KEY?.trim()
@@ -182,6 +188,14 @@ export async function sendEmail(
         to,
         subject,
         text,
+        ...(attachments?.length
+          ? {
+              attachments: attachments.map((a) => ({
+                filename: a.filename,
+                content: Buffer.from(a.content, "utf8").toString("base64"),
+              })),
+            }
+          : {}),
       }),
     });
     if (!res.ok) {

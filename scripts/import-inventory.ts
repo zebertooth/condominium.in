@@ -8,19 +8,8 @@
  *   npm run db:import-inventory -- --projects-only
  */
 import "dotenv/config";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import {
-  importListingsCsv,
-  importProjectsCsv,
-  resolveImportAdminUserId,
-  sponsorLatestListings,
-} from "../src/lib/inventory-import";
+import { runStarterInventoryImport } from "../src/lib/inventory-import";
 import { prisma } from "../src/lib/db";
-
-function readCsv(relativePath: string): string {
-  return readFileSync(join(process.cwd(), relativePath), "utf8");
-}
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -46,40 +35,35 @@ function parseArgs() {
 
 async function main() {
   const { sponsor, listingsOnly, projectsOnly, force } = parseArgs();
-  const adminUserId = await resolveImportAdminUserId();
 
-  console.log(`Using admin user id: ${adminUserId}`);
+  const result = await runStarterInventoryImport({
+    force,
+    sponsor,
+    listingsOnly,
+    projectsOnly,
+  });
 
-  const [publishedCount, projectCount] = await Promise.all([
-    prisma.userProperty.count({ where: { status: "published" } }),
-    prisma.project.count(),
-  ]);
+  console.log(`Published: ${result.publishedBefore} → ${result.publishedAfter}`);
 
-  if (!listingsOnly && projectCount >= 5 && !force) {
-    console.log(`Skipping projects — ${projectCount} already exist (use --force to import again)`);
-  } else if (!listingsOnly) {
-    const projectsCsv = readCsv("public/inventory/starter-projects.csv");
-    const projectResult = await importProjectsCsv(projectsCsv);
-    console.log(`Projects: imported ${projectResult.imported}, errors ${projectResult.errors.length}`);
-    for (const err of projectResult.errors) {
+  if (result.skipped.projects) console.log(`Skipped projects: ${result.skipped.projects}`);
+  if (result.skipped.listings) console.log(`Skipped listings: ${result.skipped.listings}`);
+
+  if (result.projects) {
+    console.log(`Projects: imported ${result.projects.imported}, errors ${result.projects.errors.length}`);
+    for (const err of result.projects.errors) {
       console.warn(`  row ${err.row}: ${err.message}`);
     }
   }
 
-  if (!projectsOnly && publishedCount >= 10 && !force) {
-    console.log(`Skipping listings — ${publishedCount} published already exist (use --force to import again)`);
-  } else if (!projectsOnly) {
-    const listingsCsv = readCsv("public/inventory/starter-listings.csv");
-    const listingResult = await importListingsCsv(listingsCsv, adminUserId);
-    console.log(`Listings: imported ${listingResult.imported}, errors ${listingResult.errors.length}`);
-    for (const err of listingResult.errors) {
+  if (result.listings) {
+    console.log(`Listings: imported ${result.listings.imported}, errors ${result.listings.errors.length}`);
+    for (const err of result.listings.errors) {
       console.warn(`  row ${err.row}: ${err.message}`);
     }
   }
 
-  if (sponsor > 0) {
-    const sponsored = await sponsorLatestListings(sponsor, 30);
-    console.log(`Sponsored ${sponsored} newest published listing(s) for 30 days`);
+  if (result.sponsored > 0) {
+    console.log(`Sponsored ${result.sponsored} newest published listing(s) for 30 days`);
   }
 }
 
