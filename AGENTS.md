@@ -13,17 +13,15 @@ Instructions for AI coding agents working in this repository.
 5. Production check: `GET https://www.condominium.in.th/api/health`
 6. Deploy: push `main` → `npx vercel --prod` or Vercel auto-deploy
 
-> ## 🤝 HANDOFF (session 52 — **Phase 14 viewing + blog area links**)
+> ## 🤝 HANDOFF (session 53 — **Phase 12 ops polish**)
 >
-> **Production:** https://www.condominium.in.th — deploy session 52 pending (local)
+> **Production:** https://www.condominium.in.th — deploy session 53 pending (local)
 >
-> **Phase 13B complete (deployed):** inquiry badge, mark contacted, auto-assign
+> **Session 53:**
+> - `/admin/ops` — inventory goal (≥20 published), AdSense 9/9 slots, quick links
+> - Owner viewing emails on `owner_direct` leads with date/time
 >
-> **Session 52:**
-> - Viewing scheduler emails — `processViewingRequest()` replaces console simulation
-> - Blog `areaSlug` — admin picker + CTA to `/areas/[slug]` on review articles
->
-> **Next:** Phase 12 user ops — inventory ≥20 listings, editorial cadence, AdSense slots
+> **Next:** Run `npm run db:import-inventory` on prod; paste AdSense slots; editorial cadence
 
 ---
 

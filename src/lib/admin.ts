@@ -21,6 +21,17 @@ export function adminRouteError(error: unknown, fallbackMessage: string) {
   return NextResponse.json({ error: fallbackMessage }, { status: 500 });
 }
 
+/** Phase 12 — live listing inventory goal for /admin/ops */
+export const INVENTORY_TARGET = 20;
+
+export async function getInventoryOpsStats() {
+  const [published, pending] = await Promise.all([
+    prisma.userProperty.count({ where: { status: "published" } }),
+    prisma.userProperty.count({ where: { status: "pending" } }),
+  ]);
+  return { published, pending, target: INVENTORY_TARGET };
+}
+
 export async function getAdminStats() {
   const [
     users,

@@ -46,6 +46,40 @@ export async function processViewingRequest(
   });
 
   if (ctx.contactMode === "owner_direct") {
+    if (ctx.ownerUserId) {
+      const owner = await prisma.user.findUnique({
+        where: { id: ctx.ownerUserId },
+        select: { email: true, fullName: true },
+      });
+      if (owner?.email) {
+        const timeLabel = visitor.viewingTime ?? "ไม่ระบุ";
+        const propertyBlock = ctx.propertyTitle
+          ? `\nประกาศ: ${ctx.propertyTitle}${
+              ctx.propertySlug ? `\n${siteConfig.url}/property/${ctx.propertySlug}` : ""
+            }`
+          : "";
+        await sendEmail(
+          owner.email,
+          `คำขอนัดชมทรัพย์ — ${ctx.propertyTitle ?? "ประกาศของคุณ"}`,
+          [
+            `สวัสดีคุณ ${owner.fullName},`,
+            "",
+            `${visitor.name} ขอนัดชมทรัพย์ของคุณ:`,
+            "",
+            `วันที่: ${visitor.viewingDate}`,
+            `เวลา: ${timeLabel}`,
+            `ช่องทางติดต่อ: ${visitorContactLine(visitor)}`,
+            propertyBlock,
+            "",
+            `ข้อความ: "${visitor.message}"`,
+            "",
+            `จัดการในแดชบอร์ด: ${siteConfig.url}/dashboard/inquiries`,
+            "",
+            "— Condominium.in.th",
+          ].join("\n"),
+        );
+      }
+    }
     return;
   }
 

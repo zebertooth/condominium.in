@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getInventoryOpsStats } from "@/lib/admin";
 import { getIntegrationStatus } from "@/lib/integrations";
 import { readCronSecret } from "@/lib/cron-auth";
 import { countActiveNewsletterSubscribers } from "@/lib/newsletter-digest";
@@ -6,6 +7,8 @@ import { adsenseClientId } from "@/lib/adsense";
 import { getSiteSettings } from "@/lib/site-settings";
 import { t, tf } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
+
+const AD_SLOT_TARGET = 9;
 
 export async function AdminOpsPanel() {
   const locale = await getLocale();
@@ -15,10 +18,21 @@ export async function AdminOpsPanel() {
   const settings = await getSiteSettings();
   const filledSlots = Object.values(settings.adSlots).filter((s) => s?.trim()).length;
   const newsletterCount = await countActiveNewsletterSubscribers();
+  const inventory = await getInventoryOpsStats();
 
   const gscMeta = Boolean(process.env.GOOGLE_SITE_VERIFICATION?.trim());
 
   const checks = [
+    {
+      label: t("adminOpsInventory", locale),
+      ok: inventory.published >= inventory.target,
+      hint: tf("adminOpsInventoryHint", locale, {
+        count: inventory.published,
+        target: inventory.target,
+        pending: inventory.pending,
+      }),
+      href: "/admin/import",
+    },
     {
       label: "CRON_SECRET",
       ok: Boolean(cronSecret),
@@ -50,8 +64,9 @@ export async function AdminOpsPanel() {
     },
     {
       label: t("adminOpsAdSlots", locale),
-      ok: filledSlots >= 3,
-      hint: `${filledSlots}/9 — ${t("adminSeo", locale)}`,
+      ok: filledSlots >= AD_SLOT_TARGET,
+      hint: `${filledSlots}/${AD_SLOT_TARGET} — ${t("adminSeo", locale)}`,
+      href: "/admin/seo",
     },
     {
       label: "Google Search Console",
@@ -83,6 +98,13 @@ export async function AdminOpsPanel() {
               </span>
             </div>
             <p className="mt-2 text-sm text-slate-700">{check.hint}</p>
+            {"href" in check && check.href ? (
+              <p className="mt-2">
+                <Link href={check.href} className="text-sm font-medium text-teal-700 hover:underline">
+                  {t("adminOpsOpen", locale)} →
+                </Link>
+              </p>
+            ) : null}
           </div>
         ))}
       </div>
@@ -94,6 +116,10 @@ export async function AdminOpsPanel() {
           <li>{t("adminOpsAlertInstant", locale)}</li>
         </ul>
         <p className="mt-3">
+          <Link href="/admin/import" className="text-teal-700 hover:underline">
+            {t("adminImport", locale)}
+          </Link>
+          {" · "}
           <Link href="/admin/seo" className="text-teal-700 hover:underline">
             {t("adminSeo", locale)}
           </Link>
