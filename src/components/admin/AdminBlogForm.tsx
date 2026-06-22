@@ -7,6 +7,7 @@ import { SingleImageInput } from "@/components/admin/SingleImageInput";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import type { BlogArticleType, BlogFactSheet, BlogSection } from "@/types/property";
 import { BLOG_ARTICLE_TYPES } from "@/types/property";
+import { areaGuides } from "@/lib/areas";
 
 interface ProjectOption {
   id: string;
@@ -32,6 +33,7 @@ interface BlogFormState {
   seoDescriptionEn: string;
   status: "draft" | "published";
   articleType: BlogArticleType;
+  areaSlug: string;
   projectId: string;
   authorName: string;
   authorTitle: string;
@@ -66,6 +68,7 @@ const emptyForm: BlogFormState = {
   seoDescriptionEn: "",
   status: "published",
   articleType: "guide",
+  areaSlug: "",
   projectId: "",
   authorName: "",
   authorTitle: "",
@@ -135,6 +138,7 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
           seoDescriptionEn: a.seoDescriptionEn ?? "",
           status: a.status === "draft" ? "draft" : "published",
           articleType: a.articleType ?? "guide",
+          areaSlug: a.areaSlug ?? "",
           projectId: a.projectId ?? "",
           authorName: a.authorName ?? "",
           authorTitle: a.authorTitle ?? "",
@@ -186,6 +190,7 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
       seoDescriptionEn: form.seoDescriptionEn,
       status: form.status,
       articleType: form.articleType,
+      areaSlug: form.areaSlug || undefined,
       projectId: form.projectId || null,
       authorName: form.authorName,
       authorTitle: form.authorTitle,
@@ -225,6 +230,7 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
   if (loading) return <p className="text-sm text-slate-500">{t("loading")}</p>;
 
   const showReviewFields = isReviewType(form.articleType);
+  const showAreaFields = form.articleType === "area_review";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -344,6 +350,28 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
           />
         </label>
       </div>
+
+      {showAreaFields && (
+        <div className="space-y-4 rounded-2xl border border-indigo-200 bg-indigo-50/40 p-5">
+          <h3 className="font-semibold text-indigo-900">{t("adminBlogAreaSection")}</h3>
+          <label className="block">
+            <span className="text-sm font-medium text-slate-700">{t("adminBlogAreaSlug")}</span>
+            <p className="mt-0.5 text-xs text-slate-500">{t("adminBlogAreaSlugHint")}</p>
+            <select
+              value={form.areaSlug}
+              onChange={(e) => setForm({ ...form, areaSlug: e.target.value })}
+              className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2"
+            >
+              <option value="">—</option>
+              {areaGuides.map((area) => (
+                <option key={area.slug} value={area.slug}>
+                  {area.name} ({area.slug})
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      )}
 
       {showReviewFields && (
         <div className="space-y-4 rounded-2xl border border-teal-200 bg-teal-50/40 p-5">

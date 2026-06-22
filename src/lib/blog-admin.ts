@@ -1,8 +1,17 @@
 import type { z } from "zod";
+import { areaGuides } from "@/lib/areas";
 import { validateProjectId } from "@/lib/projects";
 import { blogArticleSchema } from "@/lib/content-validation";
 
 type BlogArticleInput = z.infer<typeof blogArticleSchema>;
+
+const validAreaSlugs = new Set(areaGuides.map((a) => a.slug));
+
+function normalizeAreaSlug(value?: string | null): string {
+  const slug = value?.trim() ?? "";
+  if (!slug) return "";
+  return validAreaSlugs.has(slug) ? slug : "";
+}
 
 export async function blogArticleToDbData(data: BlogArticleInput) {
   const projectId = await validateProjectId(data.projectId ?? null);
@@ -25,6 +34,7 @@ export async function blogArticleToDbData(data: BlogArticleInput) {
     seoDescriptionEn: data.seoDescriptionEn ?? "",
     status: data.status,
     articleType: data.articleType,
+    areaSlug: normalizeAreaSlug(data.areaSlug),
     projectId,
     authorName: data.authorName ?? "",
     authorTitle: data.authorTitle ?? "",
@@ -58,6 +68,7 @@ export function blogArticleFromDb(row: {
   seoDescriptionEn: string;
   status: string;
   articleType: string;
+  areaSlug: string;
   projectId: string | null;
   authorName: string;
   authorTitle: string;
@@ -115,6 +126,7 @@ export function blogArticleFromDb(row: {
     seoDescriptionEn: row.seoDescriptionEn,
     status: row.status,
     articleType: row.articleType,
+    areaSlug: row.areaSlug,
     projectId: row.projectId,
     authorName: row.authorName,
     authorTitle: row.authorTitle,

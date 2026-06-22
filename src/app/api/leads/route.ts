@@ -12,6 +12,7 @@ import {
   notifyPosterInquiry,
   sendLeadNurtureEmail,
 } from "@/lib/lead-notifications";
+import { processViewingRequest } from "@/lib/viewing-scheduler";
 import { logMatchingEvent } from "@/lib/matching";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { leadSchema } from "@/lib/validation";
@@ -122,6 +123,17 @@ export async function POST(request: Request) {
         agentManaged: property.agentManaged,
       });
 
+      if (visitor.viewingDate) {
+        void processViewingRequest(visitor, {
+          leadId: lead.id,
+          assignedToId,
+          ownerUserId,
+          contactMode,
+          propertyTitle,
+          propertySlug,
+        });
+      }
+
       return NextResponse.json({
         message:
           contactMode === "owner_direct"
@@ -144,11 +156,14 @@ export async function POST(request: Request) {
       assignedToId,
     });
 
-    if (parsed.data.viewingDate) {
-      console.log(`[viewing-scheduler] SIMULATION:
-- LINE / WhatsApp Alert sent to Agent Team about viewing request for property "${parsed.data.propertyTitle}"
-- Details: Date ${parsed.data.viewingDate}, Time ${parsed.data.viewingTime ?? "not specified"}
-- Google Calendar API: Inserted viewing slot calendar event.`);
+    if (visitor.viewingDate) {
+      void processViewingRequest(visitor, {
+        leadId: lead.id,
+        assignedToId,
+        contactMode,
+        propertyTitle,
+        propertySlug,
+      });
     }
 
     void sendLeadNurtureEmail(visitor, { kind: "contact" });

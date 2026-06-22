@@ -13,13 +13,15 @@ Instructions for AI coding agents working in this repository.
 5. Production check: `GET https://www.condominium.in.th/api/health`
 6. Deploy: push `main` → `npx vercel --prod` or Vercel auto-deploy
 
-> ## 🤝 HANDOFF (session 51 — **Phase 13B complete**)
+> ## 🤝 HANDOFF (session 52 — **Phase 14 viewing + blog area links**)
 >
-> **Production:** https://www.condominium.in.th — deploy session 51 pending (local)
+> **Production:** https://www.condominium.in.th — deploy session 52 pending (local)
 >
-> **Phase 13B complete:**
-> - Lead nurture + owner alerts + post-inquiry UX (`3a380ac`)
-> - Inquiry unread badge + mark contacted + auto-assign (`pickDefaultLeadAssignee`)
+> **Phase 13B complete (deployed):** inquiry badge, mark contacted, auto-assign
+>
+> **Session 52:**
+> - Viewing scheduler emails — `processViewingRequest()` replaces console simulation
+> - Blog `areaSlug` — admin picker + CTA to `/areas/[slug]` on review articles
 >
 > **Next:** Phase 12 user ops — inventory ≥20 listings, editorial cadence, AdSense slots
 
@@ -31,7 +33,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 13B done** — user ops (inventory/editorial) next |
+| Phase | **Phase 14 done (local)** — viewing emails + blog area CTAs; user ops next |
 | Monetization | **Sponsor boost only** — 1d ฿29 · 3d ฿79 · 7d ฿159 (PromptPay + SlipOK) |
 | Listings | Unlimited after verify (Thai users); agents admin-capped |
 | Admin sponsored | `/admin/sponsored` — 1/3/7 days + custom date |

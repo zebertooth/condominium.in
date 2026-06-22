@@ -1955,6 +1955,7 @@ export const BlogArticleScalarFieldEnum = {
   seoDescriptionEn: 'seoDescriptionEn',
   status: 'status',
   articleType: 'articleType',
+  areaSlug: 'areaSlug',
   projectId: 'projectId',
   authorName: 'authorName',
   authorTitle: 'authorTitle',

@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-17 (session 50 — **Phase 13B must-haves done**)  
-**Current phase:** **Phase 13B complete** — next: Phase 12 user ops (inventory + editorial)
+**Last updated:** 2026-06-17 (session 52 — **Phase 14 viewing + blog area links**)  
+**Current phase:** **Phase 14 complete (local)** — next: Phase 12 user ops (inventory + editorial)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
@@ -22,10 +22,9 @@
 | Area | State |
 |------|--------|
 | **Phase** | **Phase 13B** — conversion emails + inquiry UX (**must-haves done**) |
-| **13B done** | Lead nurture email, owner alerts w/ dashboard links, post-inquiry UX |
-| **13A done** | Sponsor wizard, SlipOK, payment emails, user CSV import, compare fix |
-| **Production** | Live; PromptPay + SlipOK + Resend on `/api/health` |
-| **Focus now** | Turn inquiries into closed deals; parallel user ops (inventory, editorial) |
+| **13B done** | Inquiry badge, mark contacted, lead auto-assign (deployed) |
+| **14 done** | Viewing scheduler emails; blog areaSlug admin + area CTA |
+| **Focus now** | User ops: inventory ≥20, editorial cadence, AdSense slots |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -76,6 +75,19 @@ Bangkok condo/house marketplace with:
 | **12** | Inventory, editorial cadence, ops monitoring | **Ongoing (user ops)** | 2026 Q3–Q4 |
 | **13A** | Monetization polish — sponsor tiers, SlipOK, wizard, emails | **Done** (session 49) | 2026 Q2 |
 | **13B** | Lead nurture, inquiry follow-up, conversion UX | **Done** | 2026 Q3 |
+| **14** | Viewing scheduler emails + blog area CTAs | **Done** | 2026 Q3 |
+
+---
+
+## Phase 14 — Viewing + editorial links (DONE)
+
+**Goal:** Replace viewing simulation with real agent emails; link area roundup articles to BTS area pages.
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | `processViewingRequest()` — status → viewing + email assignee | [x] `src/lib/viewing-scheduler.ts` |
+| 2 | Wired on property + contact lead POST when `viewingDate` set | [x] `/api/leads` |
+| 3 | Blog `areaSlug` admin picker + CTA on articles | [x] `AdminBlogForm`, `ReviewArticleLayout` |
 
 ---
 
@@ -157,7 +169,7 @@ Bangkok condo/house marketplace with:
 
 ### Should-have (product backlog — pick when ready)
 
-- [ ] Agent CRM scheduling polish (Phase 3 carryover)
+- [ ] Agent CRM scheduling polish (Phase 3 carryover) — viewing emails done; calendar sync backlog
 - [ ] OpenAI AI search (`OPENAI_API_KEY` on Vercel)
 - [ ] Package expiry reminder emails
 - [ ] In-app chat / mobile app / pgvector search (2027+)

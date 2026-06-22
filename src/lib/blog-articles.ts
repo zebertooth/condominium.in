@@ -30,6 +30,7 @@ type DbArticle = {
   seoDescriptionEn: string;
   status: string;
   articleType?: string;
+  areaSlug?: string;
   projectId?: string | null;
   authorName?: string;
   authorTitle?: string;
@@ -107,6 +108,7 @@ export function dbArticleToPost(row: DbArticle): BlogPost {
     seoDescription: row.seoDescription,
     seoDescriptionEn: row.seoDescriptionEn || undefined,
     articleType,
+    areaSlug: row.areaSlug || undefined,
     projectId: row.projectId ?? undefined,
     projectSlug: row.project?.slug,
     projectName: row.project?.name,

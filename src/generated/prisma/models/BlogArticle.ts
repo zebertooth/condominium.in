@@ -56,6 +56,7 @@ export type BlogArticleMinAggregateOutputType = {
   seoDescriptionEn: string | null
   status: string | null
   articleType: string | null
+  areaSlug: string | null
   projectId: string | null
   authorName: string | null
   authorTitle: string | null
@@ -92,6 +93,7 @@ export type BlogArticleMaxAggregateOutputType = {
   seoDescriptionEn: string | null
   status: string | null
   articleType: string | null
+  areaSlug: string | null
   projectId: string | null
   authorName: string | null
   authorTitle: string | null
@@ -128,6 +130,7 @@ export type BlogArticleCountAggregateOutputType = {
   seoDescriptionEn: number
   status: number
   articleType: number
+  areaSlug: number
   projectId: number
   authorName: number
   authorTitle: number
@@ -176,6 +179,7 @@ export type BlogArticleMinAggregateInputType = {
   seoDescriptionEn?: true
   status?: true
   articleType?: true
+  areaSlug?: true
   projectId?: true
   authorName?: true
   authorTitle?: true
@@ -212,6 +216,7 @@ export type BlogArticleMaxAggregateInputType = {
   seoDescriptionEn?: true
   status?: true
   articleType?: true
+  areaSlug?: true
   projectId?: true
   authorName?: true
   authorTitle?: true
@@ -248,6 +253,7 @@ export type BlogArticleCountAggregateInputType = {
   seoDescriptionEn?: true
   status?: true
   articleType?: true
+  areaSlug?: true
   projectId?: true
   authorName?: true
   authorTitle?: true
@@ -371,6 +377,7 @@ export type BlogArticleGroupByOutputType = {
   seoDescriptionEn: string
   status: string
   articleType: string
+  areaSlug: string
   projectId: string | null
   authorName: string
   authorTitle: string
@@ -430,6 +437,7 @@ export type BlogArticleWhereInput = {
   seoDescriptionEn?: Prisma.StringFilter<"BlogArticle"> | string
   status?: Prisma.StringFilter<"BlogArticle"> | string
   articleType?: Prisma.StringFilter<"BlogArticle"> | string
+  areaSlug?: Prisma.StringFilter<"BlogArticle"> | string
   projectId?: Prisma.StringNullableFilter<"BlogArticle"> | string | null
   authorName?: Prisma.StringFilter<"BlogArticle"> | string
   authorTitle?: Prisma.StringFilter<"BlogArticle"> | string
@@ -467,6 +475,7 @@ export type BlogArticleOrderByWithRelationInput = {
   seoDescriptionEn?: Prisma.SortOrder
   status?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
+  areaSlug?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   authorName?: Prisma.SortOrder
   authorTitle?: Prisma.SortOrder
@@ -507,6 +516,7 @@ export type BlogArticleWhereUniqueInput = Prisma.AtLeast<{
   seoDescriptionEn?: Prisma.StringFilter<"BlogArticle"> | string
   status?: Prisma.StringFilter<"BlogArticle"> | string
   articleType?: Prisma.StringFilter<"BlogArticle"> | string
+  areaSlug?: Prisma.StringFilter<"BlogArticle"> | string
   projectId?: Prisma.StringNullableFilter<"BlogArticle"> | string | null
   authorName?: Prisma.StringFilter<"BlogArticle"> | string
   authorTitle?: Prisma.StringFilter<"BlogArticle"> | string
@@ -544,6 +554,7 @@ export type BlogArticleOrderByWithAggregationInput = {
   seoDescriptionEn?: Prisma.SortOrder
   status?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
+  areaSlug?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   authorName?: Prisma.SortOrder
   authorTitle?: Prisma.SortOrder
@@ -588,6 +599,7 @@ export type BlogArticleScalarWhereWithAggregatesInput = {
   seoDescriptionEn?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   status?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   articleType?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
+  areaSlug?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   projectId?: Prisma.StringNullableWithAggregatesFilter<"BlogArticle"> | string | null
   authorName?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
   authorTitle?: Prisma.StringWithAggregatesFilter<"BlogArticle"> | string
@@ -624,6 +636,7 @@ export type BlogArticleCreateInput = {
   seoDescriptionEn?: string
   status?: string
   articleType?: string
+  areaSlug?: string
   authorName?: string
   authorTitle?: string
   reviewNumber?: number | null
@@ -660,6 +673,7 @@ export type BlogArticleUncheckedCreateInput = {
   seoDescriptionEn?: string
   status?: string
   articleType?: string
+  areaSlug?: string
   projectId?: string | null
   authorName?: string
   authorTitle?: string
@@ -696,6 +710,7 @@ export type BlogArticleUpdateInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -732,6 +747,7 @@ export type BlogArticleUncheckedUpdateInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -768,6 +784,7 @@ export type BlogArticleCreateManyInput = {
   seoDescriptionEn?: string
   status?: string
   articleType?: string
+  areaSlug?: string
   projectId?: string | null
   authorName?: string
   authorTitle?: string
@@ -804,6 +821,7 @@ export type BlogArticleUpdateManyMutationInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -839,6 +857,7 @@ export type BlogArticleUncheckedUpdateManyInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -875,6 +894,7 @@ export type BlogArticleCountOrderByAggregateInput = {
   seoDescriptionEn?: Prisma.SortOrder
   status?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
+  areaSlug?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   authorName?: Prisma.SortOrder
   authorTitle?: Prisma.SortOrder
@@ -916,6 +936,7 @@ export type BlogArticleMaxOrderByAggregateInput = {
   seoDescriptionEn?: Prisma.SortOrder
   status?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
+  areaSlug?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   authorName?: Prisma.SortOrder
   authorTitle?: Prisma.SortOrder
@@ -952,6 +973,7 @@ export type BlogArticleMinOrderByAggregateInput = {
   seoDescriptionEn?: Prisma.SortOrder
   status?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
+  areaSlug?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   authorName?: Prisma.SortOrder
   authorTitle?: Prisma.SortOrder
@@ -1045,6 +1067,7 @@ export type BlogArticleCreateWithoutProjectInput = {
   seoDescriptionEn?: string
   status?: string
   articleType?: string
+  areaSlug?: string
   authorName?: string
   authorTitle?: string
   reviewNumber?: number | null
@@ -1080,6 +1103,7 @@ export type BlogArticleUncheckedCreateWithoutProjectInput = {
   seoDescriptionEn?: string
   status?: string
   articleType?: string
+  areaSlug?: string
   authorName?: string
   authorTitle?: string
   reviewNumber?: number | null
@@ -1144,6 +1168,7 @@ export type BlogArticleScalarWhereInput = {
   seoDescriptionEn?: Prisma.StringFilter<"BlogArticle"> | string
   status?: Prisma.StringFilter<"BlogArticle"> | string
   articleType?: Prisma.StringFilter<"BlogArticle"> | string
+  areaSlug?: Prisma.StringFilter<"BlogArticle"> | string
   projectId?: Prisma.StringNullableFilter<"BlogArticle"> | string | null
   authorName?: Prisma.StringFilter<"BlogArticle"> | string
   authorTitle?: Prisma.StringFilter<"BlogArticle"> | string
@@ -1180,6 +1205,7 @@ export type BlogArticleCreateManyProjectInput = {
   seoDescriptionEn?: string
   status?: string
   articleType?: string
+  areaSlug?: string
   authorName?: string
   authorTitle?: string
   reviewNumber?: number | null
@@ -1215,6 +1241,7 @@ export type BlogArticleUpdateWithoutProjectInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1250,6 +1277,7 @@ export type BlogArticleUncheckedUpdateWithoutProjectInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1285,6 +1313,7 @@ export type BlogArticleUncheckedUpdateManyWithoutProjectInput = {
   seoDescriptionEn?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   articleType?: Prisma.StringFieldUpdateOperationsInput | string
+  areaSlug?: Prisma.StringFieldUpdateOperationsInput | string
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   authorTitle?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1322,6 +1351,7 @@ export type BlogArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   seoDescriptionEn?: boolean
   status?: boolean
   articleType?: boolean
+  areaSlug?: boolean
   projectId?: boolean
   authorName?: boolean
   authorTitle?: boolean
@@ -1359,6 +1389,7 @@ export type BlogArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   seoDescriptionEn?: boolean
   status?: boolean
   articleType?: boolean
+  areaSlug?: boolean
   projectId?: boolean
   authorName?: boolean
   authorTitle?: boolean
@@ -1396,6 +1427,7 @@ export type BlogArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   seoDescriptionEn?: boolean
   status?: boolean
   articleType?: boolean
+  areaSlug?: boolean
   projectId?: boolean
   authorName?: boolean
   authorTitle?: boolean
@@ -1433,6 +1465,7 @@ export type BlogArticleSelectScalar = {
   seoDescriptionEn?: boolean
   status?: boolean
   articleType?: boolean
+  areaSlug?: boolean
   projectId?: boolean
   authorName?: boolean
   authorTitle?: boolean
@@ -1449,7 +1482,7 @@ export type BlogArticleSelectScalar = {
   updatedAt?: boolean
 }
 
-export type BlogArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "titleEn" | "excerpt" | "excerptEn" | "content" | "contentEn" | "category" | "categoryEn" | "imageUrl" | "publishedAt" | "readTime" | "seoTitle" | "seoTitleEn" | "seoDescription" | "seoDescriptionEn" | "status" | "articleType" | "projectId" | "authorName" | "authorTitle" | "reviewNumber" | "factsJson" | "sectionsJson" | "galleryUrls" | "videoUrl" | "relatedSlugs" | "sourceName" | "sourceUrl" | "sourceTitle" | "createdAt" | "updatedAt", ExtArgs["result"]["blogArticle"]>
+export type BlogArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "titleEn" | "excerpt" | "excerptEn" | "content" | "contentEn" | "category" | "categoryEn" | "imageUrl" | "publishedAt" | "readTime" | "seoTitle" | "seoTitleEn" | "seoDescription" | "seoDescriptionEn" | "status" | "articleType" | "areaSlug" | "projectId" | "authorName" | "authorTitle" | "reviewNumber" | "factsJson" | "sectionsJson" | "galleryUrls" | "videoUrl" | "relatedSlugs" | "sourceName" | "sourceUrl" | "sourceTitle" | "createdAt" | "updatedAt", ExtArgs["result"]["blogArticle"]>
 export type BlogArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.BlogArticle$projectArgs<ExtArgs>
 }
@@ -1485,6 +1518,7 @@ export type $BlogArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     seoDescriptionEn: string
     status: string
     articleType: string
+    areaSlug: string
     projectId: string | null
     authorName: string
     authorTitle: string
@@ -1942,6 +1976,7 @@ export interface BlogArticleFieldRefs {
   readonly seoDescriptionEn: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly status: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly articleType: Prisma.FieldRef<"BlogArticle", 'String'>
+  readonly areaSlug: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly projectId: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly authorName: Prisma.FieldRef<"BlogArticle", 'String'>
   readonly authorTitle: Prisma.FieldRef<"BlogArticle", 'String'>

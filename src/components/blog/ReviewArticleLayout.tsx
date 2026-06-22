@@ -221,6 +221,14 @@ export function ReviewArticleLayout({
               {t("blogViewProject", locale)}
             </Link>
           )}
+          {post.areaSlug && (
+            <Link
+              href={lp(`/areas/${post.areaSlug}`)}
+              className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"
+            >
+              {t("blogViewArea", locale)}
+            </Link>
+          )}
           <Link
             href={lp("/contact")}
             className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"

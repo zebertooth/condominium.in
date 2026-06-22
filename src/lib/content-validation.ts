@@ -65,6 +65,7 @@ export const blogArticleSchema = z.object({
   articleType: z
     .enum(["guide", "project_review", "project_preview", "area_review", "news"])
     .default("guide"),
+  areaSlug: z.string().optional(),
   projectId: z.string().nullable().optional(),
   authorName: z.string().optional(),
   authorTitle: z.string().optional(),
