@@ -1,8 +1,8 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-29 (session 55 — **district/station SEO hubs + location UX**)  
-**Current phase:** **Phase 15 complete** — next: Phase 12 user ops (inventory + editorial + `OPENAI_API_KEY`)
+**Last updated:** 2026-06-29 (session 56 — **Phase 16 station hub SEO**)  
+**Current phase:** **Phase 16 complete** — next: Phase 12 user ops (inventory + editorial)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
@@ -21,8 +21,9 @@
 
 | Area | State |
 |------|--------|
-| **Phase** | **Phase 15** — district/station SEO + location UX (**done**) |
-| **15 done** | 50 district hubs, 137 station catalog, unified location filter, hub listing counts, map deep-links |
+| **Phase** | **Phase 16** — full station hub SEO (**done**) |
+| **16 done** | 280 station hub URLs, hub intro copy, blog related listings, AI alert + FAQ |
+| **15 done** | 50 district hubs, 140 station catalog, unified location filter |
 | **14 done** | Viewing scheduler emails; blog areaSlug admin + area CTA |
 | **Focus now** | User ops: starter import, inventory ≥20, AdSense slots, optional `OPENAI_API_KEY` on Vercel |
 
@@ -77,6 +78,21 @@ Bangkok condo/house marketplace with:
 | **13B** | Lead nurture, inquiry follow-up, conversion UX | **Done** | 2026 Q3 |
 | **14** | Viewing scheduler emails + blog area CTAs | **Done** | 2026 Q3 |
 | **15** | District/station SEO hubs, location filter UX, nav polish | **Done** | 2026 Q3 |
+| **16** | Full station hub SEO, article↔listings, AI conversion polish | **Done** | 2026 Q3 |
+
+---
+
+## Phase 16 — Station hub SEO + growth polish (DONE)
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | `/buy|rent/station/[id]` for all 140 stations + sitemap | [x] |
+| 2 | `/stations` index links → dedicated hub URLs | [x] |
+| 3 | Hub intro copy on district + station pages | [x] |
+| 4 | Review articles auto-related listings (area/project) | [x] |
+| 5 | Admin blog: station picker → suggest listing slugs | [x] |
+| 6 | AI search: save alert + FAQ schema + search logging | [x] |
+| 7 | Admin analytics 7/30/90 day selector | [x] |
 
 ---
 
@@ -87,7 +103,7 @@ Bangkok condo/house marketplace with:
 | # | Feature | Status |
 |---|---------|--------|
 | 1 | 50 Bangkok district data + `/districts` + `/buy|rent/district/[slug]` | [x] |
-| 2 | 137 transit stations + `/stations` + map/list pickers | [x] |
+| 2 | 140 transit stations + `/stations` + map/list pickers | [x] |
 | 3 | Unified location filter — district **or** station choice chip | [x] |
 | 4 | Hub listing counts + cross-links (home, areas, blog) | [x] |
 | 5 | Map deep-links from selected district/station chips | [x] |

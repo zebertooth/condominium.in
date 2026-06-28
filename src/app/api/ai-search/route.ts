@@ -31,10 +31,12 @@ export async function POST(request: Request) {
 
     void logSearchEvent({
       query: body.query.trim(),
-      listingType: body.listingType,
+      listingType: body.listingType ?? result.filters?.listingType,
+      btsStation: result.filters?.btsStation,
+      district: result.filters?.district,
       resultCount: result.properties.length,
       source: "ai-search",
-      filters: { engine: result.engine },
+      filters: { engine: result.engine, ...result.filters },
     }).catch(() => {});
 
     return NextResponse.json(result);

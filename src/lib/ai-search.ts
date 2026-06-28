@@ -9,6 +9,7 @@ import {
   searchTransitStations,
   stationFilterValue,
 } from "@/lib/transit-stations";
+import { stationHubPath } from "@/lib/station-seo";
 import {
   CATEGORY_PROPERTY_TYPES,
   parsePropertyCategoryFromQuery,
@@ -296,10 +297,17 @@ function buildHubLinks(
   if (filters.btsStation) {
     const station = resolveStationFromFilter(filters.btsStation);
     const q = encodeURIComponent(station ? stationFilterValue(station) : filters.btsStation);
-    links.push({
-      label: station ? `ดูประกาศใกล้ ${station.label}` : `ดูประกาศใกล้ BTS ${filters.btsStation}`,
-      href: `${base}?bts=${q}`,
-    });
+    if (station) {
+      links.push({
+        label: `ดูประกาศใกล้ ${station.label}`,
+        href: stationHubPath(station, type),
+      });
+    } else {
+      links.push({
+        label: `ดูประกาศใกล้ BTS ${filters.btsStation}`,
+        href: `${base}?bts=${q}`,
+      });
+    }
     links.push({
       label: "ค้นหาบนแผนที่",
       href: `/map?bts=${q}&type=${type}`,

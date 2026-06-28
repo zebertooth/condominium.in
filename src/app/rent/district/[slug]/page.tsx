@@ -47,6 +47,7 @@ export default async function RentDistrictHubPage({ params, searchParams }: Rent
       searchParams={query}
       heading={tf("districtHubRentTitle", locale, { district: name })}
       description={tf("districtHubRentDesc", locale, { district: name })}
+      hubIntro={tf("districtHubIntro", locale, { district: name })}
       resultsTitle={t("allRentListings", locale)}
       mapFocusDistrict={district}
     />

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import type { Locale } from "@/lib/i18n";
 import { areaGuides } from "@/lib/areas";
 import { BANGKOK_DISTRICTS } from "@/lib/bangkok-districts";
+import { TRANSIT_STATIONS } from "@/lib/transit-stations";
 import { getAllBlogPosts, getBlogPostsByProjectSlug } from "@/lib/blog";
 import { getAllListings } from "@/lib/listings";
 import { ALL_LOCALES, publicPageUrl } from "@/lib/locale-routing";
@@ -164,6 +165,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   });
 
+  const stationHubPages = TRANSIT_STATIONS.flatMap((s) => [
+    ...entriesForPath(`/buy/station/${encodeURIComponent(s.id)}`, {
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.77,
+    }),
+    ...entriesForPath(`/rent/station/${encodeURIComponent(s.id)}`, {
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.77,
+    }),
+  ]);
+
   const districtHubPages = BANGKOK_DISTRICTS.flatMap((d) => [
     ...entriesForPath(`/buy/district/${encodeURIComponent(d.slug)}`, {
       lastModified: now,
@@ -181,6 +195,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...areaPages,
     ...btsHubPages,
+    ...stationHubPages,
     ...districtHubPages,
     ...rentUnderPages,
     ...buyBedroomPages,

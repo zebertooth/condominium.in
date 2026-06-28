@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useT } from "@/components/i18n/LocaleProvider";
+import { useT, useTf } from "@/components/i18n/LocaleProvider";
 import { SingleImageInput } from "@/components/admin/SingleImageInput";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import type { BlogArticleType, BlogFactSheet, BlogSection } from "@/types/property";
 import { BLOG_ARTICLE_TYPES } from "@/types/property";
 import { areaGuides } from "@/lib/areas";
+import { NEARBY_STATIONS } from "@/lib/transit-stations";
 
 interface ProjectOption {
   id: string;
@@ -96,12 +97,14 @@ function isReviewType(type: BlogArticleType): boolean {
 
 export function AdminBlogForm({ articleId }: { articleId?: string }) {
   const t = useT();
+  const tf = useTf();
   const [form, setForm] = useState<BlogFormState>(emptyForm);
   const [projects, setProjects] = useState<ProjectOption[]>([]);
   const [loading, setLoading] = useState(!!articleId);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [suggestStation, setSuggestStation] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/projects")
@@ -164,6 +167,35 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
       ...form,
       sections: [...form.sections, { id, title: "" }],
     });
+  }
+
+  async function suggestListingsForStation() {
+    if (!suggestStation) return;
+    try {
+      const res = await fetch("/api/admin/properties?status=published");
+      const data = await res.json();
+      const station = NEARBY_STATIONS.find((s) => s.id === suggestStation);
+      if (!station) return;
+      const matches = (data.properties ?? [])
+        .filter(
+          (p: { btsStation?: string; slug: string }) =>
+            p.btsStation &&
+            (p.btsStation === station.name ||
+              p.btsStation.includes(station.name) ||
+              station.name.includes(p.btsStation)),
+        )
+        .map((p: { slug: string }) => p.slug)
+        .slice(0, 6);
+      if (matches.length === 0) {
+        setMessage(t("adminBlogNoStationListings"));
+        return;
+      }
+      const merged = [...new Set([...linesToArray(form.relatedSlugsText), ...matches])];
+      setForm({ ...form, relatedSlugsText: merged.join("\n") });
+      setMessage(tf("adminBlogSuggestedListings", { count: String(matches.length) }));
+    } catch {
+      setError(t("adminBlogLoadError"));
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -527,12 +559,35 @@ export function AdminBlogForm({ articleId }: { articleId?: string }) {
 
           <label className="block">
             <span className="text-sm font-medium text-slate-700">{t("adminBlogRelatedSlugs")}</span>
+            <div className="mt-1 flex flex-wrap gap-2">
+              <select
+                value={suggestStation}
+                onChange={(e) => setSuggestStation(e.target.value)}
+                className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+              >
+                <option value="">{t("adminBlogPickStation")}</option>
+                {NEARBY_STATIONS.filter((s) => s.category === "bts")
+                  .slice(0, 40)
+                  .map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.label}
+                    </option>
+                  ))}
+              </select>
+              <button
+                type="button"
+                onClick={suggestListingsForStation}
+                className="rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm font-medium text-teal-800"
+              >
+                {t("adminBlogSuggestListings")}
+              </button>
+            </div>
             <textarea
               rows={3}
               value={form.relatedSlugsText}
               onChange={(e) => setForm({ ...form, relatedSlugsText: e.target.value })}
               placeholder="listing-slug-1"
-              className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2 font-mono text-sm"
+              className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-2 font-mono text-sm"
             />
             <p className="mt-1 text-xs text-slate-500">{t("adminBlogRelatedSlugsHint")}</p>
           </label>

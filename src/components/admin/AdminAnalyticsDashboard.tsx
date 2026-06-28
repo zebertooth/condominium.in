@@ -48,9 +48,21 @@ function BarChart({
   );
 }
 
-export function AdminAnalyticsDashboard({ summary }: { summary: AnalyticsSummary }) {
+export function AdminAnalyticsDashboard({
+  summary,
+  days = 30,
+}: {
+  summary: AnalyticsSummary;
+  days?: number;
+}) {
   const t = useT();
   const tf = useTf();
+
+  const periodLinks = [
+    { days: 7, label: t("adminAnalyticsDays7") },
+    { days: 30, label: t("adminAnalyticsDays30") },
+    { days: 90, label: t("adminAnalyticsDays90") },
+  ];
 
   const exportTypes = [
     { type: "searches", label: t("adminExportSearches") },
@@ -74,10 +86,26 @@ export function AdminAnalyticsDashboard({ summary }: { summary: AnalyticsSummary
           <p className="mt-1 text-slate-600">{t("adminAnalyticsDesc")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-1">
+            <span className="px-2 text-xs font-medium text-slate-500">{t("adminAnalyticsDays")}</span>
+            {periodLinks.map((p) => (
+              <Link
+                key={p.days}
+                href={`/admin/analytics?days=${p.days}`}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+                  days === p.days
+                    ? "bg-teal-600 text-white"
+                    : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                {p.label}
+              </Link>
+            ))}
+          </div>
           {exportTypes.map((e) => (
             <a
               key={e.type}
-              href={`/api/admin/analytics/export?type=${e.type}&days=30`}
+              href={`/api/admin/analytics/export?type=${e.type}&days=${days}`}
               className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
               {tf("adminExportCsv", { label: e.label })}

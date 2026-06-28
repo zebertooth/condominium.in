@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { AISearchCreateAlert } from "@/components/ai/AISearchCreateAlert";
 import { LocalizedLink } from "@/components/i18n/LocalizedLink";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
@@ -179,6 +180,13 @@ export function AISearchClient() {
                 <li key={s}>• {s}</li>
               ))}
             </ul>
+
+            <AISearchCreateAlert
+              listingType={type}
+              locale={locale}
+              filters={result.filters}
+              query={query}
+            />
           </div>
 
           <h2 className="mb-6 mt-10 text-xl font-semibold text-slate-900">

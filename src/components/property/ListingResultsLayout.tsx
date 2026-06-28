@@ -35,6 +35,7 @@ interface ListingResultsLayoutProps {
   lockedBts?: string;
   lockedDistrict?: string;
   mapFocusDistrict?: BangkokDistrict | null;
+  hubIntro?: string;
   showSearch?: boolean;
   showAds?: boolean;
 }
@@ -51,6 +52,7 @@ export async function ListingResultsLayout({
   lockedBts,
   lockedDistrict,
   mapFocusDistrict = null,
+  hubIntro,
 }: ListingResultsLayoutProps) {
   const filters = parseListingSearchParams(
     {
@@ -78,6 +80,7 @@ export async function ListingResultsLayout({
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold text-slate-900">{heading}</h1>
       <p className="mt-2 max-w-2xl text-slate-600">{description}</p>
+      {hubIntro && <p className="mt-3 max-w-2xl text-sm text-slate-500">{hubIntro}</p>}
 
       {(lockedDistrict || lockedBts) && (
         <HubCrossLinks

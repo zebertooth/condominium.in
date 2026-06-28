@@ -20,7 +20,7 @@ import {
   dateLocale,
   isNonThaiLocale,
 } from "@/lib/locale-content";
-import { getListingsBySlugs } from "@/lib/listings";
+import { getReviewRelatedListings } from "@/lib/blog-related-listings";
 import { getLocale } from "@/lib/locale";
 import { localePath } from "@/lib/locale-routing";
 import { createMetadata, siteConfig } from "@/lib/seo";
@@ -57,8 +57,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   ]);
 
   if (isReviewArticle(post)) {
-    const slugs = post.relatedSlugs ?? [];
-    const relatedListings = slugs.length > 0 ? await getListingsBySlugs(slugs) : [];
+    const relatedListings = await getReviewRelatedListings(post);
     return (
       <ReviewArticleLayout
         post={post}

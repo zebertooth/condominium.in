@@ -13,17 +13,19 @@ Instructions for AI coding agents working in this repository.
 5. Production check: `GET https://www.condominium.in.th/api/health`
 6. Deploy: push `main` → `npx vercel --prod` or Vercel auto-deploy
 
-> ## 🤝 HANDOFF (session 55 — **Phase 15 district/station SEO**)
+> ## 🤝 HANDOFF (session 56 — **Phase 16 station hub SEO + growth polish**)
 >
-> **Production:** https://www.condominium.in.th — deploy session 55 pending (local)
+> **Production:** https://www.condominium.in.th — deploy pending (local)
 >
-> **Session 55:**
-> - Hub listing counts on `/districts` and `/stations`
-> - Cross-links: home, `/areas`, blog review CTAs → districts/stations/map
-> - Map deep-links on location filter chips (SelectedChoice)
-> - AI search: district + full transit station parsing (LLM + rules)
+> **Session 56:**
+> - **140 station hub pages** — `/buy|rent/station/[id]` for all BTS/MRT/BRT + sitemap
+> - Hub intro copy on district + station pages
+> - Review articles auto-related listings (area/project match)
+> - Admin blog: BTS station → suggest listing slugs
+> - AI search: save alert, FAQ schema, richer search logging
+> - Admin analytics: 7/30/90 day period selector
 >
-> **Next:** Starter import on `/admin/ops`; set `OPENAI_API_KEY` on Vercel; fill AdSense slots
+> **Next:** User ops — listings + editorial (3 articles/month); GSC monitor new station URLs
 
 ---
 
@@ -33,7 +35,7 @@ Instructions for AI coding agents working in this repository.
 |------|-------|
 | Production | **https://www.condominium.in.th** |
 | GitHub | https://github.com/zebertooth/condominium.in |
-| Phase | **Phase 15 done** — district/station hubs + location UX; user ops next |
+| Phase | **Phase 16 done (local)** — station hub SEO; user ops next |
 | Monetization | **Sponsor boost only** — 1d ฿29 · 3d ฿79 · 7d ฿159 (PromptPay + SlipOK) |
 | Listings | Unlimited after verify (Thai users); agents admin-capped |
 | Admin sponsored | `/admin/sponsored` — 1/3/7 days + custom date |
@@ -43,7 +45,7 @@ Instructions for AI coding agents working in this repository.
 | Ads | AdSense in `<head>`; units after cookie accept + slot IDs in `/admin/seo` |
 | Security | Cloudflare Turnstile on login, register, contact |
 | Crons | Mon 02:00 UTC alerts · daily 03:00 UTC sponsor reminders + expiry |
-| SEO hubs | `/districts` (50) · `/stations` (137) · `/buy|rent/district/[slug]` |
+| SEO hubs | `/districts` (50) · `/stations` (140) · `/buy|rent/station/[id]` · `/buy|rent/district/[slug]` |
 
 **Launch policy:** Thai = LINE + Email to post (**unlimited**). Non-Thai blocked from posting. Owner listings → direct contact.
 
@@ -54,7 +56,8 @@ Instructions for AI coding agents working in this repository.
 ```
 # Phase 15 — district/station SEO
 src/lib/bangkok-districts-data.ts       50 districts
-src/lib/transit-stations-data.ts        137 stations
+src/lib/station-seo.ts                   All 140 station hub routes
+src/app/buy/station/[id]/ src/app/rent/station/[id]/
 src/lib/hub-listing-counts.ts           Per-hub buy/rent counts
 src/components/property/LocationFilterPicker.tsx  District OR station choice
 src/components/property/HubExploreLinks.tsx       Cross-link strip

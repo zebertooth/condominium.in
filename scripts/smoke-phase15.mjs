@@ -15,7 +15,8 @@ const routes = [
   { method: "GET", path: "/areas", expect: [200], bodyIncludes: ["50 เขต", "สถานีรถไฟฟ้า"] },
   { method: "GET", path: "/", expect: [200], bodyIncludes: ["ค้นหาตามพื้นที่", "50 เขตกรุงเทพ"] },
   { method: "GET", path: "/buy", expect: [200], bodyIncludes: ["ตัวกรองขั้นสูง", "ซื้อคอนโด"] },
-  { method: "GET", path: "/rent?district=ปทุมวัน", expect: [200], bodyIncludes: ["ปทุมวัน"] },
+  { method: "GET", path: "/rent/station/bts-asok", expect: [200], bodyIncludes: ["อโศก"] },
+  { method: "GET", path: "/buy/station/mrt-silom", expect: [200], bodyIncludes: ["สีลม"] },
 ];
 
 const aiQueries = [

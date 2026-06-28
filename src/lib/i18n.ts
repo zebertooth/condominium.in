@@ -228,6 +228,31 @@ const th = {
   districtHubBuyDesc: "รวมประกาศขายคอนโดและบ้านใน{district} — กรอง เรียง และดูบนแผนที่",
   districtHubRentTitle: "เช่าคอนโด{district}",
   districtHubRentDesc: "รวมประกาศเช่าคอนโดใน{district} — กรอง เรียง และดูบนแผนที่",
+  districtHubIntro:
+    "รวมประกาศซื้อ-เช่าคอนโดและบ้านใน{district} กรองตามราคา ห้องนอน และสถานีรถไฟฟ้าใกล้เคียง หรือดูบนแผนที่",
+  stationHubBuyTitle: "ซื้อคอนโดใกล้ {station} ({line})",
+  stationHubBuyDesc:
+    "รวมประกาศขายคอนโดและบ้านใกล้ {station} — กรอง เรียง และดูบนแผนที่",
+  stationHubRentTitle: "เช่าคอนโดใกล้ {station} ({line})",
+  stationHubRentDesc:
+    "รวมประกาศเช่าคอนโดใกล้ {station} — กรอง เรียง และดูบนแผนที่",
+  stationHubIntro:
+    "ค้นหาคอนโดซื้อ-เช่าใกล้ {station} บน {line} ในกรุงเทพฯ กรองตามงบประมาณ ห้องนอน และดูตำแหน่งบนแผนที่",
+  aiSearchCreateAlert: "บันทึกการแจ้งเตือนจากผลค้นหานี้",
+  aiSearchFaqTitle: "คำถามที่พบบ่อย",
+  aiSearchFaq1Q: "ค้นหาคอนโดด้วย AI ใช้อย่างไร?",
+  aiSearchFaq1A:
+    "พิมพ์ความต้องการเป็นภาษาพูด เช่น ย่าน BTS จำนวนห้องนอน และงบประมาณ ระบบจะวิเคราะห์ประกาศทั้งหมดและแนะนำทรัพย์ที่ตรงเงื่อนไข",
+  aiSearchFaq2Q: "รองรับสถานี BTS MRT BRT หรือไม่?",
+  aiSearchFaq2A:
+    "รองรับสถานีรถไฟฟ้าในกรุงเทพฯ รวม BTS MRT BRT และ Airport Rail Link พร้อมลิงก์ไปหน้าค้นหาตามสถานีและเขต",
+  aiSearchFaq3Q: "ต้องสมัครสมาชิกหรือไม่?",
+  aiSearchFaq3A:
+    "ค้นหาได้ทันทีโดยไม่ต้องล็อกอิน หากต้องการรับอีเมลแจ้งเตือนเมื่อมีประกาศใหม่ตรงเงื่อนไข สมัครสมาชิกแล้วกดบันทึกการแจ้งเตือน",
+  adminAnalyticsDays: "ช่วงเวลา",
+  adminAnalyticsDays7: "7 วัน",
+  adminAnalyticsDays30: "30 วัน",
+  adminAnalyticsDays90: "90 วัน",
   districtsFooter: "รวม {count} เขตกรุงเทพมหานคร — อ้างอิงวิกิพีเดีย",
   hubBrowseTitle: "ค้นหาตามพื้นที่",
   hubBrowseDesc: "เลือกจาก 50 เขตกรุงเทพฯ หรือสถานีรถไฟฟ้า BTS MRT BRT",
@@ -980,6 +1005,10 @@ const th = {
   adminBlogOnePerLine: "หนึ่ง URL ต่อบรรทัด",
   adminBlogRelatedSlugs: "slug ประกาศที่เกี่ยวข้อง",
   adminBlogRelatedSlugsHint: "slug จาก /property/[slug] — หนึ่งบรรทัดต่อประกาศ",
+  adminBlogPickStation: "เลือกสถานี BTS",
+  adminBlogSuggestListings: "แนะนำประกาศจากสถานี",
+  adminBlogSuggestedListings: "เพิ่ม {count} slug แล้ว",
+  adminBlogNoStationListings: "ไม่พบประกาศที่เผยแพร่ใกล้สถานีนี้",
   adminBlogContentHint: "ใช้ **หัวข้อ** สำหรับ H2 (สร้าง anchor อัตโนมัติ)",
   adminSeo: "SEO",
   adminSeoDesc: "ตั้งค่า title, description, keywords และ AdSense slot IDs",
@@ -1223,6 +1252,29 @@ const en: Record<keyof typeof th, string> = {
   districtHubBuyDesc: "Sale listings in {district} — filter, sort, and map view",
   districtHubRentTitle: "Rent condos in {district}",
   districtHubRentDesc: "Rental listings in {district} — filter, sort, and map view",
+  districtHubIntro:
+    "Browse buy and rent condos in {district}. Filter by price, bedrooms, and nearby transit, or view on the map.",
+  stationHubBuyTitle: "Buy condos near {station} ({line})",
+  stationHubBuyDesc: "Sale listings near {station} — filter, sort, and map view",
+  stationHubRentTitle: "Rent condos near {station} ({line})",
+  stationHubRentDesc: "Rental listings near {station} — filter, sort, and map view",
+  stationHubIntro:
+    "Find condos for sale or rent near {station} on the {line} in Bangkok. Filter by budget and bedrooms.",
+  aiSearchCreateAlert: "Save alert from this search",
+  aiSearchFaqTitle: "Frequently asked questions",
+  aiSearchFaq1Q: "How does AI property search work?",
+  aiSearchFaq1A:
+    "Type your needs in plain language — BTS area, bedrooms, budget. We match against all live listings and suggest the best fits.",
+  aiSearchFaq2Q: "Does it support BTS, MRT, and BRT?",
+  aiSearchFaq2A:
+    "Yes — Bangkok transit stations including BTS, MRT, BRT, and Airport Rail Link, with links to station and district hub pages.",
+  aiSearchFaq3Q: "Do I need an account?",
+  aiSearchFaq3A:
+    "Search is free without login. Sign in to save email alerts when new listings match your criteria.",
+  adminAnalyticsDays: "Period",
+  adminAnalyticsDays7: "7 days",
+  adminAnalyticsDays30: "30 days",
+  adminAnalyticsDays90: "90 days",
   districtsFooter: "{count} Bangkok districts — Wikipedia reference data",
   hubBrowseTitle: "Browse by location",
   hubBrowseDesc: "Search by Bangkok district or BTS / MRT / BRT station",
@@ -1975,6 +2027,10 @@ const en: Record<keyof typeof th, string> = {
   adminBlogOnePerLine: "One URL per line",
   adminBlogRelatedSlugs: "Related listing slugs",
   adminBlogRelatedSlugsHint: "Slug from /property/[slug] — one per line",
+  adminBlogPickStation: "Pick BTS station",
+  adminBlogSuggestListings: "Suggest listings",
+  adminBlogSuggestedListings: "Added {count} slugs",
+  adminBlogNoStationListings: "No published listings near this station",
   adminBlogContentHint: "Use **Heading** for H2 (auto anchor)",
   adminSeo: "SEO",
   adminSeoDesc: "Manage site title, description, keywords, and AdSense slot IDs",

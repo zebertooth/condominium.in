@@ -47,6 +47,7 @@ export default async function BuyDistrictHubPage({ params, searchParams }: BuyDi
       searchParams={query}
       heading={tf("districtHubBuyTitle", locale, { district: name })}
       description={tf("districtHubBuyDesc", locale, { district: name })}
+      hubIntro={tf("districtHubIntro", locale, { district: name })}
       resultsTitle={t("allSaleListings", locale)}
       mapFocusDistrict={district}
     />

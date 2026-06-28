@@ -13,6 +13,7 @@ import { localePath } from "@/lib/locale-routing";
 import { getLocale } from "@/lib/locale";
 import { tf } from "@/lib/i18n";
 import { createMetadata } from "@/lib/seo";
+import { stationHubPath } from "@/lib/station-seo";
 import {
   TRANSIT_LINES,
   TRANSIT_STATIONS,
@@ -137,11 +138,11 @@ export default async function StationsPage() {
                   const countText = stationCountLabel(counts, locale);
                   const isEmpty = counts.sale + counts.rent === 0;
                   const buyHref = localePath(
-                    `/buy?bts=${encodeURIComponent(stationFilterValue(station))}`,
+                    stationHubPath(station, "sale"),
                     locale,
                   );
                   const rentHref = localePath(
-                    `/rent?bts=${encodeURIComponent(stationFilterValue(station))}`,
+                    stationHubPath(station, "rent"),
                     locale,
                   );
                   const hubHref = station.hubSlug
