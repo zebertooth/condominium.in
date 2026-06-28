@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { PropertyListingCarousel } from "@/components/property/PropertyListingCarousel";
 import { SourceCredit } from "@/components/blog/SourceCredit";
 import { MarketTrendsBanner } from "@/components/market/MarketTrendsBanner";
+import { getAreaBySlug } from "@/lib/areas";
 import type { Locale } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
 import { BlogVideoEmbed } from "@/components/blog/BlogVideoEmbed";
@@ -43,6 +44,7 @@ export function ReviewArticleLayout({
   const excerpt = blogExcerpt(post, locale);
   const content = blogContent(post, locale);
   const category = blogCategory(post, locale);
+  const areaGuide = post.areaSlug ? getAreaBySlug(post.areaSlug) : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -229,6 +231,26 @@ export function ReviewArticleLayout({
               {t("blogViewArea", locale)}
             </Link>
           )}
+          {areaGuide && (
+            <Link
+              href={lp(`/map?bts=${encodeURIComponent(areaGuide.btsStation)}&type=rent`)}
+              className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"
+            >
+              {nonTh ? "Map" : "แผนที่"}
+            </Link>
+          )}
+          <Link
+            href={lp("/districts")}
+            className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"
+          >
+            {nonTh ? "Districts" : "ค้นหาตามเขต"}
+          </Link>
+          <Link
+            href={lp("/stations")}
+            className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"
+          >
+            {nonTh ? "Stations" : "สถานีรถไฟฟ้า"}
+          </Link>
           <Link
             href={lp("/contact")}
             className="rounded-lg border border-teal-300 px-4 py-2 text-sm font-medium text-teal-800"

@@ -3,6 +3,7 @@ import { AdSlot } from "@/components/ads/AdSlot";
 import { BlogGridCard } from "@/components/blog/BlogGridCard";
 import { Hero } from "@/components/home/Hero";
 import { HomeListingsSection } from "@/components/home/HomeListingsSection";
+import { HubExploreLinks } from "@/components/property/HubExploreLinks";
 import { areaGuides } from "@/lib/areas";
 import { getGuidePosts, getLatestReviewPosts } from "@/lib/blog";
 import { t } from "@/lib/i18n";
@@ -72,6 +73,32 @@ export default async function HomePage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AdSlot position="homeMid" format="auto" />
       </div>
+
+      <section className="border-t border-slate-200 bg-slate-50 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <h2 className="text-2xl font-bold text-slate-900">{t("hubBrowseTitle", locale)}</h2>
+          <p className="mt-1 text-slate-600">{t("hubBrowseDesc", locale)}</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <Link
+              href={lp("/districts")}
+              className="rounded-2xl border border-violet-200 bg-white p-6 transition hover:border-violet-400 hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-violet-700">{t("hubDistrictsLabel", locale)}</p>
+              <h3 className="mt-2 text-xl font-bold text-slate-900">{t("hubDistrictsTitle", locale)}</h3>
+              <p className="mt-2 text-sm text-slate-600">{t("hubDistrictsDesc", locale)}</p>
+            </Link>
+            <Link
+              href={lp("/stations")}
+              className="rounded-2xl border border-teal-200 bg-white p-6 transition hover:border-teal-400 hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-teal-700">{t("hubStationsLabel", locale)}</p>
+              <h3 className="mt-2 text-xl font-bold text-slate-900">{t("hubStationsTitle", locale)}</h3>
+              <p className="mt-2 text-sm text-slate-600">{t("hubStationsDesc", locale)}</p>
+            </Link>
+          </div>
+          <HubExploreLinks locale={locale} className="mt-6" />
+        </div>
+      </section>
 
       <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">

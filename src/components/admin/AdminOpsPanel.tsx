@@ -40,6 +40,7 @@ export async function AdminOpsPanel() {
       hint: integrations.openai
         ? t("adminOpsOpenAiOk", locale)
         : t("adminOpsOpenAiMissing", locale),
+      href: integrations.openai ? "/ai-search" : undefined,
     },
     {
       label: "CRON_SECRET",

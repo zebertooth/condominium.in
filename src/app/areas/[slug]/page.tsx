@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
+import { HubExploreLinks } from "@/components/property/HubExploreLinks";
 import { getAreaBySlug } from "@/lib/areas";
 import { t } from "@/lib/i18n";
 import { filterListings } from "@/lib/listings";
@@ -139,6 +140,39 @@ export default async function AreaPage({ params }: PageProps) {
       )}
 
       <MarketTrendsBanner locale={locale} district={area.name} />
+
+      <div className="mt-8 flex flex-wrap gap-2">
+        <Link
+          href={lp(`/buy?bts=${encodeURIComponent(area.btsStation)}`)}
+          className="rounded-lg bg-teal-50 px-3 py-1.5 text-sm font-medium text-teal-800 hover:bg-teal-100"
+        >
+          {nonTh ? `Buy near BTS ${area.nameEn}` : `ซื้อใกล้ BTS ${area.btsStation}`}
+        </Link>
+        <Link
+          href={lp(`/rent?bts=${encodeURIComponent(area.btsStation)}`)}
+          className="rounded-lg bg-violet-50 px-3 py-1.5 text-sm font-medium text-violet-800 hover:bg-violet-100"
+        >
+          {nonTh ? `Rent near BTS ${area.nameEn}` : `เช่าใกล้ BTS ${area.btsStation}`}
+        </Link>
+        <Link
+          href={lp(`/map?bts=${encodeURIComponent(area.btsStation)}&type=rent`)}
+          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          {nonTh ? "Map" : "แผนที่"}
+        </Link>
+        <Link
+          href={lp("/stations")}
+          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          {nonTh ? "All stations" : "สถานีทั้งหมด"}
+        </Link>
+        <Link
+          href={lp("/districts")}
+          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          {nonTh ? "By district" : "ค้นหาตามเขต"}
+        </Link>
+      </div>
 
       <div className="mt-10 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 p-6 text-white">
         <h2 className="text-xl font-bold">

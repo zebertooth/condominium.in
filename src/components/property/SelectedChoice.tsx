@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 interface SelectedChoiceProps {
   label: string;
   value: string;
@@ -9,6 +11,8 @@ interface SelectedChoiceProps {
   disabled?: boolean;
   changeLabel: string;
   clearLabel: string;
+  mapHref?: string;
+  mapLabel?: string;
 }
 
 export function SelectedChoice({
@@ -20,6 +24,8 @@ export function SelectedChoice({
   disabled,
   changeLabel,
   clearLabel,
+  mapHref,
+  mapLabel,
 }: SelectedChoiceProps) {
   const styles =
     accent === "teal"
@@ -47,7 +53,15 @@ export function SelectedChoice({
         <p className={`truncate text-sm font-semibold ${styles.value}`}>{value}</p>
       </div>
       {!disabled && (
-        <div className="flex shrink-0 gap-1">
+        <div className="flex shrink-0 flex-wrap gap-1">
+          {mapHref && mapLabel && (
+            <Link
+              href={mapHref}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium ${styles.btn}`}
+            >
+              {mapLabel}
+            </Link>
+          )}
           <button
             type="button"
             onClick={onChange}

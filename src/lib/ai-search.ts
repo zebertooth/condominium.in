@@ -1,6 +1,13 @@
 import { getAllListings, filterListings } from "@/lib/listings";
 import { hasOpenAI, openaiChat } from "@/lib/openai";
+import { BANGKOK_DISTRICTS } from "@/lib/bangkok-districts";
+import { districtMatchesFilter } from "@/lib/district-match";
 import { textMatchScore } from "@/lib/property-search-text";
+import { stationMatchesFilter } from "@/lib/station-match";
+import {
+  resolveStationFromFilter,
+  searchTransitStations,
+} from "@/lib/transit-stations";
 import {
   CATEGORY_PROPERTY_TYPES,
   parsePropertyCategoryFromQuery,
@@ -12,6 +19,7 @@ interface SearchFilters {
   listingType?: "sale" | "rent";
   propertyCategory?: PropertyCategory;
   btsStation?: string;
+  district?: string;
   bedrooms?: number;
   maxPrice?: number;
 }
@@ -56,6 +64,7 @@ function extractNumber(text: string, patterns: RegExp[]): number | undefined {
 
 function scoreProperty(property: Property, query: string, prefs: {
   btsStation?: string;
+  district?: string;
   bedrooms?: number;
   maxPrice?: number;
   listingType?: "sale" | "rent";
@@ -64,13 +73,14 @@ function scoreProperty(property: Property, query: string, prefs: {
   const q = query.toLowerCase();
 
   if (prefs.listingType && property.listingType === prefs.listingType) score += 30;
-  if (prefs.btsStation && property.btsStation === prefs.btsStation) score += 40;
+  if (prefs.btsStation && stationMatchesFilter(property.btsStation, prefs.btsStation)) score += 40;
+  if (prefs.district && districtMatchesFilter(property.district, prefs.district)) score += 35;
   if (prefs.bedrooms && property.bedrooms >= prefs.bedrooms) score += 20;
   if (prefs.maxPrice && property.price <= prefs.maxPrice) score += 25;
   if (property.featured) score += 5;
   if (property.distanceToBtsMeters && property.distanceToBtsMeters <= 400) score += 10;
 
-  if (q.includes("ใกล้ bts") || q.includes("near bts")) {
+  if (q.includes("ใกล้ bts") || q.includes("near bts") || q.includes("ใกล้ mrt") || q.includes("near mrt")) {
     if (property.btsStation) score += 15;
   }
   if (q.includes("สระ") || q.includes("pool")) {
@@ -80,10 +90,41 @@ function scoreProperty(property: Property, query: string, prefs: {
   return score;
 }
 
-function resolveBtsStation(value?: string): string | undefined {
+function resolveStationFilter(value?: string): string | undefined {
   if (!value) return undefined;
-  const key = value.toLowerCase().trim();
-  return BTS_ALIASES[key] ?? BTS_ALIASES[value.trim()] ?? value.trim();
+  const resolved = resolveStationFromFilter(value);
+  return resolved?.name ?? value.trim();
+}
+
+function parseDistrictFromQuery(query: string): string | undefined {
+  const lower = query.toLowerCase();
+  for (const district of BANGKOK_DISTRICTS) {
+    if (
+      query.includes(district.nameTh) ||
+      query.includes(`เขต${district.nameTh}`) ||
+      lower.includes(district.labelEn.toLowerCase()) ||
+      lower.includes(district.nameEn.toLowerCase())
+    ) {
+      return district.nameTh;
+    }
+  }
+  return undefined;
+}
+
+function parseStationFromQuery(query: string): string | undefined {
+  const lower = query.toLowerCase();
+  const hits = searchTransitStations(query);
+  if (hits.length === 1) return hits[0]!.name;
+  if (hits.length > 1) {
+    const exact = hits.find(
+      (s) =>
+        lower.includes(s.name.toLowerCase()) ||
+        lower.includes(s.nameEn.toLowerCase()) ||
+        lower.includes(s.label.toLowerCase()),
+    );
+    if (exact) return exact.name;
+  }
+  return undefined;
 }
 
 /** Deterministic, zero-cost filter extraction from a free-text query. */
@@ -101,13 +142,17 @@ function parseFiltersFromQuery(
         ? "rent"
         : undefined);
 
-  let btsStation: string | undefined;
-  for (const [alias, station] of Object.entries(BTS_ALIASES)) {
-    if (lower.includes(alias.toLowerCase())) {
-      btsStation = station;
-      break;
+  let btsStation = parseStationFromQuery(query);
+  if (!btsStation) {
+    for (const [alias, station] of Object.entries(BTS_ALIASES)) {
+      if (lower.includes(alias.toLowerCase())) {
+        btsStation = station;
+        break;
+      }
     }
   }
+
+  const district = parseDistrictFromQuery(query);
 
   const bedrooms = extractNumber(lower, [/(\d+)\s*(ห้องนอน|br|bedroom)/, /(\d+)br/]);
 
@@ -119,7 +164,7 @@ function parseFiltersFromQuery(
     /(\d[\d,]*)\s*(บาท|baht|thb)/,
   ]);
 
-  return { listingType, propertyCategory: parsePropertyCategoryFromQuery(query), btsStation, bedrooms, maxPrice };
+  return { listingType, propertyCategory: parsePropertyCategoryFromQuery(query), btsStation, district, bedrooms, maxPrice };
 }
 
 /** Ask the LLM to extract structured filters. Returns null on any failure. */
@@ -128,8 +173,9 @@ async function extractFiltersWithLLM(query: string): Promise<SearchFilters | nul
     json: true,
     system:
       "You extract structured real-estate search filters from a Thai/English query for a Bangkok condo marketplace. " +
-      'Reply ONLY with JSON: {"listingType": "sale"|"rent"|null, "btsStation": string|null, "bedrooms": number|null, "maxPrice": number|null}. ' +
-      "btsStation should be the Thai BTS station name (e.g. อโศก, ทองหล่อ, พร้อมพงษ์, อารีย์, สยาม). maxPrice is THB (per month for rent). Use null when unknown.",
+      'Reply ONLY with JSON: {"listingType": "sale"|"rent"|null, "btsStation": string|null, "district": string|null, "bedrooms": number|null, "maxPrice": number|null}. ' +
+      "btsStation: Thai station name without line prefix (e.g. อโศก, ทองหล่อ, พร้อมพงษ์, สามย่าน). Works for BTS, MRT, BRT. " +
+      "district: Thai district name without เขต prefix (e.g. วัฒนา, คลองเตย, ปทุมวัน). maxPrice is THB (per month for rent). Use null when unknown.",
     user: query,
   });
 
@@ -147,9 +193,13 @@ async function extractFiltersWithLLM(query: string): Promise<SearchFilters | nul
       typeof parsed.maxPrice === "number" && parsed.maxPrice > 0 ? parsed.maxPrice : undefined;
     const btsStation =
       typeof parsed.btsStation === "string" && parsed.btsStation.trim()
-        ? resolveBtsStation(parsed.btsStation)
+        ? resolveStationFilter(parsed.btsStation)
         : undefined;
-    return { listingType, btsStation, bedrooms, maxPrice };
+    const district =
+      typeof parsed.district === "string" && parsed.district.trim()
+        ? parseDistrictFromQuery(parsed.district) ?? parsed.district.trim().replace(/^เขต/, "")
+        : undefined;
+    return { listingType, btsStation, district, bedrooms, maxPrice };
   } catch {
     return null;
   }
@@ -160,12 +210,12 @@ async function selectResults(
   query: string,
   filters: SearchFilters,
 ): Promise<Property[]> {
-  const { listingType, propertyCategory, btsStation, bedrooms, maxPrice } = filters;
+  const { listingType, propertyCategory, btsStation, district, bedrooms, maxPrice } = filters;
 
   const scored = properties
     .map((p) => ({
       property: p,
-      score: scoreProperty(p, query.toLowerCase(), { btsStation, bedrooms, maxPrice, listingType }),
+      score: scoreProperty(p, query.toLowerCase(), { btsStation, district, bedrooms, maxPrice, listingType }),
       textScore: textMatchScore(p, query),
     }))
     .filter(({ score, property, textScore }) => {
@@ -174,7 +224,8 @@ async function selectResults(
         const allowed = CATEGORY_PROPERTY_TYPES[propertyCategory];
         if (!allowed.includes(property.propertyType)) return false;
       }
-      if (btsStation && property.btsStation !== btsStation && textScore < 12) return false;
+      if (btsStation && !stationMatchesFilter(property.btsStation, btsStation) && textScore < 12) return false;
+      if (district && !districtMatchesFilter(property.district, district) && textScore < 12) return false;
       if (bedrooms && property.bedrooms < bedrooms) return false;
       if (maxPrice && property.price > maxPrice) return false;
       return score > 0;
@@ -186,7 +237,7 @@ async function selectResults(
   if (scored.length > 0) return scored;
 
   return (
-    await filterListings({ listingType, propertyCategory, btsStation, bedrooms, maxPrice, query })
+    await filterListings({ listingType, propertyCategory, btsStation, district, bedrooms, maxPrice, query })
   ).slice(0, 6);
 }
 
@@ -198,7 +249,8 @@ function templateSummary(
   const parts: string[] = [];
   if (filters.listingType === "rent") parts.push("ประเภท: เช่า");
   else if (filters.listingType === "sale") parts.push("ประเภท: ซื้อ/ขาย");
-  if (filters.btsStation) parts.push(`ใกล้ BTS ${filters.btsStation}`);
+  if (filters.btsStation) parts.push(`ใกล้ ${resolveStationFromFilter(filters.btsStation)?.label ?? `BTS ${filters.btsStation}`}`);
+  if (filters.district) parts.push(`เขต${filters.district}`);
   if (filters.bedrooms) parts.push(`${filters.bedrooms} ห้องนอนขึ้นไป`);
   if (filters.maxPrice) parts.push(`งบไม่เกิน ฿${filters.maxPrice.toLocaleString("th-TH")}`);
 
@@ -256,6 +308,7 @@ export async function runAISearch(request: AISearchRequest): Promise<AISearchRes
         listingType: request.listingType ?? llmFilters.listingType ?? ruleFilters.listingType,
         propertyCategory: requestCategory ?? ruleFilters.propertyCategory,
         btsStation: llmFilters.btsStation ?? ruleFilters.btsStation,
+        district: llmFilters.district ?? ruleFilters.district,
         bedrooms: llmFilters.bedrooms ?? ruleFilters.bedrooms,
         maxPrice: llmFilters.maxPrice ?? ruleFilters.maxPrice,
       };
@@ -267,10 +320,16 @@ export async function runAISearch(request: AISearchRequest): Promise<AISearchRes
   const baseSummary = templateSummary(results, properties.length, filters);
   const summary = engine === "ai" ? await llmSummary(query, results, baseSummary) : baseSummary;
 
+  const stationLabel = filters.btsStation
+    ? resolveStationFromFilter(filters.btsStation)?.label ?? `BTS ${filters.btsStation}`
+    : null;
+
   const suggestions = [
-    filters.btsStation
-      ? `ดูคอนโดทั้งหมดใกล้ BTS ${filters.btsStation}`
-      : "ลองระบุสถานี BTS เช่น อโศก เอกมัย",
+    stationLabel
+      ? `ดูคอนโดทั้งหมดใกล้ ${stationLabel}`
+      : filters.district
+        ? `ดูคอนโดทั้งหมดในเขต${filters.district}`
+        : "ลองระบุสถานี BTS/MRT หรือเขต เช่น อโศก วัฒนา",
     filters.maxPrice
       ? "เพิ่มงบประมาณเล็กน้อยเพื่อดูตัวเลือกเพิ่ม"
       : "ระบุงบประมาณเพื่อผลลัพธ์ที่แม่นยำขึ้น",

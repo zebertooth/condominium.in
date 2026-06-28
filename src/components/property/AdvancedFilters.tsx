@@ -215,6 +215,7 @@ export function AdvancedFilters({ listingType, currentCategory, basePath, locked
                 onStationChange={setBtsStation}
                 lockedDistrict={lockedDistrict}
                 lockedStation={lockedBts}
+                listingType={listingType}
               />
             </div>
 

@@ -1,5 +1,11 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { HubExploreLinks } from "@/components/property/HubExploreLinks";
+import {
+  countForStation,
+  getHubListingCounts,
+  stationCountLabel,
+} from "@/lib/hub-listing-counts";
 import { localePath } from "@/lib/locale-routing";
 import { getLocale } from "@/lib/locale";
 import { t, tf } from "@/lib/i18n";
@@ -31,6 +37,7 @@ export async function generateMetadata() {
 export default async function StationsPage() {
   const locale = await getLocale();
   const nonTh = locale !== "th";
+  const hubCounts = await getHubListingCounts();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -88,6 +95,7 @@ export default async function StationsPage() {
             </>
           )}
         </p>
+        <HubExploreLinks locale={locale} className="mt-4" />
       </header>
 
       <div className="mt-10 space-y-10">
@@ -122,6 +130,8 @@ export default async function StationsPage() {
 
               <ul className="grid gap-px bg-slate-100 sm:grid-cols-2 lg:grid-cols-3">
                 {stations.map((station) => {
+                  const counts = countForStation(hubCounts, station);
+                  const countText = stationCountLabel(counts, locale);
                   const buyHref = localePath(
                     `/buy?bts=${encodeURIComponent(stationFilterValue(station))}`,
                     locale,
@@ -134,12 +144,18 @@ export default async function StationsPage() {
                     ? localePath(`/buy/bts/${station.hubSlug}`, locale)
                     : null;
 
+                  const mapHref = localePath(
+                    `/map?bts=${encodeURIComponent(stationFilterValue(station))}&type=rent`,
+                    locale,
+                  );
+
                   return (
                     <li key={station.id} className="bg-white p-4">
                       <p className="font-medium text-slate-900">{station.label}</p>
                       <p className="text-xs text-slate-500">
                         {nonTh ? station.nameEn : station.name}
                       </p>
+                      <p className="mt-1 text-xs font-medium text-teal-700">{countText}</p>
                       <div className="mt-3 flex flex-wrap gap-2 text-xs">
                         <Link
                           href={buyHref}
@@ -152,6 +168,12 @@ export default async function StationsPage() {
                           className="rounded-lg bg-violet-50 px-2.5 py-1 font-medium text-violet-800 hover:bg-violet-100"
                         >
                           {nonTh ? "Rent" : "เช่า"}
+                        </Link>
+                        <Link
+                          href={mapHref}
+                          className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium text-slate-700 hover:bg-slate-50"
+                        >
+                          {nonTh ? "Map" : "แผนที่"}
                         </Link>
                         {hubHref && (
                           <Link

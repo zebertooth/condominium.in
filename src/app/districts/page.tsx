@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { HubExploreLinks } from "@/components/property/HubExploreLinks";
 import {
   BANGKOK_DISTRICTS,
   DISTRICT_ZONE_LABELS,
   districtFilterValue,
   districtsByZone,
 } from "@/lib/bangkok-districts";
+import {
+  countForDistrict,
+  districtCountLabel,
+  getHubListingCounts,
+} from "@/lib/hub-listing-counts";
 import { localePath } from "@/lib/locale-routing";
 import { getLocale } from "@/lib/locale";
 import { tf } from "@/lib/i18n";
@@ -31,6 +37,7 @@ export async function generateMetadata() {
 export default async function DistrictsPage() {
   const locale = await getLocale();
   const nonTh = locale !== "th";
+  const hubCounts = await getHubListingCounts();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -92,6 +99,7 @@ export default async function DistrictsPage() {
         >
           {nonTh ? "Open map search" : "เปิดค้นหาบนแผนที่"}
         </Link>
+        <HubExploreLinks locale={locale} className="mt-4" />
       </header>
 
       <div className="mt-10 space-y-10">
@@ -119,6 +127,8 @@ export default async function DistrictsPage() {
 
               <ul className="grid gap-px bg-slate-100 sm:grid-cols-2 lg:grid-cols-3">
                 {districts.map((district) => {
+                  const counts = countForDistrict(hubCounts, district);
+                  const countText = districtCountLabel(counts, locale);
                   const buyHref = localePath(
                     `/buy/district/${encodeURIComponent(district.slug)}`,
                     locale,
@@ -138,6 +148,7 @@ export default async function DistrictsPage() {
                         {nonTh ? district.labelEn : district.labelTh}
                       </p>
                       <p className="text-xs text-slate-500">{district.nameEn}</p>
+                      <p className="mt-1 text-xs font-medium text-violet-700">{countText}</p>
                       <div className="mt-3 flex flex-wrap gap-2 text-xs">
                         <Link
                           href={buyHref}

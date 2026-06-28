@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HubExploreLinks } from "@/components/property/HubExploreLinks";
 import { areaGuides } from "@/lib/areas";
 import { t } from "@/lib/i18n";
 import { areaBtsLineLabel, areaDescription, areaHighlights, areaName } from "@/lib/locale-content";
@@ -24,6 +25,7 @@ export default async function AreasPage() {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold text-slate-900">{t("areasPageTitle", locale)}</h1>
       <p className="mt-2 max-w-2xl text-slate-600">{t("areasCardDesc", locale)}</p>
+      <HubExploreLinks locale={locale} className="mt-4" />
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {areaGuides.map((area) => {

@@ -1,13 +1,13 @@
 # ROADMAP.md — Timeline & State Tracker
 
 **Project:** Condominium.in.th  
-**Last updated:** 2026-06-17 (session 52 — **Phase 14 viewing + blog area links**)  
-**Current phase:** **Phase 14 complete (local)** — next: Phase 12 user ops (inventory + editorial)
+**Last updated:** 2026-06-29 (session 55 — **district/station SEO hubs + location UX**)  
+**Current phase:** **Phase 15 complete** — next: Phase 12 user ops (inventory + editorial + `OPENAI_API_KEY`)
 
 > ## Build status
 > **Production:** https://www.condominium.in.th (Vercel, Node 22).  
-> **GitHub `main`:** through `65dad74` — compare fix + Phase 13A monetization stack  
-> **Local verify:** `npm run db:deploy && npm run build` — 133 routes, 25 migrations  
+> **GitHub `main`:** through `87ea393` — district/station hubs, unified location filter, nav UX  
+> **Local verify:** `npm run db:deploy && npm run build` — 236 routes, 26 migrations  
 > **Vercel CI:** `scripts/vercel-build.mjs` — Production migrate; Preview skips if no `DATABASE_URL`.
 
 > **LAUNCH POLICY (current):** Paid = **sponsor boost only** (฿29/79/159). Listing packages disabled. Thai users verify **LINE + Email** → **unlimited** free listings. Non-Thai cannot post. PromptPay + SlipOK live when env set.
@@ -17,14 +17,14 @@
 
 ---
 
-## Model transfer snapshot (session 49)
+## Model transfer snapshot (session 55)
 
 | Area | State |
 |------|--------|
-| **Phase** | **Phase 13B** — conversion emails + inquiry UX (**must-haves done**) |
-| **13B done** | Inquiry badge, mark contacted, lead auto-assign (deployed) |
+| **Phase** | **Phase 15** — district/station SEO + location UX (**done**) |
+| **15 done** | 50 district hubs, 137 station catalog, unified location filter, hub listing counts, map deep-links |
 | **14 done** | Viewing scheduler emails; blog areaSlug admin + area CTA |
-| **Focus now** | User ops: inventory ≥20, editorial cadence, AdSense slots |
+| **Focus now** | User ops: starter import, inventory ≥20, AdSense slots, optional `OPENAI_API_KEY` on Vercel |
 
 **Startup order:** `AGENTS.md` → this file → `CLAUDE.md` → `DEPLOYMENT.md`
 
@@ -76,6 +76,22 @@ Bangkok condo/house marketplace with:
 | **13A** | Monetization polish — sponsor tiers, SlipOK, wizard, emails | **Done** (session 49) | 2026 Q2 |
 | **13B** | Lead nurture, inquiry follow-up, conversion UX | **Done** | 2026 Q3 |
 | **14** | Viewing scheduler emails + blog area CTAs | **Done** | 2026 Q3 |
+| **15** | District/station SEO hubs, location filter UX, nav polish | **Done** | 2026 Q3 |
+
+---
+
+## Phase 15 — District/station SEO + location UX (DONE)
+
+**Goal:** Bangkok-wide district and transit station discovery with unified search UX.
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | 50 Bangkok district data + `/districts` + `/buy|rent/district/[slug]` | [x] |
+| 2 | 137 transit stations + `/stations` + map/list pickers | [x] |
+| 3 | Unified location filter — district **or** station choice chip | [x] |
+| 4 | Hub listing counts + cross-links (home, areas, blog) | [x] |
+| 5 | Map deep-links from selected district/station chips | [x] |
+| 6 | AI search — district + MRT/BRT station parsing (LLM + rules) | [x] |
 
 ---
 

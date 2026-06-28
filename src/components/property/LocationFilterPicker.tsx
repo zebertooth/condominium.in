@@ -5,8 +5,9 @@ import { useLocale } from "@/components/i18n/LocaleProvider";
 import { DistrictSearchPicker } from "@/components/property/DistrictSearchPicker";
 import { SelectedChoice } from "@/components/property/SelectedChoice";
 import { StationSearchPicker } from "@/components/property/StationSearchPicker";
-import { getDistrictByName } from "@/lib/bangkok-districts";
-import { getStationByName } from "@/lib/transit-stations";
+import { districtFilterValue, getDistrictByName } from "@/lib/bangkok-districts";
+import { localePathWithQuery } from "@/lib/locale-routing";
+import { getStationByName, stationFilterValue } from "@/lib/transit-stations";
 
 export type LocationFilterMode = "any" | "district" | "station";
 
@@ -17,6 +18,7 @@ interface LocationFilterPickerProps {
   onStationChange: (value: string) => void;
   lockedDistrict?: string;
   lockedStation?: string;
+  listingType?: "sale" | "rent";
 }
 
 export function LocationFilterPicker({
@@ -26,9 +28,11 @@ export function LocationFilterPicker({
   onStationChange,
   lockedDistrict,
   lockedStation,
+  listingType = "rent",
 }: LocationFilterPickerProps) {
   const locale = useLocale();
   const nonTh = locale !== "th";
+  const mapType = listingType === "sale" ? "sale" : "rent";
 
   const initialMode: LocationFilterMode = lockedStation || station
     ? "station"
@@ -88,6 +92,29 @@ export function LocationFilterPicker({
         : `BTS ${activeStation}`
       : "";
 
+  const districtMapHref =
+    activeDistrict && districtResolved
+      ? localePathWithQuery("/map", locale, {
+          district: districtFilterValue(districtResolved),
+          type: mapType,
+        })
+      : undefined;
+
+  const stationMapHref =
+    activeStation && stationResolved
+      ? localePathWithQuery("/map", locale, {
+          bts: stationFilterValue(stationResolved),
+          type: mapType,
+        })
+      : activeStation
+        ? localePathWithQuery("/map", locale, {
+            bts: activeStation,
+            type: mapType,
+          })
+        : undefined;
+
+  const mapLabel = nonTh ? "Map" : "แผนที่";
+
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-1.5">
@@ -126,6 +153,8 @@ export function LocationFilterPicker({
           disabled={!!lockedDistrict}
           changeLabel={nonTh ? "Change" : "เปลี่ยน"}
           clearLabel={nonTh ? "Clear district" : "ล้างเขต"}
+          mapHref={districtMapHref}
+          mapLabel={mapLabel}
         />
       )}
 
@@ -139,6 +168,8 @@ export function LocationFilterPicker({
           disabled={!!lockedStation}
           changeLabel={nonTh ? "Change" : "เปลี่ยน"}
           clearLabel={nonTh ? "Clear station" : "ล้างสถานี"}
+          mapHref={stationMapHref}
+          mapLabel={mapLabel}
         />
       )}
 
