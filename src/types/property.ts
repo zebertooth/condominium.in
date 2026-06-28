@@ -234,4 +234,8 @@ export interface AISearchResult {
   engine?: "ai" | "rules";
   filters?: AISearchExtractedFilters;
   hubLinks?: AISearchHubLink[];
+  /** True when filters/summary were served from in-memory cache */
+  cacheHit?: boolean;
+  /** True when LLM extract was skipped because rules already parsed enough */
+  skipLlmExtract?: boolean;
 }

@@ -36,7 +36,12 @@ export async function POST(request: Request) {
       district: result.filters?.district,
       resultCount: result.properties.length,
       source: "ai-search",
-      filters: { engine: result.engine, ...result.filters },
+      filters: {
+        engine: result.engine,
+        cacheHit: result.cacheHit,
+        skipLlmExtract: result.skipLlmExtract,
+        ...result.filters,
+      },
     }).catch(() => {});
 
     return NextResponse.json(result);

@@ -1,3 +1,8 @@
+import {
+  aiSearchCacheKey,
+  getCachedAISearch,
+  setCachedAISearch,
+} from "@/lib/ai-search-cache";
 import { getAllListings, filterListings } from "@/lib/listings";
 import { hasOpenAI, openaiChat } from "@/lib/openai";
 import { BANGKOK_DISTRICTS, getDistrictByName, getDistrictBySlug } from "@/lib/bangkok-districts";
@@ -169,6 +174,52 @@ function parseFiltersFromQuery(
   return { listingType, propertyCategory: parsePropertyCategoryFromQuery(query), btsStation, district, bedrooms, maxPrice };
 }
 
+/** Skip paid LLM extract when rule parser already resolved location + constraints. */
+function rulesFiltersSufficient(filters: SearchFilters, query: string): boolean {
+  if (process.env.AI_SEARCH_SKIP_LLM_WHEN_RULES_SUFFICIENT === "false") return false;
+
+  const hasLocation = Boolean(filters.btsStation || filters.district);
+  if (!hasLocation) return false;
+
+  if (filters.bedrooms || filters.maxPrice) return true;
+  if (parseStationFromQuery(query)) return true;
+  if (filters.district && parseDistrictFromQuery(query)) return true;
+
+  return false;
+}
+
+function resultSlugKey(results: Property[]): string {
+  return results.map((p) => p.slug).join(",");
+}
+
+function buildSuggestions(filters: SearchFilters): string[] {
+  const stationLabel = filters.btsStation
+    ? resolveStationFromFilter(filters.btsStation)?.label ?? `BTS ${filters.btsStation}`
+    : null;
+
+  return [
+    stationLabel
+      ? `ดูคอนโดทั้งหมดใกล้ ${stationLabel}`
+      : filters.district
+        ? `ดูคอนโดทั้งหมดในเขต${filters.district}`
+        : "ลองระบุสถานี BTS/MRT หรือเขต เช่น อโศก วัฒนา",
+    filters.maxPrice
+      ? "เพิ่มงบประมาณเล็กน้อยเพื่อดูตัวเลือกเพิ่ม"
+      : "ระบุงบประมาณเพื่อผลลัพธ์ที่แม่นยำขึ้น",
+    "นัดชมทรัพย์จริงกับทีมเอเจนต์ของเรา",
+  ];
+}
+
+function toPublicFilters(filters: SearchFilters): AISearchResult["filters"] {
+  return {
+    listingType: filters.listingType,
+    btsStation: filters.btsStation,
+    district: filters.district,
+    bedrooms: filters.bedrooms,
+    maxPrice: filters.maxPrice,
+  };
+}
+
 /** Ask the LLM to extract structured filters. Returns null on any failure. */
 async function extractFiltersWithLLM(query: string): Promise<SearchFilters | null> {
   const content = await openaiChat({
@@ -338,25 +389,58 @@ function buildHubLinks(
 }
 
 export async function runAISearch(request: AISearchRequest): Promise<AISearchResult> {
-  const properties = await getAllListings();
   const query = request.query.trim();
+  const cacheKey = aiSearchCacheKey(request);
+  const cached = getCachedAISearch(cacheKey);
+  const properties = await getAllListings();
 
-  const ruleFilters = parseFiltersFromQuery(query, request.listingType);
   const requestCategory =
     request.propertyCategory && request.propertyCategory !== "all"
       ? request.propertyCategory
       : undefined;
 
-  let filters = {
+  if (cached) {
+    const filters: SearchFilters = {
+      listingType: cached.listingType ?? request.listingType,
+      propertyCategory: cached.propertyCategory ?? requestCategory,
+      btsStation: cached.btsStation,
+      district: cached.district,
+      bedrooms: cached.bedrooms,
+      maxPrice: cached.maxPrice,
+    };
+    const results = await selectResults(properties, query, filters);
+    const baseSummary = templateSummary(results, properties.length, filters);
+    const slugKey = resultSlugKey(results);
+    const summary =
+      cached.engine === "ai" &&
+      cached.summary &&
+      results.length > 0 &&
+      (!cached.summaryResultSlugs || cached.summaryResultSlugs === slugKey)
+        ? cached.summary
+        : baseSummary;
+
+    return {
+      summary,
+      properties: results,
+      suggestions: buildSuggestions(filters),
+      engine: cached.engine,
+      filters: toPublicFilters(filters),
+      hubLinks: buildHubLinks(filters, request.listingType),
+      cacheHit: true,
+    };
+  }
+
+  const ruleFilters = parseFiltersFromQuery(query, request.listingType);
+  let filters: SearchFilters = {
     ...ruleFilters,
     propertyCategory: requestCategory ?? ruleFilters.propertyCategory,
   };
   let engine: "ai" | "rules" = "rules";
+  const skipLlmExtract = rulesFiltersSufficient(filters, query);
 
-  if (hasOpenAI()) {
+  if (hasOpenAI() && !skipLlmExtract) {
     const llmFilters = await extractFiltersWithLLM(query);
     if (llmFilters) {
-      // LLM result wins, but keep rule-based values where LLM returned nothing.
       filters = {
         listingType: request.listingType ?? llmFilters.listingType ?? ruleFilters.listingType,
         propertyCategory: requestCategory ?? ruleFilters.propertyCategory,
@@ -372,35 +456,28 @@ export async function runAISearch(request: AISearchRequest): Promise<AISearchRes
   const results = await selectResults(properties, query, filters);
   const baseSummary = templateSummary(results, properties.length, filters);
   const summary = engine === "ai" ? await llmSummary(query, results, baseSummary) : baseSummary;
+  const slugKey = resultSlugKey(results);
 
-  const stationLabel = filters.btsStation
-    ? resolveStationFromFilter(filters.btsStation)?.label ?? `BTS ${filters.btsStation}`
-    : null;
-
-  const suggestions = [
-    stationLabel
-      ? `ดูคอนโดทั้งหมดใกล้ ${stationLabel}`
-      : filters.district
-        ? `ดูคอนโดทั้งหมดในเขต${filters.district}`
-        : "ลองระบุสถานี BTS/MRT หรือเขต เช่น อโศก วัฒนา",
-    filters.maxPrice
-      ? "เพิ่มงบประมาณเล็กน้อยเพื่อดูตัวเลือกเพิ่ม"
-      : "ระบุงบประมาณเพื่อผลลัพธ์ที่แม่นยำขึ้น",
-    "นัดชมทรัพย์จริงกับทีมเอเจนต์ของเรา",
-  ];
+  setCachedAISearch(cacheKey, {
+    listingType: filters.listingType,
+    propertyCategory: filters.propertyCategory,
+    btsStation: filters.btsStation,
+    district: filters.district,
+    bedrooms: filters.bedrooms,
+    maxPrice: filters.maxPrice,
+    engine,
+    summary: engine === "ai" ? summary : undefined,
+    summaryResultSlugs: engine === "ai" && results.length > 0 ? slugKey : undefined,
+  });
 
   return {
     summary,
     properties: results,
-    suggestions,
+    suggestions: buildSuggestions(filters),
     engine,
-    filters: {
-      listingType: filters.listingType,
-      btsStation: filters.btsStation,
-      district: filters.district,
-      bedrooms: filters.bedrooms,
-      maxPrice: filters.maxPrice,
-    },
+    filters: toPublicFilters(filters),
     hubLinks: buildHubLinks(filters, request.listingType),
+    cacheHit: false,
+    skipLlmExtract: skipLlmExtract && hasOpenAI(),
   };
 }
