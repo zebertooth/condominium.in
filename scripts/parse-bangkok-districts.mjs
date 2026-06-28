@@ -189,8 +189,4 @@ export const DISTRICT_ZONE_LABELS: Record<DistrictZone, { th: string; en: string
 `;
 
 writeFileSync("src/lib/bangkok-districts-data.ts", tsContent);
-writeFileSync(
-  "scripts/bangkok-districts-parsed.json",
-  JSON.stringify({ count: districts.length, districts }, null, 2),
-);
 console.log("Wrote", districts.length, "districts to src/lib/bangkok-districts-data.ts");
