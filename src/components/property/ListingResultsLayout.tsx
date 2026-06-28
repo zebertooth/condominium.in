@@ -19,6 +19,7 @@ import {
   type ListingSearchParams,
 } from "@/lib/listing-search-params";
 import { filterListings } from "@/lib/listings";
+import type { BangkokDistrict } from "@/lib/bangkok-districts";
 import { getSiteSettings } from "@/lib/site-settings";
 import type { ListingType } from "@/types/property";
 
@@ -30,6 +31,8 @@ interface ListingResultsLayoutProps {
   description: string;
   resultsTitle: string;
   lockedBts?: string;
+  lockedDistrict?: string;
+  mapFocusDistrict?: BangkokDistrict | null;
   showSearch?: boolean;
   showAds?: boolean;
 }
@@ -44,9 +47,15 @@ export async function ListingResultsLayout({
   showSearch = true,
   showAds = true,
   lockedBts,
+  lockedDistrict,
+  mapFocusDistrict = null,
 }: ListingResultsLayoutProps) {
   const filters = parseListingSearchParams(
-    lockedBts ? { ...searchParams, bts: lockedBts } : searchParams,
+    {
+      ...searchParams,
+      ...(lockedBts ? { bts: lockedBts } : {}),
+      ...(lockedDistrict ? { district: lockedDistrict } : {}),
+    },
     listingType,
   );
   const category = filters.propertyCategory ?? "all";
@@ -93,6 +102,7 @@ export async function ListingResultsLayout({
             currentCategory={category}
             basePath={basePath}
             lockedBts={lockedBts}
+            lockedDistrict={lockedDistrict}
           />
         </Suspense>
       </div>
@@ -124,7 +134,18 @@ export async function ListingResultsLayout({
 
         {mapView ? (
           <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <PropertyListingsMapLazy properties={mapListings} locale={locale} />
+            {mapFocusDistrict && (
+              <p className="mb-3 text-sm text-violet-800">
+                {locale === "th"
+                  ? `แสดงประกาศในเขต${mapFocusDistrict.nameTh} (${mapListings.length} บนแผนที่)`
+                  : `${mapFocusDistrict.labelEn} — ${mapListings.length} on map`}
+              </p>
+            )}
+            <PropertyListingsMapLazy
+              properties={mapListings}
+              locale={locale}
+              focusDistrict={mapFocusDistrict}
+            />
             {mapListings.length === 0 && (
               <p className="mt-4 text-center text-sm text-amber-800">{t("mapPageEmpty", locale)}</p>
             )}

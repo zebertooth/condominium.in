@@ -24,6 +24,8 @@ const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1502672260266-1c1ef2d93
 const CATEGORY_LABEL_KEYS = {
   bts: "stationGroupBts",
   mrt: "stationGroupMrt",
+  gold: "stationGroupGold",
+  brt: "stationGroupBrt",
   train: "stationGroupTrain",
   airport: "stationGroupAirport",
 } as const;

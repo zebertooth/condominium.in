@@ -3,36 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, useTransition } from "react";
 import { useT, useLocale } from "@/components/i18n/LocaleProvider";
+import { DistrictSearchPicker } from "@/components/property/DistrictSearchPicker";
+import { LocationFilterPicker } from "@/components/property/LocationFilterPicker";
 import { localePath, localePathWithQuery } from "@/lib/locale-routing";
-
-const BTS_STATIONS = [
-  { value: "อโศก", label: "อโศก", labelEn: "Asoke" },
-  { value: "ทองหล่อ", label: "ทองหล่อ", labelEn: "Thonglor" },
-  { value: "เอกมัย", label: "เอกมัย", labelEn: "Ekkamai" },
-  { value: "พร้อมพงษ์", label: "พร้อมพงษ์", labelEn: "Phrom Phong" },
-  { value: "สุรศักดิ์", label: "สุรศักดิ์", labelEn: "Surasak" },
-  { value: "พญาไท", label: "พญาไท", labelEn: "Phayathai" },
-  { value: "ราชเทวี", label: "ราชเทวี", labelEn: "Ratchathewi" },
-  { value: "ชิดลม", label: "ชิดลม", labelEn: "Chidlom" },
-  { value: "อารีย์", label: "อารีย์", labelEn: "Ari" },
-  { value: "สยาม", label: "สยาม", labelEn: "Siam" },
-  { value: "อ่อนนุช", label: "อ่อนนุช", labelEn: "On Nut" },
-  { value: "สำโรง", label: "สำโรง", labelEn: "Samrong" },
-  { value: "บางนา", label: "บางนา", labelEn: "Bang Na" },
-];
-
-const DISTRICTS = [
-  { value: "วัฒนา", label: "วัฒนา", labelEn: "Watthana" },
-  { value: "บางรัก", label: "บางรัก", labelEn: "Bang Rak" },
-  { value: "ราชเทวี", label: "ราชเทวี", labelEn: "Ratchathewi" },
-  { value: "สาทร", label: "สาทร", labelEn: "Sathorn" },
-  { value: "ปทุมวัน", label: "ปทุมวัน", labelEn: "Pathumwan" },
-  { value: "พญาไท", label: "พญาไท", labelEn: "Phayathai" },
-  { value: "ห้วยขวาง", label: "ห้วยขวาง", labelEn: "Huai Khwang" },
-  { value: "คลองเตย", label: "คลองเตย", labelEn: "Khlong Toei" },
-  { value: "ดินแดง", label: "ดินแดง", labelEn: "Din Daeng" },
-  { value: "จตุจักร", label: "จตุจักร", labelEn: "Chatuchak" },
-];
 
 const PRICE_RANGES_RENT = [
   { min: 0, max: 15000, label: "ไม่เกิน ฿15,000", labelEn: "Under ฿15,000" },
@@ -78,9 +51,10 @@ interface AdvancedFiltersProps {
   currentCategory?: string;
   basePath?: string;
   lockedBts?: string;
+  lockedDistrict?: string;
 }
 
-export function AdvancedFilters({ listingType, currentCategory, basePath, lockedBts }: AdvancedFiltersProps) {
+export function AdvancedFilters({ listingType, currentCategory, basePath, lockedBts, lockedDistrict }: AdvancedFiltersProps) {
   const t = useT();
   const locale = useLocale();
   const router = useRouter();
@@ -89,7 +63,7 @@ export function AdvancedFilters({ listingType, currentCategory, basePath, locked
   const nonTh = locale !== "th";
 
   const [btsStation, setBtsStation] = useState(searchParams.get("bts") ?? lockedBts ?? "");
-  const [district, setDistrict] = useState(searchParams.get("district") ?? "");
+  const [district, setDistrict] = useState(searchParams.get("district") ?? lockedDistrict ?? "");
   const [priceRange, setPriceRange] = useState(searchParams.get("price") ?? "");
   const [bedrooms, setBedrooms] = useState(searchParams.get("beds") ?? "");
   const [sqmRange, setSqmRange] = useState(searchParams.get("sqm") ?? "");
@@ -111,8 +85,9 @@ export function AdvancedFilters({ listingType, currentCategory, basePath, locked
     const params = new URLSearchParams();
     if (currentCategory && currentCategory !== "all") params.set("category", currentCategory);
     const bts = lockedBts ?? btsStation;
+    const dist = lockedDistrict ?? district;
     if (bts) params.set("bts", bts);
-    if (district) params.set("district", district);
+    if (dist) params.set("district", dist);
     if (priceRange) params.set("price", priceRange);
     if (bedrooms) params.set("beds", bedrooms);
     if (sqmRange) params.set("sqm", sqmRange);
@@ -150,6 +125,7 @@ export function AdvancedFilters({ listingType, currentCategory, basePath, locked
   }, [
     btsStation,
     lockedBts,
+    lockedDistrict,
     district,
     priceRange,
     bedrooms,
@@ -177,15 +153,21 @@ export function AdvancedFilters({ listingType, currentCategory, basePath, locked
           category: currentCategory && currentCategory !== "all" ? currentCategory : undefined,
           type: basePath === "/map" ? listingType : undefined,
           bts: lockedBts,
+          district: lockedDistrict,
           sort: searchParams.get("sort") ?? undefined,
           view: searchParams.get("view") === "map" ? "map" : undefined,
         }),
       );
     });
-  }, [currentCategory, listingType, basePath, locale, router, lockedBts, searchParams]);
+  }, [currentCategory, listingType, basePath, locale, router, lockedBts, lockedDistrict, searchParams]);
 
   const hasFilters =
-    (lockedBts ? false : btsStation) || district || priceRange || bedrooms || sqmRange || furnishing;
+    (lockedBts ? false : btsStation) ||
+    (lockedDistrict ? false : district) ||
+    priceRange ||
+    bedrooms ||
+    sqmRange ||
+    furnishing;
 
   const selectClass =
     "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-teal-500 focus:ring-2";
@@ -218,42 +200,22 @@ export function AdvancedFilters({ listingType, currentCategory, basePath, locked
       {expanded && (
         <div className="mt-4 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {!lockedBts && (
-            <div>
+            <div className="sm:col-span-2 lg:col-span-3">
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                {t("filterBts")}
+                {lockedBts
+                  ? t("filterTransit")
+                  : lockedDistrict
+                    ? t("filterDistrict")
+                    : t("filterLocation")}
               </label>
-              <select
-                value={btsStation}
-                onChange={(e) => setBtsStation(e.target.value)}
-                className={selectClass}
-              >
-                <option value="">{t("any")}</option>
-                {BTS_STATIONS.map((s) => (
-                  <option key={s.value} value={s.value}>
-                    {nonTh ? s.labelEn : s.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            )}
-
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                {t("filterDistrict")}
-              </label>
-              <select
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                className={selectClass}
-              >
-                <option value="">{t("any")}</option>
-                {DISTRICTS.map((d) => (
-                  <option key={d.value} value={d.value}>
-                    {nonTh ? d.labelEn : d.label}
-                  </option>
-                ))}
-              </select>
+              <LocationFilterPicker
+                district={district}
+                station={btsStation}
+                onDistrictChange={setDistrict}
+                onStationChange={setBtsStation}
+                lockedDistrict={lockedDistrict}
+                lockedStation={lockedBts}
+              />
             </div>
 
             <div>

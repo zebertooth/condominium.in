@@ -1,0 +1,1755 @@
+{
+  "systems": [
+    {
+      "id": "bts",
+      "name": "รถไฟฟ้าบีทีเอส",
+      "nameEn": "BTS Skytrain"
+    },
+    {
+      "id": "mrt",
+      "name": "รถไฟฟ้ามหานคร",
+      "nameEn": "MRT"
+    },
+    {
+      "id": "arl",
+      "name": "รถไฟฟ้าแอร์พอร์ต เรล ลิงก์",
+      "nameEn": "Airport Rail Link"
+    },
+    {
+      "id": "gold",
+      "name": "รถไฟฟ้าสายสีทอง",
+      "nameEn": "Gold Line"
+    },
+    {
+      "id": "srt",
+      "name": "รถไฟฟ้าชานเมือง (SRT)",
+      "nameEn": "SRT Red Lines"
+    }
+  ],
+  "lines": [
+    {
+      "id": "bts-sukhumvit",
+      "systemId": "bts",
+      "name": "สายสุขุมวิท",
+      "nameEn": "Sukhumvit Line",
+      "color": "#8DC63F"
+    },
+    {
+      "id": "bts-silom",
+      "systemId": "bts",
+      "name": "สายสีลม",
+      "nameEn": "Silom Line",
+      "color": "#1A7A4C"
+    },
+    {
+      "id": "bts-gold",
+      "systemId": "gold",
+      "name": "สายสีทอง",
+      "nameEn": "Gold Line",
+      "color": "#CFB53B"
+    },
+    {
+      "id": "mrt-blue",
+      "systemId": "mrt",
+      "name": "สายสีน้ำเงิน",
+      "nameEn": "Blue Line",
+      "color": "#1E4598"
+    },
+    {
+      "id": "mrt-purple",
+      "systemId": "mrt",
+      "name": "สายสีม่วง",
+      "nameEn": "Purple Line",
+      "color": "#6B238E"
+    },
+    {
+      "id": "mrt-yellow",
+      "systemId": "mrt",
+      "name": "สายสีเหลือง",
+      "nameEn": "Yellow Line",
+      "color": "#FFD400"
+    },
+    {
+      "id": "mrt-pink",
+      "systemId": "mrt",
+      "name": "สายสีชมพู",
+      "nameEn": "Pink Line",
+      "color": "#E91E8C"
+    },
+    {
+      "id": "arl-main",
+      "systemId": "arl",
+      "name": "สายหลัก",
+      "nameEn": "Main Line",
+      "color": "#761F21"
+    },
+    {
+      "id": "srt-dark-red",
+      "systemId": "srt",
+      "name": "สายสีแดงเข้ม",
+      "nameEn": "Dark Red Line",
+      "color": "#A12037"
+    },
+    {
+      "id": "srt-light-red",
+      "systemId": "srt",
+      "name": "สายสีแดงอ่อน",
+      "nameEn": "Light Red Line",
+      "color": "#EE6A7A"
+    }
+  ],
+  "stations": [
+    {
+      "id": "bts-sukhumvit-n24",
+      "lineId": "bts-sukhumvit",
+      "name": "คูคต",
+      "nameEn": "คูคต",
+      "code": "N24",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n23",
+      "lineId": "bts-sukhumvit",
+      "name": "แยก คปอ.",
+      "nameEn": "แยก คปอ.",
+      "code": "N23",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n22",
+      "lineId": "bts-sukhumvit",
+      "name": "พิพิธภัณฑ์กองทัพอากาศ",
+      "nameEn": "พิพิธภัณฑ์กองทัพอากาศ",
+      "code": "N22",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n21",
+      "lineId": "bts-sukhumvit",
+      "name": "โรงพยาบาลภูมิพลอดุลยเดช",
+      "nameEn": "โรงพยาบาลภูมิพลอดุลยเดช",
+      "code": "N21",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n20",
+      "lineId": "bts-sukhumvit",
+      "name": "สะพานใหม่",
+      "nameEn": "สะพานใหม่",
+      "code": "N20",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n19",
+      "lineId": "bts-sukhumvit",
+      "name": "สายหยุด",
+      "nameEn": "สายหยุด",
+      "code": "N19",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n18",
+      "lineId": "bts-sukhumvit",
+      "name": "พหลโยธิน 59",
+      "nameEn": "พหลโยธิน 59",
+      "code": "N18",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n17",
+      "lineId": "bts-sukhumvit",
+      "name": "วัดพระศรีมหาธาตุ",
+      "nameEn": "วัดพระศรีมหาธาตุ",
+      "code": "N17",
+      "interchangeRaw": "สายสีชมพู(สถานีร่วม)"
+    },
+    {
+      "id": "bts-sukhumvit-n16",
+      "lineId": "bts-sukhumvit",
+      "name": "กรมทหารราบที่ 11",
+      "nameEn": "กรมทหารราบที่ 11",
+      "code": "N16",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n15",
+      "lineId": "bts-sukhumvit",
+      "name": "บางบัว",
+      "nameEn": "บางบัว",
+      "code": "N15",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n14",
+      "lineId": "bts-sukhumvit",
+      "name": "กรมป่าไม้",
+      "nameEn": "กรมป่าไม้",
+      "code": "N14",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n13",
+      "lineId": "bts-sukhumvit",
+      "name": "มหาวิทยาลัยเกษตรศาสตร์",
+      "nameEn": "มหาวิทยาลัยเกษตรศาสตร์",
+      "code": "N13",
+      "interchangeRaw": "สายสีน้ำตาลสถานีมหาวิทยาลัยเกษตรศาสตร์ ประตู 1(โครงการ)"
+    },
+    {
+      "id": "bts-sukhumvit-n12",
+      "lineId": "bts-sukhumvit",
+      "name": "เสนานิคม",
+      "nameEn": "เสนานิคม",
+      "code": "N12",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n11",
+      "lineId": "bts-sukhumvit",
+      "name": "รัชโยธิน",
+      "nameEn": "รัชโยธิน",
+      "code": "N11",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n10",
+      "lineId": "bts-sukhumvit",
+      "name": "พหลโยธิน 24",
+      "nameEn": "พหลโยธิน 24",
+      "code": "N10",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n9",
+      "lineId": "bts-sukhumvit",
+      "name": "ห้าแยกลาดพร้าว",
+      "nameEn": "ห้าแยกลาดพร้าว",
+      "code": "N9",
+      "interchangeRaw": "สายสีน้ำเงินสถานีพหลโยธิน"
+    },
+    {
+      "id": "bts-sukhumvit-n8",
+      "lineId": "bts-sukhumvit",
+      "name": "หมอชิต",
+      "nameEn": "หมอชิต",
+      "code": "N8",
+      "interchangeRaw": "สายสีน้ำเงินสถานีสวนจตุจักร"
+    },
+    {
+      "id": "bts-sukhumvit-n7",
+      "lineId": "bts-sukhumvit",
+      "name": "สะพานควาย",
+      "nameEn": "สะพานควาย",
+      "code": "N7",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n6",
+      "lineId": "bts-sukhumvit",
+      "name": "เสนาร่วม",
+      "nameEn": "เสนาร่วม",
+      "code": "N6",
+      "interchangeRaw": "สถานีในอนาคต"
+    },
+    {
+      "id": "bts-sukhumvit-n5",
+      "lineId": "bts-sukhumvit",
+      "name": "อารีย์",
+      "nameEn": "อารีย์",
+      "code": "N5",
+      "interchangeRaw": "",
+      "lat": 13.7797,
+      "lng": 100.5447
+    },
+    {
+      "id": "bts-sukhumvit-n4",
+      "lineId": "bts-sukhumvit",
+      "name": "สนามเป้า",
+      "nameEn": "สนามเป้า",
+      "code": "N4",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n3",
+      "lineId": "bts-sukhumvit",
+      "name": "อนุสาวรีย์ชัยสมรภูมิ",
+      "nameEn": "อนุสาวรีย์ชัยสมรภูมิ",
+      "code": "N3",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-n2",
+      "lineId": "bts-sukhumvit",
+      "name": "พญาไท",
+      "nameEn": "พญาไท",
+      "code": "N2",
+      "interchangeRaw": "สายซิตี้สถานีพญาไทสายสีแดงอ่อนสถานีพญาไท(โครงการ)",
+      "lat": 13.7569,
+      "lng": 100.5341
+    },
+    {
+      "id": "bts-sukhumvit-n1",
+      "lineId": "bts-sukhumvit",
+      "name": "ราชเทวี",
+      "nameEn": "ราชเทวี",
+      "code": "N1",
+      "interchangeRaw": "สายสีส้มสถานีราชเทวี(กำลังก่อสร้าง)",
+      "lat": 13.7519,
+      "lng": 100.5312
+    },
+    {
+      "id": "bts-sukhumvit-cen",
+      "lineId": "bts-sukhumvit",
+      "name": "สยาม",
+      "nameEn": "สยาม",
+      "code": "CEN",
+      "interchangeRaw": "สายสีลม(สถานีร่วม)สายสีส้มสถานีประตูน้ำ(กำลังก่อสร้าง)",
+      "lat": 13.7457,
+      "lng": 100.534
+    },
+    {
+      "id": "bts-sukhumvit-e1",
+      "lineId": "bts-sukhumvit",
+      "name": "ชิดลม",
+      "nameEn": "ชิดลม",
+      "code": "E1",
+      "interchangeRaw": "สายสีส้มสถานีประตูน้ำ(กำลังก่อสร้าง)",
+      "lat": 13.744,
+      "lng": 100.543
+    },
+    {
+      "id": "bts-sukhumvit-e2",
+      "lineId": "bts-sukhumvit",
+      "name": "เพลินจิต",
+      "nameEn": "เพลินจิต",
+      "code": "E2",
+      "interchangeRaw": "สายสีแดงอ่อนสถานีเพลินจิต(โครงการ)"
+    },
+    {
+      "id": "bts-sukhumvit-e3",
+      "lineId": "bts-sukhumvit",
+      "name": "นานา",
+      "nameEn": "นานา",
+      "code": "E3",
+      "interchangeRaw": "",
+      "lat": 13.7406,
+      "lng": 100.5526
+    },
+    {
+      "id": "bts-sukhumvit-e4",
+      "lineId": "bts-sukhumvit",
+      "name": "อโศก",
+      "nameEn": "อโศก",
+      "code": "E4",
+      "interchangeRaw": "สายสีน้ำเงินสถานีสุขุมวิท",
+      "lat": 13.7373,
+      "lng": 100.5603
+    },
+    {
+      "id": "bts-sukhumvit-e5",
+      "lineId": "bts-sukhumvit",
+      "name": "พร้อมพงษ์",
+      "nameEn": "พร้อมพงษ์",
+      "code": "E5",
+      "interchangeRaw": "",
+      "lat": 13.7305,
+      "lng": 100.5695
+    },
+    {
+      "id": "bts-sukhumvit-e6",
+      "lineId": "bts-sukhumvit",
+      "name": "ทองหล่อ",
+      "nameEn": "ทองหล่อ",
+      "code": "E6",
+      "interchangeRaw": "สายสีเทาสถานีทองหล่อ(โครงการ)",
+      "lat": 13.7242,
+      "lng": 100.5781
+    },
+    {
+      "id": "bts-sukhumvit-e7",
+      "lineId": "bts-sukhumvit",
+      "name": "เอกมัย",
+      "nameEn": "เอกมัย",
+      "code": "E7",
+      "interchangeRaw": "",
+      "lat": 13.7191,
+      "lng": 100.5851
+    },
+    {
+      "id": "bts-sukhumvit-e8",
+      "lineId": "bts-sukhumvit",
+      "name": "พระโขนง",
+      "nameEn": "พระโขนง",
+      "code": "E8",
+      "interchangeRaw": "สายสีเทาสถานีพระโขนง(โครงการ)",
+      "lat": 13.696,
+      "lng": 100.601
+    },
+    {
+      "id": "bts-sukhumvit-e9",
+      "lineId": "bts-sukhumvit",
+      "name": "อ่อนนุช",
+      "nameEn": "อ่อนนุช",
+      "code": "E9",
+      "interchangeRaw": "",
+      "lat": 13.7056,
+      "lng": 100.601
+    },
+    {
+      "id": "bts-sukhumvit-e10",
+      "lineId": "bts-sukhumvit",
+      "name": "บางจาก",
+      "nameEn": "บางจาก",
+      "code": "E10",
+      "interchangeRaw": "",
+      "lat": 13.6967,
+      "lng": 100.6053
+    },
+    {
+      "id": "bts-sukhumvit-e11",
+      "lineId": "bts-sukhumvit",
+      "name": "ปุณณวิถี",
+      "nameEn": "ปุณณวิถี",
+      "code": "E11",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e12",
+      "lineId": "bts-sukhumvit",
+      "name": "อุดมสุข",
+      "nameEn": "อุดมสุข",
+      "code": "E12",
+      "interchangeRaw": "สายสีเงินสถานีบางนา(โครงการ)"
+    },
+    {
+      "id": "bts-sukhumvit-e13",
+      "lineId": "bts-sukhumvit",
+      "name": "บางนา",
+      "nameEn": "บางนา",
+      "code": "E13",
+      "interchangeRaw": "",
+      "lat": 13.646,
+      "lng": 100.599
+    },
+    {
+      "id": "bts-sukhumvit-e14",
+      "lineId": "bts-sukhumvit",
+      "name": "แบริ่ง",
+      "nameEn": "แบริ่ง",
+      "code": "E14",
+      "interchangeRaw": "",
+      "lat": 13.6686,
+      "lng": 100.6042
+    },
+    {
+      "id": "bts-sukhumvit-e15",
+      "lineId": "bts-sukhumvit",
+      "name": "สำโรง",
+      "nameEn": "สำโรง",
+      "code": "E15",
+      "interchangeRaw": "สายสีเหลืองสถานีสำโรง"
+    },
+    {
+      "id": "bts-sukhumvit-e16",
+      "lineId": "bts-sukhumvit",
+      "name": "ปู่เจ้า",
+      "nameEn": "ปู่เจ้า",
+      "code": "E16",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e17",
+      "lineId": "bts-sukhumvit",
+      "name": "ช้างเอราวัณ",
+      "nameEn": "ช้างเอราวัณ",
+      "code": "E17",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e18",
+      "lineId": "bts-sukhumvit",
+      "name": "โรงเรียนนายเรือ",
+      "nameEn": "โรงเรียนนายเรือ",
+      "code": "E18",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e19",
+      "lineId": "bts-sukhumvit",
+      "name": "ปากน้ำ",
+      "nameEn": "ปากน้ำ",
+      "code": "E19",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e20",
+      "lineId": "bts-sukhumvit",
+      "name": "ศรีนครินทร์",
+      "nameEn": "ศรีนครินทร์",
+      "code": "E20",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e21",
+      "lineId": "bts-sukhumvit",
+      "name": "แพรกษา",
+      "nameEn": "แพรกษา",
+      "code": "E21",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e22",
+      "lineId": "bts-sukhumvit",
+      "name": "สายลวด",
+      "nameEn": "สายลวด",
+      "code": "E22",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-sukhumvit-e23",
+      "lineId": "bts-sukhumvit",
+      "name": "เคหะฯ",
+      "nameEn": "เคหะฯ",
+      "code": "E23",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-silom-w1",
+      "lineId": "bts-silom",
+      "name": "สนามกีฬาแห่งชาติ",
+      "nameEn": "สนามกีฬาแห่งชาติ",
+      "code": "W1",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-silom-cen",
+      "lineId": "bts-silom",
+      "name": "สยาม",
+      "nameEn": "สยาม",
+      "code": "CEN",
+      "interchangeRaw": "สายสุขุมวิท(สถานีร่วม)สายสีส้มสถานีประตูน้ำ(กำลังก่อสร้าง)",
+      "lat": 13.7457,
+      "lng": 100.534
+    },
+    {
+      "id": "bts-silom-s1",
+      "lineId": "bts-silom",
+      "name": "ราชดำริ",
+      "nameEn": "ราชดำริ",
+      "code": "S1",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-silom-s2",
+      "lineId": "bts-silom",
+      "name": "ศาลาแดง",
+      "nameEn": "ศาลาแดง",
+      "code": "S2",
+      "interchangeRaw": "สายสีน้ำเงินสีลม"
+    },
+    {
+      "id": "bts-silom-s3",
+      "lineId": "bts-silom",
+      "name": "ช่องนนทรี",
+      "nameEn": "ช่องนนทรี",
+      "code": "S3",
+      "interchangeRaw": "สายสีเทาสถานีช่องนนทรี(โครงการ)"
+    },
+    {
+      "id": "bts-silom-s4",
+      "lineId": "bts-silom",
+      "name": "เซนต์หลุยส์",
+      "nameEn": "เซนต์หลุยส์",
+      "code": "S4",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-silom-s5",
+      "lineId": "bts-silom",
+      "name": "สุรศักดิ์",
+      "nameEn": "สุรศักดิ์",
+      "code": "S5",
+      "interchangeRaw": "",
+      "lat": 13.7195,
+      "lng": 100.5214
+    },
+    {
+      "id": "bts-silom-s6",
+      "lineId": "bts-silom",
+      "name": "สะพานตากสิน",
+      "nameEn": "สะพานตากสิน",
+      "code": "S6",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-silom-s7",
+      "lineId": "bts-silom",
+      "name": "กรุงธนบุรี",
+      "nameEn": "กรุงธนบุรี",
+      "code": "S7",
+      "interchangeRaw": "สายสีทองสถานีกรุงธนบุรี"
+    },
+    {
+      "id": "bts-silom-s8",
+      "lineId": "bts-silom",
+      "name": "วงเวียนใหญ่",
+      "nameEn": "วงเวียนใหญ่",
+      "code": "S8",
+      "interchangeRaw": "สายสีแดงเข้มวงเวียนใหญ่(โครงการ)"
+    },
+    {
+      "id": "bts-silom-s9",
+      "lineId": "bts-silom",
+      "name": "โพธิ์นิมิตร",
+      "nameEn": "โพธิ์นิมิตร",
+      "code": "S9",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-silom-s10",
+      "lineId": "bts-silom",
+      "name": "ตลาดพลู",
+      "nameEn": "ตลาดพลู",
+      "code": "S10",
+      "interchangeRaw": "สายสีเทาสถานีตลาดพลู(โครงการ)"
+    },
+    {
+      "id": "bts-silom-s11",
+      "lineId": "bts-silom",
+      "name": "วุฒากาศ",
+      "nameEn": "วุฒากาศ",
+      "code": "S11",
+      "interchangeRaw": "สายสีแดงเข้มตากสิน(โครงการ)"
+    },
+    {
+      "id": "bts-silom-s12",
+      "lineId": "bts-silom",
+      "name": "บางหว้า",
+      "nameEn": "บางหว้า",
+      "code": "S12",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "bts-gold-g1",
+      "lineId": "bts-gold",
+      "name": "กรุงธนบุรี",
+      "nameEn": "กรุงธนบุรี",
+      "code": "G1",
+      "interchangeRaw": "สายสีลมสถานีกรุงธนบุรี"
+    },
+    {
+      "id": "bts-gold-g2",
+      "lineId": "bts-gold",
+      "name": "เจริญนคร (ไอคอนสยาม)",
+      "nameEn": "เจริญนคร (ไอคอนสยาม)",
+      "code": "G2",
+      "interchangeRaw": "",
+      "lat": 13.726,
+      "lng": 100.513
+    },
+    {
+      "id": "bts-gold-g3",
+      "lineId": "bts-gold",
+      "name": "คลองสาน",
+      "nameEn": "คลองสาน",
+      "code": "G3",
+      "interchangeRaw": "สายสีแดงเข้มสถานีคลองสาน(โครงการ)"
+    },
+    {
+      "id": "bts-gold-g4",
+      "lineId": "bts-gold",
+      "name": "ประชาธิปก",
+      "nameEn": "ประชาธิปก",
+      "code": "G4",
+      "interchangeRaw": "สายสีม่วงสถานีสะพานพุทธ(กำลังก่อสร้าง)"
+    },
+    {
+      "id": "mrt-blue-bl01",
+      "lineId": "mrt-blue",
+      "name": "ท่าพระ (ถนนจรัญสนิทวงศ์)",
+      "nameEn": "ท่าพระ (ถนนจรัญสนิทวงศ์)",
+      "code": "BL01",
+      "interchangeRaw": "ช่วงหัวลำโพง - หลักสองสายสีเทาท่าพระ(โครงการ)"
+    },
+    {
+      "id": "mrt-blue-bl02",
+      "lineId": "mrt-blue",
+      "name": "จรัญฯ 13",
+      "nameEn": "จรัญฯ 13",
+      "code": "BL02",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl03",
+      "lineId": "mrt-blue",
+      "name": "ไฟฉาย",
+      "nameEn": "ไฟฉาย",
+      "code": "BL03",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl04",
+      "lineId": "mrt-blue",
+      "name": "บางขุนนนท์",
+      "nameEn": "บางขุนนนท์",
+      "code": "BL04",
+      "interchangeRaw": "สายสีแดงอ่อนบางขุนนนท์(โครงการ)"
+    },
+    {
+      "id": "mrt-blue-bl05",
+      "lineId": "mrt-blue",
+      "name": "บางยี่ขัน",
+      "nameEn": "บางยี่ขัน",
+      "code": "BL05",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl06",
+      "lineId": "mrt-blue",
+      "name": "สิรินธร",
+      "nameEn": "สิรินธร",
+      "code": "BL06",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl07",
+      "lineId": "mrt-blue",
+      "name": "บางพลัด",
+      "nameEn": "บางพลัด",
+      "code": "BL07",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl08",
+      "lineId": "mrt-blue",
+      "name": "บางอ้อ",
+      "nameEn": "บางอ้อ",
+      "code": "BL08",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl09",
+      "lineId": "mrt-blue",
+      "name": "บางโพ",
+      "nameEn": "บางโพ",
+      "code": "BL09",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl10",
+      "lineId": "mrt-blue",
+      "name": "เตาปูน",
+      "nameEn": "เตาปูน",
+      "code": "BL10",
+      "interchangeRaw": "สายสีม่วง(สถานีร่วม)",
+      "lat": 13.806,
+      "lng": 100.5307
+    },
+    {
+      "id": "mrt-blue-bl11",
+      "lineId": "mrt-blue",
+      "name": "บางซื่อ",
+      "nameEn": "บางซื่อ",
+      "code": "BL11",
+      "interchangeRaw": "สายเหนือสายตะวันออกเฉียงเหนือสายใต้:กรุงเทพอภิวัฒน์ สายสีแดงเข้มสายสีแดงอ่อน:กรุงเทพอภิวัฒน์ สายซิตี้:กรุงเทพอภิวัฒน์(กำลังก่อสร้าง)",
+      "lat": 13.803,
+      "lng": 100.539
+    },
+    {
+      "id": "mrt-blue-bl12",
+      "lineId": "mrt-blue",
+      "name": "กำแพงเพชร",
+      "nameEn": "กำแพงเพชร",
+      "code": "BL12",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl13",
+      "lineId": "mrt-blue",
+      "name": "สวนจตุจักร",
+      "nameEn": "สวนจตุจักร",
+      "code": "BL13",
+      "interchangeRaw": "สายสุขุมวิทสถานีหมอชิต",
+      "lat": 13.8028,
+      "lng": 100.5534
+    },
+    {
+      "id": "mrt-blue-bl14",
+      "lineId": "mrt-blue",
+      "name": "พหลโยธิน",
+      "nameEn": "พหลโยธิน",
+      "code": "BL14",
+      "interchangeRaw": "สายสุขุมวิทสถานีห้าแยกลาดพร้าว"
+    },
+    {
+      "id": "mrt-blue-bl15",
+      "lineId": "mrt-blue",
+      "name": "ลาดพร้าว",
+      "nameEn": "ลาดพร้าว",
+      "code": "BL15",
+      "interchangeRaw": "สายสีเหลืองลาดพร้าว"
+    },
+    {
+      "id": "mrt-blue-bl16",
+      "lineId": "mrt-blue",
+      "name": "รัชดาภิเษก",
+      "nameEn": "รัชดาภิเษก",
+      "code": "BL16",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl17",
+      "lineId": "mrt-blue",
+      "name": "สุทธิสาร",
+      "nameEn": "สุทธิสาร",
+      "code": "BL17",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl18",
+      "lineId": "mrt-blue",
+      "name": "ห้วยขวาง",
+      "nameEn": "ห้วยขวาง",
+      "code": "BL18",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl19",
+      "lineId": "mrt-blue",
+      "name": "ศูนย์วัฒนธรรมแห่งประเทศไทย",
+      "nameEn": "ศูนย์วัฒนธรรมแห่งประเทศไทย",
+      "code": "BL19",
+      "interchangeRaw": "สายสีส้ม(สถานีร่วม) (กำลังก่อสร้าง)",
+      "lat": 13.7799,
+      "lng": 100.5704
+    },
+    {
+      "id": "mrt-blue-bl20",
+      "lineId": "mrt-blue",
+      "name": "พระราม 9",
+      "nameEn": "พระราม 9",
+      "code": "BL20",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl21",
+      "lineId": "mrt-blue",
+      "name": "เพชรบุรี",
+      "nameEn": "เพชรบุรี",
+      "code": "BL21",
+      "interchangeRaw": "สายสีฟ้าสถานีมักกะสัน(โครงการ)"
+    },
+    {
+      "id": "mrt-blue-bl22",
+      "lineId": "mrt-blue",
+      "name": "สุขุมวิท",
+      "nameEn": "สุขุมวิท",
+      "code": "BL22",
+      "interchangeRaw": "สายสุขุมวิทสถานีอโศก",
+      "lat": 13.738,
+      "lng": 100.5615
+    },
+    {
+      "id": "mrt-blue-bl23",
+      "lineId": "mrt-blue",
+      "name": "ศูนย์การประชุมแห่งชาติสิริกิติ์",
+      "nameEn": "ศูนย์การประชุมแห่งชาติสิริกิติ์",
+      "code": "BL23",
+      "interchangeRaw": "",
+      "lat": 13.723,
+      "lng": 100.559
+    },
+    {
+      "id": "mrt-blue-bl24",
+      "lineId": "mrt-blue",
+      "name": "คลองเตย",
+      "nameEn": "คลองเตย",
+      "code": "BL24",
+      "interchangeRaw": "สายสีแดงอ่อนสถานีคลองเตย(โครงการ)",
+      "lat": 13.722,
+      "lng": 100.554
+    },
+    {
+      "id": "mrt-blue-bl25",
+      "lineId": "mrt-blue",
+      "name": "ลุมพินี",
+      "nameEn": "ลุมพินี",
+      "code": "BL25",
+      "interchangeRaw": "สายสีฟ้าสถานีลุมพินี(โครงการ)",
+      "lat": 13.7255,
+      "lng": 100.5415
+    },
+    {
+      "id": "mrt-blue-bl26",
+      "lineId": "mrt-blue",
+      "name": "สีลม",
+      "nameEn": "สีลม",
+      "code": "BL26",
+      "interchangeRaw": "สายสีลมสถานีศาลาแดง",
+      "lat": 13.729,
+      "lng": 100.534
+    },
+    {
+      "id": "mrt-blue-bl27",
+      "lineId": "mrt-blue",
+      "name": "สามย่าน",
+      "nameEn": "สามย่าน",
+      "code": "BL27",
+      "interchangeRaw": "",
+      "lat": 13.7199,
+      "lng": 100.53
+    },
+    {
+      "id": "mrt-blue-bl28",
+      "lineId": "mrt-blue",
+      "name": "หัวลำโพง",
+      "nameEn": "หัวลำโพง",
+      "code": "BL28",
+      "interchangeRaw": "สายสีแดงเข้มหัวลำโพง(โครงการ)",
+      "lat": 13.7375,
+      "lng": 100.517
+    },
+    {
+      "id": "mrt-blue-bl29",
+      "lineId": "mrt-blue",
+      "name": "วัดมังกร",
+      "nameEn": "วัดมังกร",
+      "code": "BL29",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl30",
+      "lineId": "mrt-blue",
+      "name": "สามยอด",
+      "nameEn": "สามยอด",
+      "code": "BL30",
+      "interchangeRaw": "สายสีม่วง(สถานีร่วม) (กำลังก่อสร้าง)"
+    },
+    {
+      "id": "mrt-blue-bl31",
+      "lineId": "mrt-blue",
+      "name": "สนามไชย",
+      "nameEn": "สนามไชย",
+      "code": "BL31",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl32",
+      "lineId": "mrt-blue",
+      "name": "อิสรภาพ",
+      "nameEn": "อิสรภาพ",
+      "code": "BL32",
+      "interchangeRaw": "สายสีทองสถานีอิสรภาพ(โครงการ)"
+    },
+    {
+      "id": "mrt-blue-bl01e",
+      "lineId": "mrt-blue",
+      "name": "ท่าพระ (ถนนเพชรเกษม)",
+      "nameEn": "ท่าพระ (ถนนเพชรเกษม)",
+      "code": "BL01E",
+      "interchangeRaw": "ช่วงเตาปูน - ท่าพระสายสีเทาท่าพระ(โครงการ)"
+    },
+    {
+      "id": "mrt-blue-bl33",
+      "lineId": "mrt-blue",
+      "name": "บางไผ่",
+      "nameEn": "บางไผ่",
+      "code": "BL33",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl34",
+      "lineId": "mrt-blue",
+      "name": "บางหว้า",
+      "nameEn": "บางหว้า",
+      "code": "BL34",
+      "interchangeRaw": "สายสีลมบางหว้า"
+    },
+    {
+      "id": "mrt-blue-bl35",
+      "lineId": "mrt-blue",
+      "name": "เพชรเกษม 48",
+      "nameEn": "เพชรเกษม 48",
+      "code": "BL35",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl36",
+      "lineId": "mrt-blue",
+      "name": "ภาษีเจริญ",
+      "nameEn": "ภาษีเจริญ",
+      "code": "BL36",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl37",
+      "lineId": "mrt-blue",
+      "name": "บางแค",
+      "nameEn": "บางแค",
+      "code": "BL37",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-blue-bl38",
+      "lineId": "mrt-blue",
+      "name": "หลักสอง",
+      "nameEn": "หลักสอง",
+      "code": "BL38",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp01",
+      "lineId": "mrt-purple",
+      "name": "คลองบางไผ่",
+      "nameEn": "คลองบางไผ่",
+      "code": "PP01",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp02",
+      "lineId": "mrt-purple",
+      "name": "ตลาดบางใหญ่",
+      "nameEn": "ตลาดบางใหญ่",
+      "code": "PP02",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp03",
+      "lineId": "mrt-purple",
+      "name": "สามแยกบางใหญ่",
+      "nameEn": "สามแยกบางใหญ่",
+      "code": "PP03",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp04",
+      "lineId": "mrt-purple",
+      "name": "บางพลู",
+      "nameEn": "บางพลู",
+      "code": "PP04",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp05",
+      "lineId": "mrt-purple",
+      "name": "บางรักใหญ่",
+      "nameEn": "บางรักใหญ่",
+      "code": "PP05",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp06",
+      "lineId": "mrt-purple",
+      "name": "บางรักน้อยท่าอิฐ",
+      "nameEn": "บางรักน้อยท่าอิฐ",
+      "code": "PP06",
+      "interchangeRaw": "สายสีลมสถานีบางรักน้อยท่าอิฐ (โครงการ)"
+    },
+    {
+      "id": "mrt-purple-pp07",
+      "lineId": "mrt-purple",
+      "name": "ไทรม้า",
+      "nameEn": "ไทรม้า",
+      "code": "PP07",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp08",
+      "lineId": "mrt-purple",
+      "name": "สะพานพระนั่งเกล้า",
+      "nameEn": "สะพานพระนั่งเกล้า",
+      "code": "PP08",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp09",
+      "lineId": "mrt-purple",
+      "name": "แยกนนทบุรี 1",
+      "nameEn": "แยกนนทบุรี 1",
+      "code": "PP09",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp10",
+      "lineId": "mrt-purple",
+      "name": "บางกระสอ",
+      "nameEn": "บางกระสอ",
+      "code": "PP10",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp11",
+      "lineId": "mrt-purple",
+      "name": "ศูนย์ราชการนนทบุรี",
+      "nameEn": "ศูนย์ราชการนนทบุรี",
+      "code": "PP11",
+      "interchangeRaw": "สายสีน้ำตาลศูนย์ราชการนนทบุรี(โครงการ)"
+    },
+    {
+      "id": "mrt-purple-pp12",
+      "lineId": "mrt-purple",
+      "name": "กระทรวงสาธารณสุข",
+      "nameEn": "กระทรวงสาธารณสุข",
+      "code": "PP12",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp13",
+      "lineId": "mrt-purple",
+      "name": "แยกติวานนท์",
+      "nameEn": "แยกติวานนท์",
+      "code": "PP13",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp14",
+      "lineId": "mrt-purple",
+      "name": "วงศ์สว่าง",
+      "nameEn": "วงศ์สว่าง",
+      "code": "PP14",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-purple-pp15",
+      "lineId": "mrt-purple",
+      "name": "บางซ่อน",
+      "nameEn": "บางซ่อน",
+      "code": "PP15",
+      "interchangeRaw": "สายสีแดงอ่อนสถานีบางซ่อน"
+    },
+    {
+      "id": "mrt-purple-pp16",
+      "lineId": "mrt-purple",
+      "name": "เตาปูน",
+      "nameEn": "เตาปูน",
+      "code": "PP16",
+      "interchangeRaw": "สายสีน้ำเงิน(สถานีร่วม)",
+      "lat": 13.806,
+      "lng": 100.5307
+    },
+    {
+      "id": "mrt-yellow-yl01",
+      "lineId": "mrt-yellow",
+      "name": "ลาดพร้าว",
+      "nameEn": "ลาดพร้าว",
+      "code": "YL01",
+      "interchangeRaw": "สายสีน้ำเงินลาดพร้าว"
+    },
+    {
+      "id": "mrt-yellow-yl02",
+      "lineId": "mrt-yellow",
+      "name": "ภาวนา",
+      "nameEn": "ภาวนา",
+      "code": "YL02",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl03",
+      "lineId": "mrt-yellow",
+      "name": "โชคชัย 4",
+      "nameEn": "โชคชัย 4",
+      "code": "YL03",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl04",
+      "lineId": "mrt-yellow",
+      "name": "ลาดพร้าว 71",
+      "nameEn": "ลาดพร้าว 71",
+      "code": "YL04",
+      "interchangeRaw": "สายสีเทาลาดพร้าว 71(โครงการ)"
+    },
+    {
+      "id": "mrt-yellow-yl05",
+      "lineId": "mrt-yellow",
+      "name": "ลาดพร้าว 83",
+      "nameEn": "ลาดพร้าว 83",
+      "code": "YL05",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl06",
+      "lineId": "mrt-yellow",
+      "name": "มหาดไทย",
+      "nameEn": "มหาดไทย",
+      "code": "YL06",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl07",
+      "lineId": "mrt-yellow",
+      "name": "ลาดพร้าว 101",
+      "nameEn": "ลาดพร้าว 101",
+      "code": "YL07",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl08",
+      "lineId": "mrt-yellow",
+      "name": "บางกะปิ",
+      "nameEn": "บางกะปิ",
+      "code": "YL08",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl09",
+      "lineId": "mrt-yellow",
+      "name": "แยกลำสาลี",
+      "nameEn": "แยกลำสาลี",
+      "code": "YL09",
+      "interchangeRaw": "สายสีส้มแยกลำสาลี(กำลังก่อสร้าง)"
+    },
+    {
+      "id": "mrt-yellow-yl10",
+      "lineId": "mrt-yellow",
+      "name": "ศรีกรีฑา",
+      "nameEn": "ศรีกรีฑา",
+      "code": "YL10",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl11",
+      "lineId": "mrt-yellow",
+      "name": "หัวหมาก",
+      "nameEn": "หัวหมาก",
+      "code": "YL11",
+      "interchangeRaw": "สายซิตี้หัวหมากสายสีแดงอ่อนหัวหมาก(โครงการ)"
+    },
+    {
+      "id": "mrt-yellow-yl12",
+      "lineId": "mrt-yellow",
+      "name": "กลันตัน",
+      "nameEn": "กลันตัน",
+      "code": "YL12",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl13",
+      "lineId": "mrt-yellow",
+      "name": "ศรีนุช",
+      "nameEn": "ศรีนุช",
+      "code": "YL13",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl14",
+      "lineId": "mrt-yellow",
+      "name": "ศรีนครินทร์ 38",
+      "nameEn": "ศรีนครินทร์ 38",
+      "code": "YL14",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl15",
+      "lineId": "mrt-yellow",
+      "name": "สวนหลวง ร.9",
+      "nameEn": "สวนหลวง ร.9",
+      "code": "YL15",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl16",
+      "lineId": "mrt-yellow",
+      "name": "ศรีอุดม",
+      "nameEn": "ศรีอุดม",
+      "code": "YL16",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl17",
+      "lineId": "mrt-yellow",
+      "name": "ศรีเอี่ยม",
+      "nameEn": "ศรีเอี่ยม",
+      "code": "YL17",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl18",
+      "lineId": "mrt-yellow",
+      "name": "ศรีลาซาล",
+      "nameEn": "ศรีลาซาล",
+      "code": "YL18",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl19",
+      "lineId": "mrt-yellow",
+      "name": "ศรีแบริ่ง",
+      "nameEn": "ศรีแบริ่ง",
+      "code": "YL19",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl20",
+      "lineId": "mrt-yellow",
+      "name": "ศรีด่าน",
+      "nameEn": "ศรีด่าน",
+      "code": "YL20",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl21",
+      "lineId": "mrt-yellow",
+      "name": "ศรีเทพา",
+      "nameEn": "ศรีเทพา",
+      "code": "YL21",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl22",
+      "lineId": "mrt-yellow",
+      "name": "ทิพวัล",
+      "nameEn": "ทิพวัล",
+      "code": "YL22",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-yellow-yl23",
+      "lineId": "mrt-yellow",
+      "name": "สำโรง",
+      "nameEn": "สำโรง",
+      "code": "YL23",
+      "interchangeRaw": "สายสุขุมวิทสถานีสำโรง"
+    },
+    {
+      "id": "mrt-pink-pk01",
+      "lineId": "mrt-pink",
+      "name": "ศูนย์ราชการนนทบุรี",
+      "nameEn": "ศูนย์ราชการนนทบุรี",
+      "code": "PK01",
+      "interchangeRaw": "สายสีม่วงสถานีศูนย์ราชการนนทบุรี"
+    },
+    {
+      "id": "mrt-pink-pk02",
+      "lineId": "mrt-pink",
+      "name": "แคราย",
+      "nameEn": "แคราย",
+      "code": "PK02",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk03",
+      "lineId": "mrt-pink",
+      "name": "สนามบินน้ำ",
+      "nameEn": "สนามบินน้ำ",
+      "code": "PK03",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk04",
+      "lineId": "mrt-pink",
+      "name": "สามัคคี",
+      "nameEn": "สามัคคี",
+      "code": "PK04",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk05",
+      "lineId": "mrt-pink",
+      "name": "กรมชลประทาน",
+      "nameEn": "กรมชลประทาน",
+      "code": "PK05",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk06",
+      "lineId": "mrt-pink",
+      "name": "แยกปากเกร็ด",
+      "nameEn": "แยกปากเกร็ด",
+      "code": "PK06",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk07",
+      "lineId": "mrt-pink",
+      "name": "เลี่ยงเมืองปากเกร็ด",
+      "nameEn": "เลี่ยงเมืองปากเกร็ด",
+      "code": "PK07",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk08",
+      "lineId": "mrt-pink",
+      "name": "แจ้งวัฒนะ-ปากเกร็ด 28",
+      "nameEn": "แจ้งวัฒนะ-ปากเกร็ด 28",
+      "code": "PK08",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk09",
+      "lineId": "mrt-pink",
+      "name": "ศรีรัช",
+      "nameEn": "ศรีรัช",
+      "code": "PK09",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk10",
+      "lineId": "mrt-pink",
+      "name": "เมืองทองธานี",
+      "nameEn": "เมืองทองธานี",
+      "code": "PK10",
+      "interchangeRaw": "สายเมืองทองธานี"
+    },
+    {
+      "id": "mrt-pink-pk11",
+      "lineId": "mrt-pink",
+      "name": "แจ้งวัฒนะ 14",
+      "nameEn": "แจ้งวัฒนะ 14",
+      "code": "PK11",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk12",
+      "lineId": "mrt-pink",
+      "name": "ศูนย์ราชการเฉลิมพระเกียรติ",
+      "nameEn": "ศูนย์ราชการเฉลิมพระเกียรติ",
+      "code": "PK12",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk13",
+      "lineId": "mrt-pink",
+      "name": "โทรคมนาคมแห่งชาติ",
+      "nameEn": "โทรคมนาคมแห่งชาติ",
+      "code": "PK13",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk14",
+      "lineId": "mrt-pink",
+      "name": "หลักสี่",
+      "nameEn": "หลักสี่",
+      "code": "PK14",
+      "interchangeRaw": "สายสีแดงเข้มสถานีหลักสี่"
+    },
+    {
+      "id": "mrt-pink-pk15",
+      "lineId": "mrt-pink",
+      "name": "ราชภัฏพระนคร",
+      "nameEn": "ราชภัฏพระนคร",
+      "code": "PK15",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk16",
+      "lineId": "mrt-pink",
+      "name": "วัดพระศรีมหาธาตุ",
+      "nameEn": "วัดพระศรีมหาธาตุ",
+      "code": "PK16",
+      "interchangeRaw": "สายสุขุมวิท(สถานีร่วม)"
+    },
+    {
+      "id": "mrt-pink-pk17",
+      "lineId": "mrt-pink",
+      "name": "รามอินทรา 3",
+      "nameEn": "รามอินทรา 3",
+      "code": "PK17",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk18",
+      "lineId": "mrt-pink",
+      "name": "ลาดปลาเค้า",
+      "nameEn": "ลาดปลาเค้า",
+      "code": "PK18",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk19",
+      "lineId": "mrt-pink",
+      "name": "รามอินทรา กม. 4",
+      "nameEn": "รามอินทรา กม. 4",
+      "code": "PK19",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk20",
+      "lineId": "mrt-pink",
+      "name": "มัยลาภ",
+      "nameEn": "มัยลาภ",
+      "code": "PK20",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk21",
+      "lineId": "mrt-pink",
+      "name": "วัชรพล",
+      "nameEn": "วัชรพล",
+      "code": "PK21",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk22",
+      "lineId": "mrt-pink",
+      "name": "รามอินทรา กม. 6",
+      "nameEn": "รามอินทรา กม. 6",
+      "code": "PK22",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk23",
+      "lineId": "mrt-pink",
+      "name": "คู้บอน",
+      "nameEn": "คู้บอน",
+      "code": "PK23",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk24",
+      "lineId": "mrt-pink",
+      "name": "รามอินทรา กม. 9",
+      "nameEn": "รามอินทรา กม. 9",
+      "code": "PK24",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk25",
+      "lineId": "mrt-pink",
+      "name": "วงแหวนรามอินทรา",
+      "nameEn": "วงแหวนรามอินทรา",
+      "code": "PK25",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk26",
+      "lineId": "mrt-pink",
+      "name": "นพรัตน์",
+      "nameEn": "นพรัตน์",
+      "code": "PK26",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk27",
+      "lineId": "mrt-pink",
+      "name": "บางชัน",
+      "nameEn": "บางชัน",
+      "code": "PK27",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk28",
+      "lineId": "mrt-pink",
+      "name": "เศรษฐบุตรบำเพ็ญ",
+      "nameEn": "เศรษฐบุตรบำเพ็ญ",
+      "code": "PK28",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk29",
+      "lineId": "mrt-pink",
+      "name": "ตลาดมีนบุรี",
+      "nameEn": "ตลาดมีนบุรี",
+      "code": "PK29",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-pk30",
+      "lineId": "mrt-pink",
+      "name": "มีนบุรี",
+      "nameEn": "มีนบุรี",
+      "code": "PK30",
+      "interchangeRaw": "สายสีส้ม(สถานีร่วม) (กำลังก่อสร้าง)"
+    },
+    {
+      "id": "mrt-pink-mt01",
+      "lineId": "mrt-pink",
+      "name": "อิมแพ็ค เมืองทองธานี",
+      "nameEn": "อิมแพ็ค เมืองทองธานี",
+      "code": "MT01",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "mrt-pink-mt02",
+      "lineId": "mrt-pink",
+      "name": "ทะเลสาบเมืองทองธานี",
+      "nameEn": "ทะเลสาบเมืองทองธานี",
+      "code": "MT02",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "arl-main-a1",
+      "lineId": "arl-main",
+      "name": "สุวรรณภูมิ",
+      "nameEn": "สุวรรณภูมิ",
+      "code": "A1",
+      "interchangeRaw": "สายสีเงินสถานีสุวรรณภูมิ(โครงการ)",
+      "lat": 13.698,
+      "lng": 100.752
+    },
+    {
+      "id": "arl-main-a2",
+      "lineId": "arl-main",
+      "name": "ลาดกระบัง",
+      "nameEn": "ลาดกระบัง",
+      "code": "A2",
+      "interchangeRaw": "สายสีแดงอ่อนสถานีลาดกระบัง(โครงการ)"
+    },
+    {
+      "id": "arl-main-a3",
+      "lineId": "arl-main",
+      "name": "บ้านทับช้าง",
+      "nameEn": "บ้านทับช้าง",
+      "code": "A3",
+      "interchangeRaw": "สายสีแดงอ่อนสถานีบ้านทับช้าง(โครงการ)"
+    },
+    {
+      "id": "arl-main-a4",
+      "lineId": "arl-main",
+      "name": "หัวหมาก",
+      "nameEn": "หัวหมาก",
+      "code": "A4",
+      "interchangeRaw": "สายสีเหลืองสถานีหัวหมาก"
+    },
+    {
+      "id": "arl-main-a5",
+      "lineId": "arl-main",
+      "name": "รามคำแหง",
+      "nameEn": "รามคำแหง",
+      "code": "A5",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "arl-main-a6",
+      "lineId": "arl-main",
+      "name": "มักกะสัน",
+      "nameEn": "มักกะสัน",
+      "code": "A6",
+      "interchangeRaw": "สายสีน้ำเงินสถานีเพชรบุรี",
+      "lat": 13.745,
+      "lng": 100.562
+    },
+    {
+      "id": "arl-main-a7",
+      "lineId": "arl-main",
+      "name": "ราชปรารภ",
+      "nameEn": "ราชปรารภ",
+      "code": "A7",
+      "interchangeRaw": "สายสีส้มสถานีราชปรารภ(กำลังก่อสร้าง)"
+    },
+    {
+      "id": "arl-main-a8",
+      "lineId": "arl-main",
+      "name": "พญาไท",
+      "nameEn": "พญาไท",
+      "code": "A8",
+      "interchangeRaw": "สายสุขุมวิทสถานีพญาไท",
+      "lat": 13.7569,
+      "lng": 100.5341
+    },
+    {
+      "id": "srt-dark-red-rn10",
+      "lineId": "srt-dark-red",
+      "name": "รังสิต",
+      "nameEn": "รังสิต",
+      "code": "RN10",
+      "interchangeRaw": "สายเหนือสายตะวันออกเฉียงเหนือ:รังสิต"
+    },
+    {
+      "id": "srt-dark-red-rn09",
+      "lineId": "srt-dark-red",
+      "name": "หลักหก (มหาวิทยาลัยรังสิต)",
+      "nameEn": "หลักหก (มหาวิทยาลัยรังสิต)",
+      "code": "RN09",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-dark-red-rn08",
+      "lineId": "srt-dark-red",
+      "name": "ดอนเมือง",
+      "nameEn": "ดอนเมือง",
+      "code": "RN08",
+      "interchangeRaw": "สายซิตี้ท่าอากาศยานดอนเมือง(กำลังก่อสร้าง)",
+      "lat": 13.9126,
+      "lng": 100.6067
+    },
+    {
+      "id": "srt-dark-red-rn07",
+      "lineId": "srt-dark-red",
+      "name": "การเคหะ",
+      "nameEn": "การเคหะ",
+      "code": "RN07",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-dark-red-rn06",
+      "lineId": "srt-dark-red",
+      "name": "หลักสี่",
+      "nameEn": "หลักสี่",
+      "code": "RN06",
+      "interchangeRaw": "สายสีชมพูหลักสี่"
+    },
+    {
+      "id": "srt-dark-red-rn05",
+      "lineId": "srt-dark-red",
+      "name": "ทุ่งสองห้อง",
+      "nameEn": "ทุ่งสองห้อง",
+      "code": "RN05",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-dark-red-rn04",
+      "lineId": "srt-dark-red",
+      "name": "บางเขน",
+      "nameEn": "บางเขน",
+      "code": "RN04",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-dark-red-rn03",
+      "lineId": "srt-dark-red",
+      "name": "วัดเสมียนนารี",
+      "nameEn": "วัดเสมียนนารี",
+      "code": "RN03",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-dark-red-rn02",
+      "lineId": "srt-dark-red",
+      "name": "จตุจักร",
+      "nameEn": "จตุจักร",
+      "code": "RN02",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-dark-red-rn01",
+      "lineId": "srt-dark-red",
+      "name": "กรุงเทพอภิวัฒน์ (สถานีกลาง)",
+      "nameEn": "กรุงเทพอภิวัฒน์ (สถานีกลาง)",
+      "code": "RN01",
+      "interchangeRaw": "สายซิตี้(กำลังก่อสร้าง) สายสีแดงอ่อน(สถานีร่วม) สายสีน้ำเงินสถานีบางซื่อ"
+    },
+    {
+      "id": "srt-light-red-rw06",
+      "lineId": "srt-light-red",
+      "name": "ตลิ่งชัน",
+      "nameEn": "ตลิ่งชัน",
+      "code": "RW06",
+      "interchangeRaw": "สายแยกตลิ่งชัน-ศิริราชสายสีลมสถานีตลิ่งชัน(โครงการ)"
+    },
+    {
+      "id": "srt-light-red-rw05",
+      "lineId": "srt-light-red",
+      "name": "บางบำหรุ",
+      "nameEn": "บางบำหรุ",
+      "code": "RW05",
+      "interchangeRaw": ""
+    },
+    {
+      "id": "srt-light-red-rw02",
+      "lineId": "srt-light-red",
+      "name": "บางซ่อน",
+      "nameEn": "บางซ่อน",
+      "code": "RW02",
+      "interchangeRaw": "สายสีม่วงสถานีบางซ่อน"
+    },
+    {
+      "id": "srt-light-red-rw01",
+      "lineId": "srt-light-red",
+      "name": "กรุงเทพอภิวัฒน์ (สถานีกลาง)",
+      "nameEn": "กรุงเทพอภิวัฒน์ (สถานีกลาง)",
+      "code": "RW01",
+      "interchangeRaw": "สายสีแดงเข้ม(สถานีร่วม) สายสีน้ำเงินสถานีบางซื่อ สายซิตี้สถานีกลางกรุงเทพอภิวัฒน์(กำลังก่อสร้าง)"
+    }
+  ]
+}

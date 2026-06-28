@@ -4,6 +4,8 @@ import { isPropertyFurnished } from "@/lib/furnishing";
 import { shouldShowDemoListings } from "@/lib/demo-listings";
 import { sortListings } from "@/lib/listing-sort";
 import { getPriceReducedSlugSet } from "@/lib/price-history";
+import { stationMatchesFilter } from "@/lib/station-match";
+import { districtMatchesFilter } from "@/lib/district-match";
 import { CATEGORY_PROPERTY_TYPES } from "@/lib/property-types";
 import {
   getAllPublishedUserProperties,
@@ -66,8 +68,8 @@ export function propertyMatchesFilters(p: Property, filters: SearchFilters): boo
     const allowed = CATEGORY_PROPERTY_TYPES[filters.propertyCategory];
     if (!allowed.includes(p.propertyType)) return false;
   }
-  if (filters.district && p.district !== filters.district) return false;
-  if (filters.btsStation && p.btsStation !== filters.btsStation) return false;
+  if (filters.district && !districtMatchesFilter(p.district, filters.district)) return false;
+  if (filters.btsStation && !stationMatchesFilter(p.btsStation, filters.btsStation)) return false;
   if (filters.bedrooms && p.bedrooms < filters.bedrooms) return false;
   if (filters.minPrice && p.price < filters.minPrice) return false;
   if (filters.maxPrice && p.price > filters.maxPrice) return false;

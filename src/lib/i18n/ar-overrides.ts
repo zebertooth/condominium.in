@@ -75,6 +75,7 @@ export const arOverrides = {
   readTime: "دقيقة قراءة",
   filterType: "نوع الإعلان",
   filterDistrict: "المنطقة / الحي",
+  filterLocation: "منطقة البحث",
   filterBts: "محطة BTS",
   filterMinPrice: "أقل سعر",
   filterMaxPrice: "أعلى سعر",

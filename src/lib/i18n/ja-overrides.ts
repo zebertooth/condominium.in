@@ -75,6 +75,7 @@ export const jaOverrides = {
   readTime: "分で読める",
   filterType: "物件タイプ",
   filterDistrict: "地区 / エリア",
+  filterLocation: "検索エリア",
   filterBts: "BTS駅",
   filterMinPrice: "最低価格",
   filterMaxPrice: "最高価格",

@@ -75,6 +75,7 @@ export const zhOverrides = {
   readTime: "分钟阅读",
   filterType: "房源类型",
   filterDistrict: "区域 / 地段",
+  filterLocation: "搜索区域",
   filterBts: "BTS 站点",
   filterMinPrice: "最低价格",
   filterMaxPrice: "最高价格",

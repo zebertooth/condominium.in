@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
 import { AdSlot } from "@/components/ads/AdSlot";
-import { AnalyticsLoader, CookieConsent } from "@/components/layout/CookieConsent";
-import { FloatingFeedbackWidget } from "@/components/layout/FloatingFeedbackWidget";
+import { AnalyticsLoader } from "@/components/layout/CookieConsent";
+import { ClientLayoutEnhancements } from "@/components/layout/ClientLayoutEnhancements";
 import { TurnstileScript } from "@/components/security/TurnstileScript";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
-import { CompareBar } from "@/components/property/CompareBar";
 import { CompareProvider } from "@/components/property/CompareProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -20,7 +19,8 @@ import "./globals.css";
 const notoSansThai = Noto_Sans_Thai({
   variable: "--font-noto-sans-thai",
   subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -65,6 +65,7 @@ export default async function RootLayout({
       <body className="flex min-h-full flex-col font-sans">
         <LocaleProvider locale={locale}>
           <CompareProvider>
+          <ClientLayoutEnhancements />
           <JsonLd data={organizationJsonLd} />
           <AnalyticsLoader />
           <TurnstileScript />
@@ -74,9 +75,6 @@ export default async function RootLayout({
             <AdSlot position="footer" format="auto" className="mb-4" />
           </div>
           <Footer locale={locale} />
-          <FloatingFeedbackWidget />
-          <CookieConsent />
-          <CompareBar />
           </CompareProvider>
         </LocaleProvider>
       </body>

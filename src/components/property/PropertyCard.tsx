@@ -38,7 +38,7 @@ export function PropertyCard({
   );
   const listedAge = formatListedAge(property.publishedAt, locale);
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+    <article className="property-card group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-teal-200 hover:shadow-md">
       {(showSaveButton || showCompareButton) && (
         <div className="absolute right-3 top-3 z-10 flex gap-2">
           {showCompareButton && (
@@ -56,7 +56,8 @@ export function PropertyCard({
             alt={title}
             fill
             className="object-cover transition duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
           />
           <div className="absolute left-3 top-3 flex flex-wrap gap-2">
             {property.isDemo && (

@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
-    optimizePackageImports: ["leaflet", "react-leaflet"],
+    optimizePackageImports: ["leaflet", "react-leaflet", "lucide-react"],
   },
   images: {
     remotePatterns: [

@@ -33,6 +33,8 @@ export function Footer({ locale }: { locale: Locale }) {
             <li><Link href={lp("/buy")} className="hover:text-white">{t("buy", locale)}</Link></li>
             <li><Link href={lp("/rent")} className="hover:text-white">{t("rent", locale)}</Link></li>
             <li><Link href={lp("/areas")} className="hover:text-white">{t("areas", locale)}</Link></li>
+            <li><Link href={lp("/stations")} className="hover:text-white">{t("navStations", locale)}</Link></li>
+            <li><Link href={lp("/districts")} className="hover:text-white">{t("navDistricts", locale)}</Link></li>
             <li><Link href={lp("/ai-search")} className="hover:text-white">{t("aiSearch", locale)}</Link></li>
             <li><Link href={lp("/list-property")} className="hover:text-white">{t("listProperty", locale)}</Link></li>
           </ul>

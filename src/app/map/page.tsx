@@ -8,6 +8,7 @@ import { getLocale } from "@/lib/locale";
 import { localePath, localePathWithQuery } from "@/lib/locale-routing";
 import { parseListingSearchParams, type ListingSearchParams } from "@/lib/listing-search-params";
 import { filterListings } from "@/lib/listings";
+import { getDistrictByName } from "@/lib/bangkok-districts";
 import { createMetadata } from "@/lib/seo";
 
 interface MapPageProps {
@@ -37,7 +38,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
 
   const propertiesWithCoords = listings.filter((p) => p.latitude && p.longitude);
   const category = filters.propertyCategory ?? "all";
-  const lp = (path: string) => localePath(path, locale);
+  const focusDistrict = params.district ? getDistrictByName(params.district) : null;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -82,7 +83,18 @@ export default async function MapPage({ searchParams }: MapPageProps) {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <PropertyListingsMapLazy properties={propertiesWithCoords} locale={locale} />
+        {focusDistrict && (
+          <p className="mb-3 text-sm text-violet-800">
+            {locale === "th"
+              ? `แสดงประกาศใน${focusDistrict.labelTh} (${propertiesWithCoords.length} รายการบนแผนที่)`
+              : `${focusDistrict.labelEn} — ${propertiesWithCoords.length} listings on map`}
+          </p>
+        )}
+        <PropertyListingsMapLazy
+          properties={propertiesWithCoords}
+          locale={locale}
+          focusDistrict={focusDistrict}
+        />
       </div>
 
       {propertiesWithCoords.length === 0 && (

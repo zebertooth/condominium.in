@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Property } from "@/types/property";
+import type { BangkokDistrict } from "@/lib/bangkok-districts";
 import { formatPrice, type Locale } from "@/lib/i18n";
 import { localePath } from "@/lib/locale-routing";
 import { localizedPropertyTitle } from "@/lib/property-i18n";
@@ -11,6 +12,7 @@ interface PropertyListingsMapProps {
   locale: Locale;
   center?: [number, number];
   zoom?: number;
+  focusDistrict?: BangkokDistrict | null;
   onPropertyClick?: (property: Property) => void;
 }
 
@@ -27,11 +29,13 @@ export function PropertyListingsMap({
   locale,
   center = [13.7563, 100.5018],
   zoom = 12,
+  focusDistrict = null,
   onPropertyClick,
 }: PropertyListingsMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
+  const districtLayerRef = useRef<L.Circle | null>(null);
   const onPropertyClickRef = useRef(onPropertyClick);
   const [mapReady, setMapReady] = useState(false);
 
@@ -85,6 +89,7 @@ export function PropertyListingsMap({
         mapInstanceRef.current = null;
       }
       markersLayerRef.current = null;
+      districtLayerRef.current = null;
       if (mapRef.current) {
         clearLeafletContainer(mapRef.current);
       }
@@ -149,6 +154,8 @@ export function PropertyListingsMap({
 
       if (!cancelled && bounds.length > 0) {
         map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+      } else if (!cancelled && focusDistrict) {
+        map.setView([focusDistrict.lat, focusDistrict.lng], 13);
       } else if (!cancelled) {
         map.setView(center, zoom);
       }
@@ -161,7 +168,56 @@ export function PropertyListingsMap({
     return () => {
       cancelled = true;
     };
-  }, [mapReady, properties, locale, center, zoom]);
+  }, [mapReady, properties, locale, center, zoom, focusDistrict]);
+
+  useEffect(() => {
+    if (!mapReady) return;
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    let cancelled = false;
+
+    const updateDistrict = async () => {
+      const L = (await import("leaflet")).default;
+      if (cancelled) return;
+
+      if (districtLayerRef.current) {
+        districtLayerRef.current.remove();
+        districtLayerRef.current = null;
+      }
+
+      if (!focusDistrict) return;
+
+      const zoneColor =
+        focusDistrict.zone === "inner"
+          ? "#0d9488"
+          : focusDistrict.zone === "central"
+            ? "#7c3aed"
+            : "#64748b";
+
+      const circle = L.circle([focusDistrict.lat, focusDistrict.lng], {
+        radius: 2500,
+        color: zoneColor,
+        fillColor: zoneColor,
+        fillOpacity: 0.12,
+        weight: 2,
+        dashArray: "6 4",
+      }).addTo(map);
+
+      circle.bindTooltip(
+        locale === "th" ? focusDistrict.labelTh : focusDistrict.labelEn,
+        { permanent: false, direction: "top" },
+      );
+
+      districtLayerRef.current = circle;
+    };
+
+    void updateDistrict();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [mapReady, focusDistrict, locale]);
 
   return (
     <div className="relative">
