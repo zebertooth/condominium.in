@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { HubCardEmptyCta } from "@/components/property/HubCardEmptyCta";
 import { HubExploreLinks } from "@/components/property/HubExploreLinks";
+import { HubIndexCrossLinks } from "@/components/property/HubIndexCrossLinks";
+import { getDistrictStationGraph } from "@/lib/district-stations";
 import {
   countForStation,
   getHubListingCounts,
@@ -8,7 +11,7 @@ import {
 } from "@/lib/hub-listing-counts";
 import { localePath } from "@/lib/locale-routing";
 import { getLocale } from "@/lib/locale";
-import { t, tf } from "@/lib/i18n";
+import { tf } from "@/lib/i18n";
 import { createMetadata } from "@/lib/seo";
 import {
   TRANSIT_LINES,
@@ -37,7 +40,7 @@ export async function generateMetadata() {
 export default async function StationsPage() {
   const locale = await getLocale();
   const nonTh = locale !== "th";
-  const hubCounts = await getHubListingCounts();
+  const [hubCounts, graph] = await Promise.all([getHubListingCounts(), getDistrictStationGraph()]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -132,6 +135,7 @@ export default async function StationsPage() {
                 {stations.map((station) => {
                   const counts = countForStation(hubCounts, station);
                   const countText = stationCountLabel(counts, locale);
+                  const isEmpty = counts.sale + counts.rent === 0;
                   const buyHref = localePath(
                     `/buy?bts=${encodeURIComponent(stationFilterValue(station))}`,
                     locale,
@@ -156,6 +160,8 @@ export default async function StationsPage() {
                         {nonTh ? station.nameEn : station.name}
                       </p>
                       <p className="mt-1 text-xs font-medium text-teal-700">{countText}</p>
+                      {isEmpty && <HubCardEmptyCta locale={locale} />}
+                      <HubIndexCrossLinks locale={locale} graph={graph} station={station} />
                       <div className="mt-3 flex flex-wrap gap-2 text-xs">
                         <Link
                           href={buyHref}

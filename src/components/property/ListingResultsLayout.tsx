@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AdvancedFilters } from "@/components/property/AdvancedFilters";
 import { CreateAlertButton } from "@/components/property/CreateAlertButton";
+import { EmptyListingsCta } from "@/components/property/EmptyListingsCta";
+import { HubCrossLinks } from "@/components/property/HubCrossLinks";
 import { ListingSortBar } from "@/components/property/ListingSortBar";
 import { ListingViewToggle } from "@/components/property/ListingViewToggle";
 import { PropertyCategoryFilter } from "@/components/property/PropertyCategoryFilter";
@@ -19,7 +21,7 @@ import {
   type ListingSearchParams,
 } from "@/lib/listing-search-params";
 import { filterListings } from "@/lib/listings";
-import type { BangkokDistrict } from "@/lib/bangkok-districts";
+import { getDistrictByName, type BangkokDistrict } from "@/lib/bangkok-districts";
 import { getSiteSettings } from "@/lib/site-settings";
 import type { ListingType } from "@/types/property";
 
@@ -76,6 +78,15 @@ export async function ListingResultsLayout({
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold text-slate-900">{heading}</h1>
       <p className="mt-2 max-w-2xl text-slate-600">{description}</p>
+
+      {(lockedDistrict || lockedBts) && (
+        <HubCrossLinks
+          locale={locale}
+          listingType={listingType}
+          district={mapFocusDistrict ?? (lockedDistrict ? getDistrictByName(lockedDistrict) : null)}
+          stationName={lockedBts ?? filters.btsStation}
+        />
+      )}
 
       {showAds && (
         <div className="mt-6">
@@ -150,6 +161,13 @@ export async function ListingResultsLayout({
               <p className="mt-4 text-center text-sm text-amber-800">{t("mapPageEmpty", locale)}</p>
             )}
           </div>
+        ) : listings.length === 0 ? (
+          <EmptyListingsCta
+            locale={locale}
+            listingType={listingType}
+            district={lockedDistrict ?? filters.district}
+            station={lockedBts ?? filters.btsStation}
+          />
         ) : (
           <PropertyGrid
             properties={listings}

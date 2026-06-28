@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getIntegrationStatus } from "@/lib/integrations";
+import { isSponsorSubscriptionPackageId } from "@/lib/sponsor-subscription";
 
 export async function getAdminUser() {
   const user = await getCurrentUser();
@@ -30,6 +32,32 @@ export async function getInventoryOpsStats() {
     prisma.userProperty.count({ where: { status: "pending" } }),
   ]);
   return { published, pending, target: INVENTORY_TARGET };
+}
+
+export async function getSponsorOpsStats() {
+  const integrations = getIntegrationStatus();
+  const pendingRows = await prisma.userSubscription.findMany({
+    where: {
+      paymentStatus: { in: ["pending", "pending_review"] },
+    },
+    select: { packageId: true },
+  });
+  const pendingPayments = pendingRows.filter((r) => isSponsorSubscriptionPackageId(r.packageId)).length;
+
+  const activeSponsored = await prisma.userProperty.count({
+    where: {
+      status: "published",
+      isSponsored: true,
+      OR: [{ sponsoredUntil: null }, { sponsoredUntil: { gt: new Date() } }],
+    },
+  });
+
+  return {
+    pendingPayments,
+    activeSponsored,
+    promptpay: integrations.promptpay,
+    slipok: integrations.slipok,
+  };
 }
 
 export async function getAdminStats() {

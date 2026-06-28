@@ -68,3 +68,33 @@ export function buildViewingIcs(opts: {
   lines.push("STATUS:CONFIRMED", "END:VEVENT", "END:VCALENDAR");
   return lines.join("\r\n");
 }
+
+function googleCalendarDate(dt: Date): string {
+  return `${dt.getFullYear()}${pad2(dt.getMonth() + 1)}${pad2(dt.getDate())}T${pad2(dt.getHours())}${pad2(dt.getMinutes())}00`;
+}
+
+/** Google Calendar "add event" URL for a property viewing. */
+export function buildGoogleCalendarViewUrl(opts: {
+  title: string;
+  date: string;
+  time?: string;
+  durationMinutes?: number;
+  description?: string;
+  location?: string;
+}): string {
+  const { y, m, d, hh, mm } = parseViewingParts(opts.date, opts.time);
+  const duration = opts.durationMinutes ?? 60;
+  const startLocal = new Date(y, m - 1, d, hh, mm, 0);
+  const endLocal = new Date(startLocal.getTime() + duration * 60_000);
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: opts.title,
+    dates: `${googleCalendarDate(startLocal)}/${googleCalendarDate(endLocal)}`,
+    ctz: "Asia/Bangkok",
+  });
+  if (opts.description) params.set("details", opts.description);
+  if (opts.location) params.set("location", opts.location);
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}

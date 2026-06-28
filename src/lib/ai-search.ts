@@ -1,19 +1,20 @@
 import { getAllListings, filterListings } from "@/lib/listings";
 import { hasOpenAI, openaiChat } from "@/lib/openai";
-import { BANGKOK_DISTRICTS } from "@/lib/bangkok-districts";
+import { BANGKOK_DISTRICTS, getDistrictByName, getDistrictBySlug } from "@/lib/bangkok-districts";
 import { districtMatchesFilter } from "@/lib/district-match";
 import { textMatchScore } from "@/lib/property-search-text";
 import { stationMatchesFilter } from "@/lib/station-match";
 import {
   resolveStationFromFilter,
   searchTransitStations,
+  stationFilterValue,
 } from "@/lib/transit-stations";
 import {
   CATEGORY_PROPERTY_TYPES,
   parsePropertyCategoryFromQuery,
   type PropertyCategory,
 } from "@/lib/property-types";
-import type { AISearchRequest, AISearchResult, Property } from "@/types/property";
+import type { AISearchHubLink, AISearchRequest, AISearchResult, Property } from "@/types/property";
 
 interface SearchFilters {
   listingType?: "sale" | "rent";
@@ -284,6 +285,50 @@ async function llmSummary(
   return content?.trim() || fallback;
 }
 
+function buildHubLinks(
+  filters: SearchFilters,
+  listingType?: "sale" | "rent",
+): AISearchHubLink[] {
+  const type = filters.listingType ?? listingType ?? "rent";
+  const base = type === "sale" ? "/buy" : "/rent";
+  const links: AISearchHubLink[] = [];
+
+  if (filters.btsStation) {
+    const station = resolveStationFromFilter(filters.btsStation);
+    const q = encodeURIComponent(station ? stationFilterValue(station) : filters.btsStation);
+    links.push({
+      label: station ? `ดูประกาศใกล้ ${station.label}` : `ดูประกาศใกล้ BTS ${filters.btsStation}`,
+      href: `${base}?bts=${q}`,
+    });
+    links.push({
+      label: "ค้นหาบนแผนที่",
+      href: `/map?bts=${q}&type=${type}`,
+    });
+    if (station?.hubSlug) {
+      links.push({ label: "คู่มือย่าน", href: `/areas/${station.hubSlug}-bts` });
+    }
+  }
+
+  if (filters.district) {
+    const district = getDistrictBySlug(filters.district) ?? getDistrictByName(filters.district);
+    if (district) {
+      links.push({
+        label: `ดูประกาศใน${district.labelTh}`,
+        href: `${base}/district/${encodeURIComponent(district.slug)}`,
+      });
+      links.push({
+        label: "ค้นหาบนแผนที่",
+        href: `/map?district=${encodeURIComponent(district.nameTh)}&type=${type}`,
+      });
+    }
+  }
+
+  links.push({ label: "สถานีรถไฟฟ้าทั้งหมด", href: "/stations" });
+  links.push({ label: "เขตกรุงเทพทั้งหมด", href: "/districts" });
+
+  return links;
+}
+
 export async function runAISearch(request: AISearchRequest): Promise<AISearchResult> {
   const properties = await getAllListings();
   const query = request.query.trim();
@@ -336,5 +381,18 @@ export async function runAISearch(request: AISearchRequest): Promise<AISearchRes
     "นัดชมทรัพย์จริงกับทีมเอเจนต์ของเรา",
   ];
 
-  return { summary, properties: results, suggestions, engine };
+  return {
+    summary,
+    properties: results,
+    suggestions,
+    engine,
+    filters: {
+      listingType: filters.listingType,
+      btsStation: filters.btsStation,
+      district: filters.district,
+      bedrooms: filters.bedrooms,
+      maxPrice: filters.maxPrice,
+    },
+    hubLinks: buildHubLinks(filters, request.listingType),
+  };
 }

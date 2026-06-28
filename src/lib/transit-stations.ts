@@ -36,6 +36,14 @@ const hubSlugByName = new Map(
   areaGuides.map((g) => [g.btsStation, g.slug.replace(/-bts$/, "")]),
 );
 
+/** Legacy / alternate names for station search and listing match */
+const STATION_SEARCH_ALIASES: Record<string, string[]> = {
+  "brt-technic-krungthep": ["เทคโน", "Techno"],
+  "brt-nara-rama-3": ["นราธิวาส", "Narathiwat"],
+  "brt-rama-3-bridge": ["พระราม 3", "Rama III"],
+  "brt-chan-road": ["จันทน์", "Chan"],
+};
+
 function buildStation(
   id: string,
   lineId: TransitLineId,
@@ -59,7 +67,15 @@ function buildStation(
     lineLabelEn: line.nameEn,
     lineColor: line.color,
     hubSlug,
-    searchTerms: [name, nameEn, line.prefix, line.nameTh, line.nameEn, id],
+    searchTerms: [
+      name,
+      nameEn,
+      line.prefix,
+      line.nameTh,
+      line.nameEn,
+      id,
+      ...(STATION_SEARCH_ALIASES[id] ?? []),
+    ],
   };
 }
 
@@ -113,8 +129,13 @@ export function getStationById(id: string): TransitStation | undefined {
 
 export function getStationByName(name: string): TransitStation | undefined {
   const trimmed = name.trim();
-  return TRANSIT_STATIONS.find(
+  const direct = TRANSIT_STATIONS.find(
     (s) => s.name === trimmed || s.label === trimmed || s.nameEn.toLowerCase() === trimmed.toLowerCase(),
+  );
+  if (direct) return direct;
+  const lower = trimmed.toLowerCase();
+  return TRANSIT_STATIONS.find((s) =>
+    s.searchTerms.some((term) => term.toLowerCase() === lower),
   );
 }
 

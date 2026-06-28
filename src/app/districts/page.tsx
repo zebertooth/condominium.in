@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { HubCardEmptyCta } from "@/components/property/HubCardEmptyCta";
 import { HubExploreLinks } from "@/components/property/HubExploreLinks";
+import { HubIndexCrossLinks } from "@/components/property/HubIndexCrossLinks";
 import {
   BANGKOK_DISTRICTS,
   DISTRICT_ZONE_LABELS,
   districtFilterValue,
   districtsByZone,
 } from "@/lib/bangkok-districts";
+import { getDistrictStationGraph } from "@/lib/district-stations";
 import {
   countForDistrict,
   districtCountLabel,
@@ -37,7 +40,7 @@ export async function generateMetadata() {
 export default async function DistrictsPage() {
   const locale = await getLocale();
   const nonTh = locale !== "th";
-  const hubCounts = await getHubListingCounts();
+  const [hubCounts, graph] = await Promise.all([getHubListingCounts(), getDistrictStationGraph()]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -129,6 +132,7 @@ export default async function DistrictsPage() {
                 {districts.map((district) => {
                   const counts = countForDistrict(hubCounts, district);
                   const countText = districtCountLabel(counts, locale);
+                  const isEmpty = counts.sale + counts.rent === 0;
                   const buyHref = localePath(
                     `/buy/district/${encodeURIComponent(district.slug)}`,
                     locale,
@@ -149,6 +153,8 @@ export default async function DistrictsPage() {
                       </p>
                       <p className="text-xs text-slate-500">{district.nameEn}</p>
                       <p className="mt-1 text-xs font-medium text-violet-700">{countText}</p>
+                      {isEmpty && <HubCardEmptyCta locale={locale} />}
+                      <HubIndexCrossLinks locale={locale} graph={graph} district={district} />
                       <div className="mt-3 flex flex-wrap gap-2 text-xs">
                         <Link
                           href={buyHref}

@@ -214,9 +214,24 @@ export interface AISearchRequest {
   propertyCategory?: PropertyCategory;
 }
 
+export interface AISearchExtractedFilters {
+  listingType?: ListingType;
+  btsStation?: string;
+  district?: string;
+  bedrooms?: number;
+  maxPrice?: number;
+}
+
+export interface AISearchHubLink {
+  label: string;
+  href: string;
+}
+
 export interface AISearchResult {
   summary: string;
   properties: Property[];
   suggestions: string[];
   engine?: "ai" | "rules";
+  filters?: AISearchExtractedFilters;
+  hubLinks?: AISearchHubLink[];
 }

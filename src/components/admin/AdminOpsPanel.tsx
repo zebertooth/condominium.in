@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AdminStarterImport } from "@/components/admin/AdminStarterImport";
-import { getInventoryOpsStats } from "@/lib/admin";
+import { getInventoryOpsStats, getSponsorOpsStats } from "@/lib/admin";
 import { getIntegrationStatus } from "@/lib/integrations";
 import { readCronSecret } from "@/lib/cron-auth";
 import { countActiveNewsletterSubscribers } from "@/lib/newsletter-digest";
@@ -20,6 +20,7 @@ export async function AdminOpsPanel() {
   const filledSlots = Object.values(settings.adSlots).filter((s) => s?.trim()).length;
   const newsletterCount = await countActiveNewsletterSubscribers();
   const inventory = await getInventoryOpsStats();
+  const sponsor = await getSponsorOpsStats();
 
   const gscMeta = Boolean(process.env.GOOGLE_SITE_VERIFICATION?.trim());
 
@@ -87,6 +88,29 @@ export async function AdminOpsPanel() {
       ok: newsletterCount > 0,
       hint: tf("adminOpsNewsletterCount", locale, { count: newsletterCount }),
     },
+    {
+      label: t("adminOpsSponsorPending", locale),
+      ok: sponsor.pendingPayments === 0,
+      hint: tf("adminOpsSponsorPendingHint", locale, { count: sponsor.pendingPayments }),
+      href: "/admin/payments",
+    },
+    {
+      label: t("adminOpsSponsorActive", locale),
+      ok: sponsor.activeSponsored > 0,
+      hint: tf("adminOpsSponsorActiveHint", locale, { count: sponsor.activeSponsored }),
+      href: "/admin/sponsored",
+    },
+    {
+      label: t("adminOpsSponsorPayments", locale),
+      ok: sponsor.promptpay && sponsor.slipok,
+      hint:
+        sponsor.promptpay && sponsor.slipok
+          ? t("adminOpsSponsorPaymentsOk", locale)
+          : sponsor.promptpay
+            ? t("adminOpsSlipOkMissing", locale)
+            : t("adminOpsPromptPayMissing", locale),
+      href: sponsor.promptpay ? "/admin/payments" : undefined,
+    },
   ];
 
   return (
@@ -136,6 +160,14 @@ export async function AdminOpsPanel() {
           {" · "}
           <Link href="/admin/newsletter" className="text-teal-700 hover:underline">
             {t("adminNewsletter", locale)}
+          </Link>
+          {" · "}
+          <Link href="/admin/payments" className="text-teal-700 hover:underline">
+            {t("adminPayments", locale)}
+          </Link>
+          {" · "}
+          <Link href="/admin/sponsored" className="text-teal-700 hover:underline">
+            {t("adminSponsored", locale)}
           </Link>
           {" · "}
           <a

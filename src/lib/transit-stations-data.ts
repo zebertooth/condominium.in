@@ -1,7 +1,8 @@
 /**
  * Bangkok metropolitan rail stations — compiled from
  * https://th.wikipedia.org/wiki/รายชื่อสถานีรถไฟฟ้าในกรุงเทพมหานครและปริมณฑล
- * (BTS, MRT, BRT, Airport Rail Link, SRT Red — Oct 2025 snapshot)
+ * (BTS, MRT, BRT, Airport Rail Link, SRT Red — Jun 2026 snapshot)
+ * BRT Sathorn–Ratchaphruek: 14 stations per BMA/BTSC (B3A + B4A added Sep 2024).
  *
  * Coordinates are approximate (OpenStreetMap / operator maps).
  */
@@ -229,18 +230,21 @@ export const STATION_TUPLES: readonly [string, TransitLineId, string, string, nu
   ["gold-charoen-nakhon", "gold", "เจริญนคร", "Charoen Nakhon", 13.718, 100.501],
   ["gold-khlong-san", "gold", "คลองสาน", "Khlong San", 13.715, 100.496],
 
-  // BRT Sathorn–Ratchaphruek
-  ["brt-sathorn", "brt", "สาทร", "Sathorn", 13.72, 100.528],
-  ["brt-chan", "brt", "จันทน์", "Chan", 13.715, 100.522],
-  ["brt-narathiwat", "brt", "นราธิวาส", "Narathiwat", 13.71, 100.516],
-  ["brt-rama-3", "brt", "พระราม 3", "Rama III", 13.705, 100.51],
-  ["brt-rama-9-bridge", "brt", "สะพานพระราม 9", "Rama IX Bridge", 13.7, 100.504],
-  ["brt-thanon-chan", "brt", "ถนนจันทน์", "Thanon Chan", 13.695, 100.498],
-  ["brt-techno", "brt", "เทคโน", "Techno", 13.69, 100.492],
-  ["brt-thanon-toei", "brt", "ถนนเทอดไท", "Thanon Toei", 13.685, 100.486],
-  ["brt-nut", "brt", "นัท", "Nut", 13.68, 100.48],
-  ["brt-wat-dan", "brt", "วัดด่าน", "Wat Dan", 13.675, 100.474],
-  ["brt-ratchaphruek", "brt", "ราชพฤกษ์", "Ratchaphruek", 13.67, 100.468],
+  // BRT Sathorn–Ratchaphruek (14 stations, B1→B12 + B3A/B4A — BMA open data + Sep 2024 expansion)
+  ["brt-sathorn", "brt", "สาทร", "Sathorn", 13.7212, 100.5306],
+  ["brt-akhan-songkhro", "brt", "อาคารสงเคราะห์", "Akhan Songkhro", 13.7173, 100.5326],
+  ["brt-technic-krungthep", "brt", "เทคนิคกรุงเทพ", "Technic Krungthep", 13.7124, 100.535],
+  ["brt-chan-north", "brt", "ถนนจันทน์เหนือ", "Chan Road North", 13.7086, 100.537],
+  ["brt-chan-road", "brt", "ถนนจันทน์", "Chan Road", 13.7048, 100.5389],
+  ["brt-chan-south", "brt", "ถนนจันทน์ใต้", "Chan Road South", 13.7006, 100.5421],
+  ["brt-nara-rama-3", "brt", "นราราม 3", "Nara Rama 3", 13.6964, 100.5453],
+  ["brt-wat-dan", "brt", "วัดด่าน", "Wat Dan", 13.6742, 100.5431],
+  ["brt-wat-pariwat", "brt", "วัดปริวาส", "Wat Pariwat", 13.6749, 100.534],
+  ["brt-wat-dokmai", "brt", "วัดดอกไม้", "Wat Dokmai", 13.6824, 100.5255],
+  ["brt-rama-9-bridge", "brt", "สะพานพระราม 9", "Rama IX Bridge", 13.6883, 100.5154],
+  ["brt-charoen-rat", "brt", "เจริญราษฎร์", "Charoen Rat", 13.6903, 100.5041],
+  ["brt-rama-3-bridge", "brt", "สะพานพระราม 3", "Rama III Bridge", 13.6938, 100.5002],
+  ["brt-ratchaphruek", "brt", "ราชพฤกษ์", "Ratchaphruek", 13.716, 100.4791],
 
   // Airport Rail Link
   ["airport-phayathai", "airport", "พญาไท", "Phaya Thai", 13.7569, 100.5341],

@@ -2,9 +2,39 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { LocalizedLink } from "@/components/i18n/LocalizedLink";
 import { PropertyGrid } from "@/components/property/PropertyGrid";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
-import type { AISearchResult } from "@/types/property";
+import { tf, type Locale, type TranslationKey } from "@/lib/i18n";
+import type { AISearchExtractedFilters, AISearchResult } from "@/types/property";
+
+function filterChips(
+  filters: AISearchExtractedFilters,
+  t: (key: TranslationKey) => string,
+  locale: Locale,
+): string[] {
+  const chips: string[] = [];
+  if (filters.listingType) {
+    chips.push(filters.listingType === "sale" ? t("buy") : t("rent"));
+  }
+  if (filters.btsStation) {
+    chips.push(tf("aiSearchFilterBts", locale, { station: filters.btsStation }));
+  }
+  if (filters.district) {
+    chips.push(tf("aiSearchFilterDistrict", locale, { district: filters.district }));
+  }
+  if (filters.bedrooms) {
+    chips.push(tf("aiSearchFilterBedrooms", locale, { count: filters.bedrooms }));
+  }
+  if (filters.maxPrice) {
+    chips.push(
+      tf("aiSearchFilterMaxPrice", locale, {
+        price: filters.maxPrice.toLocaleString(locale === "th" ? "th-TH" : "en-US"),
+      }),
+    );
+  }
+  return chips;
+}
 
 export function AISearchClient() {
   const locale = useLocale();
@@ -47,6 +77,8 @@ export function AISearchClient() {
     runSearch(query);
   }
 
+  const chips = result?.filters ? filterChips(result.filters, t, locale) : [];
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -58,7 +90,7 @@ export function AISearchClient() {
               type === "rent" ? "bg-teal-600 text-white" : "bg-slate-100 text-slate-700"
             }`}
           >
-            เช่า
+            {t("rent")}
           </button>
           <button
             type="button"
@@ -67,7 +99,7 @@ export function AISearchClient() {
               type === "sale" ? "bg-teal-600 text-white" : "bg-slate-100 text-slate-700"
             }`}
           >
-            ซื้อ
+            {t("buy")}
           </button>
         </div>
 
@@ -75,7 +107,7 @@ export function AISearchClient() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           rows={3}
-          placeholder="เช่น คอนโด 2 ห้องนอน ใกล้ BTS อโศก งบ 40,000 มีสระว่ายน้ำ"
+          placeholder={t("searchPlaceholder")}
           className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-teal-500 focus:ring-2"
         />
 
@@ -84,7 +116,7 @@ export function AISearchClient() {
           disabled={loading || !query.trim()}
           className="mt-4 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white transition hover:bg-violet-700 disabled:opacity-50"
         >
-          {loading ? "กำลังวิเคราะห์..." : "ค้นหาด้วย AI"}
+          {loading ? "…" : t("aiSearch")}
         </button>
       </form>
 
@@ -92,7 +124,7 @@ export function AISearchClient() {
         <div className="mt-10">
           <div className="rounded-2xl bg-violet-50 p-6">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="font-bold text-violet-900">ผลการวิเคราะห์ AI</h2>
+              <h2 className="font-bold text-violet-900">{t("aiSearch")}</h2>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   result.engine === "ai"
@@ -104,6 +136,44 @@ export function AISearchClient() {
               </span>
             </div>
             <p className="mt-2 text-violet-800">{result.summary}</p>
+
+            {chips.length > 0 && (
+              <div className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-violet-700">
+                  {t("aiSearchFiltersHeading")}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {chips.map((chip) => (
+                    <span
+                      key={chip}
+                      className="rounded-full border border-violet-200 bg-white px-3 py-1 text-xs font-medium text-violet-900"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {result.hubLinks && result.hubLinks.length > 0 && (
+              <div className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-violet-700">
+                  {t("aiSearchHubLinksHeading")}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {result.hubLinks.map((link) => (
+                    <LocalizedLink
+                      key={link.href}
+                      href={link.href}
+                      className="rounded-full border border-violet-300 bg-violet-100 px-3 py-1.5 text-xs font-medium text-violet-900 hover:bg-violet-200"
+                    >
+                      {link.label}
+                    </LocalizedLink>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <ul className="mt-4 space-y-1 text-sm text-violet-700">
               {result.suggestions.map((s) => (
                 <li key={s}>• {s}</li>
@@ -112,14 +182,14 @@ export function AISearchClient() {
           </div>
 
           <h2 className="mb-6 mt-10 text-xl font-semibold text-slate-900">
-            ทรัพย์ที่แนะนำ ({result.properties.length})
+            {t("featuredListings")} ({result.properties.length})
           </h2>
           <PropertyGrid properties={result.properties} locale={locale} />
         </div>
       )}
 
       <div className="mt-10 rounded-2xl border border-dashed border-slate-300 p-6 text-sm text-slate-600">
-        <p className="font-medium text-slate-800">ตัวอย่างคำค้นหา:</p>
+        <p className="font-medium text-slate-800">{t("searchPlaceholder")}</p>
         <ul className="mt-2 space-y-1">
           <li>• คอนโด 2 ห้องนอน ใกล้ BTS อโศก งบ 45,000</li>
           <li>• เช่าสตูดิโอ ใกล้ BTS พญาไท ไม่เกิน 15,000</li>

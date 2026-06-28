@@ -30,7 +30,46 @@ export async function createLead(input: CreateLeadInput) {
   });
 }
 
-/** Default CRM assignee for unassigned agent_team leads (admin first, then oldest agent). */
+/** Default CRM assignee — prefers agent covering the BTS area, else admin, then oldest agent. */
+export async function pickLeadAssignee(btsStation?: string | null): Promise<string | null> {
+  const station = btsStation?.trim();
+  if (station) {
+    const teamAgents = await prisma.teamAgent.findMany({
+      where: { published: true, userId: { not: null } },
+      select: { userId: true, areas: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+    });
+
+    for (const row of teamAgents) {
+      let areas: string[] = [];
+      try {
+        const parsed = JSON.parse(row.areas) as unknown;
+        areas = Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+      } catch {
+        areas = [];
+      }
+
+      const matches = areas.some(
+        (area) =>
+          station.includes(area) ||
+          area.includes(station) ||
+          station.toLowerCase().includes(area.toLowerCase()),
+      );
+
+      if (matches && row.userId) {
+        const user = await prisma.user.findUnique({
+          where: { id: row.userId },
+          select: { id: true, role: true },
+        });
+        if (user?.role === "agent") return user.id;
+      }
+    }
+  }
+
+  return pickDefaultLeadAssignee();
+}
+
+/** @deprecated use pickLeadAssignee */
 export async function pickDefaultLeadAssignee(): Promise<string | null> {
   const admin = await prisma.user.findFirst({
     where: { role: "admin" },

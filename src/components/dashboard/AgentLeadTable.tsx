@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LocalizedLink } from "@/components/i18n/LocalizedLink";
 import { useLocale, useT } from "@/components/i18n/LocaleProvider";
+import { buildGoogleCalendarViewUrl, buildViewingIcs } from "@/lib/calendar-invite";
 import {
   getLeadStatuses,
   leadContactModeLabelFor,
@@ -37,6 +38,42 @@ const statusStyle: Record<string, string> = {
   closed: "bg-green-100 text-green-800",
   lost: "bg-slate-200 text-slate-600",
 };
+
+function downloadViewingIcs(lead: LeadView) {
+  if (!lead.viewingDate) return;
+  const title = lead.propertyTitle
+    ? `นัดชม: ${lead.propertyTitle}`
+    : `นัดชมทรัพย์ — ${lead.name}`;
+  const ics = buildViewingIcs({
+    uid: `viewing-${lead.id}@condominium.in.th`,
+    title,
+    date: lead.viewingDate,
+    time: lead.viewingTime ?? undefined,
+    description: `${lead.name}: ${lead.message}`,
+    location: lead.propertyTitle ?? undefined,
+  });
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "viewing.ics";
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function googleCalUrl(lead: LeadView): string | null {
+  if (!lead.viewingDate) return null;
+  const title = lead.propertyTitle
+    ? `นัดชม: ${lead.propertyTitle}`
+    : `นัดชมทรัพย์ — ${lead.name}`;
+  return buildGoogleCalendarViewUrl({
+    title,
+    date: lead.viewingDate,
+    time: lead.viewingTime ?? undefined,
+    description: `${lead.name}: ${lead.message}`,
+    location: lead.propertyTitle ?? undefined,
+  });
+}
 
 export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
   const router = useRouter();
@@ -79,7 +116,9 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
         </div>
       )}
 
-      {leads.map((lead) => (
+      {leads.map((lead) => {
+        const calUrl = googleCalUrl(lead);
+        return (
         <div key={lead.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -124,21 +163,42 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
           )}
 
           {lead.viewingDate && (
-            <div className="mt-3 flex items-center gap-2 rounded-xl bg-violet-50 px-4 py-3 text-sm text-violet-800 border border-violet-100 font-medium">
-              <span>📅</span>
-              <span>
-                {t("agentLeadViewingOn")}: <span className="underline">{lead.viewingDate}</span>
-                {lead.viewingTime && (
-                  <>
-                    {" "}
-                    {t("agentLeadViewingTime")}:{" "}
-                    <span className="underline">
-                      {lead.viewingTime}
-                      {t("agentLeadTimeSuffix") ? ` ${t("agentLeadTimeSuffix")}` : ""}
-                    </span>
-                  </>
+            <div className="mt-3 rounded-xl border border-violet-100 bg-violet-50 px-4 py-3 text-sm text-violet-800">
+              <div className="flex items-center gap-2 font-medium">
+                <span>📅</span>
+                <span>
+                  {t("agentLeadViewingOn")}: <span className="underline">{lead.viewingDate}</span>
+                  {lead.viewingTime && (
+                    <>
+                      {" "}
+                      {t("agentLeadViewingTime")}:{" "}
+                      <span className="underline">
+                        {lead.viewingTime}
+                        {t("agentLeadTimeSuffix") ? ` ${t("agentLeadTimeSuffix")}` : ""}
+                      </span>
+                    </>
+                  )}
+                </span>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {calUrl && (
+                  <a
+                    href={calUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg border border-violet-200 bg-white px-3 py-1.5 text-xs font-medium text-violet-800 hover:bg-violet-100"
+                  >
+                    {t("agentLeadAddGoogleCal")}
+                  </a>
                 )}
-              </span>
+                <button
+                  type="button"
+                  onClick={() => downloadViewingIcs(lead)}
+                  className="rounded-lg border border-violet-200 bg-white px-3 py-1.5 text-xs font-medium text-violet-800 hover:bg-violet-100"
+                >
+                  {t("agentLeadDownloadIcs")}
+                </button>
+              </div>
             </div>
           )}
 
@@ -187,7 +247,8 @@ export function AgentLeadTable({ leads }: { leads: LeadView[] }) {
             </label>
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
